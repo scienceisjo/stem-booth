@@ -12,11 +12,8 @@
 
 <!-- ================= 제목 ================= -->
 <rect x="0" y="0" width="1400" height="72" fill="#1d1d1f"/>
-<rect x="28" y="16" width="40" height="40" rx="10" fill="#ffffff"/>
-<rect x="39" y="27" width="18" height="18" rx="4" fill="#1d1d1f"/>
-<image href="img/logo.png" x="28" y="16" width="40" height="40"/>
-<text x="84" y="33" font-size="19" font-weight="600" fill="#ffffff">어쩌다 반도체 연구원! · 체험부스 내부 도면</text>
-<text x="84" y="55" font-size="13" fill="#cccccc">2026 서울STEM축제 · 해누리중학교 · 천막 4.0 m × 4.0 m · 축척 1/50 · 단위 mm</text>
+<text x="28" y="33" font-size="19" font-weight="600" fill="#ffffff">어쩌다 반도체 연구원! · 체험부스 내부 도면</text>
+<text x="28" y="55" font-size="13" fill="#cccccc">2026 서울STEM축제 · 해누리중학교 · 천막 4.0 m × 4.0 m · 축척 1/50 · 단위 mm</text>
 <text x="1372" y="33" font-size="13" fill="#cccccc" text-anchor="end">HNR Tech Inc.</text>
 <text x="1372" y="55" font-size="12" fill="#7a7a7a" text-anchor="end">2026-09-07</text>
 
