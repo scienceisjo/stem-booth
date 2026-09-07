@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>어쩌다 반도체 연구원! 가상실험실</title>
+<link rel="stylesheet" href="booth.css">
+<style>
+  .subnav .title{font-size:21px;font-weight:600;letter-spacing:.2px}
+  .subnav .cta{background:var(--primary);color:#fff;border-radius:9999px;padding:6px 14px;font-size:12px;white-space:nowrap}
+  .hero{padding:clamp(28px,4vw,40px) clamp(16px,4vw,48px) 24px;text-align:center}
+  .eyebrow{font-size:14px;font-weight:600;color:var(--ink48);letter-spacing:-.22px;margin-bottom:10px}
+  h1{font-size:clamp(32px,5vw,56px);font-weight:600;line-height:1.07;letter-spacing:-.28px}
+  .lead{margin-top:14px;font-size:clamp(17px,2vw,24px);font-weight:300;line-height:1.5;color:var(--ink80)}
+  .lead b{font-weight:600;color:var(--ink)}
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;padding:12px clamp(16px,4vw,48px) 0}
+  @media (max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .card{background:var(--canvas);border:1px solid var(--hairline);border-radius:18px;padding:22px 16px 20px;min-height:236px;display:flex;flex-direction:column;align-items:center;text-align:center;color:inherit;text-decoration:none}
+  .card:active{transform:scale(.98)}
+  .card .no{font-size:12px;color:var(--ink48);letter-spacing:-.12px}
+  .card .stamp{width:72px;height:72px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;margin:12px 0 14px;font-weight:600;font-size:15px;letter-spacing:-.3px;position:relative}
+  .card .stamp::before{content:"";position:absolute;inset:4px;border-radius:50%;border:1px solid var(--ink)}
+  .card .name{font-size:17px;font-weight:600;letter-spacing:-.37px;line-height:1.24}
+  .card .sub{margin-top:8px;font-size:13px;line-height:1.4;color:var(--ink48);letter-spacing:-.2px}
+  .card .go{margin-top:auto;padding-top:12px;font-size:13px;color:var(--primary)}
+  .card.final{background:var(--tile);color:#fff;border-color:var(--tile)}
+  .card.final .no,.card.final .sub{color:#ccc}
+  .card.final .stamp,.card.final .stamp::before{border-color:#fff}
+  .card.final .go{color:#2997ff}
+  .how{display:flex;justify-content:center;gap:14px;padding:22px clamp(16px,4vw,48px) 0;align-items:center;flex-wrap:wrap}
+  .how .h{display:flex;align-items:center;gap:10px;font-size:15px;letter-spacing:-.3px;color:var(--ink80);white-space:nowrap}
+  .how .h b{font-weight:600;color:var(--ink)}
+  .how .h .k{width:28px;height:28px;border-radius:50%;background:var(--parchment);border:1px solid var(--hairline);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+  .how .arrow{color:var(--ink48);font-size:18px}
+  .foot{margin-top:auto}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="nav">
+    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
+    <div class="right">2026 서울STEM축제 · 해누리중학교 체험부스</div>
+  </div>
+  <div class="subnav">
+    <div class="title">가상실험실</div>
+    <div class="cta">태블릿에서 실행 · 설치 불필요</div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">어쩌다 반도체 연구원!</div>
+    <h1>눈에 안 보이는 전기,<br>여기서는 보입니다.</h1>
+    <p class="lead">실물 체험 옆 태블릿 한 대. 전하·전류·자기장을 그림으로 보여 주고,<br>기다리는 사람도 <b>미션 6개</b>를 미리 구경합니다.</p>
+  </div>
+
+  <div class="grid">
+    <a class="card" href="m1.html"><div class="no">미션 1 · 입사 선서</div><div class="stamp">연결</div><div class="name">손잡고 불 켜라</div><div class="sub">몸을 통해 전류의<br>길이 이어진다</div><div class="go">가상실험실 열기 ›</div></a>
+    <a class="card" href="m2.html"><div class="no">미션 2</div><div class="stamp">끌림</div><div class="name">캔을 움직여라</div><div class="sub">문지르기 전과 후,<br>무엇이 달라졌을까</div><div class="go">가상실험실 열기 ›</div></a>
+    <a class="card" href="m3.html"><div class="no">미션 3</div><div class="stamp">빛</div><div class="name">불빛을 깨워라</div><div class="sub">전선 없이 켜지는<br>거리를 찾아라</div><div class="go">가상실험실 열기 ›</div></a>
+    <a class="card" href="m4.html"><div class="no">미션 4</div><div class="stamp">회전</div><div class="name">내 몸을 돌려라</div><div class="sub">바퀴를 기울이면<br>내가 돈다</div><div class="go">가상실험실 열기 ›</div></a>
+    <a class="card" href="m5.html"><div class="no">미션 5</div><div class="stamp">달림</div><div class="name">건전지야 달려!</div><div class="sub">전기와 자석이 만나면<br>힘이 생긴다</div><div class="go">가상실험실 열기 ›</div></a>
+    <a class="card final" href="m6.html"><div class="no">미션 6 · 최종</div><div class="stamp">기억</div><div class="name">기억을 만들어라</div><div class="sub">전하를 가두면<br>정보가 된다</div><div class="go">가상실험실 열기 ›</div></a>
+  </div>
+
+  <div class="how">
+    <div class="h"><span class="k">1</span><span><b>실물로 해 본다</b> 캔이 구르고 건전지가 달린다</span></div>
+    <div class="arrow">→</div>
+    <div class="h"><span class="k">2</span><span><b>태블릿으로 본다</b> 안 보이던 전하와 자기장이 그림으로</span></div>
+    <div class="arrow">→</div>
+    <div class="h"><span class="k">3</span><span><b>예상을 적는다</b> 사원증에 답을 쓰면 스탬프</span></div>
+  </div>
+
+  <div class="foot">
+    <div>“전기로 물체를 움직이고 불을 켜는 데 성공했어. 이번에는 전기로 기억도 만들어 볼까?”</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+  </div>
+</div>
+</body>
+</html>

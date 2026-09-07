@@ -1,0 +1,59 @@
+/* 어쩌다 반도체 연구원! 가상실험실 — 공통 셸 (Apple 디자인 md 기반: 단일 블루, 그림자 0) */
+:root{
+  --primary:#0066cc; --ink:#1d1d1f; --ink80:#333; --ink48:#7a7a7a;
+  --hairline:#e0e0e0; --canvas:#fff; --parchment:#f5f5f7; --tile:#272729; --force:#ff9f0a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#d2d2d7;font-family:"SF Pro Display","SF Pro Text",-apple-system,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;display:flex;align-items:flex-start;justify-content:center}
+.stage{width:100%;max-width:1280px;min-height:100vh;background:var(--canvas);position:relative;display:flex;flex-direction:column}
+@media (min-width:1300px){ body{padding:24px;align-items:center} .stage{min-height:800px} }
+.nav{height:44px;background:#000;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,48px);font-size:12px}
+.nav .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;color:#fff;text-decoration:none}
+.nav .brand .logo{width:18px;height:18px;border-radius:5px;background:#fff;display:inline-block;position:relative}
+.nav .brand .logo::after{content:"";position:absolute;inset:5px;border-radius:2px;background:#000}
+.nav .right{opacity:.8}
+.subnav{min-height:52px;background:var(--parchment);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px clamp(16px,4vw,48px);border-bottom:1px solid var(--hairline)}
+.subnav .crumb{font-size:14px;color:var(--ink48)}
+.subnav .crumb a{color:var(--primary);text-decoration:none}
+.subnav .crumb b{color:var(--ink);font-weight:600;font-size:21px;margin-left:10px;letter-spacing:.2px}
+.subnav .stamp{width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;position:relative;flex:none;background:var(--canvas)}
+.subnav .stamp::before{content:"";position:absolute;inset:3px;border-radius:50%;border:1px solid var(--ink)}
+.subnav .right{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--ink48)}
+.main{flex:1;display:grid;grid-template-columns:minmax(0,820px) minmax(300px,1fr);min-height:0}
+@media (max-width:980px){ .main{grid-template-columns:1fr} }
+.lab{background:var(--parchment);position:relative;padding:22px clamp(16px,3vw,24px) 16px clamp(16px,4vw,48px)}
+.lab h2{font-size:clamp(24px,3.2vw,34px);font-weight:600;letter-spacing:-.37px;line-height:1.2}
+.lab .q{font-size:17px;color:var(--ink80);margin-top:4px;letter-spacing:-.37px}
+.lab svg{width:100%;max-width:748px;height:auto;display:block;margin-top:6px;touch-action:none}
+.lab svg text.halo{paint-order:stroke;stroke:#f5f5f7;stroke-width:6px;stroke-linejoin:round}
+.legend{display:flex;gap:22px;margin-top:6px;font-size:13px;color:var(--ink80);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:22px;height:0;border-top:3px solid;margin-right:7px;vertical-align:middle}
+.legend .cur::before{border-color:var(--primary)}
+.legend .fld::before{border-color:var(--ink48);border-top-style:dashed}
+.legend .frc::before{border-color:var(--force)}
+.panel{padding:26px clamp(16px,4vw,48px) 24px clamp(16px,2.5vw,28px);display:flex;flex-direction:column;gap:16px}
+.panel h3{font-size:14px;font-weight:600;color:var(--ink48);letter-spacing:-.22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--hairline);background:var(--canvas);border-radius:9999px;padding:10px 16px;font-size:14px;cursor:pointer;user-select:none;letter-spacing:-.22px;min-height:44px;display:inline-flex;align-items:center}
+.chip.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.chip.blue{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chip:active{transform:scale(.97)}
+.steps{border:1px solid var(--hairline);border-radius:18px;padding:18px 20px;background:var(--canvas)}
+.step{display:flex;gap:12px;align-items:flex-start;padding:9px 0}
+.step+.step{border-top:1px solid var(--parchment)}
+.step .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.step .t{font-size:15px;line-height:1.4;letter-spacing:-.3px}
+.step .t small{display:block;color:var(--ink48);font-size:13px;margin-top:2px}
+.step.now .n{background:var(--primary)}
+.ask{background:var(--tile);color:#fff;border-radius:18px;padding:18px 20px}
+.ask h3{color:#ccc;margin-bottom:8px}
+.ask p{font-size:17px;font-weight:600;line-height:1.35;letter-spacing:-.37px}
+.ask p+p{margin-top:8px;font-weight:300;color:#ccc;font-size:14px}
+.readout{display:flex;gap:10px;flex-wrap:wrap}
+.readout .r{flex:1;min-width:110px;border:1px solid var(--hairline);border-radius:11px;padding:10px 12px;background:var(--canvas)}
+.readout .r .k{font-size:12px;color:var(--ink48)}
+.readout .r .v{font-size:22px;font-weight:600;letter-spacing:-.37px;margin-top:2px}
+.foot{background:var(--parchment);border-top:1px solid var(--hairline);padding:12px clamp(16px,4vw,48px);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink80)}
+.foot .safe{color:var(--primary)}
+#app-credit{font-size:10px;color:var(--ink48)}
