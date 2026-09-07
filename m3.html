@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>가상실험실 · 불빛을 깨워라</title>
+<link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="stylesheet" href="booth.css">
 <style>
   /* 이 페이지만 암실 느낌: lab 배경을 어둡게, 글자는 밝게 (booth.css 는 손대지 않음) */
@@ -14,6 +15,7 @@
   .lab svg text.halo{stroke:#0d0d0e}
   .legend .pl::before{border-color:#5ac8fa}
   .legend .mk::before{border-color:#fff}
+  .legend .win::before{border-color:#6e6e73;border-top-style:solid}
   #tube{cursor:grab}
   #tube.drag{cursor:grabbing}
   .slider{display:flex;align-items:center;gap:12px}
@@ -21,29 +23,40 @@
   .slider span{font-size:14px;min-width:38px;text-align:right;letter-spacing:-.22px}
   .slider.lbls{justify-content:space-between;font-size:12px;color:#7a7a7a;margin-top:-4px;padding:0 50px 0 4px}
   .slider.lbls span{min-width:0;text-align:center}
+  .readout .r{flex:1 1 calc(50% - 5px)}
+  .readout .r .v.dir{font-size:19px}
   @media (max-width:980px){ .main{grid-template-columns:minmax(0,1fr)} .lab svg{max-width:100%} }
 </style>
 </head>
-<body>
+<body data-mission="3">
 <div class="stage">
   <div class="nav">
-    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
-    <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
+    <a class="brand" href="index.html"><img src="img/badge.png" alt="" width="26" height="26" style="border-radius:50%">HNR Tech Inc.</a>
+    <div class="right">어쩌다 반도체 연구원! · 가상실험실</div>
   </div>
   <div class="subnav">
     <div class="crumb"><a href="index.html">가상실험실</a> › 미션 3 <b>불빛을 깨워라</b></div>
-    <div class="right"><span>클리어하면 스탬프</span><div class="stamp">빛</div></div>
+    <div class="right"><span>깨면 스탬프</span><div class="stamp">빛</div></div>
   </div>
 
   <div class="main">
     <div class="lab">
-      <h2>전선도 없는데 형광등이 왜 켜질까?</h2>
-      <div class="q">가까이·멀리 움직이며 켜지는 거리를 찾아보세요.</div>
+      <h2>전선도 없는데 형광등이 왜 켜질까요?</h2>
+      <div class="q">가까이·멀리 움직이며 켜지는 거리를 찾아보아요.</div>
 
       <svg viewBox="0 0 748 470" id="sim" aria-label="플라즈마볼로 형광등 켜기 시뮬레이션">
         <!-- 암실 상자 -->
         <rect x="1" y="1" width="746" height="468" rx="14" fill="#0d0d0e" stroke="#3a3a3c" stroke-width="2"/>
         <text x="20" y="26" font-size="13" fill="#8e8e93">암실 상자 (안이 어두워야 잘 보여요)</text>
+
+        <!-- 관찰창(아크릴판) 프레임 -->
+        <g id="window" fill="none" stroke="#3a3a3c" stroke-width="1.5">
+          <rect x="14" y="38" width="720" height="406" rx="8"/>
+          <rect x="19" y="43" width="710" height="396" rx="6" stroke="#2c2c2e" stroke-width="1"/>
+          <path d="M34 60 l26 -12" stroke="#fff" opacity=".22" stroke-width="2" stroke-linecap="round"/>
+          <path d="M34 72 l52 -24" stroke="#fff" opacity=".12" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <text x="730" y="461" font-size="12" fill="#6e6e73" text-anchor="end">관찰창 (아크릴판)</text>
 
         <!-- 전기장 범위 점선 -->
         <g id="rings"></g>
@@ -62,6 +75,8 @@
 
         <!-- 플라즈마볼 -->
         <g id="ball">
+          <!-- 받침대: 아크릴 판 위 -->
+          <rect x="104" y="408" width="172" height="8" rx="3" fill="none" stroke="#3a3a3c" stroke-width="1.5"/>
           <path d="M152,332 L228,332 L246,398 L134,398 Z" fill="#2c2c2e" stroke="#6e6e73" stroke-width="2"/>
           <rect x="120" y="398" width="140" height="12" rx="4" fill="#2c2c2e" stroke="#6e6e73" stroke-width="2"/>
           <circle cx="190" cy="250" r="90" fill="#121214" stroke="#6e6e73" stroke-width="2.5"/>
@@ -72,9 +87,13 @@
           <text x="190" y="432" font-size="13" fill="#8e8e93" text-anchor="middle">플라즈마볼 (지름 15 cm)</text>
         </g>
 
-        <!-- 형광등 (드래그) -->
+        <!-- 형광등 (드래그) + 연구원 손 -->
         <g id="tube">
-          <rect x="-112" y="-32" width="224" height="64" fill="#fff" opacity="0"/>
+          <rect x="-112" y="-32" width="244" height="64" fill="#fff" opacity="0"/>
+          <!-- 손(픽토그램): 관의 바깥쪽 끝을 잡음 -->
+          <rect x="118" y="-7" width="16" height="14" rx="3" fill="#2c2c2e" stroke="#8e8e93" stroke-width="2"/>
+          <rect x="92" y="-17" width="34" height="34" rx="12" fill="#2c2c2e" stroke="#8e8e93" stroke-width="2"/>
+          <path d="M98 -9 h20 M98 0 h22 M98 9 h20" fill="none" stroke="#8e8e93" stroke-width="1.6" stroke-linecap="round"/>
           <rect x="-95" y="-11" width="190" height="22" rx="11" fill="#2a2a2c" stroke="#8e8e93" stroke-width="2"/>
           <g id="segs"></g>
           <g id="cores"></g>
@@ -82,25 +101,25 @@
           <rect x="87" y="-8" width="14" height="16" rx="2" fill="#8e8e93"/>
         </g>
 
-        <text id="hint" class="halo" x="560" y="300" font-size="14" fill="#c7c7cc" text-anchor="middle">형광등을 끌어서 움직여 보세요</text>
-        <text id="modeHint" class="halo" x="560" y="300" font-size="14" fill="#5ac8fa" text-anchor="middle" style="display:none">멀리서부터 천천히 가까이 가 보세요</text>
+        <text id="hint" class="halo" x="560" y="300" font-size="14" fill="#c7c7cc" text-anchor="middle">형광등을 끌어서 볼 쪽으로 가져가 보아요</text>
+        <text id="modeHint" class="halo" x="560" y="300" font-size="14" fill="#5ac8fa" text-anchor="middle" style="display:none">멀리서부터 천천히 가까이 가 보아요</text>
       </svg>
 
-      <div class="legend"><span class="pl">전극에서 뻗는 방전 가지</span><span class="fld">전기장이 미치는 범위 (바깥일수록 약함)</span><span class="mk">처음 켜진 거리</span></div>
+      <div class="legend"><span class="pl">볼 안의 빛줄기 (방전 가지)</span><span class="fld">전기장이 미치는 범위 (바깥일수록 약해요)</span><span class="mk">처음 켜진 거리</span><span class="win">관찰창 (아크릴판)</span></div>
     </div>
 
     <div class="panel">
       <div>
-        <h3>보기</h3>
+        <h3>무엇을 볼까요?</h3>
         <div class="chips">
           <div class="chip on" data-layer="rings">전기장 범위</div>
         </div>
       </div>
       <div>
-        <h3>만져 보기</h3>
+        <h3>만져 볼까요?</h3>
         <div class="chips">
-          <div class="chip blue" id="mode">범위 찾기 모드</div>
-          <div class="chip" id="rotate">세로로 들기</div>
+          <div class="chip blue" id="mode">켜지는 거리 찾기</div>
+          <div class="chip" id="rotate">볼과 나란히 들기</div>
           <div class="chip" id="reset">처음으로</div>
         </div>
       </div>
@@ -113,24 +132,25 @@
         <div class="r"><div class="k">볼 표면에서 거리</div><div class="v" id="rd">— cm</div></div>
         <div class="r"><div class="k">밝기</div><div class="v" id="rb">0 %</div></div>
         <div class="r"><div class="k">형광등</div><div class="v" id="ro">꺼짐</div></div>
+        <div class="r"><div class="k">드는 방향</div><div class="v dir" id="ra">볼을 향함</div></div>
       </div>
       <div class="steps">
-        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
-        <div class="step" id="s1"><div class="n">1</div><div class="t">플라즈마볼 가운데 전극이 아주 빠르게 변하는 높은 전압을 만든다<small>볼 안의 가지 모양 빛은 전극에서 유리 쪽으로 뻗는 방전이다</small></div></div>
-        <div class="step" id="s2"><div class="n">2</div><div class="t">볼 주변에 빠르게 변하는 전기장이 생기고, 가까운 형광등 속 기체가 자극을 받는다<small>전선 없이도 전기장은 유리 밖까지 미친다</small></div></div>
-        <div class="step" id="s3"><div class="n">3</div><div class="t">자극받은 기체가 자외선을 내고, 관 안쪽 형광 물질이 그 빛을 눈에 보이는 빛으로 바꾼다<small>거리가 멀면 자극이 약해 꺼진다</small></div></div>
+        <h3 style="margin-bottom:6px">지금 무슨 일이 일어나고 있나요?</h3>
+        <div class="step" id="s1"><div class="n">1</div><div class="t">볼 가운데 전극이 아주 빠르게 변하는 높은 전압을 만들어요<small>볼 안의 빛줄기는 전극에서 유리 쪽으로 뻗는 방전이에요</small></div></div>
+        <div class="step" id="s2"><div class="n">2</div><div class="t">볼 주변에 빠르게 변하는 전기장이 생기고, 가까운 형광등 속 기체가 자극을 받아요<small>전선 없이도 전기장은 유리 밖까지 미쳐요</small></div></div>
+        <div class="step" id="s3"><div class="n">3</div><div class="t">자극받은 기체가 자외선을 내고, 관 안쪽 형광 물질이 눈에 보이는 빛으로 바꿔요<small>멀어지면 자극이 약해 꺼져요. 관을 볼 쪽으로 향하게 들면 양끝의 차이가 커서 더 잘 켜져요</small></div></div>
       </div>
       <div class="ask">
-        <h3>실물에서 확인</h3>
-        <p>볼에서 몇 cm 까지 켜질까? 형광등을 세로로 들면, 가로로 들면 다를까?</p>
-        <p>암실 상자에서 확인하고 사원증에 적으세요.</p>
+        <h3>실물에서 확인해 보아요!</h3>
+        <p>볼에서 몇 cm까지 켜질까요? 형광등을 세로로 들 때와 가로로 들 때 다를까요?</p>
+        <p>예상을 사원증 뒷면에 적고 진행자에게 말해 주세요.</p>
       </div>
     </div>
   </div>
 
   <div class="foot">
-    <div><span class="safe">안전</span> · 플라즈마볼 표면에 금속을 대면 작은 불꽃이 튈 수 있어요. 형광등은 유리이니 세게 부딪히지 않습니다.</div>
-    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+    <div><span class="safe">안전</span> · 플라즈마볼 표면에 금속을 대면 작은 불꽃이 튈 수 있어요. 형광등은 유리라서 살살 다뤄 주세요.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-08</div>
   </div>
 </div>
 
@@ -143,7 +163,7 @@
   const THR=[8,14,22];                        // 세기별 켜지는 최대 거리(볼 표면에서, cm)
   const LEVEL_TXT=['낮음','보통','높음'];
   const TL=95, NSEG=12;                       // 형광등 반길이 px, 구간 수
-  const st={x:560,y:250,a:0,level:1,rings:true,mode:false,marker:null,wasOn:false,moved:false,lit:0,dcm:99};
+  const st={x:560,y:250,a:0,level:1,rings:true,mode:false,marker:null,wasOn:false,moved:false,lit:0,dcm:99,align:1};
 
   /* ---------- 전기장 범위 점선 ---------- */
   const ringG=$('rings'), rings=[];
@@ -235,22 +255,33 @@
     if(dcm>=thr) return 0;
     return Math.pow(1-dcm/thr,1.3);
   }
+  // 방사 방향 각도: 볼 중심 → 관 중심 (관의 +x 끝, 즉 손 쪽이 볼 반대편을 보게)
+  function radialAngle(){ return Math.atan2(st.y-CY,st.x-CX); }
+  // 관 축과 방사 방향 사이 각 α 의 |cos α| : 1=볼을 향함, 0=볼과 나란함
+  function alignment(){
+    const dx=st.x-CX, dy=st.y-CY, d=Math.hypot(dx,dy)||1;
+    return Math.abs((dx*Math.cos(st.a)+dy*Math.sin(st.a))/d);
+  }
 
   /* ---------- 그리기 ---------- */
-  const tube=$('tube'), rd=$('rd'), rb=$('rb'), ro=$('ro');
+  const tube=$('tube'), rd=$('rd'), rb=$('rb'), ro=$('ro'), ra=$('ra');
   const measure=$('measure'), msL=$('msL'), msT=$('msT');
   const marker=$('marker'), mkC=$('mkC'), mkT=$('mkT');
   const steps=[$('s1'),$('s2'),$('s3')];
+  const rotBtn=$('rotate');
   function render(t){
     tube.setAttribute('transform',`translate(${st.x.toFixed(1)},${st.y.toFixed(1)}) rotate(${st.a*180/Math.PI})`);
     const ux=Math.cos(st.a), uy=Math.sin(st.a);
     const flick=0.94+0.06*Math.sin(t*17)+0.02*Math.sin(t*41);
+    // 관 양끝의 전위차 → 관을 따라 놓인 전기장 성분. 방사 방향 1.0, 접선 방향 0.3
+    st.align=alignment();
+    const dirF=0.3+0.7*st.align;
     let maxO=0;
     segs.forEach((s,i)=>{
       const lx=-83+(i+0.5)*w;
       const sx=st.x+lx*ux, sy=st.y+lx*uy;
       const dcm=Math.max(0,(Math.hypot(sx-CX,sy-CY)-R)/PX);
-      const o=bright(dcm); if(o>maxO) maxO=o;
+      const o=bright(dcm)*dirF; if(o>maxO) maxO=o;
       s.setAttribute('opacity',(o*0.9*flick).toFixed(3));
       cores[i].setAttribute('opacity',(Math.pow(o,1.8)*0.95*flick).toFixed(3));
     });
@@ -262,6 +293,9 @@
     rb.textContent=Math.round(maxO*100)+' %';
     ro.textContent=on?'켜짐':'꺼짐';
     ro.style.color=on?'#0066cc':'';
+    const radial=st.align>0.5;
+    ra.textContent=st.align>0.7?'볼을 향함':(st.align<0.35?'볼과 나란함':'비스듬함');
+    rotBtn.textContent=radial?'볼과 나란히 들기':'볼을 향해 들기';
     steps.forEach(s=>s.classList.remove('now'));
     (on?(maxO<0.4?steps[1]:steps[2]):steps[0]).classList.add('now');
 
@@ -276,7 +310,7 @@
       measure.style.display='';
     } else measure.style.display='none';
 
-    // 범위 찾기: 꺼짐 → 켜짐 순간 기록
+    // 켜지는 거리 찾기: 꺼짐 → 켜짐 순간 기록
     if(st.mode && on && !st.wasOn){
       st.marker=st.dcm;
       const mr=R+st.dcm*PX;
@@ -326,19 +360,20 @@
   const modeBtn=$('mode');
   modeBtn.addEventListener('click',()=>{
     st.mode=!st.mode; modeBtn.classList.toggle('on',st.mode);
-    modeBtn.textContent=st.mode?'범위 찾기 중…':'범위 찾기 모드';
+    modeBtn.textContent=st.mode?'거리 찾는 중…':'켜지는 거리 찾기';
     $('modeHint').style.display=(st.mode&&st.marker===null)?'':'none';
     if(st.mode){$('hint').style.display='none';}
   });
-  const rotBtn=$('rotate');
   rotBtn.addEventListener('click',()=>{
-    st.a=st.a===0?Math.PI/2:0; rotBtn.textContent=st.a===0?'세로로 들기':'가로로 들기';
+    // 지금 볼을 향해 있으면 나란히(접선), 아니면 볼을 향해(방사) 돌린다
+    const ra0=radialAngle();
+    st.a=(alignment()>0.5)?ra0-Math.PI/2:ra0;
     clampTube(); render(t);
   });
   $('reset').addEventListener('click',()=>{
-    st.x=560; st.y=250; st.a=0; rotBtn.textContent='세로로 들기';
+    st.x=560; st.y=250; st.a=0;
     st.marker=null; marker.style.display='none'; st.wasOn=false;
-    st.mode=false; modeBtn.classList.remove('on'); modeBtn.textContent='범위 찾기 모드';
+    st.mode=false; modeBtn.classList.remove('on'); modeBtn.textContent='켜지는 거리 찾기';
     $('modeHint').style.display='none'; render(t);
   });
   const power=$('power'), powerLbl=$('powerLbl');
@@ -347,7 +382,50 @@
   });
 
   layoutRings(); clampTube(); requestAnimationFrame(tick);
+
+  /* ---------- 실물 장면 그림 (booth.js 가 만든 #procArt 에 채움) ---------- */
+  function fillArt(){
+    const el=document.getElementById('procArt'); if(!el) return;
+    el.innerHTML=
+      '<svg viewBox="0 0 400 150" aria-hidden="true">'+
+        /* 바닥선 */
+        '<path d="M14 140 H386" fill="none" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>'+
+        /* 암실 상자 */
+        '<rect x="140" y="14" width="246" height="126" rx="8" fill="#1d1d1f" stroke="#1d1d1f" stroke-width="2.5"/>'+
+        /* 관찰창(아크릴) */
+        '<rect x="298" y="22" width="76" height="26" rx="4" fill="none" stroke="#8e8e93" stroke-width="1.5"/>'+
+        '<path d="M306 42 l14 -14" fill="none" stroke="#fff" opacity=".35" stroke-width="2" stroke-linecap="round"/>'+
+        /* 플라즈마볼 + 받침 */
+        '<path d="M296 118 L320 118 L326 130 L290 130 Z" fill="#3a3a3c" stroke="#8e8e93" stroke-width="2"/>'+
+        '<circle cx="308" cy="88" r="30" fill="#121214" stroke="#8e8e93" stroke-width="2.5"/>'+
+        '<g fill="none" stroke="#0066cc" stroke-width="4" opacity=".45" stroke-linejoin="round">'+
+          '<polyline points="308,88 297,80 289,70 284,62"/><polyline points="308,88 318,78 326,66"/><polyline points="308,88 320,96 330,104"/><polyline points="308,88 296,98 286,106"/><polyline points="308,88 300,88 282,90"/>'+
+        '</g>'+
+        '<g fill="none" stroke="#5ac8fa" stroke-width="1.6" stroke-linejoin="round">'+
+          '<polyline points="308,88 297,80 289,70 284,62"/><polyline points="308,88 318,78 326,66"/><polyline points="308,88 320,96 330,104"/><polyline points="308,88 296,98 286,106"/><polyline points="308,88 300,88 282,90"/>'+
+        '</g>'+
+        '<circle cx="308" cy="88" r="4" fill="#fff"/>'+
+        /* 상자 앞 구멍 */
+        '<ellipse cx="140" cy="88" rx="9" ry="18" fill="#f5f5f7" stroke="#1d1d1f" stroke-width="2.5"/>'+
+        /* 연구원 (원+선) */
+        '<circle cx="72" cy="38" r="13" fill="none" stroke="#1d1d1f" stroke-width="2.5"/>'+
+        '<path d="M72 51 V108 M72 108 L58 140 M72 108 L88 140 M72 62 L52 96" fill="none" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+
+        /* 상자 안으로 들어간 팔 + 손 */
+        '<path d="M72 62 L140 81" fill="none" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>'+
+        '<path d="M140 81 L158 86" fill="none" stroke="#f5f5f7" stroke-width="2.5" stroke-linecap="round"/>'+
+        '<circle cx="164" cy="88" r="9" fill="#f5f5f7" stroke="#1d1d1f" stroke-width="2.5"/>'+
+        /* 형광등: 볼 중심을 향해 든 모습, 볼 쪽 끝이 파랗게 */
+        '<rect x="170" y="82" width="98" height="12" rx="6" fill="#2a2a2c" stroke="#8e8e93" stroke-width="2"/>'+
+        '<rect x="214" y="84" width="50" height="8" rx="4" fill="#0066cc" opacity=".55"/>'+
+        '<rect x="236" y="84" width="28" height="8" rx="4" fill="#5ac8fa" opacity=".9"/>'+
+        '<rect x="246" y="86" width="16" height="4" rx="2" fill="#fff" opacity=".9"/>'+
+        '<rect x="168" y="84" width="6" height="8" rx="1" fill="#8e8e93"/><rect x="264" y="84" width="6" height="8" rx="1" fill="#8e8e93"/>'+
+      '</svg>';
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(fillArt,0));
+  else setTimeout(fillArt,0);
 })();
 </script>
+<script src="booth.js"></script>
 </body>
 </html>

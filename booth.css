@@ -57,3 +57,60 @@ body{min-height:100vh;display:flex;align-items:flex-start;justify-content:center
 .foot{background:var(--parchment);border-top:1px solid var(--hairline);padding:12px clamp(16px,4vw,48px);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink80)}
 .foot .safe{color:var(--primary)}
 #app-credit{font-size:10px;color:var(--ink48)}
+
+/* ───────────── 진행 띠 (nav 아래) ───────────── */
+.hnr-strip{display:flex;align-items:center;gap:14px;padding:6px clamp(16px,4vw,48px);background:var(--canvas);border-bottom:1px solid var(--hairline);font-size:12.5px;color:var(--ink80);flex-wrap:wrap}
+.hnr-strip .who{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.hnr-strip .who img{border-radius:50%}
+.hnr-strip .who em{font-style:normal;color:var(--ink48);font-size:11px}
+.hnr-strip .bar{flex:1;min-width:80px;height:6px;border-radius:9999px;background:var(--parchment);overflow:hidden}
+.hnr-strip .bar i{display:block;height:100%;background:var(--primary);border-radius:9999px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.hnr-strip .pct{font-weight:600;color:var(--ink);white-space:nowrap}
+.hnr-strip .dots{display:flex;gap:5px}
+.hnr-strip .dots .d{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--hairline);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink48);text-decoration:none;background:var(--canvas)}
+.hnr-strip .dots .d.cur{border-color:var(--ink);color:var(--ink);font-weight:600}
+.hnr-strip .dots .d.on{background:var(--primary);border-color:var(--primary);color:#fff}
+
+/* ───────────── 스토리 팝업 ───────────── */
+.hnr-modal{position:fixed;inset:0;background:rgba(29,29,31,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;animation:hnrFade .22s ease}
+.hnr-modal.out{animation:hnrFadeOut .22s ease forwards}
+.hnr-card{width:min(520px,100%);background:var(--canvas);border-radius:18px;padding:22px 24px 20px;animation:hnrRise .32s cubic-bezier(.2,.8,.2,1)}
+.hnr-head{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;color:var(--ink48);letter-spacing:-.2px}
+.hnr-head img{border-radius:50%}
+.hnr-lines{margin-top:14px;min-height:72px}
+.hnr-lines p{font-size:18px;line-height:1.45;letter-spacing:-.37px;color:var(--ink);opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s}
+.hnr-lines p+p{margin-top:10px}
+.hnr-lines p.in{opacity:1;transform:none}
+.hnr-actions{display:flex;justify-content:flex-end;margin-top:18px}
+.hnr-btn{background:var(--primary);color:#fff;border:0;border-radius:9999px;padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;letter-spacing:-.2px;font-family:inherit}
+.hnr-btn:active{transform:scale(.97)}
+.hnr-btn.ghost{background:var(--canvas);color:var(--primary);border:1px solid var(--hairline)}
+.hnr-btn.big{width:100%;padding:16px 22px;font-size:17px}
+@keyframes hnrFade{from{opacity:0}to{opacity:1}}
+@keyframes hnrFadeOut{to{opacity:0}}
+@keyframes hnrRise{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+
+/* ───────────── 스탬프 ───────────── */
+.hnr-stampwrap{display:flex;justify-content:center;margin:10px 0 2px}
+.hnr-stamp{width:96px;height:96px;border-radius:50%;border:3px solid var(--primary);display:flex;align-items:center;justify-content:center;position:relative;color:var(--primary);font-weight:700;font-size:22px;letter-spacing:-.5px;animation:hnrStamp .55s cubic-bezier(.2,1.4,.3,1) both}
+.hnr-stamp::before{content:"";position:absolute;inset:6px;border-radius:50%;border:1.5px solid var(--primary)}
+@keyframes hnrStamp{0%{transform:scale(1.8) rotate(-18deg);opacity:0}60%{transform:scale(.96) rotate(2deg);opacity:1}100%{transform:none}}
+.subnav .stamp.got{background:var(--primary);color:#fff;border-color:var(--primary)}
+.subnav .stamp.got::before{border-color:#fff}
+
+/* ───────────── 실험 과정 · 완료 ───────────── */
+.hnr-proc h3{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.hnr-proc h3 small{font-weight:400;color:var(--ink48);font-size:12px}
+.hnr-proc .proc-art{margin:4px 0 10px}
+.hnr-proc .proc-art svg{width:100%;height:auto;display:block;max-height:150px}
+.hnr-complete{display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 0 4px}
+.hnr-complete small{color:var(--ink48);font-size:12.5px}
+.hnr-complete .ok{font-size:15px;font-weight:600;color:var(--primary)}
+
+/* ───────────── 패널 카드 등장 애니메이션 ───────────── */
+.panel>*{animation:hnrRise .5s cubic-bezier(.2,.8,.2,1) both}
+.panel>*:nth-child(1){animation-delay:.05s}.panel>*:nth-child(2){animation-delay:.12s}.panel>*:nth-child(3){animation-delay:.19s}
+.panel>*:nth-child(4){animation-delay:.26s}.panel>*:nth-child(5){animation-delay:.33s}.panel>*:nth-child(6){animation-delay:.40s}.panel>*:nth-child(7){animation-delay:.47s}
+.panel>*:nth-child(8){animation-delay:.54s}.panel>*:nth-child(9){animation-delay:.61s}.panel>*:nth-child(10){animation-delay:.68s}
+.lab h2,.lab .q{animation:hnrRise .5s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){.panel>*,.lab h2,.lab .q,.hnr-card,.hnr-stamp{animation:none}}

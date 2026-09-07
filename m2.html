@@ -4,54 +4,60 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>가상실험실 · 캔을 움직여라</title>
+<link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="stylesheet" href="booth.css">
 <style>
   .legend .pos::before{border-color:#ff3b30}
   .legend .neg::before{border-color:var(--primary)}
-  .subnav .stamp.got{background:var(--primary);color:#fff;border-color:var(--primary)}
-  .subnav .stamp.got::before{border-color:#fff}
   .readout .r .v.blue{color:var(--primary)}
   .readout .r .k.blue{color:var(--primary);font-weight:600}
   #sim #straw{cursor:grab}
   #sim #straw.drag{cursor:grabbing}
 </style>
 </head>
-<body>
+<body data-mission="2">
 <div class="stage">
   <div class="nav">
-    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
-    <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
+    <a class="brand" href="index.html"><img src="img/badge.png" alt="" width="26" height="26" style="border-radius:50%">HNR Tech Inc.</a>
+    <div class="right">어쩌다 반도체 연구원! · 가상실험실</div>
   </div>
   <div class="subnav">
     <div class="crumb"><a href="index.html">가상실험실</a> › 미션 2 <b>캔을 움직여라</b></div>
-    <div class="right"><span>클리어하면 스탬프</span><div class="stamp" id="stamp">끌림</div></div>
+    <div class="right"><span>깨면 스탬프</span><div class="stamp" id="stamp">끌림</div></div>
   </div>
 
   <div class="main">
     <div class="lab">
-      <h2>손도 안 댔는데 캔이 왜 따라올까?</h2>
-      <div class="q">문지르기 전과 후를 비교해 보세요.</div>
+      <h2>손도 안 댔는데 캔이 왜 따라올까요?</h2>
+      <div class="q">문지르기 전과 후를 비교해 보아요.</div>
 
-      <svg viewBox="0 0 748 420" id="sim" aria-label="대전된 빨대로 알루미늄 캔을 굴리는 시뮬레이션">
+      <svg viewBox="0 0 748 420" id="sim" aria-label="문지른 빨대로 알루미늄 캔을 굴려 보는 가상실험">
         <defs>
           <marker id="arrF" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff9f0a"/></marker>
           <clipPath id="canClip"><rect x="-60" y="268" width="120" height="64" rx="12"/></clipPath>
         </defs>
 
         <!-- 안내 문구 -->
-        <text id="status" class="halo" x="20" y="34" font-size="15" fill="#1d1d1f" font-weight="600">① 「문지르기」를 눌러 빨대를 대전시키세요</text>
+        <text id="status" class="halo" x="20" y="34" font-size="15" fill="#1d1d1f" font-weight="600">먼저 그냥 가져가 보고, 그다음 「문지르기」를 눌러 보아요</text>
         <text id="statusSub" class="halo" x="20" y="56" font-size="13" fill="#7a7a7a">지금은 빨대를 캔 옆에 가져가도 캔이 움직이지 않아요</text>
 
-        <!-- 바닥 -->
-        <line x1="20" y1="340" x2="728" y2="340" stroke="#1d1d1f" stroke-width="2"/>
-        <line x1="20" y1="346" x2="728" y2="346" stroke="#e0e0e0" stroke-width="1"/>
-        <text x="150" y="364" font-size="13" fill="#7a7a7a" text-anchor="middle">출발</text>
+        <!-- 책상 (윗면 + 두께 + 다리) -->
+        <g id="desk">
+          <rect x="20" y="340" width="708" height="11" fill="#ebebed" stroke="#1d1d1f" stroke-width="2"/>
+          <line x1="20" y1="340" x2="728" y2="340" stroke="#1d1d1f" stroke-width="2.5"/>
+          <rect x="52" y="351" width="9" height="36" fill="#d2d2d7" stroke="#1d1d1f" stroke-width="1.5"/>
+          <rect x="687" y="351" width="9" height="36" fill="#d2d2d7" stroke="#1d1d1f" stroke-width="1.5"/>
+          <line x1="150" y1="352" x2="150" y2="340" stroke="#7a7a7a" stroke-width="1.5"/>
+          <text x="150" y="366" font-size="13" fill="#7a7a7a" text-anchor="middle">출발</text>
+        </g>
 
-        <!-- 골인 -->
+        <!-- 골인 (책상 위 파란 선 + 깃발) -->
         <g id="goal">
-          <line x1="540" y1="254" x2="540" y2="340" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
-          <path d="M541,254 L582,266 L541,278 z" fill="#0066cc"/>
-          <text x="540" y="364" font-size="13" fill="#0066cc" font-weight="600" text-anchor="middle">골인</text>
+          <line x1="540" y1="337" x2="540" y2="352" stroke="#0066cc" stroke-width="4" stroke-linecap="round"/>
+          <ellipse cx="540" cy="338" rx="12" ry="4" fill="#0066cc"/>
+          <line x1="540" y1="338" x2="540" y2="226" stroke="#1d1d1f" stroke-width="3" stroke-linecap="round"/>
+          <path d="M541,226 L590,232 Q580,244 590,256 L541,262 z" fill="#0066cc"/>
+          <text x="540" y="366" font-size="13" fill="#0066cc" font-weight="600" text-anchor="middle">골인</text>
         </g>
 
         <!-- 캔 -->
@@ -73,8 +79,10 @@
 
         <!-- 손대지 않고! -->
         <text id="noTouch" class="halo" x="0" y="0" font-size="16" fill="#ff3b30" font-weight="700" text-anchor="middle" style="display:none">손대지 않고!</text>
+        <!-- 문지르기 전 안내 (빨대가 캔 가까이 왔을 때만) -->
+        <text id="neutralHint" class="halo" x="0" y="0" font-size="14" fill="#1d1d1f" font-weight="600" text-anchor="middle" style="display:none">문지르기 전엔 + 와 − 가 같아서 힘이 없어요</text>
 
-        <!-- 빨대 -->
+        <!-- 빨대 (+ 잡은 손) -->
         <g id="straw">
           <line x1="0" y1="0" x2="150" y2="-100" stroke="rgba(0,0,0,0)" stroke-width="56" stroke-linecap="round" pointer-events="stroke"/>
           <line x1="0" y1="0" x2="150" y2="-100" stroke="#1d1d1f" stroke-width="15" stroke-linecap="round"/>
@@ -84,14 +92,20 @@
             <rect x="-24" y="-16" width="48" height="32" rx="7" fill="#fff" stroke="#1d1d1f" stroke-width="2"/>
             <text x="0" y="5" font-size="12" fill="#1d1d1f" text-anchor="middle" font-weight="600">휴지</text>
           </g>
-          <text class="halo" x="63" y="-68" font-size="13" fill="#7a7a7a" text-anchor="middle" transform="rotate(-33.7 63 -68)">빨대 (끌어서 옮기기)</text>
+          <!-- 손 픽토그램: 팔(선) + 주먹(원) + 손가락(짧은 선) -->
+          <g id="hand">
+            <line x1="150" y1="-100" x2="198" y2="-124" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="150" cy="-100" r="14" fill="#f5f5f7" stroke="#1d1d1f" stroke-width="2.5"/>
+            <line x1="144" y1="-104" x2="155" y2="-111" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+          <text class="halo" x="63" y="-68" font-size="13" fill="#7a7a7a" text-anchor="middle" transform="rotate(-33.7 63 -68)">빨대 · 손가락으로 끌어요</text>
         </g>
 
         <!-- 골인 표시 -->
         <text id="goalTxt" class="halo" x="374" y="150" font-size="44" fill="#0066cc" font-weight="700" text-anchor="middle" style="display:none">골인!</text>
 
-        <text x="20" y="404" font-size="13" fill="#7a7a7a">캔 전체는 언제나 중성 (+ 5개, − 5개)</text>
-        <text x="728" y="404" font-size="13" fill="#7a7a7a" text-anchor="end">캔 지름 약 6.6 cm 기준</text>
+        <text x="20" y="406" font-size="13" fill="#7a7a7a">캔 전체는 언제나 중성이에요 (+ 5개, − 5개)</text>
+        <text x="728" y="406" font-size="13" fill="#7a7a7a" text-anchor="end">캔 지름 약 6.6 cm 기준</text>
       </svg>
 
       <div class="legend"><span class="pos">+ 전하</span><span class="neg">− 전하</span><span class="frc">끌리는 힘</span></div>
@@ -99,14 +113,14 @@
 
     <div class="panel">
       <div>
-        <h3>보기</h3>
+        <h3>무엇을 볼까요?</h3>
         <div class="chips">
           <div class="chip on" data-layer="charge">전하 보기</div>
           <div class="chip on" data-layer="force">힘 보기</div>
         </div>
       </div>
       <div>
-        <h3>만져 보기</h3>
+        <h3>빨대를 문질러 볼까요?</h3>
         <div class="chips">
           <div class="chip blue" id="rub">문지르기</div>
           <div class="chip" id="reset">처음으로</div>
@@ -118,22 +132,22 @@
         <div class="r"><div class="k">거리</div><div class="v" id="rDist">– cm</div><div class="k">빨대 끝 ~ 캔</div></div>
       </div>
       <div class="steps">
-        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
-        <div class="step" id="s1"><div class="n">1</div><div class="t">문지르면 빨대가 − 전하를 얻는다<small>휴지와 비비면 전하가 옮겨 간다 (마찰전기)</small></div></div>
-        <div class="step" id="s2"><div class="n">2</div><div class="t">빨대가 다가오면 캔 안의 전하가 자리를 바꾼다<small>정전기 유도(대전된 물체가 가까이 오면 다른 물체 속 전하가 자리를 옮기는 것) — 가까운 쪽 +, 먼 쪽 −</small></div></div>
-        <div class="step" id="s3"><div class="n">3</div><div class="t">가까운 + 가 더 세게 끌려 캔이 굴러온다<small>먼 쪽 − 는 밀리지만 힘이 더 약하다</small></div></div>
+        <h3 style="margin-bottom:6px">지금 무슨 일이 일어나고 있나요?</h3>
+        <div class="step" id="s1"><div class="n">1</div><div class="t">문지르면 빨대가 − 전하를 얻어요<small>휴지와 비비면 전하가 빨대로 옮겨 가요 (마찰전기)</small></div></div>
+        <div class="step" id="s2"><div class="n">2</div><div class="t">빨대가 오면 캔 속 전하가 자리를 바꿔요<small>정전기 유도(대전된 물체가 다가오면 다른 물체 속 전하가 자리를 옮기는 것)예요. 가까운 쪽엔 +, 먼 쪽엔 − 가 모여요.</small></div></div>
+        <div class="step" id="s3"><div class="n">3</div><div class="t">가까운 + 가 더 세게 끌려서 캔이 굴러와요<small>먼 쪽 − 는 밀리지만, 멀어서 힘이 더 약해요</small></div></div>
       </div>
       <div class="ask">
-        <h3>실물에서 확인</h3>
-        <p>빨대를 문지르지 않고 가져가면? 캔은 원래 +일까 −일까?</p>
-        <p>실물 캔으로 해 보고 사원증에 적으세요.</p>
+        <h3>실물에서 확인해 보아요!</h3>
+        <p>빨대를 문지르지 않으면 캔은 움직일까요? 캔은 원래 +일까요, −일까요?</p>
+        <p>예상을 사원증 뒷면에 적고 진행자에게 말해 주세요.</p>
       </div>
     </div>
   </div>
 
   <div class="foot">
-    <div><span class="safe">안전</span> · 캔 모서리에 손을 베이지 않게 굴러온 캔은 진행자가 정리합니다.</div>
-    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+    <div><span class="safe">안전</span> · 캔 모서리는 날카로워요. 굴러온 캔은 진행자가 정리해 드려요.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-08</div>
   </div>
 </div>
 
@@ -144,8 +158,8 @@
   const svg=$('sim'), can=$('can'), stripes=$('stripes'), canCh=$('canCharges');
   const straw=$('straw'), strawCh=$('strawCharges'), tissue=$('tissue');
   const forceG=$('force'), forceLine=$('forceLine'), forceTxt=$('forceTxt');
-  const noTouch=$('noTouch'), goalTxt=$('goalTxt'), status=$('status'), statusSub=$('statusSub');
-  const rStraw=$('rStraw'), rStrawSub=$('rStrawSub'), rCan=$('rCan'), rCanSub=$('rCanSub'), rDist=$('rDist'), stamp=$('stamp');
+  const noTouch=$('noTouch'), neutralHint=$('neutralHint'), goalTxt=$('goalTxt'), status=$('status'), statusSub=$('statusSub');
+  const rStraw=$('rStraw'), rStrawSub=$('rStrawSub'), rCan=$('rCan'), rCanSub=$('rCanSub'), rDist=$('rDist');
   const steps=[$('s1'),$('s2'),$('s3')];
 
   // 상수 (px). 캔: 폭 120, 높이 64, 중심 y=300, 바닥 y=340
@@ -197,11 +211,11 @@
   let last=performance.now();
 
   function clampStraw(){
-    sx=Math.max(30,Math.min(590,sx)); sy=Math.max(120,Math.min(332,sy));
+    sx=Math.max(30,Math.min(580,sx)); sy=Math.max(120,Math.min(332,sy));
     // 캔에 닿기 전에 멈춤: 빨대 끝이 캔 높이 범위에 있으면 옆으로 밀어냄
     if(sy>CAN_T-12 && sy<CAN_B+12){
       const lim=CAN_W+GAP_MIN;
-      if(Math.abs(sx-cx)<lim){ sx=cx+(sx>=cx?lim:-lim); sx=Math.max(30,Math.min(590,sx)); }
+      if(Math.abs(sx-cx)<lim){ sx=cx+(sx>=cx?lim:-lim); sx=Math.max(30,Math.min(580,sx)); }
     }
   }
   function gapToCan(){
@@ -245,14 +259,18 @@
     const close=gap<=GAP_MIN+4 && sy>CAN_T-12 && sy<CAN_B+12;
     noTouch.style.display=close?'':'none';
     if(close){ noTouch.setAttribute('x',cx); noTouch.setAttribute('y',CAN_T-48); }
+    // 문지르기 전, 빨대가 캔 가까이 왔을 때만 힘이 없는 이유 안내
+    const near=!charged && !rubbing && gap<90;
+    neutralHint.style.display=near?'':'none';
+    if(near){ neutralHint.setAttribute('x',Math.max(170,Math.min(578,cx))); neutralHint.setAttribute('y',CAN_T-72); }
     // 안내
-    if(goal){ setText(status,'골인! 손대지 않고 캔을 옮겼어요'); setText(statusSub,'스탬프 「끌림」 획득 — 실물 캔으로도 해 보세요'); }
-    else if(!charged){ setText(status,'① 「문지르기」를 눌러 빨대를 대전시키세요'); setText(statusSub,'지금은 빨대를 캔 옆에 가져가도 캔이 움직이지 않아요'); }
-    else { setText(status,'② 빨대를 끌어 캔 오른쪽 가까이 가져오세요'); setText(statusSub,'가까울수록 세게 끌려요 · 닿으면 안 돼요'); }
+    if(goal){ setText(status,'골인! 손대지 않고 캔을 옮겼어요'); setText(statusSub,'이제 실물 캔으로도 해 보아요. 다 하면 아래 「미션 완료」를 눌러요'); }
+    else if(!charged){ setText(status,'먼저 그냥 가져가 보고, 그다음 「문지르기」를 눌러 보아요'); setText(statusSub,'지금은 빨대를 캔 옆에 가져가도 캔이 움직이지 않아요'); }
+    else { setText(status,'이제 빨대를 끌어 캔 오른쪽 가까이 가져가 볼까요?'); setText(statusSub,'가까울수록 세게 끌려요 · 닿으면 안 돼요'); }
     goalTxt.style.display=goal?'':'none';
     // 수치
     setText(rStraw,charged?'− 대전':'중성'); rStraw.classList.toggle('blue',charged); setText(rStrawSub,charged?'문지른 뒤':'문지르기 전');
-    setText(rCan,'중성'); setText(rCanSub,s>0.15?'전하 재배치됨':'전하 골고루 섞임'); rCanSub.classList.toggle('blue',s>0.15);
+    setText(rCan,'중성'); setText(rCanSub,s>0.15?'전하 자리 바뀜':'전하 골고루 섞임'); rCanSub.classList.toggle('blue',s>0.15);
     setText(rDist,(gap*CM_PER_PX).toFixed(1)+' cm');
     // 단계
     let now=0;
@@ -288,7 +306,7 @@
       if(sx>cx && cx>sx-lim){ cx=sx-lim; v=0; }
       if(sx<=cx && cx<sx+lim){ cx=sx+lim; v=0; }
     }
-    if(!goal && cx+CAN_W>=GOAL_X){ goal=true; stamp.classList.add('got'); }
+    if(!goal && cx+CAN_W>=GOAL_X){ goal=true; }
     render(gapToCan(),f,s,ux,uy);
     requestAnimationFrame(tick);
   }
@@ -318,12 +336,62 @@
   $('rub').addEventListener('click',()=>{ if(rubbing||charged) return; rubbing=true; rubT=0; });
   $('reset').addEventListener('click',()=>{
     cx=START_X; v=0; sx=SX0; sy=SY0; charged=false; goal=false; rubbing=false; rubT=0;
-    tissue.style.display='none'; strawExtra.forEach(g=>g.style.display='none'); stamp.classList.remove('got');
+    tissue.style.display='none'; strawExtra.forEach(g=>g.style.display='none');
   });
 
   clampStraw();
   requestAnimationFrame(tick);
+
+  // ─── 실물 장면 그림 (booth.js 가 만든 #procArt 안에 채움) ───
+  // 왼쪽: 빨대를 털가죽에 문지르는 사람 / 오른쪽: 책상 위 누운 캔 + 골인 깃발 + 빨대를 캔 옆에 대는 손
+  const PROC_ART=
+    '<svg viewBox="0 0 400 150" aria-hidden="true">'+
+      '<g fill="none" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">'+
+        // ── 왼쪽 컷: 문지르기 ──
+        '<line x1="14" y1="120" x2="186" y2="120"/>'+
+        '<line x1="30" y1="120" x2="30" y2="142"/><line x1="170" y1="120" x2="170" y2="142"/>'+
+        '<circle cx="52" cy="34" r="12"/>'+
+        '<line x1="52" y1="46" x2="52" y2="104"/>'+
+        '<line x1="52" y1="60" x2="92" y2="84"/>'+
+        '<line x1="52" y1="66" x2="118" y2="60"/>'+
+        // 빨대 (테두리 + 흰 속)
+        '<line x1="86" y1="94" x2="168" y2="54" stroke-width="9"/>'+
+        '<line x1="86" y1="94" x2="168" y2="54" stroke="#fff" stroke-width="5"/>'+
+        // 털가죽 (작은 사각, 구리색) 위에 손 2개
+        '<rect x="112" y="66" width="30" height="20" rx="4" fill="#c9895a" transform="rotate(-26 127 76)"/>'+
+        '<circle cx="92" cy="86" r="7" fill="#f5f5f7"/>'+
+        '<circle cx="120" cy="64" r="7" fill="#f5f5f7"/>'+
+        // 문지르는 움직임 표시
+        '<path d="M104 46 q6 -6 12 0" stroke="#7a7a7a" stroke-width="2"/>'+
+        '<path d="M140 90 q6 -6 12 0" stroke="#7a7a7a" stroke-width="2"/>'+
+        // 구분선
+        '<line x1="200" y1="14" x2="200" y2="136" stroke="#e0e0e0" stroke-width="1.5"/>'+
+        // ── 오른쪽 컷: 캔 옆에 빨대 대기 ──
+        '<line x1="214" y1="120" x2="386" y2="120"/>'+
+        '<line x1="230" y1="120" x2="230" y2="142"/><line x1="370" y1="120" x2="370" y2="142"/>'+
+        // 누운 캔
+        '<rect x="246" y="88" width="58" height="32" rx="8" fill="#c7c7cc"/>'+
+        '<line x1="254" y1="90" x2="254" y2="118" stroke="#8e8e93" stroke-width="1.5"/>'+
+        '<line x1="296" y1="90" x2="296" y2="118" stroke="#8e8e93" stroke-width="1.5"/>'+
+        // 골인 깃발 (파랑)
+        '<line x1="352" y1="120" x2="352" y2="66"/>'+
+        '<path d="M353 66 L378 70 Q372 78 378 86 L353 90 z" fill="#0066cc" stroke="none"/>'+
+        '<line x1="352" y1="118" x2="352" y2="126" stroke="#0066cc" stroke-width="4"/>'+
+        // 캔이 갈 방향 화살표
+        '<path d="M312 74 h22 M328 68 l6 6 -6 6" stroke="#7a7a7a" stroke-width="2"/>'+
+        // 빨대 (테두리 + 흰 속), 끝이 캔 오른쪽에 살짝 떨어져 있음
+        '<line x1="312" y1="100" x2="356" y2="46" stroke-width="9"/>'+
+        '<line x1="312" y1="100" x2="356" y2="46" stroke="#fff" stroke-width="5"/>'+
+        // 팔 + 손
+        '<line x1="400" y1="18" x2="362" y2="42"/>'+
+        '<circle cx="358" cy="46" r="8" fill="#f5f5f7"/>'+
+        '<line x1="352" y1="50" x2="357" y2="40" stroke-width="2"/>'+
+      '</g>'+
+    '</svg>';
+  function fillProcArt(){ const el=document.getElementById('procArt'); if(el) el.innerHTML=PROC_ART; }
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(fillProcArt,0));
 })();
 </script>
+<script src="booth.js"></script>
 </body>
 </html>

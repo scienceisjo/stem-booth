@@ -4,32 +4,36 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>가상실험실 · 손잡고 불 켜라</title>
+<link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="stylesheet" href="booth.css">
 <style>
   .legend .dot::before{width:12px;height:12px;border:0;border-radius:50%;background:var(--primary);vertical-align:-1px}
   .legend .gap::before{width:11px;height:11px;border:2px solid var(--ink48);border-radius:50%;background:transparent;vertical-align:-1px}
+  .legend .met::before{width:16px;height:9px;border:0;border-radius:3px;background:#8e8e93;vertical-align:-1px}
   .steps .note{margin-top:10px;padding-top:10px;border-top:1px solid var(--parchment);font-size:13px;color:var(--ink48);letter-spacing:-.2px;line-height:1.4}
   #sim .tap{cursor:pointer}
-  #sim .arm{stroke:#1d1d1f;stroke-width:4;stroke-linecap:round;fill:none}
-  #sim .arm.off{stroke:#7a7a7a;stroke-dasharray:none}
+  #sim .arm{stroke:#1d1d1f;stroke-width:5.5;stroke-linecap:round;fill:none}
+  #sim .arm.off{stroke:#8e8e93}
+  #sim .hand{fill:#1d1d1f;stroke:#f5f5f7;stroke-width:1.5}
+  #sim .hand.off{fill:#8e8e93}
   .readout .v.on{color:var(--primary)}
 </style>
 </head>
-<body>
+<body data-mission="1">
 <div class="stage">
   <div class="nav">
-    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
+    <a class="brand" href="index.html"><img src="img/badge.png" alt="" width="26" height="26" style="border-radius:50%">HNR Tech Inc.</a>
     <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
   </div>
   <div class="subnav">
     <div class="crumb"><a href="index.html">가상실험실</a> › 미션 1 <b>손잡고 불 켜라</b></div>
-    <div class="right"><span>클리어하면 스탬프</span><div class="stamp">연결</div></div>
+    <div class="right"><span>깨면 스탬프</span><div class="stamp">연결</div></div>
   </div>
 
   <div class="main">
     <div class="lab">
-      <h2>왜 손을 놓으면 불이 꺼질까?</h2>
-      <div class="q">우리 몸을 통해 아주 작은 전류의 길이 이어집니다.</div>
+      <h2>왜 손을 놓으면 불이 꺼질까요?</h2>
+      <div class="q">우리 몸을 통해 아주 작은 전류의 길이 이어져요.</div>
 
       <svg viewBox="0 0 748 470" id="sim" aria-label="에너지스틱 협동 회로 시뮬레이션">
         <!-- 발광 후광 -->
@@ -47,31 +51,36 @@
         <g id="stick">
           <rect x="280" y="90" width="188" height="20" rx="10" fill="#fff" stroke="#1d1d1f" stroke-width="2.5"/>
           <rect id="stickLight" x="298" y="94" width="152" height="12" rx="6" fill="#0066cc" opacity="0"/>
+          <!-- 양끝 금속 전극(회색) -->
           <rect x="280" y="90" width="18" height="20" rx="6" fill="#8e8e93" stroke="#1d1d1f" stroke-width="2.5"/>
           <rect x="450" y="90" width="18" height="20" rx="6" fill="#8e8e93" stroke="#1d1d1f" stroke-width="2.5"/>
-          <text class="halo" x="374" y="74" font-size="13" fill="#7a7a7a" text-anchor="middle">에너지스틱 (양끝이 금속 전극)</text>
+          <!-- 전극 설명 이음선 -->
+          <path d="M280 100 H272 M468 100 H476" stroke="#7a7a7a" stroke-width="1.5" fill="none"/>
+          <text class="halo" x="268" y="104" font-size="12" fill="#7a7a7a" text-anchor="end">금속 전극</text>
+          <text class="halo" x="480" y="104" font-size="12" fill="#7a7a7a" text-anchor="start">금속 전극</text>
+          <text class="halo" x="374" y="74" font-size="13" fill="#7a7a7a" text-anchor="middle">에너지스틱</text>
           <text id="note" class="halo" x="500" y="82" font-size="22" fill="#0066cc" font-weight="700" opacity="0">♪</text>
         </g>
         <!-- 전류 점 -->
         <g id="dots"></g>
         <!-- 연결점 + 라벨 + 탭 영역 -->
         <g id="points"></g>
-        <text x="20" y="462" font-size="13" fill="#7a7a7a">양끝 전극을 잡으면 몸을 지나 회로가 한 바퀴 닫힌다</text>
-        <text x="728" y="462" font-size="13" fill="#7a7a7a" text-anchor="end">연결점을 탭하면 잡기 / 놓기</text>
+        <text x="20" y="462" font-size="13" fill="#7a7a7a">양끝 전극을 잡으면 몸을 지나 회로가 한 바퀴 이어져요</text>
+        <text x="728" y="462" font-size="13" fill="#7a7a7a" text-anchor="end">동그라미를 눌러 손을 잡거나 놓아 보아요</text>
       </svg>
 
-      <div class="legend"><span class="cur">몸을 지나 흐르는 전류</span><span class="dot">잡은 곳</span><span class="gap">놓은 곳</span></div>
+      <div class="legend"><span class="cur">몸을 지나 흐르는 전류</span><span class="dot">잡은 곳</span><span class="gap">놓은 곳</span><span class="met">금속 전극</span></div>
     </div>
 
     <div class="panel">
       <div>
-        <h3>보기</h3>
+        <h3>무엇을 볼까요?</h3>
         <div class="chips">
-          <div class="chip on" data-layer="flow">전류 흐름</div>
+          <div class="chip on" data-layer="flow">전류 흐름 보기</div>
         </div>
       </div>
       <div>
-        <h3>만져 보기</h3>
+        <h3>눌러 보아요</h3>
         <div class="chips">
           <div class="chip blue" id="holdAll">모두 잡기</div>
           <div class="chip" id="dropOne">한 곳 놓기</div>
@@ -79,27 +88,27 @@
         </div>
       </div>
       <div class="readout">
-        <div class="r"><div class="k">닫힌 연결</div><div class="v" id="rCount">0 / 6</div></div>
+        <div class="r"><div class="k">이어진 손</div><div class="v" id="rCount">0 / 6</div></div>
         <div class="r"><div class="k">에너지스틱</div><div class="v" id="rState">꺼짐</div></div>
       </div>
       <div class="steps">
-        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
-        <div class="step" id="s1"><div class="n">1</div><div class="t">양끝 전극을 잡으면 회로가 한 바퀴 닫힌다<small>스틱 → 사람 → 사람 → … → 스틱으로 길이 이어진다</small></div></div>
-        <div class="step" id="s2"><div class="n">2</div><div class="t">몸을 통해 아주 작은(안전한) 전류가 흐른다<small>전류가 흐르면 스틱이 빛나고 소리가 난다</small></div></div>
-        <div class="step" id="s3"><div class="n">3</div><div class="t">한 곳만 끊겨도 길이 끊겨 불이 꺼진다<small>몇 명이 잡고 있든, 끊긴 곳이 하나면 전류는 0</small></div></div>
-        <div class="note">마지막 미션의 스위치도 이렇게 길을 열고 닫습니다.</div>
+        <h3 style="margin-bottom:6px">지금 무슨 일이 일어나고 있나요?</h3>
+        <div class="step" id="s1"><div class="n">1</div><div class="t">양끝 전극을 잡으면 회로가 한 바퀴 이어져요<small>스틱 → 사람 → 사람 → … → 스틱으로 길이 이어져요</small></div></div>
+        <div class="step" id="s2"><div class="n">2</div><div class="t">몸을 통해 아주 작은(안전한) 전류가 흘러요<small>전류가 흐르면 스틱이 빛나고 소리가 나요</small></div></div>
+        <div class="step" id="s3"><div class="n">3</div><div class="t">한 곳만 끊겨도 길이 끊겨 불이 꺼져요<small>몇 명이 잡고 있든, 끊긴 곳이 하나면 전류는 0이에요</small></div></div>
+        <div class="note">몸이 전기를 만든 게 아니에요. 몸은 전류가 지나가는 길이 된 거예요. 마지막 미션의 스위치도 이렇게 길을 열고 닫아요.</div>
       </div>
       <div class="ask">
-        <h3>실물에서 확인</h3>
-        <p>5명 중 한 명만 손을 놓으면 어떻게 될까? 두 명이 동시에 놓으면?</p>
-        <p>실물 에너지스틱으로 확인하고 사원증에 적으세요.</p>
+        <h3>실물에서 확인해 보아요!</h3>
+        <p>한 명만 손을 놓으면 어떻게 될까요? 두 명이 동시에 놓으면?</p>
+        <p>예상을 사원증 뒷면에 적고 진행자에게 말해 주세요.</p>
       </div>
     </div>
   </div>
 
   <div class="foot">
-    <div><span class="safe">안전</span> · 에너지스틱은 안전한 아주 작은 전류를 씁니다. 젖은 손·금속 장신구는 닦고 벗은 뒤 잡습니다.</div>
-    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+    <div><span class="safe">안전</span> · 에너지스틱은 안전한 아주 작은 전류를 써요. 젖은 손은 닦고, 금속 장신구는 벗은 뒤 잡아요.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-08</div>
   </div>
 </div>
 
@@ -144,25 +153,28 @@
     el('text',{x:p.x,y:p.y+12,'font-size':'13','font-weight':'700',fill:'#fff','text-anchor':'middle'},g).textContent=String(i+1);
   });
 
-  // 팔: 연결점마다 사람 쪽 팔 1~2개
+  // 팔 + 손: 연결점마다 사람 쪽 팔 1~2개, 팔 끝에 손(작은 원)
   const armsG=document.getElementById('arms');
   const arms=[];
   pts.forEach((pt,k)=>{
     pt.a.forEach(i=>{
       const s=sh(i);
       const a=el('line',{class:'arm'},armsG);
-      arms.push({a,k,s,pt});
+      const h=el('circle',{class:'hand',r:5},armsG);
+      arms.push({a,h,k,s,pt});
     });
   });
   function armPos(){
     arms.forEach(o=>{
       const on=held[o.k];
       const dx=o.pt.x-o.s.x, dy=o.pt.y-o.s.y, L=Math.hypot(dx,dy);
-      const cut=on?7:15; // 놓으면 손이 못 닿아 간격이 생긴다
+      const cut=on?7:16; // 놓으면 손이 못 닿아 간격이 생긴다
       const ex=o.pt.x-dx/L*cut, ey=o.pt.y-dy/L*cut;
       o.a.setAttribute('x1',o.s.x); o.a.setAttribute('y1',o.s.y);
       o.a.setAttribute('x2',ex.toFixed(1)); o.a.setAttribute('y2',ey.toFixed(1));
       o.a.classList.toggle('off',!on);
+      o.h.setAttribute('cx',ex.toFixed(1)); o.h.setAttribute('cy',ey.toFixed(1));
+      o.h.classList.toggle('off',!on);
     });
   }
 
@@ -240,7 +252,48 @@
 
   INIT.forEach((v,i)=>held[i]=v);
   render(); requestAnimationFrame(tick);
+
+  // ── 실물 장면 SVG: 5명이 둥글게 서서 손을 잡고, 앞의 두 사람이 에너지스틱 양끝을 잡은 모습 (글자 없음)
+  function procArt(){
+    const box=document.getElementById('procArt'); if(!box) return;
+    const INK='#1d1d1f', BLUE='#0066cc', MET='#8e8e93';
+    // 둥글게 선 5명 (타원 위 좌표): 뒤·왼·오른쪽 3명 먼저, 앞 2명은 나중에 그려 스틱과 함께 앞에 오게
+    const back={x:200,y:42}, left={x:60,y:80}, right={x:340,y:80}, fl={x:130,y:113}, fr={x:270,y:113};
+    const person=p=>'<circle cx="'+p.x+'" cy="'+(p.y-30)+'" r="9" fill="#fff" stroke="'+INK+'" stroke-width="2.5"/>'
+      +'<path d="M'+p.x+' '+(p.y-21)+' V'+(p.y+8)+' M'+p.x+' '+(p.y+8)+' L'+(p.x-7)+' '+(p.y+28)+' M'+p.x+' '+(p.y+8)+' L'+(p.x+7)+' '+(p.y+28)+'" fill="none" stroke="'+INK+'" stroke-width="2.5" stroke-linecap="round"/>';
+    const arm=(p,jx,jy)=>'<path d="M'+p.x+' '+(p.y-16)+' L'+jx+' '+jy+'" fill="none" stroke="'+INK+'" stroke-width="2.5" stroke-linecap="round"/>';
+    const join=(x,y)=>'<circle cx="'+x+'" cy="'+y+'" r="3.5" fill="'+BLUE+'"/>';
+    // 손잡은 자리 4곳 + 스틱 양끝 2곳
+    const J=[[130,61],[270,61],[305,96],[95,96]];
+    box.innerHTML='<svg viewBox="0 0 400 150" aria-hidden="true">'
+      +'<ellipse cx="200" cy="100" rx="168" ry="44" fill="none" stroke="#e0e0e0" stroke-width="1.5" stroke-dasharray="5 6"/>'
+      // 스틱 후광
+      +'<circle cx="200" cy="116" r="34" fill="'+BLUE+'" opacity=".08"/><circle cx="200" cy="116" r="22" fill="'+BLUE+'" opacity=".12"/>'
+      // 뒤·옆 사람
+      +person(back)+person(left)+person(right)
+      // 팔(손잡기)
+      +arm(left,J[0][0],J[0][1])+arm(back,J[0][0],J[0][1])
+      +arm(back,J[1][0],J[1][1])+arm(right,J[1][0],J[1][1])
+      +arm(right,J[2][0],J[2][1])+arm(fr,J[2][0],J[2][1])
+      +arm(left,J[3][0],J[3][1])+arm(fl,J[3][0],J[3][1])
+      +J.map(j=>join(j[0],j[1])).join('')
+      // 앞 사람 + 스틱으로 뻗은 팔
+      +person(fl)+person(fr)
+      +arm(fl,158,116)+arm(fr,242,116)
+      // 에너지스틱: 흰 몸통 + 파란 발광 + 양끝 회색 금속 전극
+      +'<rect x="152" y="110" width="96" height="12" rx="6" fill="#fff" stroke="'+INK+'" stroke-width="2.5"/>'
+      +'<rect x="166" y="113" width="68" height="6" rx="3" fill="'+BLUE+'" opacity=".75"/>'
+      +'<rect x="152" y="110" width="14" height="12" rx="5" fill="'+MET+'" stroke="'+INK+'" stroke-width="2.5"/>'
+      +'<rect x="234" y="110" width="14" height="12" rx="5" fill="'+MET+'" stroke="'+INK+'" stroke-width="2.5"/>'
+      // 빛살
+      +'<path d="M186 100 l-4 -7 M200 98 v-8 M214 100 l4 -7" fill="none" stroke="'+BLUE+'" stroke-width="2.5" stroke-linecap="round"/>'
+      // 손(잡은 곳)
+      +'<circle cx="158" cy="116" r="4.5" fill="'+INK+'"/><circle cx="242" cy="116" r="4.5" fill="'+INK+'"/>'
+      +'</svg>';
+  }
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(procArt,0));
 })();
 </script>
+<script src="booth.js"></script>
 </body>
 </html>

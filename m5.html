@@ -4,23 +4,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>가상실험실 · 건전지야 달려!</title>
+<link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="stylesheet" href="booth.css">
+<style>
+  .tip{border:1px solid var(--primary);border-radius:18px;padding:16px 20px;background:#f0f6ff}
+  .tip h3{color:var(--primary);margin-bottom:6px}
+  .tip p{font-size:14.5px;line-height:1.45;color:var(--ink80);letter-spacing:-.2px}
+  .readout .r .v small{display:block;font-size:12px;font-weight:600;color:var(--ink48);margin-top:2px}
+  #sim .tap{cursor:pointer}
+</style>
 </head>
-<body>
+<body data-mission="5">
 <div class="stage">
   <div class="nav">
-    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
-    <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
+    <a class="brand" href="index.html"><img src="img/badge.png" alt="" width="26" height="26" style="border-radius:50%">HNR Tech Inc.</a>
+    <div class="right">어쩌다 반도체 연구원! · 가상실험실</div>
   </div>
   <div class="subnav">
     <div class="crumb"><a href="index.html">가상실험실</a> › 미션 5 <b>건전지야 달려!</b></div>
-    <div class="right"><span>클리어하면 스탬프</span><div class="stamp">달림</div></div>
+    <div class="right"><span>깨면 스탬프</span><div class="stamp">달림</div></div>
   </div>
 
   <div class="main">
     <div class="lab">
-      <h2>건전지는 왜 코일 속을 달릴까?</h2>
-      <div class="q">실물에선 안 보이는 전류·자기장·힘을 그려 봅니다.</div>
+      <h2>건전지는 왜 코일 속을 달릴까요?</h2>
+      <div class="q">실물에선 안 보이는 전류·자기장·힘을 그려 보아요.</div>
 
       <svg viewBox="0 0 748 470" id="sim" aria-label="코일 속을 달리는 건전지 시뮬레이션">
         <defs>
@@ -29,29 +37,53 @@
           <marker id="arrG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7a7a7a"/></marker>
           <linearGradient id="cu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9895a"/><stop offset="1" stop-color="#9a5a2e"/></linearGradient>
         </defs>
+        <!-- 자석 색 안내 (설명 그림) -->
+        <g font-size="12" fill="#7a7a7a">
+          <rect x="20" y="16" width="16" height="16" rx="3" fill="#1d1d1f"/><text x="28" y="28" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">N</text>
+          <rect x="42" y="16" width="16" height="16" rx="3" fill="#8e8e93"/><text x="50" y="28" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">S</text>
+          <text x="66" y="28">자석의 바깥 면 극 · 자석이나 건전지를 눌러도 뒤집혀요</text>
+        </g>
+        <!-- 책상 · 코일 받침 (실물 윤곽) -->
+        <line x1="20" y1="336" x2="728" y2="336" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="90" y="322" width="40" height="14" rx="3" fill="#f5f5f7" stroke="#1d1d1f" stroke-width="2"/>
+        <rect x="618" y="322" width="40" height="14" rx="3" fill="#f5f5f7" stroke="#1d1d1f" stroke-width="2"/>
         <!-- 축선 -->
         <line x1="20" y1="240" x2="728" y2="240" stroke="#e0e0e0" stroke-width="1"/>
         <g id="backTurns"></g>
         <g id="field" opacity="1"></g>
         <!-- 건전지 + 자석 -->
         <g id="train">
-          <rect x="-66" y="-22" width="132" height="44" rx="8" fill="#fff" stroke="#1d1d1f" stroke-width="2.5"/>
-          <rect x="-66" y="-22" width="22" height="44" rx="8" fill="#1d1d1f"/>
-          <text x="10" y="6" font-size="15" text-anchor="middle" fill="#1d1d1f" font-weight="600">AA 1.5 V</text>
-          <text x="-55" y="5" font-size="13" fill="#fff" text-anchor="middle">−</text>
-          <text x="58" y="6" font-size="15" fill="#1d1d1f" text-anchor="middle">+</text>
+          <g id="batG" class="tap">
+            <rect x="-66" y="-22" width="132" height="44" rx="8" fill="#fff" stroke="#1d1d1f" stroke-width="2.5"/>
+            <rect id="batCap" x="-66" y="-22" width="22" height="44" rx="8" fill="#1d1d1f"/>
+            <text x="0" y="6" font-size="15" text-anchor="middle" fill="#1d1d1f" font-weight="600">AA 1.5 V</text>
+            <text id="batMinus" x="-55" y="5" font-size="13" fill="#fff" text-anchor="middle">−</text>
+            <text id="batPlus" x="56" y="6" font-size="17" fill="#1d1d1f" text-anchor="middle" font-weight="600">+</text>
+          </g>
           <!-- 자석 -->
-          <rect x="-94" y="-32" width="28" height="64" rx="4" fill="#8e8e93" stroke="#1d1d1f" stroke-width="2.5"/>
-          <rect x="66" y="-32" width="28" height="64" rx="4" fill="#8e8e93" stroke="#1d1d1f" stroke-width="2.5"/>
-          <text id="mL" x="-80" y="6" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">N</text>
-          <text id="mR" x="80" y="6" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">N</text>
+          <g id="magL" class="tap">
+            <rect id="mLr" x="-94" y="-32" width="28" height="64" rx="4" fill="#1d1d1f" stroke="#1d1d1f" stroke-width="2.5"/>
+            <text id="mL" x="-80" y="6" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">N</text>
+          </g>
+          <g id="magR" class="tap">
+            <rect id="mRr" x="66" y="-32" width="28" height="64" rx="4" fill="#1d1d1f" stroke="#1d1d1f" stroke-width="2.5"/>
+            <text id="mR" x="80" y="6" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">N</text>
+          </g>
           <!-- 힘 -->
-          <g id="force"><line x1="104" y1="0" x2="190" y2="0" stroke="#ff9f0a" stroke-width="5" marker-end="url(#arrF)"/><text class="halo" x="147" y="-18" font-size="15" fill="#ff9f0a" font-weight="600" text-anchor="middle">미는 힘</text></g>
+          <g id="force">
+            <line id="fA" x1="-190" y1="0" x2="-104" y2="0" stroke="#ff9f0a" stroke-width="5" marker-end="url(#arrF)"/>
+            <line id="fB" x1="104" y1="0" x2="190" y2="0" stroke="#ff9f0a" stroke-width="5" marker-end="url(#arrF)"/>
+          </g>
         </g>
         <g id="frontTurns" opacity="0.5"></g>
-        <g id="currentLabel"><text class="halo" x="0" y="0" font-size="13" fill="#0066cc" font-weight="600" text-anchor="middle">자석과 닿은 구간에서만 전류가 흐른다</text></g>
+        <!-- 힘 라벨은 코일 앞에 그려 또렷하게 -->
+        <g id="forceLbl">
+          <text id="fLbl" class="halo" x="147" y="-18" font-size="15" fill="#ff9f0a" font-weight="600" text-anchor="middle">미는 힘</text>
+          <text id="fStop" class="halo" x="0" y="-54" font-size="16" fill="#ff9f0a" font-weight="700" text-anchor="middle" style="display:none">힘이 맞서서 안 달려요!</text>
+        </g>
+        <g id="currentLabel"><text class="halo" x="0" y="0" font-size="13" fill="#0066cc" font-weight="600" text-anchor="middle">자석과 닿은 구간에서만 전류가 흘러요</text></g>
         <text x="20" y="450" font-size="13" fill="#7a7a7a">피복 없는 구리선 코일 (지름 약 2 cm, 1.5 m)</text>
-        <text x="728" y="450" font-size="13" fill="#7a7a7a" text-anchor="end">자석 → 건전지 → 코일 → 자석 순으로 회로가 닫힌다</text>
+        <text x="728" y="450" font-size="13" fill="#7a7a7a" text-anchor="end">자석 → 건전지 → 코일 → 자석 순으로 회로가 닫혀요</text>
       </svg>
 
       <div class="legend"><span class="cur">전류가 흐르는 코일</span><span class="fld">코일이 만든 자기장</span><span class="frc">자석이 받는 힘</span></div>
@@ -59,7 +91,7 @@
 
     <div class="panel">
       <div>
-        <h3>보기</h3>
+        <h3>무엇을 보여 줄까요?</h3>
         <div class="chips">
           <div class="chip on" data-layer="current">전류</div>
           <div class="chip on" data-layer="field">자기장</div>
@@ -67,39 +99,50 @@
         </div>
       </div>
       <div>
-        <h3>만져 보기</h3>
+        <h3>직접 뒤집어 보아요</h3>
         <div class="chips">
-          <div class="chip blue" id="flip">자석 하나 뒤집기</div>
+          <div class="chip blue" id="flipL">왼쪽 자석 뒤집기</div>
+          <div class="chip blue" id="flipR">오른쪽 자석 뒤집기</div>
+          <div class="chip" id="flipB">건전지 뒤집기</div>
           <div class="chip" id="pause">멈춤</div>
         </div>
       </div>
+      <div class="readout">
+        <div class="r"><div class="k">두 자석 방향</div><div class="v" id="rMag">서로 반대<small>달림</small></div></div>
+        <div class="r"><div class="k">건전지</div><div class="v" id="rBat">+ 오른쪽</div></div>
+        <div class="r"><div class="k">열차</div><div class="v" id="rDir">→</div></div>
+      </div>
       <div class="steps">
-        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
-        <div class="step"><div class="n">1</div><div class="t">자석–건전지–코일이 닿아 회로가 닫힌다<small>닿은 두 자석 사이 구간에만 전류가 흐른다</small></div></div>
-        <div class="step"><div class="n">2</div><div class="t">전류가 흐르는 코일은 전자석이 된다<small>코일 안쪽에 자기장이 생긴다</small></div></div>
-        <div class="step"><div class="n">3</div><div class="t">코일의 자기장이 양끝 자석을 민다<small>자석이 붙은 건전지가 함께 앞으로 간다</small></div></div>
+        <h3 style="margin-bottom:6px">지금 무슨 일이 일어나고 있나요?</h3>
+        <div class="step"><div class="n">1</div><div class="t">자석–건전지–코일이 닿아 회로가 닫혀요<small>닿은 두 자석 사이 구간에만 전류가 흘러요</small></div></div>
+        <div class="step"><div class="n">2</div><div class="t">전류가 흐르는 코일은 전자석이 돼요<small>코일 안쪽에 자기장이 생겨요</small></div></div>
+        <div class="step"><div class="n">3</div><div class="t">코일의 자기장이 양끝 자석을 밀어요<small>두 자석이 반대로 놓여야 같은 쪽으로 밀려요</small></div></div>
+      </div>
+      <div class="tip">
+        <h3>안 달릴 때는?</h3>
+        <p>자석 하나만 뒤집혀 있으면 두 힘이 맞서서 멈춰요. 진행자에게 자석 방향을 확인해 달라고 말해 보아요.</p>
       </div>
       <div class="ask">
-        <h3>실물에서 확인</h3>
-        <p>자석 하나를 뒤집어 넣으면 어느 쪽으로 달릴까?</p>
-        <p>예상을 사원증에 적고, 진행자에게 건전지를 받아 확인하세요.</p>
+        <h3>실물에서 확인해 보아요!</h3>
+        <p>자석 하나를 거꾸로 붙이면 건전지는 어느 쪽으로 달릴까요?</p>
+        <p>예상을 사원증 뒷면에 적고 진행자에게 말해 주세요.</p>
       </div>
     </div>
   </div>
 
   <div class="foot">
-    <div><span class="safe">안전</span> · 건전지가 뜨거워지니 한 번 달린 뒤 바로 꺼냅니다. 자석은 진행자만 만집니다.</div>
-    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+    <div><span class="safe">안전</span> · 건전지가 뜨거워지니 한 번 달린 뒤 바로 꺼내요. 자석은 진행자만 만져요.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-08</div>
   </div>
 </div>
 
 <script>
 (function(){
   const NS='http://www.w3.org/2000/svg';
-  const svg=document.getElementById('sim');
-  const back=document.getElementById('backTurns'), front=document.getElementById('frontTurns');
-  const fieldG=document.getElementById('field'), train=document.getElementById('train');
-  const forceG=document.getElementById('force'), curLabel=document.getElementById('currentLabel');
+  const $=id=>document.getElementById(id);
+  const back=$('backTurns'), front=$('frontTurns');
+  const fieldG=$('field'), train=$('train');
+  const forceG=$('force'), forceLbl=$('forceLbl'), curLabel=$('currentLabel');
   const CY=240, RY=82, RX=11, X0=70, X1=690, N=32;
   const turns=[];
   for(let i=0;i<N;i++){
@@ -125,15 +168,45 @@
   ftxt.setAttribute('font-size','13'); ftxt.setAttribute('fill','#7a7a7a'); ftxt.setAttribute('text-anchor','middle');
   ftxt.textContent='코일이 만든 자기장'; ftxt.setAttribute('class','halo'); fieldG.appendChild(ftxt);
 
-  let x=140, dir=1, speed=95, paused=false, last=performance.now();
+  // ── 상태: 자석 바깥 면의 극(polL, polR), 건전지 방향(bat: +1 = + 가 오른쪽)
+  let polL='N', polR='N', bat=1;
+  let x=140, speed=95, paused=false, last=performance.now();
   const layers={current:true,field:true,force:true};
+  // 두 자석이 서로 반대로 놓여(바깥 면이 같은 극) 있어야 같은 쪽으로 힘을 받아 달린다.
+  // 하나만 뒤집으면 힘이 맞서 상쇄 → dir=0(정지). 건전지를 뒤집으면 전류·자기장 반대 → 반대로 달린다.
+  function getDir(){ return (polL===polR) ? bat*(polL==='N'?1:-1) : 0; }
+  let dir=getDir();
+
   function fieldPath(a,b,dy,k,side){
     // side=-1: 코일 위로 도는 고리, +1: 아래로 도는 고리. 안쪽은 축 근처 직선, 바깥은 코일 밖 큰 고리
+    // 자기장 방향은 건전지(전류) 방향으로만 정해진다 — 자석 방향과 무관.
     const yi=CY+side*dy, yo=CY+side*(RY+26+k), bul=60+k*0.6;
     const m=(a+b)/2;
-    if(dir>0) return `M${a},${yi} L${m},${yi} L${b},${yi} C${b+bul},${yi} ${b+bul},${yo} ${b},${yo} L${m},${yo} L${a},${yo} C${a-bul},${yo} ${a-bul},${yi} ${a},${yi}`;
+    if(bat>0) return `M${a},${yi} L${m},${yi} L${b},${yi} C${b+bul},${yi} ${b+bul},${yo} ${b},${yo} L${m},${yo} L${a},${yo} C${a-bul},${yo} ${a-bul},${yi} ${a},${yi}`;
     return `M${b},${yi} L${m},${yi} L${a},${yi} C${a-bul},${yi} ${a-bul},${yo} ${a},${yo} L${m},${yo} L${b},${yo} C${b+bul},${yo} ${b+bul},${yi} ${b},${yi}`;
   }
+  function arrow(el,x1,x2){ el.setAttribute('x1',x1); el.setAttribute('x2',x2); }
+  function drawForce(){
+    const fA=$('fA'), fB=$('fB'), lbl=$('fLbl'), stop=$('fStop');
+    if(dir>0){ arrow(fA,-190,-104); arrow(fB,104,190); lbl.setAttribute('x',147); lbl.style.display=''; stop.style.display='none'; }
+    else if(dir<0){ arrow(fA,190,104); arrow(fB,-104,-190); lbl.setAttribute('x',-147); lbl.style.display=''; stop.style.display='none'; }
+    else { arrow(fA,-190,-104); arrow(fB,190,104); lbl.style.display='none'; stop.style.display=''; }
+  }
+  function drawParts(){
+    // 자석: 글자 + 색(N 잉크, S 회색)
+    $('mL').textContent=polL; $('mR').textContent=polR;
+    $('mLr').setAttribute('fill',polL==='N'?'#1d1d1f':'#8e8e93');
+    $('mRr').setAttribute('fill',polR==='N'?'#1d1d1f':'#8e8e93');
+    // 건전지: − 캡과 +/− 글자가 bat 에 따라 좌우 바뀜
+    $('batCap').setAttribute('x',bat>0?-66:44);
+    $('batMinus').setAttribute('x',bat>0?-55:55);
+    $('batPlus').setAttribute('x',bat>0?56:-56);
+    // readout
+    $('rMag').innerHTML=(polL===polR)?'서로 반대<small>달림</small>':'같음<small>멈춤</small>';
+    $('rBat').textContent=bat>0?'+ 오른쪽':'+ 왼쪽';
+    $('rDir').textContent=dir>0?'→':dir<0?'←':'정지';
+  }
+  function update(){ dir=getDir(); drawParts(); drawForce(); render(); }
   function render(){
     train.setAttribute('transform',`translate(${x},${CY})`);
     const L=x-94, R=x+94; // 자석 접점
@@ -149,23 +222,70 @@
     fl.forEach((p,i)=>{const k=i%3, side=i<3?-1:1; p.setAttribute('d',fieldPath(L+6,R-6,10+k*14,k*16,side));});
     ftxt.setAttribute('x',x); ftxt.setAttribute('y',CY-RY-74);
     forceG.style.display=layers.force?'':'none';
-    forceG.setAttribute('transform',dir>0?'':'scale(-1,1)');
+    forceLbl.style.display=layers.force?'':'none';
+    forceLbl.setAttribute('transform',`translate(${x},${CY})`);
   }
   function tick(now){
     const dt=Math.min(.05,(now-last)/1000); last=now;
-    if(!paused){ x+=dir*speed*dt; if(x>X1-90){x=X0+90;} if(x<X0+90){x=X1-90;} }
+    if(!paused && dir!==0){ x+=dir*speed*dt; if(x>X1-90){x=X0+90;} if(x<X0+90){x=X1-90;} }
     render(); requestAnimationFrame(tick);
   }
   document.querySelectorAll('.chip[data-layer]').forEach(c=>c.addEventListener('click',()=>{
     const k=c.dataset.layer; layers[k]=!layers[k]; c.classList.toggle('on',layers[k]); render();
   }));
-  document.getElementById('flip').addEventListener('click',()=>{
-    dir*=-1; const mL=document.getElementById('mL'); mL.textContent=mL.textContent==='N'?'S':'N'; render();
-  });
-  const pb=document.getElementById('pause');
+  const flipL=()=>{ polL=polL==='N'?'S':'N'; update(); };
+  const flipR=()=>{ polR=polR==='N'?'S':'N'; update(); };
+  const flipB=()=>{ bat*=-1; update(); };
+  $('flipL').addEventListener('click',flipL);
+  $('flipR').addEventListener('click',flipR);
+  $('flipB').addEventListener('click',flipB);
+  $('magL').addEventListener('click',flipL);
+  $('magR').addEventListener('click',flipR);
+  $('batG').addEventListener('click',flipB);
+  const pb=$('pause');
   pb.addEventListener('click',()=>{paused=!paused; pb.textContent=paused?'재생':'멈춤'; pb.classList.toggle('on',paused);});
-  render(); requestAnimationFrame(tick);
+  update(); requestAnimationFrame(tick);
+
+  // ── 실물 장면: 책상 위 긴 구리 코일, 손이 자석 붙은 건전지를 입구에 넣는 모습, 반대쪽 출구 화살표
+  function procArt(){
+    const el=$('procArt'); if(!el) return;
+    let coilBack='', coilFront='';
+    for(let i=0;i<19;i++){
+      const cx=132+i*11;
+      coilBack+=`<path d="M${cx},52 A7,36 0 0 1 ${cx},124" fill="none" stroke="#c9895a" stroke-width="3" stroke-linecap="round" opacity=".55"/>`;
+      coilFront+=`<path d="M${cx},124 A7,36 0 0 1 ${cx},52" fill="none" stroke="#c9895a" stroke-width="3" stroke-linecap="round"/>`;
+    }
+    el.innerHTML=
+      `<svg viewBox="0 0 400 150" aria-hidden="true">
+        <defs><marker id="pArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0066cc"/></marker></defs>
+        <!-- 책상 -->
+        <line x1="14" y1="126" x2="386" y2="126" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="40" y1="126" x2="40" y2="146" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="360" y1="126" x2="360" y2="146" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 코일 뒤쪽 -->
+        ${coilBack}
+        <!-- 사람(원+선) -->
+        <circle cx="46" cy="30" r="11" fill="none" stroke="#1d1d1f" stroke-width="2.5"/>
+        <path d="M46,41 V96 M46,58 L18,92 M46,58 L92,84" fill="none" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M46,96 L30,124 M46,96 L62,124" fill="none" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 손(손가락 두 개) -->
+        <path d="M92,84 L104,86 M92,84 L102,92" fill="none" stroke="#1d1d1f" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 자석 붙은 건전지: 코일 입구로 -->
+        <g transform="translate(112,88)">
+          <rect x="0" y="-8" width="34" height="16" rx="4" fill="#fff" stroke="#1d1d1f" stroke-width="2"/>
+          <rect x="0" y="-8" width="6" height="16" rx="3" fill="#1d1d1f"/>
+          <rect x="-9" y="-11" width="9" height="22" rx="2" fill="#1d1d1f"/>
+          <rect x="34" y="-11" width="9" height="22" rx="2" fill="#1d1d1f"/>
+        </g>
+        <!-- 코일 앞쪽 -->
+        ${coilFront}
+        <!-- 출구 화살표 -->
+        <line x1="346" y1="88" x2="384" y2="88" stroke="#0066cc" stroke-width="4" stroke-linecap="round" marker-end="url(#pArr)"/>
+      </svg>`;
+  }
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(procArt,0));
 })();
 </script>
+<script src="booth.js"></script>
 </body>
 </html>
