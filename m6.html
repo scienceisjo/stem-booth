@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가상실험실 · 기억을 만들어라</title>
+<link rel="stylesheet" href="booth.css">
+<style>
+  .holds{display:flex;gap:8px}
+  .hold{flex:1;min-height:62px;border:2px solid var(--primary);color:var(--primary);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;font-weight:600;letter-spacing:-.3px;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;background:var(--canvas)}
+  .hold small{font-size:12px;font-weight:400;opacity:.85;margin-top:2px}
+  .hold.down{background:var(--primary);color:#fff}
+  .hold:active{transform:scale(.98)}
+  .note{border:1px solid var(--hairline);border-radius:18px;padding:16px 20px;background:var(--parchment)}
+  .note h3{margin-bottom:6px}
+  .note p{font-size:14px;line-height:1.5;letter-spacing:-.2px;color:var(--ink80)}
+  .legend .cu::before{border-color:#c9895a}
+  .legend .led::before{border-color:var(--force)}
+  .legend .pos::before{border-color:#ff3b30}
+  #sim .btn{cursor:pointer;-webkit-touch-callout:none}
+  #sim{-webkit-user-select:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="nav">
+    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
+    <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
+  </div>
+  <div class="subnav">
+    <div class="crumb"><a href="index.html">가상실험실</a> › 미션 6 <b>기억을 만들어라</b></div>
+    <div class="right"><span>클리어하면 스탬프</span><div class="stamp">기억</div></div>
+  </div>
+
+  <div class="main">
+    <div class="lab">
+      <h2>전기로 어떻게 '기억'을 만들까?</h2>
+      <div class="q">쓰기 → 기다리기 → 읽기 → 다시 쓰기. 순서대로 눌러 보세요.</div>
+
+      <svg viewBox="0 0 748 470" id="sim" aria-label="1비트 기억 회로 시뮬레이션">
+        <defs>
+          <linearGradient id="cu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9895a"/><stop offset="1" stop-color="#9a5a2e"/></linearGradient>
+          <clipPath id="gclip"><rect x="60" y="345" width="668" height="100"/></clipPath>
+        </defs>
+
+        <text x="20" y="26" font-size="13" fill="#7a7a7a">카드보드 위에 구리 테이프로 그린 1비트 기억 회로</text>
+        <text x="728" y="26" font-size="13" fill="#7a7a7a" text-anchor="end">왼쪽 고리 = 쓰기 · 오른쪽 고리 = 읽기</text>
+
+        <!-- 전기 주머니 표시 -->
+        <rect x="322" y="146" width="104" height="76" rx="12" fill="none" stroke="#7a7a7a" stroke-width="1.4" stroke-dasharray="5 4"/>
+
+        <!-- 구리 테이프 배선 -->
+        <g fill="none" stroke="url(#cu)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M90,172 L90,70 L170,70"/>
+          <path d="M230,70 L374,70 L374,162"/>
+          <path d="M374,208 L374,300 L90,300 L90,196"/>
+          <path d="M374,70 L430,70"/>
+          <path d="M490,70 L660,70 L660,108"/>
+          <path d="M660,172 L660,198"/>
+          <path d="M660,262 L660,300 L374,300"/>
+        </g>
+
+        <!-- 전류 점 경로(보이지 않음) -->
+        <path id="pW" d="M90,184 L90,70 L374,70 L374,300 L90,300 Z" fill="none" stroke="none"/>
+        <path id="pR" d="M374,185 L374,70 L660,70 L660,300 L374,300 Z" fill="none" stroke="none"/>
+        <g id="pWDots"></g>
+        <g id="pRDots"></g>
+
+        <!-- 코인전지 -->
+        <g>
+          <rect x="66" y="172" width="48" height="24" rx="5" fill="#8e8e93" stroke="#1d1d1f" stroke-width="2.5"/>
+          <text x="90" y="189" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3 V</text>
+          <text x="122" y="178" font-size="14" font-weight="700" fill="#ff3b30">+</text>
+          <text x="122" y="199" font-size="14" font-weight="700" fill="#0066cc">−</text>
+          <text class="halo" x="90" y="244" font-size="13" fill="#333" text-anchor="middle">코인전지 3 V</text>
+        </g>
+
+        <!-- 쓰기 스위치 -->
+        <g id="swW">
+          <circle cx="230" cy="70" r="4.5" fill="#1d1d1f"/>
+          <line id="levW" x1="170" y1="70" x2="230" y2="70" stroke="#1d1d1f" stroke-width="4" stroke-linecap="round" transform="rotate(-28 170 70)"/>
+          <circle cx="170" cy="70" r="4.5" fill="#1d1d1f"/>
+          <g id="bW" class="btn">
+            <rect x="152" y="96" width="118" height="48" rx="12" fill="#fff" stroke="#0066cc" stroke-width="2"/>
+            <text x="211" y="116" font-size="15" font-weight="700" fill="#0066cc" text-anchor="middle">쓰기</text>
+            <text x="211" y="134" font-size="11" fill="#0066cc" text-anchor="middle">누르고 있기</text>
+          </g>
+        </g>
+
+        <!-- 읽기 스위치 -->
+        <g id="swR">
+          <circle cx="490" cy="70" r="4.5" fill="#1d1d1f"/>
+          <line id="levR" x1="430" y1="70" x2="490" y2="70" stroke="#1d1d1f" stroke-width="4" stroke-linecap="round" transform="rotate(-28 430 70)"/>
+          <circle cx="430" cy="70" r="4.5" fill="#1d1d1f"/>
+          <g id="bR" class="btn">
+            <rect x="401" y="96" width="118" height="48" rx="12" fill="#fff" stroke="#0066cc" stroke-width="2"/>
+            <text x="460" y="116" font-size="15" font-weight="700" fill="#0066cc" text-anchor="middle">읽기</text>
+            <text x="460" y="134" font-size="11" fill="#0066cc" text-anchor="middle">누르고 있기</text>
+          </g>
+        </g>
+
+        <!-- 축전기 -->
+        <g>
+          <rect x="334" y="162" width="80" height="6" fill="#1d1d1f"/>
+          <rect x="334" y="202" width="80" height="6" fill="#1d1d1f"/>
+          <g id="charges"></g>
+          <text class="halo" x="374" y="240" font-size="13" fill="#333" text-anchor="middle" font-weight="600">전기 주머니</text>
+          <text class="halo" x="374" y="256" font-size="12" fill="#7a7a7a" text-anchor="middle">축전기 1 mF</text>
+        </g>
+
+        <!-- 저항 -->
+        <path d="M660,108 L668,114 L652,124 L668,134 L652,144 L668,154 L652,164 L660,172" fill="none" stroke="#1d1d1f" stroke-width="3" stroke-linejoin="round"/>
+        <text x="678" y="145" font-size="13" fill="#7a7a7a">220 Ω</text>
+
+        <!-- LED -->
+        <g>
+          <circle id="glow" cx="660" cy="226" r="32" fill="#ff9f0a" opacity="0"/>
+          <line x1="660" y1="198" x2="660" y2="208" stroke="#1d1d1f" stroke-width="3"/>
+          <line x1="660" y1="238" x2="660" y2="262" stroke="#1d1d1f" stroke-width="3"/>
+          <polygon points="644,208 676,208 660,238" fill="#fff" stroke="#1d1d1f" stroke-width="2.5" stroke-linejoin="round"/>
+          <polygon id="ledFill" points="644,208 676,208 660,238" fill="#ff9f0a" opacity="0"/>
+          <line x1="644" y1="238" x2="676" y2="238" stroke="#1d1d1f" stroke-width="3"/>
+          <text x="690" y="228" font-size="13" fill="#7a7a7a">LED</text>
+          <text id="readMsg" class="halo" x="660" y="291" font-size="15" font-weight="700" fill="#ff9f0a" text-anchor="middle" opacity="0">읽힘!</text>
+        </g>
+
+        <!-- 왼쪽 고리 상태 -->
+        <text id="st1" x="211" y="186" font-size="15" font-weight="600" fill="#1d1d1f" text-anchor="middle">비어 있음</text>
+        <text id="st2" x="211" y="206" font-size="12.5" fill="#7a7a7a" text-anchor="middle">쓰기를 눌러 1 을 저장하세요</text>
+        <text id="sinceT" x="211" y="252" font-size="14" fill="#333" text-anchor="middle">마지막 쓰기: 아직 없음</text>
+
+        <!-- 저장된 값 -->
+        <text x="560" y="178" font-size="13" fill="#7a7a7a" text-anchor="middle">저장된 값</text>
+        <text id="bit" x="560" y="254" font-size="78" font-weight="700" fill="#7a7a7a" text-anchor="middle">0</text>
+        <text id="warn" x="560" y="284" font-size="13" font-weight="600" fill="#ff9f0a" text-anchor="middle" opacity="0">흐려짐 ?</text>
+
+        <!-- 타임라인 -->
+        <text x="60" y="336" font-size="13" fill="#7a7a7a">전하량 시간표 · 최근 40초 (쓰기 = 점프, 읽기 = 급락, 기다리기 = 천천히 감소)</text>
+        <rect x="60" y="345" width="668" height="100" fill="#fff" stroke="#e0e0e0"/>
+        <line x1="60" y1="395" x2="728" y2="395" stroke="#7a7a7a" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="52" y="350" font-size="12" fill="#7a7a7a" text-anchor="end">1</text>
+        <text x="52" y="399" font-size="11" fill="#7a7a7a" text-anchor="end">½</text>
+        <text x="52" y="448" font-size="12" fill="#7a7a7a" text-anchor="end">0</text>
+        <text x="724" y="442" font-size="11" fill="#7a7a7a" text-anchor="end">지금 →</text>
+        <g clip-path="url(#gclip)">
+          <polyline id="hist" fill="none" stroke="#0066cc" stroke-width="2.5" stroke-linejoin="round" points=""/>
+          <circle id="histDot" cx="728" cy="445" r="4" fill="#0066cc"/>
+        </g>
+      </svg>
+
+      <div class="legend"><span class="cu">구리 테이프 회로</span><span class="cur">전류(전하의 흐름)</span><span class="pos">+ 전하 / <span style="color:#0066cc">− 전하</span></span><span class="led">LED 빛</span></div>
+    </div>
+
+    <div class="panel">
+      <div>
+        <h3>보기</h3>
+        <div class="chips">
+          <div class="chip on" data-layer="current">전류</div>
+          <div class="chip on" data-layer="charge">축전기의 전하</div>
+        </div>
+      </div>
+      <div>
+        <h3>만져 보기 · 누르고 있는 동안만 스위치가 닫혀요</h3>
+        <div class="holds">
+          <div class="hold" id="hW">쓰기<small>누르고 있기</small></div>
+          <div class="hold" id="hR">읽기<small>누르고 있기</small></div>
+        </div>
+        <div class="chips" style="margin-top:8px">
+          <div class="chip" id="refresh">리프레시</div>
+          <div class="chip" id="ff">빨리 감기 ×10</div>
+          <div class="chip" id="reset">처음으로</div>
+        </div>
+      </div>
+      <div class="readout">
+        <div class="r"><div class="k">저장된 값</div><div class="v" id="rBit">0</div></div>
+        <div class="r"><div class="k">전하량</div><div class="v" id="rQ">0 %</div></div>
+        <div class="r"><div class="k">마지막 쓰기 후</div><div class="v" id="rT">—</div></div>
+      </div>
+      <div class="steps">
+        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
+        <div class="step" id="s1"><div class="n">1</div><div class="t">쓰기: 전지가 축전기에 전하를 채운다<small>= 1 을 저장</small></div></div>
+        <div class="step" id="s2"><div class="n">2</div><div class="t">기다리기: 전지와 떨어져도 전하가 남아 있다<small>조금씩 새어 나간다</small></div></div>
+        <div class="step" id="s3"><div class="n">3</div><div class="t">읽기: 전하가 LED 로 빠져나가며 불이 켜진다<small>= 1 을 읽음. 읽고 나면 0 이 되니 다시 써야 한다(리프레시)</small></div></div>
+      </div>
+      <div class="note">
+        <h3>진짜 디램과 닮은 점</h3>
+        <p>컴퓨터 메모리(디램)도 아주 작은 축전기 수십억 개에 전하가 있으면 1, 없으면 0 으로 기억합니다. 읽으면 사라지고, 가만히 두면 새어 나가서 계속 다시 써 줍니다(리프레시). 여기서는 트랜지스터 대신 손으로 누르는 스위치를 씁니다.</p>
+      </div>
+      <div class="ask">
+        <h3>실물에서 확인</h3>
+        <p>쓰고 나서 30초 기다렸다가 읽으면 불이 더 밝을까, 어두울까?</p>
+        <p>실물 회로로 확인하고 사원증에 적으세요.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div><span class="safe">안전</span> · 코인전지는 홀더에 고정되어 있어요. 부품 다리에 찔리지 않게 장갑을 낍니다.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const $=id=>document.getElementById(id);
+  const TAU_W=0.3, TAU_R=0.22, TAU_LEAK=25, WIN=40;
+  let q=0, simT=0, lastWriteT=null, heldW=false, heldR=false, autoUntil=0, ff=false;
+  let wasWriting=false, wasReading=false, readPeak=0, readAt=-1e9, angW=-28, angR=-28;
+  const layers={current:true,charge:true};
+  const hist=[]; let lastS=-1, lastQ=-1;
+
+  // 전류 점
+  function makeLoop(id,n){
+    const p=$(id), L=p.getTotalLength(), g=$(id+'Dots'), dots=[];
+    for(let i=0;i<n;i++){const c=document.createElementNS(NS,'circle'); c.setAttribute('r','4'); c.setAttribute('fill','#0066cc'); c.setAttribute('opacity','0'); g.appendChild(c); dots.push(c);}
+    return {p,L,dots,phase:0};
+  }
+  const loopW=makeLoop('pW',26), loopR=makeLoop('pR',28);
+  function moveDots(loop,I,dt){
+    loop.phase=(loop.phase+150*I*dt)%loop.L;
+    const sp=loop.L/loop.dots.length, op=layers.current?Math.min(1,I*2.5):0;
+    loop.dots.forEach((c,i)=>{
+      const pt=loop.p.getPointAtLength((loop.phase+i*sp)%loop.L);
+      const gap=Math.abs(pt.x-374)<1&&pt.y>166&&pt.y<204;
+      c.setAttribute('cx',pt.x.toFixed(1)); c.setAttribute('cy',pt.y.toFixed(1));
+      c.setAttribute('opacity',(gap||op<.03)?0:op.toFixed(2));
+    });
+  }
+
+  // 축전기 전하
+  const chg=[];
+  for(let i=0;i<8;i++){
+    const x=343+i*8.9;
+    const a=document.createElementNS(NS,'text'); a.setAttribute('x',x); a.setAttribute('y',183); a.setAttribute('font-size','13'); a.setAttribute('font-weight','700'); a.setAttribute('fill','#ff3b30'); a.setAttribute('text-anchor','middle'); a.textContent='+';
+    const b=document.createElementNS(NS,'text'); b.setAttribute('x',x); b.setAttribute('y',199); b.setAttribute('font-size','13'); b.setAttribute('font-weight','700'); b.setAttribute('fill','#0066cc'); b.setAttribute('text-anchor','middle'); b.textContent='−';
+    $('charges').appendChild(a); $('charges').appendChild(b); chg.push([a,b]);
+  }
+
+  // 누르고 있기 버튼(SVG + 패널 공용)
+  function bindHold(el,set){
+    el.addEventListener('pointerdown',e=>{e.preventDefault(); try{el.setPointerCapture(e.pointerId);}catch(_){} set(true);});
+    ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,()=>set(false)));
+    el.addEventListener('contextmenu',e=>e.preventDefault());
+  }
+  bindHold($('hW'),v=>{heldW=v;}); bindHold($('bW'),v=>{heldW=v;});
+  bindHold($('hR'),v=>{heldR=v;}); bindHold($('bR'),v=>{heldR=v;});
+
+  document.querySelectorAll('.chip[data-layer]').forEach(c=>c.addEventListener('click',()=>{
+    const k=c.dataset.layer; layers[k]=!layers[k]; c.classList.toggle('on',layers[k]);
+  }));
+  $('refresh').addEventListener('click',()=>{autoUntil=performance.now()+900;});
+  const ffb=$('ff');
+  ffb.addEventListener('click',()=>{ff=!ff; ffb.classList.toggle('on',ff);});
+  $('reset').addEventListener('click',()=>{
+    q=0; simT=0; lastWriteT=null; autoUntil=0; ff=false; ffb.classList.remove('on');
+    hist.length=0; lastS=-1; lastQ=-1; readAt=-1e9; readPeak=0;
+  });
+
+  function setBtn(gid,down){
+    const g=$(gid), r=g.querySelector('rect');
+    r.setAttribute('fill',down?'#0066cc':'#fff');
+    g.querySelectorAll('text').forEach(t=>t.setAttribute('fill',down?'#fff':'#0066cc'));
+  }
+
+  function render(now,writing,reading){
+    // 스위치
+    $('levW').setAttribute('transform',`rotate(${angW.toFixed(1)} 170 70)`);
+    $('levR').setAttribute('transform',`rotate(${angR.toFixed(1)} 430 70)`);
+    setBtn('bW',writing); setBtn('bR',reading);
+    $('hW').classList.toggle('down',writing); $('hR').classList.toggle('down',reading);
+    // 전하
+    const n=Math.round(q*8);
+    chg.forEach((pr,i)=>{const o=(layers.charge&&i<n)?1:0; pr[0].setAttribute('opacity',o); pr[1].setAttribute('opacity',o);});
+    // 저장된 값
+    const bit=q>0.5?1:0;
+    const bitEl=$('bit'); bitEl.textContent=bit; bitEl.setAttribute('fill',bit?'#0066cc':'#7a7a7a');
+    $('warn').setAttribute('opacity',(q>0.35&&q<0.65)?1:0);
+    // LED
+    const b=reading?q:0;
+    $('glow').setAttribute('opacity',(b*0.85).toFixed(2));
+    $('ledFill').setAttribute('opacity',b.toFixed(2));
+    const since=now-readAt, msg=$('readMsg');
+    if(since<1600){
+      msg.textContent=readPeak>0.05?`읽힘! 밝기 ${Math.round(readPeak*100)}%`:'0 · 불이 안 켜져요';
+      msg.setAttribute('fill',readPeak>0.05?'#ff9f0a':'#7a7a7a');
+      msg.setAttribute('opacity',since<1100?1:(1-(since-1100)/500).toFixed(2));
+    } else msg.setAttribute('opacity',0);
+    // 상태 문구 + 단계
+    let phase, t1, t2;
+    if(writing){phase=1; t1='쓰는 중'; t2='전지가 축전기에 전하를 채워요';}
+    else if(reading){phase=3; t1='읽는 중'; t2='전하가 LED 로 빠져나가요';}
+    else if(q>=0.02){phase=2; t1='기다리는 중'; t2='전지와 떨어져도 전하가 남아요 · 조금씩 새어요';}
+    else {phase=1; t1='비어 있음'; t2='쓰기를 눌러 1 을 저장하세요';}
+    $('st1').textContent=t1; $('st2').textContent=t2;
+    [1,2,3].forEach(i=>$('s'+i).classList.toggle('now',i===phase));
+    const secs=lastWriteT===null?null:Math.floor(simT-lastWriteT);
+    $('sinceT').textContent=secs===null?'마지막 쓰기: 아직 없음':`마지막 쓰기 후 ${secs}초`;
+    // readout
+    $('rBit').textContent=bit; $('rQ').textContent=Math.round(q*100)+' %'; $('rT').textContent=secs===null?'—':secs+' 초';
+    // 타임라인
+    const pts=[]; const x=t=>728-(simT-t)/WIN*668, y=v=>445-v*100;
+    hist.forEach(s=>pts.push(x(s.t).toFixed(1)+','+y(s.q).toFixed(1)));
+    pts.push('728,'+y(q).toFixed(1));
+    $('hist').setAttribute('points',pts.join(' '));
+    $('histDot').setAttribute('cy',y(q).toFixed(1));
+  }
+
+  let last=performance.now();
+  function tick(now){
+    const dt=Math.min(.05,(now-last)/1000); last=now;
+    const writing=heldW||now<autoUntil, reading=heldR;
+    const sdt=dt*((ff&&!writing&&!reading)?10:1);
+    if(writing) q+=(1-q)*(1-Math.exp(-dt/TAU_W));
+    if(reading) q*=Math.exp(-dt/TAU_R);
+    q*=Math.exp(-sdt/TAU_LEAK);
+    if(q<1e-4) q=0;
+    simT+=sdt;
+    if(writing) lastWriteT=simT;
+    if(reading&&!wasReading){readPeak=q; readAt=now;}
+    wasWriting=writing; wasReading=reading;
+    angW+=((writing?0:-28)-angW)*Math.min(1,dt*18);
+    angR+=((reading?0:-28)-angR)*Math.min(1,dt*18);
+    if(simT-lastS>=0.1||Math.abs(q-lastQ)>0.03){hist.push({t:simT,q}); lastS=simT; lastQ=q;}
+    while(hist.length&&hist[0].t<simT-WIN-1) hist.shift();
+    moveDots(loopW,writing?(1-q):0,dt);
+    moveDots(loopR,reading?q:0,dt);
+    render(now,writing,reading);
+    requestAnimationFrame(tick);
+  }
+  render(performance.now(),false,false);
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

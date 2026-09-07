@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가상실험실 · 캔을 움직여라</title>
+<link rel="stylesheet" href="booth.css">
+<style>
+  .legend .pos::before{border-color:#ff3b30}
+  .legend .neg::before{border-color:var(--primary)}
+  .subnav .stamp.got{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .subnav .stamp.got::before{border-color:#fff}
+  .readout .r .v.blue{color:var(--primary)}
+  .readout .r .k.blue{color:var(--primary);font-weight:600}
+  #sim #straw{cursor:grab}
+  #sim #straw.drag{cursor:grabbing}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="nav">
+    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
+    <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
+  </div>
+  <div class="subnav">
+    <div class="crumb"><a href="index.html">가상실험실</a> › 미션 2 <b>캔을 움직여라</b></div>
+    <div class="right"><span>클리어하면 스탬프</span><div class="stamp" id="stamp">끌림</div></div>
+  </div>
+
+  <div class="main">
+    <div class="lab">
+      <h2>손도 안 댔는데 캔이 왜 따라올까?</h2>
+      <div class="q">문지르기 전과 후를 비교해 보세요.</div>
+
+      <svg viewBox="0 0 748 420" id="sim" aria-label="대전된 빨대로 알루미늄 캔을 굴리는 시뮬레이션">
+        <defs>
+          <marker id="arrF" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff9f0a"/></marker>
+          <clipPath id="canClip"><rect x="-60" y="268" width="120" height="64" rx="12"/></clipPath>
+        </defs>
+
+        <!-- 안내 문구 -->
+        <text id="status" class="halo" x="20" y="34" font-size="15" fill="#1d1d1f" font-weight="600">① 「문지르기」를 눌러 빨대를 대전시키세요</text>
+        <text id="statusSub" class="halo" x="20" y="56" font-size="13" fill="#7a7a7a">지금은 빨대를 캔 옆에 가져가도 캔이 움직이지 않아요</text>
+
+        <!-- 바닥 -->
+        <line x1="20" y1="340" x2="728" y2="340" stroke="#1d1d1f" stroke-width="2"/>
+        <line x1="20" y1="346" x2="728" y2="346" stroke="#e0e0e0" stroke-width="1"/>
+        <text x="150" y="364" font-size="13" fill="#7a7a7a" text-anchor="middle">출발</text>
+
+        <!-- 골인 -->
+        <g id="goal">
+          <line x1="540" y1="254" x2="540" y2="340" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+          <path d="M541,254 L582,266 L541,278 z" fill="#0066cc"/>
+          <text x="540" y="364" font-size="13" fill="#0066cc" font-weight="600" text-anchor="middle">골인</text>
+        </g>
+
+        <!-- 캔 -->
+        <g id="can">
+          <rect x="-60" y="268" width="120" height="64" rx="12" fill="#c7c7cc" stroke="#1d1d1f" stroke-width="2.5"/>
+          <g id="stripes" clip-path="url(#canClip)" stroke="#a9a9ae" stroke-width="5"></g>
+          <line x1="-46" y1="271" x2="-46" y2="329" stroke="#8e8e93" stroke-width="2"/>
+          <line x1="46" y1="271" x2="46" y2="329" stroke="#8e8e93" stroke-width="2"/>
+          <rect x="-60" y="268" width="120" height="64" rx="12" fill="none" stroke="#1d1d1f" stroke-width="2.5"/>
+          <g id="canCharges"></g>
+          <text class="halo" x="0" y="258" font-size="13" fill="#7a7a7a" text-anchor="middle">알루미늄 캔</text>
+        </g>
+
+        <!-- 끌림 힘 -->
+        <g id="force" style="display:none">
+          <line id="forceLine" x1="0" y1="0" x2="60" y2="0" stroke="#ff9f0a" stroke-width="5" marker-end="url(#arrF)" stroke-linecap="round"/>
+          <text id="forceTxt" class="halo" x="0" y="0" font-size="15" fill="#ff9f0a" font-weight="600" text-anchor="middle">끌림</text>
+        </g>
+
+        <!-- 손대지 않고! -->
+        <text id="noTouch" class="halo" x="0" y="0" font-size="16" fill="#ff3b30" font-weight="700" text-anchor="middle" style="display:none">손대지 않고!</text>
+
+        <!-- 빨대 -->
+        <g id="straw">
+          <line x1="0" y1="0" x2="150" y2="-100" stroke="rgba(0,0,0,0)" stroke-width="56" stroke-linecap="round" pointer-events="stroke"/>
+          <line x1="0" y1="0" x2="150" y2="-100" stroke="#1d1d1f" stroke-width="15" stroke-linecap="round"/>
+          <line x1="0" y1="0" x2="150" y2="-100" stroke="#fff" stroke-width="11" stroke-linecap="round"/>
+          <g id="strawCharges"></g>
+          <g id="tissue" style="display:none">
+            <rect x="-24" y="-16" width="48" height="32" rx="7" fill="#fff" stroke="#1d1d1f" stroke-width="2"/>
+            <text x="0" y="5" font-size="12" fill="#1d1d1f" text-anchor="middle" font-weight="600">휴지</text>
+          </g>
+          <text class="halo" x="63" y="-68" font-size="13" fill="#7a7a7a" text-anchor="middle" transform="rotate(-33.7 63 -68)">빨대 (끌어서 옮기기)</text>
+        </g>
+
+        <!-- 골인 표시 -->
+        <text id="goalTxt" class="halo" x="374" y="150" font-size="44" fill="#0066cc" font-weight="700" text-anchor="middle" style="display:none">골인!</text>
+
+        <text x="20" y="404" font-size="13" fill="#7a7a7a">캔 전체는 언제나 중성 (+ 5개, − 5개)</text>
+        <text x="728" y="404" font-size="13" fill="#7a7a7a" text-anchor="end">캔 지름 약 6.6 cm 기준</text>
+      </svg>
+
+      <div class="legend"><span class="pos">+ 전하</span><span class="neg">− 전하</span><span class="frc">끌리는 힘</span></div>
+    </div>
+
+    <div class="panel">
+      <div>
+        <h3>보기</h3>
+        <div class="chips">
+          <div class="chip on" data-layer="charge">전하 보기</div>
+          <div class="chip on" data-layer="force">힘 보기</div>
+        </div>
+      </div>
+      <div>
+        <h3>만져 보기</h3>
+        <div class="chips">
+          <div class="chip blue" id="rub">문지르기</div>
+          <div class="chip" id="reset">처음으로</div>
+        </div>
+      </div>
+      <div class="readout">
+        <div class="r"><div class="k">빨대 전하</div><div class="v" id="rStraw">중성</div><div class="k" id="rStrawSub">문지르기 전</div></div>
+        <div class="r"><div class="k">캔</div><div class="v" id="rCan">중성</div><div class="k" id="rCanSub">전하 골고루 섞임</div></div>
+        <div class="r"><div class="k">거리</div><div class="v" id="rDist">– cm</div><div class="k">빨대 끝 ~ 캔</div></div>
+      </div>
+      <div class="steps">
+        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
+        <div class="step" id="s1"><div class="n">1</div><div class="t">문지르면 빨대가 − 전하를 얻는다<small>휴지와 비비면 전하가 옮겨 간다 (마찰전기)</small></div></div>
+        <div class="step" id="s2"><div class="n">2</div><div class="t">빨대가 다가오면 캔 안의 전하가 자리를 바꾼다<small>정전기 유도(대전된 물체가 가까이 오면 다른 물체 속 전하가 자리를 옮기는 것) — 가까운 쪽 +, 먼 쪽 −</small></div></div>
+        <div class="step" id="s3"><div class="n">3</div><div class="t">가까운 + 가 더 세게 끌려 캔이 굴러온다<small>먼 쪽 − 는 밀리지만 힘이 더 약하다</small></div></div>
+      </div>
+      <div class="ask">
+        <h3>실물에서 확인</h3>
+        <p>빨대를 문지르지 않고 가져가면? 캔은 원래 +일까 −일까?</p>
+        <p>실물 캔으로 해 보고 사원증에 적으세요.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div><span class="safe">안전</span> · 캔 모서리에 손을 베이지 않게 굴러온 캔은 진행자가 정리합니다.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const $=id=>document.getElementById(id);
+  const svg=$('sim'), can=$('can'), stripes=$('stripes'), canCh=$('canCharges');
+  const straw=$('straw'), strawCh=$('strawCharges'), tissue=$('tissue');
+  const forceG=$('force'), forceLine=$('forceLine'), forceTxt=$('forceTxt');
+  const noTouch=$('noTouch'), goalTxt=$('goalTxt'), status=$('status'), statusSub=$('statusSub');
+  const rStraw=$('rStraw'), rStrawSub=$('rStrawSub'), rCan=$('rCan'), rCanSub=$('rCanSub'), rDist=$('rDist'), stamp=$('stamp');
+  const steps=[$('s1'),$('s2'),$('s3')];
+
+  // 상수 (px). 캔: 폭 120, 높이 64, 중심 y=300, 바닥 y=340
+  const CAN_W=60, CAN_T=268, CAN_B=332, CAN_CY=300, GOAL_X=540, START_X=150;
+  const CM_PER_PX=6.6/64, D0=34, ACC=900, DAMP=3.5, GAP_MIN=6;
+  const SX0=470, SY0=230;
+
+  function mkCharge(sign, r){
+    const g=document.createElementNS(NS,'g');
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('r',r); c.setAttribute('fill',sign>0?'#ff3b30':'#0066cc');
+    const t=document.createElementNS(NS,'text');
+    t.setAttribute('y',r*0.55); t.setAttribute('font-size',r*1.7); t.setAttribute('fill','#fff');
+    t.setAttribute('text-anchor','middle'); t.setAttribute('font-weight','700'); t.textContent=sign>0?'+':'−';
+    g.appendChild(c); g.appendChild(t); return g;
+  }
+
+  // 캔 속 전하 10개: 섞인 자리(home) ↔ 재배치 자리(induced)
+  const canQ=[];
+  const cols=[-44,-22,0,22,44];
+  for(let row=0;row<2;row++) for(let i=0;i<5;i++){
+    const sign=((i+row)%2===0)?1:-1;
+    const g=mkCharge(sign,7); canCh.appendChild(g);
+    canQ.push({sign,hx:cols[i],hy:(row===0?-14:14),g});
+  }
+  // 빨대 전하: 중성 짝 8개(+4 −4) + 문지르면 생기는 − 5개
+  const DIRX=150/Math.hypot(150,100), DIRY=-100/Math.hypot(150,100);
+  const PX=-DIRY, PY=DIRX; // 수직 방향
+  const strawExtra=[];
+  for(let k=0;k<8;k++){
+    const t=0.14+k*0.105, sign=(k%2===0)?1:-1;
+    const g=mkCharge(sign,6); g.setAttribute('transform',`translate(${150*t},${-100*t})`); strawCh.appendChild(g);
+  }
+  for(let k=0;k<5;k++){
+    const t=0.19+k*0.14;
+    const g=mkCharge(-1,8); g.setAttribute('transform',`translate(${150*t+PX*11},${-100*t+PY*11})`);
+    g.style.display='none'; strawCh.appendChild(g); strawExtra.push(g);
+  }
+  // 굴림 줄무늬
+  const stripeEls=[];
+  for(let i=0;i<9;i++){
+    const l=document.createElementNS(NS,'line'); stripes.appendChild(l); stripeEls.push(l);
+  }
+
+  // 상태
+  let cx=START_X, v=0, sx=SX0, sy=SY0, charged=false, goal=false;
+  let rubbing=false, rubT=0, dragging=false, dragOff=[0,0];
+  const layers={charge:true,force:true};
+  let last=performance.now();
+
+  function clampStraw(){
+    sx=Math.max(30,Math.min(590,sx)); sy=Math.max(120,Math.min(332,sy));
+    // 캔에 닿기 전에 멈춤: 빨대 끝이 캔 높이 범위에 있으면 옆으로 밀어냄
+    if(sy>CAN_T-12 && sy<CAN_B+12){
+      const lim=CAN_W+GAP_MIN;
+      if(Math.abs(sx-cx)<lim){ sx=cx+(sx>=cx?lim:-lim); sx=Math.max(30,Math.min(590,sx)); }
+    }
+  }
+  function gapToCan(){
+    const dx=Math.max(cx-CAN_W-sx,0,sx-(cx+CAN_W));
+    const dy=Math.max(CAN_T-sy,0,sy-CAN_B);
+    return Math.hypot(dx,dy);
+  }
+  function setText(el,s){ if(el.textContent!==s) el.textContent=s; }
+
+  function render(gap,f,s,ux,uy){
+    // 캔
+    can.setAttribute('transform',`translate(${cx},0)`);
+    const off=((cx%20)+20)%20;
+    stripeEls.forEach((l,i)=>{ const x=-90+i*20+off; l.setAttribute('x1',x); l.setAttribute('y1',260); l.setAttribute('x2',x-28); l.setAttribute('y2',344); });
+    // 캔 속 전하 재배치: 방향 u 쪽에 +, 반대쪽에 −
+    canCh.style.display=layers.charge?'':'none';
+    strawCh.style.display=layers.charge?'':'none';
+    if(layers.charge){
+      const R=1/Math.sqrt((ux/40)*(ux/40)+(uy/20)*(uy/20));
+      const px=-uy, py=ux;
+      let ip=0, im=0;
+      canQ.forEach(q=>{
+        const k=(q.sign>0?ip++:im++)-2;
+        const tx=q.sign*ux*R+px*k*12, ty=q.sign*uy*R+py*k*12;
+        const x=q.hx+(tx-q.hx)*s, y=CAN_CY+q.hy+(ty-q.hy)*s;
+        q.g.setAttribute('transform',`translate(${x},${y})`);
+      });
+    }
+    // 빨대
+    straw.setAttribute('transform',`translate(${sx},${sy})`);
+    // 힘 화살표
+    const showF=layers.force&&charged&&f>0.03&&!goal;
+    forceG.style.display=showF?'':'none';
+    if(showF){
+      const L=24+130*f;
+      forceG.setAttribute('transform',`translate(${cx},${CAN_CY})`);
+      forceLine.setAttribute('x2',ux*L); forceLine.setAttribute('y2',uy*L);
+      forceTxt.setAttribute('x',ux*L*0.6); forceTxt.setAttribute('y',uy*L*0.6-14);
+    }
+    // 손대지 않고!
+    const close=gap<=GAP_MIN+4 && sy>CAN_T-12 && sy<CAN_B+12;
+    noTouch.style.display=close?'':'none';
+    if(close){ noTouch.setAttribute('x',cx); noTouch.setAttribute('y',CAN_T-48); }
+    // 안내
+    if(goal){ setText(status,'골인! 손대지 않고 캔을 옮겼어요'); setText(statusSub,'스탬프 「끌림」 획득 — 실물 캔으로도 해 보세요'); }
+    else if(!charged){ setText(status,'① 「문지르기」를 눌러 빨대를 대전시키세요'); setText(statusSub,'지금은 빨대를 캔 옆에 가져가도 캔이 움직이지 않아요'); }
+    else { setText(status,'② 빨대를 끌어 캔 오른쪽 가까이 가져오세요'); setText(statusSub,'가까울수록 세게 끌려요 · 닿으면 안 돼요'); }
+    goalTxt.style.display=goal?'':'none';
+    // 수치
+    setText(rStraw,charged?'− 대전':'중성'); rStraw.classList.toggle('blue',charged); setText(rStrawSub,charged?'문지른 뒤':'문지르기 전');
+    setText(rCan,'중성'); setText(rCanSub,s>0.15?'전하 재배치됨':'전하 골고루 섞임'); rCanSub.classList.toggle('blue',s>0.15);
+    setText(rDist,(gap*CM_PER_PX).toFixed(1)+' cm');
+    // 단계
+    let now=0;
+    if(charged){ now=1; if(s>0.2) now=2; if(Math.abs(v)>8) now=3; }
+    steps.forEach((el,i)=>el.classList.toggle('now',i+1===now));
+  }
+
+  function tick(t){
+    const dt=Math.min(.05,(t-last)/1000); last=t;
+    // 문지르기 애니메이션
+    if(rubbing){
+      rubT+=dt; const p=Math.min(1,rubT/0.9);
+      const u=0.5+0.3*Math.sin(p*Math.PI*2*3.2);
+      tissue.style.display='';
+      tissue.setAttribute('transform',`translate(${150*u},${-100*u}) rotate(-33.7)`);
+      strawExtra.forEach((g,i)=>g.style.display=(i<Math.floor(p*5.999))?'':'none');
+      if(p>=1){ rubbing=false; charged=true; tissue.style.display='none'; strawExtra.forEach(g=>g.style.display=''); }
+    }
+    // 힘·유도
+    const gap=gapToCan();
+    const dx=sx-cx, dy=sy-CAN_CY, dist=Math.hypot(dx,dy)||1;
+    const ux=dx/dist, uy=dy/dist;
+    const f=charged?Math.min(1,(D0/(gap+D0))*(D0/(gap+D0))):0;
+    const s=Math.min(1,f*1.3);
+    // 캔 운동 (가로만)
+    v+=(ACC*f*ux-DAMP*v)*dt;
+    if(Math.abs(v)<2 && f*Math.abs(ux)<0.02) v=0;
+    cx+=v*dt;
+    if(cx<80){cx=80;v=0} if(cx>668){cx=668;v=0}
+    // 빨대에 닿기 전에 멈춤
+    if(sy>CAN_T-12 && sy<CAN_B+12){
+      const lim=CAN_W+GAP_MIN;
+      if(sx>cx && cx>sx-lim){ cx=sx-lim; v=0; }
+      if(sx<=cx && cx<sx+lim){ cx=sx+lim; v=0; }
+    }
+    if(!goal && cx+CAN_W>=GOAL_X){ goal=true; stamp.classList.add('got'); }
+    render(gapToCan(),f,s,ux,uy);
+    requestAnimationFrame(tick);
+  }
+
+  // 드래그 (pointer)
+  function toSvg(e){
+    const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  straw.addEventListener('pointerdown',e=>{
+    e.preventDefault(); const p=toSvg(e);
+    dragging=true; dragOff=[sx-p.x,sy-p.y]; straw.classList.add('drag');
+    try{ straw.setPointerCapture(e.pointerId); }catch(_){}
+  });
+  straw.addEventListener('pointermove',e=>{
+    if(!dragging) return; e.preventDefault(); const p=toSvg(e);
+    sx=p.x+dragOff[0]; sy=p.y+dragOff[1]; clampStraw();
+  });
+  const endDrag=e=>{ if(!dragging) return; dragging=false; straw.classList.remove('drag'); try{ straw.releasePointerCapture(e.pointerId); }catch(_){} };
+  straw.addEventListener('pointerup',endDrag);
+  straw.addEventListener('pointercancel',endDrag);
+
+  // 칩
+  document.querySelectorAll('.chip[data-layer]').forEach(c=>c.addEventListener('click',()=>{
+    const k=c.dataset.layer; layers[k]=!layers[k]; c.classList.toggle('on',layers[k]);
+  }));
+  $('rub').addEventListener('click',()=>{ if(rubbing||charged) return; rubbing=true; rubT=0; });
+  $('reset').addEventListener('click',()=>{
+    cx=START_X; v=0; sx=SX0; sy=SY0; charged=false; goal=false; rubbing=false; rubT=0;
+    tissue.style.display='none'; strawExtra.forEach(g=>g.style.display='none'); stamp.classList.remove('got');
+  });
+
+  clampStraw();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

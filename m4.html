@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가상실험실 · 내 몸을 돌려라</title>
+<link rel="stylesheet" href="booth.css">
+<style>
+  .legend .cu::before{border-color:#c9895a}
+  .legend .ink::before{border-color:var(--ink)}
+  .slider{margin-top:12px}
+  .slider label{display:flex;justify-content:space-between;font-size:14px;color:var(--ink80);letter-spacing:-.22px}
+  .slider label b{color:var(--ink);font-weight:600}
+  .slider input{width:100%;height:44px;accent-color:var(--primary);margin-top:2px;cursor:pointer;display:block}
+  .slider .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--ink48)}
+  .analogy{border:1px solid var(--hairline);border-radius:18px;padding:16px 20px;background:var(--canvas)}
+  .analogy h3{margin-bottom:6px}
+  .analogy p{font-size:14px;line-height:1.5;color:var(--ink80);letter-spacing:-.22px}
+  .analogy p b{color:var(--ink)}
+  @media (max-width:980px){ .main{grid-template-columns:minmax(0,1fr)} }
+  #hit{cursor:grab}
+  #hit:active{cursor:grabbing}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="nav">
+    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
+    <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
+  </div>
+  <div class="subnav">
+    <div class="crumb"><a href="index.html">가상실험실</a> › 미션 4 <b>내 몸을 돌려라</b></div>
+    <div class="right"><span>클리어하면 스탬프</span><div class="stamp">회전</div></div>
+  </div>
+
+  <div class="main">
+    <div class="lab">
+      <h2>가만히 있는데 왜 내가 돌까?</h2>
+      <div class="q">돌고 있는 바퀴를 기울이면 회전이 나에게 옮겨 옵니다.</div>
+
+      <svg viewBox="0 0 748 470" id="sim" aria-label="회전의자와 자이로스코프 바퀴 시뮬레이션">
+        <defs>
+          <marker id="arrB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0066cc"/></marker>
+          <marker id="arrC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9895a"/></marker>
+          <marker id="arrG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7a7a7a"/></marker>
+          <linearGradient id="cu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9895a"/><stop offset="1" stop-color="#9a5a2e"/></linearGradient>
+        </defs>
+
+        <!-- ===== 왼쪽: 위에서 본 모습 ===== -->
+        <text x="54" y="24" font-size="13" fill="#7a7a7a">위에서 본 모습</text>
+        <g id="top" transform="translate(232,242)">
+          <circle r="178" fill="#fff" stroke="#e0e0e0" stroke-width="1.5"/>
+          <g id="rot">
+            <!-- 의자 다리 5개 -->
+            <g stroke="#7a7a7a" stroke-width="6" stroke-linecap="round" fill="#fff">
+              <line x1="0" y1="0" x2="0" y2="-150"/>
+              <line x1="0" y1="0" x2="143" y2="-46"/>
+              <line x1="0" y1="0" x2="88" y2="121"/>
+              <line x1="0" y1="0" x2="-88" y2="121"/>
+              <line x1="0" y1="0" x2="-143" y2="-46"/>
+              <circle cx="0" cy="-150" r="8"/><circle cx="143" cy="-46" r="8"/><circle cx="88" cy="121" r="8"/><circle cx="-88" cy="121" r="8"/><circle cx="-143" cy="-46" r="8"/>
+            </g>
+            <!-- 좌석 + 등받이 -->
+            <circle r="80" fill="#f5f5f7" stroke="#1d1d1f" stroke-width="2.5"/>
+            <path d="M-64,40 A76,76 0 0 0 64,40" fill="none" stroke="#1d1d1f" stroke-width="9" stroke-linecap="round"/>
+            <!-- 팔 -->
+            <line id="armL" x1="-40" y1="-4" x2="-16" y2="-95" stroke="#8e8e93" stroke-width="11" stroke-linecap="round"/>
+            <line id="armR" x1="40" y1="-4" x2="16" y2="-95" stroke="#8e8e93" stroke-width="11" stroke-linecap="round"/>
+            <!-- 어깨 + 머리 -->
+            <ellipse rx="50" ry="23" fill="#d9d9de" stroke="#1d1d1f" stroke-width="2"/>
+            <circle r="23" fill="#fff" stroke="#1d1d1f" stroke-width="2.5"/>
+            <!-- 손에 든 바퀴 -->
+            <g transform="translate(0,-95)">
+              <ellipse id="twRim" rx="42" ry="42" fill="none" stroke="url(#cu)" stroke-width="6"/>
+              <line id="twAxis" x1="0" y1="0" x2="0" y2="0" stroke="#1d1d1f" stroke-width="6" stroke-linecap="round"/>
+              <circle r="5" fill="#1d1d1f"/>
+              <circle id="handL" cx="-6" cy="0" r="8" fill="#d9d9de" stroke="#1d1d1f" stroke-width="2"/>
+              <circle id="handR" cx="6" cy="0" r="8" fill="#d9d9de" stroke="#1d1d1f" stroke-width="2"/>
+              <circle id="twDot" cx="42" cy="0" r="6" fill="#0066cc"/>
+              <path id="twSpin" d="" fill="none" stroke="#0066cc" stroke-width="3" marker-end="url(#arrB)"/>
+            </g>
+          </g>
+        </g>
+        <path id="chairArrow" d="" fill="none" stroke="#0066cc" stroke-width="5" marker-end="url(#arrB)"/>
+        <text id="note" class="halo" x="54" y="452" font-size="13" fill="#7a7a7a">큰 화살표 = 의자가 도는 방향 · 작은 화살표 = 바퀴가 도는 방향</text>
+
+        <!-- ===== 오른쪽 위: 옆에서 본 바퀴 ===== -->
+        <text x="590" y="24" font-size="13" fill="#7a7a7a" text-anchor="middle">옆에서 본 바퀴 · 축을 드래그</text>
+        <g transform="translate(590,158)">
+          <line x1="0" y1="-118" x2="0" y2="118" stroke="#7a7a7a" stroke-width="1.6" stroke-dasharray="6 5"/>
+          <text x="-7" y="-106" font-size="12" fill="#7a7a7a" text-anchor="end">세로</text>
+          <path id="phiArc" d="" fill="none" stroke="#7a7a7a" stroke-width="1.6" marker-end="url(#arrG)"/>
+          <text id="phiLbl" class="halo" x="0" y="0" font-size="14" fill="#7a7a7a" font-style="italic" text-anchor="middle">φ</text>
+          <g id="side">
+            <line x1="0" y1="-100" x2="0" y2="100" stroke="#1d1d1f" stroke-width="6" stroke-linecap="round"/>
+            <line x1="0" y1="-100" x2="0" y2="-72" stroke="#8e8e93" stroke-width="14" stroke-linecap="round"/>
+            <line x1="0" y1="72" x2="0" y2="100" stroke="#8e8e93" stroke-width="14" stroke-linecap="round"/>
+            <ellipse rx="72" ry="24" fill="none" stroke="url(#cu)" stroke-width="7"/>
+            <circle r="7" fill="#1d1d1f"/>
+            <g id="sdArrows">
+              <line x1="18" y1="-6" x2="18" y2="-112" stroke="#c9895a" stroke-width="4" marker-end="url(#arrC)"/>
+              <path id="sdSpin" d="" fill="none" stroke="#0066cc" stroke-width="3" marker-end="url(#arrB)"/>
+            </g>
+            <circle id="sdDot" cx="72" cy="0" r="6" fill="#0066cc"/>
+          </g>
+          <text id="Llbl" class="halo" x="0" y="0" font-size="12" fill="#c9895a" font-weight="600">회전량</text>
+          <circle id="hit" r="118" fill="#fff" fill-opacity="0" pointer-events="all"/>
+        </g>
+
+        <!-- ===== 오른쪽 아래: 각운동량 막대 ===== -->
+        <g id="bars">
+          <text x="470" y="296" font-size="13" fill="#7a7a7a">세로 방향 회전량(각운동량)</text>
+          <line x1="575" y1="304" x2="575" y2="428" stroke="#7a7a7a" stroke-width="1.2"/>
+          <text x="575" y="441" font-size="11" fill="#7a7a7a" text-anchor="middle">0</text>
+          <text x="470" y="320" font-size="12" fill="#7a7a7a">바퀴(세로 성분)</text>
+          <rect id="barW" x="575" y="325" width="75" height="16" fill="#c9895a"/>
+          <text id="vW" class="halo" x="0" y="338" font-size="12" fill="#1d1d1f" font-weight="600">+1.0</text>
+          <text x="470" y="362" font-size="12" fill="#7a7a7a">사람+의자</text>
+          <rect id="barC" x="575" y="367" width="0" height="16" fill="#0066cc"/>
+          <text id="vC" class="halo" x="0" y="380" font-size="12" fill="#1d1d1f" font-weight="600">0.0</text>
+          <text x="470" y="404" font-size="12" fill="#7a7a7a">합계 = 항상 같다</text>
+          <rect id="barS" x="575" y="409" width="75" height="16" fill="#fff" stroke="#1d1d1f" stroke-width="2"/>
+          <text id="vS" class="halo" x="656" y="422" font-size="12" fill="#1d1d1f" font-weight="600">+1.0</text>
+          <text id="eq" x="728" y="462" font-size="13" fill="#1d1d1f" font-weight="600" text-anchor="end">+1.0 + 0.0 = +1.0</text>
+        </g>
+      </svg>
+
+      <div class="legend"><span class="cu">바퀴의 세로 회전량</span><span class="cur">사람+의자의 회전량</span><span class="ink">합계(항상 같음)</span></div>
+    </div>
+
+    <div class="panel">
+      <div>
+        <h3>보기</h3>
+        <div class="chips">
+          <div class="chip on" data-layer="bars">각운동량 막대</div>
+          <div class="chip on" data-layer="arrows">회전 방향 화살표</div>
+        </div>
+      </div>
+      <div>
+        <h3>만져 보기</h3>
+        <div class="chips">
+          <div class="chip on" id="spinOn">바퀴 돌리기</div>
+          <div class="chip" id="spinOff">바퀴 멈춤</div>
+          <div class="chip" id="reset">처음으로</div>
+        </div>
+        <div class="slider">
+          <label>축 기울기 φ <b id="phiV">0°</b></label>
+          <input type="range" id="phi" min="0" max="180" step="1" value="0" aria-label="축 기울기">
+          <div class="ends"><span>0° 축 세로</span><span>90° 축 가로</span><span>180° 뒤집기</span></div>
+        </div>
+      </div>
+      <div class="readout">
+        <div class="r"><div class="k">축 기울기</div><div class="v" id="rPhi">0°</div></div>
+        <div class="r"><div class="k">의자 회전 속도</div><div class="v" id="rSpd">멈춤</div></div>
+        <div class="r"><div class="k">합계 각운동량</div><div class="v" id="rSum">일정</div></div>
+      </div>
+      <div class="steps">
+        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
+        <div class="step" id="s1"><div class="n">1</div><div class="t">돌고 있는 바퀴는 '회전량(각운동량)'을 가지고 있다<small>구리 화살표가 바퀴 축 방향의 회전량</small></div></div>
+        <div class="step" id="s2"><div class="n">2</div><div class="t">축을 기울이면 바퀴의 세로 회전량이 줄어든다<small>구리 막대가 짧아진다</small></div></div>
+        <div class="step" id="s3"><div class="n">3</div><div class="t">전체 회전량은 그대로여야 하니, 줄어든 만큼 사람과 의자가 돈다<small>각운동량 보존 · 블루 막대가 길어진다</small></div></div>
+      </div>
+      <div class="analogy">
+        <h3>물리학자의 비유</h3>
+        <p>자석의 성질을 물리학자는 전자의 '스핀'이라는 회전 성질로 설명합니다. 스핀이 바뀌면 자석의 성질이 바뀝니다. 이 체험은 그 이야기를 몸으로 느껴 보는 <b>비유</b>입니다. 전자가 실제로 작은 팽이처럼 도는 것은 아니에요.</p>
+      </div>
+      <div class="ask">
+        <h3>실물에서 확인</h3>
+        <p>바퀴를 완전히 뒤집으면(180°) 더 빨리 돌까, 반대로 돌까?</p>
+        <p>회전의자에서 확인하고 사원증에 적으세요.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div><span class="safe">안전</span> · 의자에서는 발을 바닥에서 떼고, 진행자가 옆에서 잡아 줍니다. 바퀴 살에 손가락을 넣지 않습니다.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const D=Math.PI/180, $=id=>document.getElementById(id);
+  const svg=$('sim');
+  const rot=$('rot'), twRim=$('twRim'), twAxis=$('twAxis'), twDot=$('twDot'), twSpin=$('twSpin');
+  const armL=$('armL'), armR=$('armR'), handL=$('handL'), handR=$('handR');
+  const chairArrow=$('chairArrow'), note=$('note');
+  const side=$('side'), sdDot=$('sdDot'), sdSpin=$('sdSpin'), sdArrows=$('sdArrows'), Llbl=$('Llbl');
+  const phiArc=$('phiArc'), phiLbl=$('phiLbl');
+  const bars=$('bars'), barW=$('barW'), barC=$('barC'), vW=$('vW'), vC=$('vC'), vS=$('vS'), eq=$('eq');
+  const phiIn=$('phi'), phiV=$('phiV'), rPhi=$('rPhi'), rSpd=$('rSpd'), rSum=$('rSum');
+  const steps=[$('s1'),$('s2'),$('s3')];
+
+  const K=120;      // 의자 각속도 계수 (deg/s per unit L)
+  const SPIN=420;   // 바퀴 스핀 표시 속도 (deg/s)
+  const S=75, X0=575; // 막대 배율(px per L), 0 기준선
+  let phi=0, theta=0, s=0, spinning=true, omega=0, last=performance.now();
+  const layers={bars:true,arrows:true};
+
+  function arc(cx,cy,r,a0,a1){
+    const p=a=>[cx+r*Math.cos(a*D), cy+r*Math.sin(a*D)];
+    const [x0,y0]=p(a0),[x1,y1]=p(a1);
+    const large=Math.abs(a1-a0)>180?1:0, sweep=a1>a0?1:0;
+    return `M${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 ${large} ${sweep} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+  }
+  function earc(rx,ry,a0,a1){
+    const p=a=>[rx*Math.cos(a*D), ry*Math.sin(a*D)];
+    const [x0,y0]=p(a0),[x1,y1]=p(a1);
+    return `M${x0.toFixed(1)},${y0.toFixed(1)} A${rx},${ry} 0 0 1 ${x1.toFixed(1)},${y1.toFixed(1)}`;
+  }
+  function fmt(v){ const a=Math.abs(v).toFixed(1); return (v<-0.05?'−':'+')+a; }
+  function bar(rect,txt,v){
+    const w=Math.abs(v)*S;
+    rect.setAttribute('x', v>=0?X0:X0-w); rect.setAttribute('width', w.toFixed(1));
+    if(v>=0){ txt.setAttribute('x',(X0+w+6).toFixed(1)); txt.setAttribute('text-anchor','start'); }
+    else{ txt.setAttribute('x',(X0-w-6).toFixed(1)); txt.setAttribute('text-anchor','end'); }
+    txt.textContent=fmt(v);
+  }
+
+  function render(){
+    const c=Math.cos(phi*D), sn=Math.sin(phi*D);
+    const L=spinning?1:0;
+    const wz=L*c, ch=L*(1-c);      // 바퀴 세로 성분, 사람+의자
+    omega=K*ch;
+
+    // --- 위에서 본 모습 ---
+    rot.setAttribute('transform',`rotate(${(-theta).toFixed(2)})`);
+    const rx=Math.max(2.5,42*Math.abs(c));
+    twRim.setAttribute('rx',rx.toFixed(1));
+    const hx=Math.max(6, 60*sn);
+    twAxis.setAttribute('x1',(-hx).toFixed(1)); twAxis.setAttribute('x2',hx.toFixed(1));
+    handL.setAttribute('cx',(-hx).toFixed(1)); handR.setAttribute('cx',hx.toFixed(1));
+    armL.setAttribute('x2',(-hx).toFixed(1)); armR.setAttribute('x2',hx.toFixed(1));
+    twDot.setAttribute('cx',(42*c*Math.cos(s*D)).toFixed(1)); twDot.setAttribute('cy',(42*Math.sin(s*D)).toFixed(1));
+    const showSpin=layers.arrows && spinning && Math.abs(c)>0.25;
+    twSpin.style.display=showSpin?'':'none';
+    if(showSpin) twSpin.setAttribute('d', c>0?arc(0,0,58,-30,-150):arc(0,0,58,-150,-30));
+    const showChair=layers.arrows && Math.abs(omega)>3;
+    chairArrow.style.display=showChair?'':'none';
+    if(showChair) chairArrow.setAttribute('d', omega>0?arc(232,242,170,-55,-125):arc(232,242,170,-125,-55));
+    if(spinning){ note.textContent='큰 화살표 = 의자가 도는 방향 · 작은 화살표 = 바퀴가 도는 방향'; note.setAttribute('fill','#7a7a7a'); }
+    else{ note.textContent='바퀴가 멈춰 있으면 축을 기울여도 아무 일도 일어나지 않아요'; note.setAttribute('fill','#0066cc'); }
+
+    // --- 옆에서 본 바퀴 ---
+    side.setAttribute('transform',`rotate(${phi.toFixed(1)})`);
+    sdDot.setAttribute('cx',(72*Math.cos(s*D)).toFixed(1)); sdDot.setAttribute('cy',(-24*Math.sin(s*D)).toFixed(1));
+    sdArrows.style.display=(layers.arrows && spinning)?'':'none';
+    Llbl.style.display=(layers.arrows && spinning)?'':'none';
+    sdSpin.setAttribute('d',earc(72,24,25,155));
+    const lx=30*c+118*sn, ly=30*sn-118*c;
+    Llbl.setAttribute('x',lx.toFixed(1)); Llbl.setAttribute('y',(ly+4).toFixed(1));
+    Llbl.setAttribute('text-anchor', lx>8?'start':(lx<-8?'end':'middle'));
+    const showPhi=phi>6;
+    phiArc.style.display=showPhi?'':'none'; phiLbl.style.display=showPhi?'':'none';
+    if(showPhi){
+      phiArc.setAttribute('d',arc(0,0,46,-90,-90+phi));
+      phiLbl.setAttribute('x',(58*Math.cos((-90+phi/2)*D)).toFixed(1)); phiLbl.setAttribute('y',(58*Math.sin((-90+phi/2)*D)+5).toFixed(1));
+    }
+
+    // --- 막대 ---
+    bars.style.display=layers.bars?'':'none';
+    bar(barW,vW,wz); bar(barC,vC,ch);
+    $('barS').setAttribute('width',(L*S).toFixed(1)); vS.textContent=fmt(L); vS.setAttribute('x',(X0+L*S+6).toFixed(1));
+    eq.textContent=`${fmt(wz)} ${ch<0?'−':'+'} ${Math.abs(ch).toFixed(1)} = ${fmt(L)}`;
+
+    // --- 패널 ---
+    const pd=Math.round(phi)+'°';
+    phiV.textContent=pd; rPhi.textContent=pd;
+    const w=Math.abs(omega);
+    rSpd.textContent=w<3?'멈춤':(w<90?'느림':(w<170?'보통':'빠름'));
+    rSum.textContent=spinning?'일정':'0 (멈춤)';
+    let now=-1;
+    if(spinning) now = phi<8?0:(phi<45?1:2);
+    steps.forEach((el,i)=>el.classList.toggle('now',i===now));
+  }
+
+  function tick(t){
+    const dt=Math.min(.05,(t-last)/1000); last=t;
+    if(spinning){ s-=SPIN*dt; if(s<-360) s+=360; theta+=omega*dt; if(theta>360) theta-=360; if(theta<-360) theta+=360; }
+    render(); requestAnimationFrame(tick);
+  }
+
+  function setPhi(v){ phi=Math.max(0,Math.min(180,v)); phiIn.value=Math.round(phi); render(); }
+  phiIn.addEventListener('input',()=>setPhi(+phiIn.value));
+
+  // 옆 그림 축 드래그
+  const hit=$('hit'); let dragging=false;
+  function toSvg(e){ const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+  function dragPhi(e){ const p=toSvg(e); const dx=p.x-590, dy=p.y-158; setPhi(Math.atan2(Math.abs(dx),-dy)/D); }
+  hit.addEventListener('pointerdown',e=>{ dragging=true; hit.setPointerCapture(e.pointerId); dragPhi(e); e.preventDefault(); });
+  hit.addEventListener('pointermove',e=>{ if(dragging) dragPhi(e); });
+  const stop=e=>{ dragging=false; };
+  hit.addEventListener('pointerup',stop); hit.addEventListener('pointercancel',stop);
+
+  document.querySelectorAll('.chip[data-layer]').forEach(c=>c.addEventListener('click',()=>{
+    const k=c.dataset.layer; layers[k]=!layers[k]; c.classList.toggle('on',layers[k]); render();
+  }));
+  const spinOn=$('spinOn'), spinOff=$('spinOff');
+  function setSpin(on){
+    spinning=on; spinOn.classList.toggle('on',on); spinOff.classList.toggle('on',!on);
+    if(on) setPhi(0); // 진행자가 축을 세운 채로 바퀴를 돌려 준다
+    render();
+  }
+  spinOn.addEventListener('click',()=>setSpin(true));
+  spinOff.addEventListener('click',()=>setSpin(false));
+  $('reset').addEventListener('click',()=>{ theta=0; s=0; setSpin(true); });
+
+  render(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

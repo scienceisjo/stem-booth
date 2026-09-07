@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가상실험실 · 손잡고 불 켜라</title>
+<link rel="stylesheet" href="booth.css">
+<style>
+  .legend .dot::before{width:12px;height:12px;border:0;border-radius:50%;background:var(--primary);vertical-align:-1px}
+  .legend .gap::before{width:11px;height:11px;border:2px solid var(--ink48);border-radius:50%;background:transparent;vertical-align:-1px}
+  .steps .note{margin-top:10px;padding-top:10px;border-top:1px solid var(--parchment);font-size:13px;color:var(--ink48);letter-spacing:-.2px;line-height:1.4}
+  #sim .tap{cursor:pointer}
+  #sim .arm{stroke:#1d1d1f;stroke-width:4;stroke-linecap:round;fill:none}
+  #sim .arm.off{stroke:#7a7a7a;stroke-dasharray:none}
+  .readout .v.on{color:var(--primary)}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="nav">
+    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
+    <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
+  </div>
+  <div class="subnav">
+    <div class="crumb"><a href="index.html">가상실험실</a> › 미션 1 <b>손잡고 불 켜라</b></div>
+    <div class="right"><span>클리어하면 스탬프</span><div class="stamp">연결</div></div>
+  </div>
+
+  <div class="main">
+    <div class="lab">
+      <h2>왜 손을 놓으면 불이 꺼질까?</h2>
+      <div class="q">우리 몸을 통해 아주 작은 전류의 길이 이어집니다.</div>
+
+      <svg viewBox="0 0 748 470" id="sim" aria-label="에너지스틱 협동 회로 시뮬레이션">
+        <!-- 발광 후광 -->
+        <g id="glow" opacity="0">
+          <circle cx="374" cy="100" r="84" fill="#0066cc" opacity=".08"/>
+          <circle cx="374" cy="100" r="52" fill="#0066cc" opacity=".16"/>
+        </g>
+        <!-- 전류 길(숨김, 길이 계산용) -->
+        <path id="loop" d="" fill="none" stroke="none"/>
+        <!-- 사람 팔 -->
+        <g id="arms"></g>
+        <!-- 사람 -->
+        <g id="people"></g>
+        <!-- 에너지스틱 -->
+        <g id="stick">
+          <rect x="280" y="90" width="188" height="20" rx="10" fill="#fff" stroke="#1d1d1f" stroke-width="2.5"/>
+          <rect id="stickLight" x="298" y="94" width="152" height="12" rx="6" fill="#0066cc" opacity="0"/>
+          <rect x="280" y="90" width="18" height="20" rx="6" fill="#8e8e93" stroke="#1d1d1f" stroke-width="2.5"/>
+          <rect x="450" y="90" width="18" height="20" rx="6" fill="#8e8e93" stroke="#1d1d1f" stroke-width="2.5"/>
+          <text class="halo" x="374" y="74" font-size="13" fill="#7a7a7a" text-anchor="middle">에너지스틱 (양끝이 금속 전극)</text>
+          <text id="note" class="halo" x="500" y="82" font-size="22" fill="#0066cc" font-weight="700" opacity="0">♪</text>
+        </g>
+        <!-- 전류 점 -->
+        <g id="dots"></g>
+        <!-- 연결점 + 라벨 + 탭 영역 -->
+        <g id="points"></g>
+        <text x="20" y="462" font-size="13" fill="#7a7a7a">양끝 전극을 잡으면 몸을 지나 회로가 한 바퀴 닫힌다</text>
+        <text x="728" y="462" font-size="13" fill="#7a7a7a" text-anchor="end">연결점을 탭하면 잡기 / 놓기</text>
+      </svg>
+
+      <div class="legend"><span class="cur">몸을 지나 흐르는 전류</span><span class="dot">잡은 곳</span><span class="gap">놓은 곳</span></div>
+    </div>
+
+    <div class="panel">
+      <div>
+        <h3>보기</h3>
+        <div class="chips">
+          <div class="chip on" data-layer="flow">전류 흐름</div>
+        </div>
+      </div>
+      <div>
+        <h3>만져 보기</h3>
+        <div class="chips">
+          <div class="chip blue" id="holdAll">모두 잡기</div>
+          <div class="chip" id="dropOne">한 곳 놓기</div>
+          <div class="chip" id="reset">다시</div>
+        </div>
+      </div>
+      <div class="readout">
+        <div class="r"><div class="k">닫힌 연결</div><div class="v" id="rCount">0 / 6</div></div>
+        <div class="r"><div class="k">에너지스틱</div><div class="v" id="rState">꺼짐</div></div>
+      </div>
+      <div class="steps">
+        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
+        <div class="step" id="s1"><div class="n">1</div><div class="t">양끝 전극을 잡으면 회로가 한 바퀴 닫힌다<small>스틱 → 사람 → 사람 → … → 스틱으로 길이 이어진다</small></div></div>
+        <div class="step" id="s2"><div class="n">2</div><div class="t">몸을 통해 아주 작은(안전한) 전류가 흐른다<small>전류가 흐르면 스틱이 빛나고 소리가 난다</small></div></div>
+        <div class="step" id="s3"><div class="n">3</div><div class="t">한 곳만 끊겨도 길이 끊겨 불이 꺼진다<small>몇 명이 잡고 있든, 끊긴 곳이 하나면 전류는 0</small></div></div>
+        <div class="note">마지막 미션의 스위치도 이렇게 길을 열고 닫습니다.</div>
+      </div>
+      <div class="ask">
+        <h3>실물에서 확인</h3>
+        <p>5명 중 한 명만 손을 놓으면 어떻게 될까? 두 명이 동시에 놓으면?</p>
+        <p>실물 에너지스틱으로 확인하고 사원증에 적으세요.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div><span class="safe">안전</span> · 에너지스틱은 안전한 아주 작은 전류를 씁니다. 젖은 손·금속 장신구는 닦고 벗은 뒤 잡습니다.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const el=(n,a,p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+  const CX=374, CY=250, R=165, D=Math.PI/180;
+  // 사람 5명: 위쪽 틈(스틱 자리)을 넓게 둔 각도
+  const ang=[-140,-40,25,90,155];
+  const P=ang.map(a=>({x:Math.round(CX+R*Math.cos(a*D)),y:Math.round(CY+R*Math.sin(a*D))}));
+  // 연결점 6곳: 0 스틱 왼쪽 전극, 1 스틱 오른쪽 전극, 2~5 손잡기(사람1-2, 2-3, 3-4, 4-5)
+  const pts=[
+    {x:289,y:100,a:[0],lab:{x:289,y:50,anchor:'middle'}},
+    {x:459,y:100,a:[1],lab:{x:459,y:50,anchor:'middle'}},
+  ];
+  for(let i=1;i<5;i++){
+    const a=(ang[i]+(i+1<5?ang[i+1]:ang[0]+360))/2;
+    const x=Math.round(CX+(R+4)*Math.cos(a*D)), y=Math.round(CY+(R+4)*Math.sin(a*D));
+    const ox=Math.cos(a*D), oy=Math.sin(a*D);
+    pts.push({x,y,a:[i,(i+1)%5],lab:{x:Math.round(x+ox*22),y:Math.round(y+oy*22+5),anchor:ox>0.3?'start':ox<-0.3?'end':'middle'}});
+  }
+  // 사람 0(왼쪽 위)은 왼쪽 전극, 사람 1(오른쪽 위)은 오른쪽 전극을 잡는다
+  // 손잡기: pts[2]=사람1-2, pts[3]=사람2-3, pts[4]=사람3-4, pts[5]=사람4-0
+  const held=[];
+  const INIT=[true,true,true,false,true,true];
+  const layers={flow:true};
+
+  // 전류 길: 스틱 → 사람1 → 손 → 사람2 → … → 사람0 → 스틱
+  const sh=i=>({x:P[i].x,y:P[i].y-4});
+  const loopPts=[pts[0],pts[1],sh(1),pts[2],sh(2),pts[3],sh(3),pts[4],sh(4),pts[5],sh(0)];
+  const loop=document.getElementById('loop');
+  loop.setAttribute('d','M'+loopPts.map(p=>p.x+','+p.y).join(' L')+' Z');
+  const LEN=loop.getTotalLength();
+
+  // 사람 그리기
+  const people=document.getElementById('people');
+  P.forEach((p,i)=>{
+    const g=el('g',{},people);
+    el('circle',{cx:p.x,cy:p.y-26,r:11,fill:'#1d1d1f'},g);
+    el('rect',{x:p.x-13,y:p.y-12,width:26,height:38,rx:11,fill:'#1d1d1f'},g);
+    el('text',{x:p.x,y:p.y+12,'font-size':'13','font-weight':'700',fill:'#fff','text-anchor':'middle'},g).textContent=String(i+1);
+  });
+
+  // 팔: 연결점마다 사람 쪽 팔 1~2개
+  const armsG=document.getElementById('arms');
+  const arms=[];
+  pts.forEach((pt,k)=>{
+    pt.a.forEach(i=>{
+      const s=sh(i);
+      const a=el('line',{class:'arm'},armsG);
+      arms.push({a,k,s,pt});
+    });
+  });
+  function armPos(){
+    arms.forEach(o=>{
+      const on=held[o.k];
+      const dx=o.pt.x-o.s.x, dy=o.pt.y-o.s.y, L=Math.hypot(dx,dy);
+      const cut=on?7:15; // 놓으면 손이 못 닿아 간격이 생긴다
+      const ex=o.pt.x-dx/L*cut, ey=o.pt.y-dy/L*cut;
+      o.a.setAttribute('x1',o.s.x); o.a.setAttribute('y1',o.s.y);
+      o.a.setAttribute('x2',ex.toFixed(1)); o.a.setAttribute('y2',ey.toFixed(1));
+      o.a.classList.toggle('off',!on);
+    });
+  }
+
+  // 연결점: 점 + 라벨 + 탭 영역
+  const pointsG=document.getElementById('points');
+  const dotEls=[], labEls=[];
+  pts.forEach((pt,k)=>{
+    const g=el('g',{class:'tap'},pointsG);
+    el('circle',{cx:pt.x,cy:pt.y,r:32,fill:'transparent'},g);
+    const c=el('circle',{cx:pt.x,cy:pt.y,r:8,fill:'#0066cc',stroke:'#f5f5f7','stroke-width':2},g);
+    const t=el('text',{class:'halo',x:pt.lab.x,y:pt.lab.y,'font-size':'13','font-weight':'600',fill:'#ff9f0a','text-anchor':pt.lab.anchor},g);
+    t.textContent='여기가 끊겼어요';
+    dotEls.push(c); labEls.push(t);
+    g.addEventListener('pointerdown',e=>{e.preventDefault(); held[k]=!held[k]; render();});
+  });
+
+  // 전류 점
+  const dotsG=document.getElementById('dots');
+  const ND=30, dots=[];
+  for(let i=0;i<ND;i++) dots.push(el('circle',{r:3.6,fill:'#0066cc'},dotsG));
+
+  const glow=document.getElementById('glow'), light=document.getElementById('stickLight'), note=document.getElementById('note');
+  const rCount=document.getElementById('rCount'), rState=document.getElementById('rState');
+  const steps=[1,2,3].map(n=>document.getElementById('s'+n));
+
+  let closed=false, off=0, t=0, last=performance.now();
+  function render(){
+    const n=held.filter(Boolean).length; closed=n===held.length;
+    armPos();
+    dotEls.forEach((c,k)=>{
+      const on=held[k];
+      c.setAttribute('fill',on?'#0066cc':'#f5f5f7');
+      c.setAttribute('stroke',on?'#f5f5f7':'#7a7a7a');
+      c.setAttribute('stroke-width',on?2:2.5);
+      c.setAttribute('r',on?8:9);
+      labEls[k].style.display=on?'none':'';
+    });
+    dotsG.style.display=(closed&&layers.flow)?'':'none';
+    rCount.textContent=n+' / '+held.length;
+    rState.textContent=closed?'켜짐 ♪':'꺼짐';
+    rState.classList.toggle('on',closed);
+    steps[0].classList.toggle('now',closed);
+    steps[1].classList.toggle('now',closed);
+    steps[2].classList.toggle('now',!closed);
+  }
+  function tick(now){
+    const dt=Math.min(.05,(now-last)/1000); last=now; t+=dt;
+    if(closed){
+      off=(off+90*dt)%LEN;
+      if(layers.flow){
+        const gap=LEN/ND;
+        dots.forEach((d,i)=>{const p=loop.getPointAtLength((off+i*gap)%LEN); d.setAttribute('cx',p.x.toFixed(1)); d.setAttribute('cy',p.y.toFixed(1));});
+      }
+      const pul=.85+.15*Math.sin(t*5);
+      glow.setAttribute('opacity',pul.toFixed(2));
+      light.setAttribute('opacity',(.55+.25*Math.sin(t*5)).toFixed(2));
+      note.setAttribute('opacity','1');
+      note.setAttribute('transform','translate(0,'+(-3*Math.sin(t*3)).toFixed(1)+')');
+    }else{
+      glow.setAttribute('opacity','0'); light.setAttribute('opacity','0'); note.setAttribute('opacity','0');
+    }
+    requestAnimationFrame(tick);
+  }
+
+  document.querySelectorAll('.chip[data-layer]').forEach(c=>c.addEventListener('click',()=>{
+    const k=c.dataset.layer; layers[k]=!layers[k]; c.classList.toggle('on',layers[k]); render();
+  }));
+  document.getElementById('holdAll').addEventListener('click',()=>{held.fill(true); render();});
+  document.getElementById('dropOne').addEventListener('click',()=>{
+    const cand=held.map((v,i)=>v?i:-1).filter(i=>i>=0);
+    if(!cand.length) return;
+    held[cand[Math.floor(Math.random()*cand.length)]]=false; render();
+  });
+  document.getElementById('reset').addEventListener('click',()=>{INIT.forEach((v,i)=>held[i]=v); render();});
+
+  INIT.forEach((v,i)=>held[i]=v);
+  render(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

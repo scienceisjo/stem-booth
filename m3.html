@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가상실험실 · 불빛을 깨워라</title>
+<link rel="stylesheet" href="booth.css">
+<style>
+  /* 이 페이지만 암실 느낌: lab 배경을 어둡게, 글자는 밝게 (booth.css 는 손대지 않음) */
+  .lab{background:#1d1d1f;color:#fff}
+  .lab h2{color:#fff}
+  .lab .q{color:#c7c7cc}
+  .lab .legend{color:#c7c7cc}
+  .lab svg text.halo{stroke:#0d0d0e}
+  .legend .pl::before{border-color:#5ac8fa}
+  .legend .mk::before{border-color:#fff}
+  #tube{cursor:grab}
+  #tube.drag{cursor:grabbing}
+  .slider{display:flex;align-items:center;gap:12px}
+  .slider input{flex:1;min-width:0;height:44px;accent-color:#0066cc;cursor:pointer}
+  .slider span{font-size:14px;min-width:38px;text-align:right;letter-spacing:-.22px}
+  .slider.lbls{justify-content:space-between;font-size:12px;color:#7a7a7a;margin-top:-4px;padding:0 50px 0 4px}
+  .slider.lbls span{min-width:0;text-align:center}
+  @media (max-width:980px){ .main{grid-template-columns:minmax(0,1fr)} .lab svg{max-width:100%} }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="nav">
+    <a class="brand" href="index.html"><span class="logo"></span>HNR Tech Inc.</a>
+    <div class="right">가상실험실 · 어쩌다 반도체 연구원!</div>
+  </div>
+  <div class="subnav">
+    <div class="crumb"><a href="index.html">가상실험실</a> › 미션 3 <b>불빛을 깨워라</b></div>
+    <div class="right"><span>클리어하면 스탬프</span><div class="stamp">빛</div></div>
+  </div>
+
+  <div class="main">
+    <div class="lab">
+      <h2>전선도 없는데 형광등이 왜 켜질까?</h2>
+      <div class="q">가까이·멀리 움직이며 켜지는 거리를 찾아보세요.</div>
+
+      <svg viewBox="0 0 748 470" id="sim" aria-label="플라즈마볼로 형광등 켜기 시뮬레이션">
+        <!-- 암실 상자 -->
+        <rect x="1" y="1" width="746" height="468" rx="14" fill="#0d0d0e" stroke="#3a3a3c" stroke-width="2"/>
+        <text x="20" y="26" font-size="13" fill="#8e8e93">암실 상자 (안이 어두워야 잘 보여요)</text>
+
+        <!-- 전기장 범위 점선 -->
+        <g id="rings"></g>
+
+        <!-- 범위 찾기 표시선 -->
+        <g id="marker" style="display:none">
+          <circle id="mkC" cx="190" cy="250" r="200" fill="none" stroke="#fff" stroke-width="2"/>
+          <text id="mkT" class="halo" x="0" y="0" font-size="15" font-weight="600" fill="#fff">여기까지!</text>
+        </g>
+
+        <!-- 거리 표시선 -->
+        <g id="measure" style="display:none">
+          <line id="msL" x1="0" y1="0" x2="0" y2="0" stroke="#fff" stroke-width="1" stroke-dasharray="3 4" opacity=".7"/>
+          <text id="msT" class="halo" x="0" y="0" font-size="13" fill="#fff" text-anchor="middle"></text>
+        </g>
+
+        <!-- 플라즈마볼 -->
+        <g id="ball">
+          <path d="M152,332 L228,332 L246,398 L134,398 Z" fill="#2c2c2e" stroke="#6e6e73" stroke-width="2"/>
+          <rect x="120" y="398" width="140" height="12" rx="4" fill="#2c2c2e" stroke="#6e6e73" stroke-width="2"/>
+          <circle cx="190" cy="250" r="90" fill="#121214" stroke="#6e6e73" stroke-width="2.5"/>
+          <g id="bolts"></g>
+          <circle cx="190" cy="250" r="24" fill="#2997ff" opacity=".16"/>
+          <circle cx="190" cy="250" r="9" fill="#5ac8fa"/>
+          <circle cx="190" cy="250" r="3.5" fill="#fff"/>
+          <text x="190" y="432" font-size="13" fill="#8e8e93" text-anchor="middle">플라즈마볼 (지름 15 cm)</text>
+        </g>
+
+        <!-- 형광등 (드래그) -->
+        <g id="tube">
+          <rect x="-112" y="-32" width="224" height="64" fill="#fff" opacity="0"/>
+          <rect x="-95" y="-11" width="190" height="22" rx="11" fill="#2a2a2c" stroke="#8e8e93" stroke-width="2"/>
+          <g id="segs"></g>
+          <g id="cores"></g>
+          <rect x="-101" y="-8" width="14" height="16" rx="2" fill="#8e8e93"/>
+          <rect x="87" y="-8" width="14" height="16" rx="2" fill="#8e8e93"/>
+        </g>
+
+        <text id="hint" class="halo" x="560" y="300" font-size="14" fill="#c7c7cc" text-anchor="middle">형광등을 끌어서 움직여 보세요</text>
+        <text id="modeHint" class="halo" x="560" y="300" font-size="14" fill="#5ac8fa" text-anchor="middle" style="display:none">멀리서부터 천천히 가까이 가 보세요</text>
+      </svg>
+
+      <div class="legend"><span class="pl">전극에서 뻗는 방전 가지</span><span class="fld">전기장이 미치는 범위 (바깥일수록 약함)</span><span class="mk">처음 켜진 거리</span></div>
+    </div>
+
+    <div class="panel">
+      <div>
+        <h3>보기</h3>
+        <div class="chips">
+          <div class="chip on" data-layer="rings">전기장 범위</div>
+        </div>
+      </div>
+      <div>
+        <h3>만져 보기</h3>
+        <div class="chips">
+          <div class="chip blue" id="mode">범위 찾기 모드</div>
+          <div class="chip" id="rotate">세로로 들기</div>
+          <div class="chip" id="reset">처음으로</div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:6px">플라즈마볼 세기</h3>
+        <div class="slider"><input type="range" id="power" min="0" max="2" step="1" value="1" aria-label="플라즈마볼 세기"><span id="powerLbl">보통</span></div>
+        <div class="slider lbls"><span>낮음</span><span>보통</span><span>높음</span></div>
+      </div>
+      <div class="readout">
+        <div class="r"><div class="k">볼 표면에서 거리</div><div class="v" id="rd">— cm</div></div>
+        <div class="r"><div class="k">밝기</div><div class="v" id="rb">0 %</div></div>
+        <div class="r"><div class="k">형광등</div><div class="v" id="ro">꺼짐</div></div>
+      </div>
+      <div class="steps">
+        <h3 style="margin-bottom:6px">지금 일어나는 일</h3>
+        <div class="step" id="s1"><div class="n">1</div><div class="t">플라즈마볼 가운데 전극이 아주 빠르게 변하는 높은 전압을 만든다<small>볼 안의 가지 모양 빛은 전극에서 유리 쪽으로 뻗는 방전이다</small></div></div>
+        <div class="step" id="s2"><div class="n">2</div><div class="t">볼 주변에 빠르게 변하는 전기장이 생기고, 가까운 형광등 속 기체가 자극을 받는다<small>전선 없이도 전기장은 유리 밖까지 미친다</small></div></div>
+        <div class="step" id="s3"><div class="n">3</div><div class="t">자극받은 기체가 자외선을 내고, 관 안쪽 형광 물질이 그 빛을 눈에 보이는 빛으로 바꾼다<small>거리가 멀면 자극이 약해 꺼진다</small></div></div>
+      </div>
+      <div class="ask">
+        <h3>실물에서 확인</h3>
+        <p>볼에서 몇 cm 까지 켜질까? 형광등을 세로로 들면, 가로로 들면 다를까?</p>
+        <p>암실 상자에서 확인하고 사원증에 적으세요.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div><span class="safe">안전</span> · 플라즈마볼 표면에 금속을 대면 작은 불꽃이 튈 수 있어요. 형광등은 유리이니 세게 부딪히지 않습니다.</div>
+    <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-09-07</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  const svg=document.getElementById('sim');
+  const $=id=>document.getElementById(id);
+  const CX=190, CY=250, R=90, PX=12;          // 12 px = 1 cm, 볼 반지름 7.5 cm
+  const THR=[8,14,22];                        // 세기별 켜지는 최대 거리(볼 표면에서, cm)
+  const LEVEL_TXT=['낮음','보통','높음'];
+  const TL=95, NSEG=12;                       // 형광등 반길이 px, 구간 수
+  const st={x:560,y:250,a:0,level:1,rings:true,mode:false,marker:null,wasOn:false,moved:false,lit:0,dcm:99};
+
+  /* ---------- 전기장 범위 점선 ---------- */
+  const ringG=$('rings'), rings=[];
+  for(let i=0;i<3;i++){
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',CX); c.setAttribute('cy',CY); c.setAttribute('fill','none');
+    c.setAttribute('stroke','#7a7a7a'); c.setAttribute('stroke-width','1.5'); c.setAttribute('stroke-dasharray','5 6');
+    c.setAttribute('opacity',[.65,.42,.24][i]);
+    ringG.appendChild(c); rings.push(c);
+  }
+  function layoutRings(){
+    const thr=THR[st.level]*PX;
+    rings.forEach((c,i)=>c.setAttribute('r',R+thr*(i+1)/3));
+  }
+
+  /* ---------- 형광등 구간 ---------- */
+  const segG=$('segs'), coreG=$('cores'), segs=[], cores=[];
+  const inner=166, w=inner/NSEG;
+  for(let i=0;i<NSEG;i++){
+    const x=-83+i*w;
+    const s=document.createElementNS(NS,'rect');
+    s.setAttribute('x',x); s.setAttribute('y',-9); s.setAttribute('width',w+0.6); s.setAttribute('height',18);
+    s.setAttribute('fill','#5ac8fa'); s.setAttribute('opacity','0'); segG.appendChild(s); segs.push(s);
+    const c=document.createElementNS(NS,'rect');
+    c.setAttribute('x',x); c.setAttribute('y',-4); c.setAttribute('width',w+0.6); c.setAttribute('height',8);
+    c.setAttribute('fill','#fff'); c.setAttribute('opacity','0'); coreG.appendChild(c); cores.push(c);
+  }
+
+  /* ---------- 방전 가지(번개) ---------- */
+  const boltG=$('bolts'), bolts=[];
+  const BASE=[-2.5,-1.3,-0.2,0.9,2.1];
+  BASE.forEach((b,i)=>{
+    const glow=document.createElementNS(NS,'polyline');
+    glow.setAttribute('fill','none'); glow.setAttribute('stroke','#2997ff'); glow.setAttribute('stroke-width','6'); glow.setAttribute('opacity','.35'); glow.setAttribute('stroke-linejoin','round');
+    const core=document.createElementNS(NS,'polyline');
+    core.setAttribute('fill','none'); core.setAttribute('stroke','#5ac8fa'); core.setAttribute('stroke-width','2'); core.setAttribute('stroke-linejoin','round');
+    const sub=document.createElementNS(NS,'polyline');
+    sub.setAttribute('fill','none'); sub.setAttribute('stroke','#5ac8fa'); sub.setAttribute('stroke-width','1.3'); sub.setAttribute('opacity','.8');
+    boltG.appendChild(glow); boltG.appendChild(core); boltG.appendChild(sub);
+    bolts.push({base:b,ph:i*1.7,glow,core,sub,ang:b});
+  });
+  function boltPts(ang,len,n,t,ph,amp){
+    const ux=Math.cos(ang), uy=Math.sin(ang), pts=[];
+    for(let i=0;i<n;i++){
+      const r=len*i/(n-1);
+      const off=(i===0)?0:(3+i*amp)*(0.6*Math.sin(t*2.3+ph+i*1.9)+0.4*Math.sin(t*3.9+ph*2+i*0.7));
+      pts.push((CX+r*ux-off*uy).toFixed(1)+','+(CY+r*uy+off*ux).toFixed(1));
+    }
+    return pts;
+  }
+  function drawBolts(t,dt){
+    // 형광등 끝이 볼에 거의 닿으면 가장 가까운 가지가 그쪽으로 끌린다
+    const near=nearestPoint();
+    const toTube=Math.atan2(near.qy-CY,near.qx-CX);
+    const pull=Math.max(0,1-st.dcm/3);
+    let best=-1,bd=99;
+    bolts.forEach((b,i)=>{const d=Math.abs(Math.atan2(Math.sin(b.base-toTube),Math.cos(b.base-toTube))); if(d<bd){bd=d;best=i;}});
+    bolts.forEach((b,i)=>{
+      let target=b.base+0.35*Math.sin(t*0.6+b.ph);
+      if(i===best && pull>0) target=b.base+Math.atan2(Math.sin(toTube-b.base),Math.cos(toTube-b.base))*pull;
+      b.ang+=(target-b.ang)*Math.min(1,dt*6);
+      const len=(i===best&&pull>0)?86:82+3*Math.sin(t*1.1+b.ph);
+      const p=boltPts(b.ang,len,8,t,b.ph,2.6);
+      b.glow.setAttribute('points',p.join(' ')); b.core.setAttribute('points',p.join(' '));
+      const q=boltPts(b.ang+0.55*Math.sin(t*0.4+b.ph),len*0.62,5,t,b.ph+3,1.6);
+      b.sub.setAttribute('points',p.slice(0,3).join(' ')+' '+q.slice(2).join(' '));
+    });
+  }
+
+  /* ---------- 기하 ---------- */
+  function nearestPoint(){
+    // 볼 중심에서 형광등(선분)까지 가장 가까운 점
+    const ux=Math.cos(st.a), uy=Math.sin(st.a);
+    let t=(CX-st.x)*ux+(CY-st.y)*uy; t=Math.max(-TL,Math.min(TL,t));
+    const qx=st.x+t*ux, qy=st.y+t*uy;
+    return {qx,qy,d:Math.hypot(qx-CX,qy-CY)};
+  }
+  function clampTube(){
+    st.x=Math.max(40,Math.min(708,st.x)); st.y=Math.max(40,Math.min(430,st.y));
+    const n=nearestPoint(), lim=R+6;
+    if(n.d<lim){
+      let dx=n.qx-CX, dy=n.qy-CY, d=n.d;
+      if(d<0.01){dx=-Math.sin(st.a); dy=Math.cos(st.a); d=1;}
+      st.x+=dx/d*(lim-d); st.y+=dy/d*(lim-d);
+    }
+  }
+  function bright(dcm){
+    const thr=THR[st.level];
+    if(dcm>=thr) return 0;
+    return Math.pow(1-dcm/thr,1.3);
+  }
+
+  /* ---------- 그리기 ---------- */
+  const tube=$('tube'), rd=$('rd'), rb=$('rb'), ro=$('ro');
+  const measure=$('measure'), msL=$('msL'), msT=$('msT');
+  const marker=$('marker'), mkC=$('mkC'), mkT=$('mkT');
+  const steps=[$('s1'),$('s2'),$('s3')];
+  function render(t){
+    tube.setAttribute('transform',`translate(${st.x.toFixed(1)},${st.y.toFixed(1)}) rotate(${st.a*180/Math.PI})`);
+    const ux=Math.cos(st.a), uy=Math.sin(st.a);
+    const flick=0.94+0.06*Math.sin(t*17)+0.02*Math.sin(t*41);
+    let maxO=0;
+    segs.forEach((s,i)=>{
+      const lx=-83+(i+0.5)*w;
+      const sx=st.x+lx*ux, sy=st.y+lx*uy;
+      const dcm=Math.max(0,(Math.hypot(sx-CX,sy-CY)-R)/PX);
+      const o=bright(dcm); if(o>maxO) maxO=o;
+      s.setAttribute('opacity',(o*0.9*flick).toFixed(3));
+      cores[i].setAttribute('opacity',(Math.pow(o,1.8)*0.95*flick).toFixed(3));
+    });
+    const n=nearestPoint();
+    st.dcm=Math.max(0,(n.d-R)/PX);
+    st.lit=maxO;
+    const on=maxO>0.005;
+    rd.textContent=st.dcm.toFixed(1)+' cm';
+    rb.textContent=Math.round(maxO*100)+' %';
+    ro.textContent=on?'켜짐':'꺼짐';
+    ro.style.color=on?'#0066cc':'';
+    steps.forEach(s=>s.classList.remove('now'));
+    (on?(maxO<0.4?steps[1]:steps[2]):steps[0]).classList.add('now');
+
+    // 거리 표시선(볼 표면 → 형광등 가장 가까운 점)
+    if(st.dcm>0.8){
+      const dx=(n.qx-CX)/n.d, dy=(n.qy-CY)/n.d;
+      const sx=CX+dx*R, sy=CY+dy*R;
+      msL.setAttribute('x1',sx); msL.setAttribute('y1',sy); msL.setAttribute('x2',n.qx); msL.setAttribute('y2',n.qy);
+      const mx=(sx+n.qx)/2, my=(sy+n.qy)/2;
+      msT.setAttribute('x',mx-dy*12); msT.setAttribute('y',my+dx*12+4);
+      msT.textContent=st.dcm.toFixed(1)+' cm';
+      measure.style.display='';
+    } else measure.style.display='none';
+
+    // 범위 찾기: 꺼짐 → 켜짐 순간 기록
+    if(st.mode && on && !st.wasOn){
+      st.marker=st.dcm;
+      const mr=R+st.dcm*PX;
+      mkC.setAttribute('r',mr);
+      mkT.setAttribute('x',CX+mr*Math.cos(0.55)+8); mkT.setAttribute('y',CY+mr*Math.sin(0.55)+5);
+      mkT.textContent='여기까지! '+st.dcm.toFixed(1)+' cm';
+      marker.style.display='';
+      $('modeHint').style.display='none';
+    }
+    st.wasOn=on;
+    ringG.style.display=st.rings?'':'none';
+  }
+
+  /* ---------- 루프 ---------- */
+  let last=performance.now(), t=0;
+  function tick(now){
+    const dt=Math.min(.05,(now-last)/1000); last=now; t+=dt;
+    drawBolts(t,dt); render(t);
+    requestAnimationFrame(tick);
+  }
+
+  /* ---------- 드래그 ---------- */
+  function toSvg(e){
+    const p=svg.createSVGPoint(); p.x=e.clientX; p.y=e.clientY;
+    return p.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  let drag=null;
+  tube.addEventListener('pointerdown',e=>{
+    const p=toSvg(e);
+    drag={ox:p.x-st.x,oy:p.y-st.y,id:e.pointerId};
+    tube.classList.add('drag'); e.preventDefault();
+    try{ svg.setPointerCapture(e.pointerId); }catch(_){ /* 캡처 못 해도 드래그는 계속 */ }
+    if(!st.moved){st.moved=true; $('hint').style.display='none';}
+  });
+  svg.addEventListener('pointermove',e=>{
+    if(!drag||e.pointerId!==drag.id) return;
+    const p=toSvg(e);
+    st.x=p.x-drag.ox; st.y=p.y-drag.oy; clampTube(); render(t);
+  });
+  function endDrag(e){ if(drag&&e.pointerId===drag.id){drag=null; tube.classList.remove('drag');} }
+  svg.addEventListener('pointerup',endDrag); svg.addEventListener('pointercancel',endDrag);
+
+  /* ---------- 조작 ---------- */
+  document.querySelectorAll('.chip[data-layer]').forEach(c=>c.addEventListener('click',()=>{
+    st.rings=!st.rings; c.classList.toggle('on',st.rings); render(t);
+  }));
+  const modeBtn=$('mode');
+  modeBtn.addEventListener('click',()=>{
+    st.mode=!st.mode; modeBtn.classList.toggle('on',st.mode);
+    modeBtn.textContent=st.mode?'범위 찾기 중…':'범위 찾기 모드';
+    $('modeHint').style.display=(st.mode&&st.marker===null)?'':'none';
+    if(st.mode){$('hint').style.display='none';}
+  });
+  const rotBtn=$('rotate');
+  rotBtn.addEventListener('click',()=>{
+    st.a=st.a===0?Math.PI/2:0; rotBtn.textContent=st.a===0?'세로로 들기':'가로로 들기';
+    clampTube(); render(t);
+  });
+  $('reset').addEventListener('click',()=>{
+    st.x=560; st.y=250; st.a=0; rotBtn.textContent='세로로 들기';
+    st.marker=null; marker.style.display='none'; st.wasOn=false;
+    st.mode=false; modeBtn.classList.remove('on'); modeBtn.textContent='범위 찾기 모드';
+    $('modeHint').style.display='none'; render(t);
+  });
+  const power=$('power'), powerLbl=$('powerLbl');
+  power.addEventListener('input',()=>{
+    st.level=+power.value; powerLbl.textContent=LEVEL_TXT[st.level]; layoutRings(); render(t);
+  });
+
+  layoutRings(); clampTube(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
