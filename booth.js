@@ -109,7 +109,7 @@
       dots += '<a class="d' + (done ? ' on' : '') + (n === cur ? ' cur' : '') + '" href="m' + n + '.html" title="' + MISSIONS[n].title + '">' + (done ? '✓' : n) + '</a>';
     }
     el.innerHTML =
-      '<a class="who" href="index.html"><img src="img/badge.png" alt="" width="22" height="22"><b>' + s.name + '</b> 연구원' + (s.guest ? ' <em>둘러보기</em>' : '') + '</a>' +
+      '<a class="who" href="dashboard.html"><img src="img/badge.png" alt="" width="22" height="22"><b>' + s.name + '</b> 연구원' + (s.guest ? ' <em>둘러보기</em>' : '') + '</a>' +
       '<div class="bar"><i style="width:' + pct(s) + '%"></i></div>' +
       '<span class="pct">' + s.cleared.length + '/6 · ' + pct(s) + '%</span>' +
       '<span class="dots">' + dots + '</span>';
@@ -136,7 +136,7 @@
     const box = document.createElement('div');
     box.className = 'hnr-complete' + (done ? ' done' : '');
     box.innerHTML = done
-      ? '<div class="ok">스탬프 「' + m.stamp + '」 획득 완료</div><a class="hnr-btn ghost" href="' + (FROM_LAB ? 'lab.html' : (n < 6 ? 'm' + (n + 1) + '.html' : 'index.html')) + '">' + (FROM_LAB ? '연구소로 돌아가기 →' : (n < 6 ? '다음 미션으로 →' : '대시보드로 →')) + '</a>'
+      ? '<div class="ok">스탬프 「' + m.stamp + '」 획득 완료</div><a class="hnr-btn ghost" href="' + (FROM_LAB ? 'lab.html' : (n < 6 ? 'm' + (n + 1) + '.html' : 'dashboard.html')) + '">' + (FROM_LAB ? '연구소로 돌아가기 →' : (n < 6 ? '다음 미션으로 →' : '대시보드로 →')) + '</a>'
       : (FROM_LAB
         ? '<a class="hnr-btn big" href="lab.html">연구소로 돌아가기 →</a><small>스탬프는 연구소에서 비트에게 받아요</small>'
         : '<button class="hnr-btn big" type="button">미션 완료! 스탬프 받기</button><small>' + (s.guest ? '둘러보기 중이라 스탬프는 저장되지 않아요' : '실물 체험을 마쳤으면 눌러요') + '</small>');
@@ -147,7 +147,7 @@
       const cur = load() || s;
       if (!cur.guest && cur.cleared.indexOf(n) < 0) { cur.cleared.push(n); cur.cleared.sort(); save(cur); }
       story(m.clear, { label: '미션 ' + n + ' 완료', stamp: m.stamp, last: n < 6 ? '다음 미션으로' : '대시보드로' }).then(function () {
-        location.href = n < 6 ? 'm' + (n + 1) + '.html' : 'index.html';
+        location.href = n < 6 ? 'm' + (n + 1) + '.html' : 'dashboard.html';
       });
     });
   }
@@ -161,7 +161,7 @@
   // ─────────────────────────────────────────── 진입점
   function initMission(n) {
     let s = load();
-    if (!s) { location.replace('index.html?next=m' + n); return; }
+    if (!s) { location.replace('dashboard.html?next=m' + n); return; }
     const m = MISSIONS[n];
     strip(s, n);
     markStamp(n, s);
