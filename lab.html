@@ -102,10 +102,11 @@ body.dlg #minimap,body.dlg #botL,body.dlg #talk,body.dlg #hint{display:none!impo
 </div>
 <div class="hud" id="botL">
   <a class="pill" href="dashboard.html">📋 대시보드</a>
+  <button class="pill" id="viewBtn" type="button">📷 3인칭</button>
   <button class="pill" id="resetBtn" type="button">다음 팀</button>
 </div>
 <div id="minimap"></div>
-<div class="hud" id="hint">🚶 바닥을 탭하면 걸어가요 · 드래그하면 둘러봐요 · 비트 앞에서 말 걸기</div>
+<div class="hud" id="hint">🚶 바닥을 탭하면 걸어가요 · 드래그하면 둘러봐요 · 📷 버튼(V키)으로 시점 바꾸기</div>
 <div class="hud" id="talk"><button type="button" id="talkBtn">💬 비트에게 말 걸기</button></div>
 
 <div id="dlg"><div class="box">
@@ -222,7 +223,18 @@ const roomMesh = {};     // n → {floor, props[], door, lamp, light}
 const termSprite = {};   // n → sprite
 const player = {x:1300, z:1830};
 let walkQueue = [], walking = false, faceAngle = Math.PI, faceTarget = Math.PI;
-let camYaw = 0, camH = 560, camD = 700;
+let camYaw = 0, camH = 560, camD = 700, camPitch = 0, topH = 1500;
+const VIEWS = ['tps','fps','top'], VIEW_LABEL = {tps:'📷 3인칭', fps:'👀 1인칭', top:'🗺️ 탑뷰'};
+let VIEW = (function(){ try{ const v=localStorage.getItem('hnr.view'); return VIEWS.indexOf(v)>=0?v:'tps'; }catch(e){ return 'tps'; } })();
+function setView(v){
+  VIEW = v; try{ localStorage.setItem('hnr.view', v); }catch(e){}
+  $('#viewBtn').textContent = VIEW_LABEL[v];
+  if(!camera) return;
+  camera.near = v==='fps' ? 8 : 40; camera.updateProjectionMatrix();
+  playerChar.visible = v!=='fps';
+  if(v==='fps'){ camPitch = 0; camYaw = faceAngle + Math.PI; }        // 지금 보는 방향 그대로
+}
+function cycleView(){ setView(VIEWS[(VIEWS.indexOf(VIEW)+1)%VIEWS.length]); }
 const keys = {}; const SPEED = 330;
 let raycaster, pointerV, lastT = performance.now();
 
@@ -603,8 +615,19 @@ function animate(t){
   const hop = walking ? Math.abs(Math.sin(t/110))*3 : 0;
   faceAngle = lerpAngle(faceAngle, faceTarget, .25);
   playerChar.rotation.y = faceAngle; playerChar.position.set(player.x, hop, player.z);
-  camera.position.lerp(new THREE.Vector3(player.x+Math.sin(camYaw)*camD, camH, player.z+Math.cos(camYaw)*camD), .16);
-  camera.lookAt(player.x, 40, player.z);
+  if(VIEW==='fps'){
+    const eyeY = 76 + hop;
+    camera.position.set(player.x, eyeY, player.z);
+    const fx=-Math.sin(camYaw), fz=-Math.cos(camYaw);
+    camera.lookAt(player.x+fx*100, eyeY+Math.tan(camPitch)*100, player.z+fz*100);
+    if(!walking) faceTarget = camYaw + Math.PI;                       // 서 있을 땐 보는 쪽으로 몸 돌림
+  } else if(VIEW==='top'){
+    camera.position.lerp(new THREE.Vector3(player.x+Math.sin(camYaw)*topH*.25, topH, player.z+Math.cos(camYaw)*topH*.25), .16);
+    camera.lookAt(player.x, 0, player.z);
+  } else {
+    camera.position.lerp(new THREE.Vector3(player.x+Math.sin(camYaw)*camD, camH, player.z+Math.cos(camYaw)*camD), .16);
+    camera.lookAt(player.x, 40, player.z);
+  }
   for(let n=1;n<=6;n++){ const b=termSprite[n]; b.position.y = 4+Math.sin(t/500+n)*4; const led=b.userData.led;
     if(b.userData.state==='on'){ led.material.emissive.setHex(BRICK.blue); } else { const k=(Math.sin(t/300+n)+1)/2; led.material.emissive.setHex(k>.5?0x4ac7e3:0x000000); } }
   // 근접 단말기
@@ -633,18 +656,19 @@ function initPointer(){
   el.addEventListener('pointerdown', ev=>{ if(uiOpen()) return; ptrs.set(ev.pointerId,{x:ev.clientX,y:ev.clientY}); try{el.setPointerCapture(ev.pointerId);}catch(e){}
     if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; pinchD=Math.hypot(a.x-b.x,a.y-b.y); drag=null; } else if(ptrs.size===1) drag={x:ev.clientX,y:ev.clientY,moved:false,id:ev.pointerId}; });
   el.addEventListener('pointermove', ev=>{ const p=ptrs.get(ev.pointerId); if(p){p.x=ev.clientX;p.y=ev.clientY;}
-    if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; const d=Math.hypot(a.x-b.x,a.y-b.y); if(pinchD) camD=Math.max(320,Math.min(1300,camD-(d-pinchD)*1.4)); pinchD=d; return; }
+    if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; const d=Math.hypot(a.x-b.x,a.y-b.y); if(pinchD){ if(VIEW==='top') topH=Math.max(700,Math.min(2600,topH-(d-pinchD)*3)); else if(VIEW==='tps') camD=Math.max(320,Math.min(1300,camD-(d-pinchD)*1.4)); } pinchD=d; return; }
     if(!drag||ev.pointerId!==drag.id) return; const mx=ev.clientX-drag.x, my=ev.clientY-drag.y;
     if(!drag.moved && Math.hypot(mx,my)>9) drag.moved=true;
-    if(drag.moved){ camYaw-=mx*.0055; camH=Math.max(260,Math.min(900,camH+my*1.5)); drag.x=ev.clientX; drag.y=ev.clientY; hideHint(); } });
+    if(drag.moved){ camYaw-=mx*.0055; if(VIEW==='fps') camPitch=Math.max(-1.1,Math.min(1.1,camPitch-my*.004)); else if(VIEW==='tps') camH=Math.max(260,Math.min(900,camH+my*1.5)); drag.x=ev.clientX; drag.y=ev.clientY; hideHint(); } });
   el.addEventListener('pointerup', ev=>{ ptrs.delete(ev.pointerId); if(ptrs.size<2) pinchD=0; if(!drag||ev.pointerId!==drag.id) return; const was=drag.moved, cx=ev.clientX, cy=ev.clientY; drag=null; if(!was){ handleTap(cx,cy); hideHint(); } });
   el.addEventListener('pointercancel', ev=>{ ptrs.delete(ev.pointerId); drag=null; pinchD=0; });
-  el.addEventListener('wheel', ev=>{ ev.preventDefault(); camD=Math.max(320,Math.min(1300,camD+ev.deltaY*.6)); }, {passive:false});
+  el.addEventListener('wheel', ev=>{ ev.preventDefault(); if(VIEW==='top') topH=Math.max(700,Math.min(2600,topH+ev.deltaY*1.2)); else if(VIEW==='tps') camD=Math.max(320,Math.min(1300,camD+ev.deltaY*.6)); }, {passive:false});
   addEventListener('keydown', e=>{ const tag=(e.target.tagName||'').toLowerCase(); if(tag==='input') return;
     if(e.key==='Escape'){ return; }
     if(uiOpen()){ if(e.key==='Enter'||e.key===' '){ const b=$('#dlgBtns .blue')||$('#dlgBtns button'); if(b) b.click(); e.preventDefault(); } return; }
     if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key)) e.preventDefault();
     if(e.key===' '||e.key==='Enter'||e.key==='e'||e.key==='E'){ if(nearTerm) openTerminal(nearTerm); return; }
+    if(e.key==='v'||e.key==='V'){ cycleView(); return; }
     const k=e.key.toLowerCase(); if(keys.hasOwnProperty(e.key)||['a','d','w','s'].includes(k)||e.key.startsWith('Arrow')) keys[e.key.startsWith('Arrow')?e.key:k]=true; });
   addEventListener('keyup', e=>{ const k=e.key.startsWith('Arrow')?e.key:e.key.toLowerCase(); keys[k]=false; });
   addEventListener('resize', ()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); buildMinimap(); });
@@ -709,6 +733,7 @@ async function openTerminal(n){
   else if(n===1){ walkQueue = [{x:DOOR[1].x, z:DOOR[1].z+50},{x:DOOR[1].x, z:DOOR[1].z-120}]; }
 }
 $('#talkBtn').addEventListener('click', ()=>{ if(nearTerm) openTerminal(nearTerm); });
+$('#viewBtn').addEventListener('click', cycleView);
 $('#finClose').addEventListener('click', ()=>$('#fin').classList.remove('show'));
 $('#resetBtn').addEventListener('click', ()=>{ if(confirm('이 태블릿의 진행 기록을 지우고 다음 팀을 받을까요?')){ localStorage.removeItem(KEY); location.reload(); } });
 
@@ -728,7 +753,7 @@ function begin(first){
   if(!S.avatar || S.avatar[0]!=='#'){ S.avatar = AVS[0][0]; save(S); }
   buildScene(); initPointer(); buildMinimap();
   if(cleared(1)){ player.x=(RECT.hall.x1+RECT.hall.x2)/2; player.z=1500; }
-  camera.position.set(player.x, camH, player.z+camD); requestAnimationFrame(animate);
+  camera.position.set(player.x, camH, player.z+camD); setView(VIEW); requestAnimationFrame(animate);
   if(!S.seen.welcome){ S.seen.welcome=true; save(S); setTimeout(()=>showLines(WELCOME, '<b>비트</b> · 연구소 안내 도우미', [{t:'정문으로 가 볼게요',cls:'blue',v:'ok'}], 'off').then(()=>{ walkQueue=[{x:TERM[1].x+40,z:TERM[1].z+40}]; }), 500); }
 }
 initEnter();
