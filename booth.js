@@ -4,6 +4,7 @@
 (function () {
   'use strict';
   const KEY = 'hnr.session.v1';
+  const FROM_LAB = /(^|[?&])from=lab/.test(location.search);   // 3D 연구소(lab.html)에서 열었으면 그리로 돌아간다
 
   // ─────────────────────────────────────────── 문구 (부스 진행자 말투)
   const MISSIONS = {
@@ -135,8 +136,10 @@
     const box = document.createElement('div');
     box.className = 'hnr-complete' + (done ? ' done' : '');
     box.innerHTML = done
-      ? '<div class="ok">스탬프 「' + m.stamp + '」 획득 완료</div><a class="hnr-btn ghost" href="' + (n < 6 ? 'm' + (n + 1) + '.html' : 'index.html') + '">' + (n < 6 ? '다음 미션으로 →' : '대시보드로 →') + '</a>'
-      : '<button class="hnr-btn big" type="button">미션 완료! 스탬프 받기</button><small>' + (s.guest ? '둘러보기 중이라 스탬프는 저장되지 않아요' : '실물 체험을 마쳤으면 눌러요') + '</small>';
+      ? '<div class="ok">스탬프 「' + m.stamp + '」 획득 완료</div><a class="hnr-btn ghost" href="' + (FROM_LAB ? 'lab.html' : (n < 6 ? 'm' + (n + 1) + '.html' : 'index.html')) + '">' + (FROM_LAB ? '연구소로 돌아가기 →' : (n < 6 ? '다음 미션으로 →' : '대시보드로 →')) + '</a>'
+      : (FROM_LAB
+        ? '<a class="hnr-btn big" href="lab.html">연구소로 돌아가기 →</a><small>스탬프는 연구소에서 비트에게 받아요</small>'
+        : '<button class="hnr-btn big" type="button">미션 완료! 스탬프 받기</button><small>' + (s.guest ? '둘러보기 중이라 스탬프는 저장되지 않아요' : '실물 체험을 마쳤으면 눌러요') + '</small>');
     panel.appendChild(box);
     const btn = box.querySelector('button');
     if (!btn) return;

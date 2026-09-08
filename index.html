@@ -6,7 +6,7 @@
 <title>어쩌다 반도체 연구원! 가상실험실</title>
 <link rel="icon" type="image/png" href="img/favicon.png">
 <link rel="apple-touch-icon" href="img/badge.png">
-<link rel="stylesheet" href="booth.css">
+<link rel="stylesheet" href="booth.css?v=20260908b">
 <style>
   /* ── 출근 카드 ── */
   .login{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:32px;padding:clamp(24px,5vw,56px) clamp(16px,5vw,64px)}
@@ -112,6 +112,7 @@
           <button class="hnr-btn big ghost" type="button" id="guest">먼저 둘러보기</button>
         </div>
       </form>
+      <p class="note"><a href="lab.html" style="color:var(--primary);text-decoration:none;font-weight:600">🏢 3D 연구소에서 이야기로 시작하기 →</a></p>
       <p class="note">스탬프는 이 태블릿에만 저장돼요. 다음 팀이 쓸 때는 화면 맨 아래 「다음 팀」을 눌러 주세요.</p>
     </div>
 
@@ -169,6 +170,7 @@
     <div class="dash-hero">
       <h1 id="hello"></h1>
       <p id="sub"></p>
+      <p style="margin-top:14px"><a class="hnr-btn big" href="lab.html" style="display:inline-flex;text-decoration:none">🏢 3D 연구소로 들어가기</a> <span style="font-size:13px;color:var(--ink48);margin-left:10px">캐릭터로 연구소를 걸어 다니며 미션을 받아요</span></p>
     </div>
     <div class="grid" id="grid"></div>
   </section>
@@ -182,7 +184,7 @@
   </div>
 </div>
 
-<script src="booth.js"></script>
+<script src="booth.js?v=20260908b"></script>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
