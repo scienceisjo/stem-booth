@@ -551,7 +551,7 @@ const FB = {
   card: {
     1:{ front:'불이 켜졌을 때처럼, 끊긴 데 없는 길로.', back:'전류는 끊긴 데 없이 한 바퀴 이어진 길로만 흘러요. 전기는 스틱 안 전지가 보내고, 몸은 그 길의 일부예요.' },
     2:{ front:'캔이 따라온 빨대가 걸린 문으로.', back:'캔은 원래 +도 −도 아닌 중성이에요. 문지른 빨대가 다가오면 캔 속 전하가 자리를 바꿔서 캔이 끌려와요.' },
-    3:{ front:'형광등이 가장 밝게 깨어났던 방향으로 든 문으로.', back:'볼 주변의 빠르게 변하는 전기장이 형광등 속 기체를 자극해서 빛나요. 볼을 향해 들면 양 끝의 차이가 커서 더 잘 깨어나요.' },
+    3:{ front:'형광등이 가장 밝게 깨어났던 방향으로 든 문으로.', back:'볼 주변의 빠르게 변하는 전기장이 형광등 속 기체를 자극해 빛나요. 관의 어디를 잡느냐에 따라 빛나는 구간이 달라져요.' },
     4:{ front:'스위치를 눌렀을 때 실험대 나침반 N극이 가리킨 쪽. 황금 나침반도 똑같이 깨어난다.', back:'전류가 흐르는 코일 주위에는 자기장이 생겨요. 스위치를 끄면 바늘은 다시 북쪽으로 돌아가요.' },
     5:{ front:'급할수록 돌아가라 했지… 자석이 천천히 내려온 길로 가시게.', back:'자석이 움직이면 구리관에 전류가 생기고, 그 전류가 자석의 움직임을 방해해요. 전기가 잘 통하는 길일수록 더 세게 붙잡아요.' }
   }
@@ -1407,6 +1407,7 @@ function speaker(line, opt) {
   return { key: 'sys', name: String(who), role: '' };
 }
 function cardHtml(n, side, cls) {
+  if (HNR.cards) return HNR.cards.html(n, side, cls, fmt(cardText(n, 'front')), fmt(cardText(n, 'back')));
   return '<div class="pcard ' + (cls || '') + (side === 'back' ? ' flipped' : '') + '" data-n="' + n + '"><div class="inner">' +
     '<div class="face front"><div class="hd"><span>' + esc(ST('common.card', '합격 카드')) + '</span><span class="num">' + n + '</span></div><div class="tx">' + fmt(cardText(n, 'front')) + '</div><div class="ft">다음 갈림길의 수수께끼예요</div></div>' +
     '<div class="face back"><div class="hd"><span>과학 한 줄</span><span class="num">' + n + '</span></div><div class="tx">' + fmt(cardText(n, 'back')) + '</div><div class="ft">HNR Tech Inc. ' + esc(ST('common.album', '합격 자료집')) + '</div></div></div></div>';
@@ -1497,12 +1498,14 @@ ui.card = function (n, side) {
   side = side || 'front';
   return new Promise(function (res) {
     const pop = $('#cardPop'), big = $('#cardBig'), btn = $('#cardBtn'); let timer = null;
+    if (HNR.cards) { big.innerHTML = HNR.cards.faces(n, fmt(cardText(n, 'front')), fmt(cardText(n, 'back')), true); big.classList.add('research-card'); big.setAttribute('data-n', n); }
     $('#cardFrontHd').textContent = ST('common.card', '합격 카드'); $('#cardNumF').textContent = n; $('#cardNumB').textContent = n;
     $('#cardFrontTx').innerHTML = fmt(cardText(n, 'front')); $('#cardBackTx').innerHTML = fmt(cardText(n, 'back'));
     big.classList.toggle('flipped', side === 'back');
     $('#cardCap').textContent = side === 'front' ? '🎉 합격 카드 ' + n + '번을 받았어요!' : side === 'flip' ? '🚪 문이 열렸어요! 카드를 뒤집어 볼까요?' : '합격 카드 ' + n + '번 · 과학 한 줄';
     btn.textContent = side === 'front' ? '🃏 카드 지갑에 넣기' : '확인';
     const canFlip = side !== 'front' || state.forkSolved(n);
+    big.classList.toggle('can-flip', canFlip);
     big.onclick = function () { if (canFlip) { big.classList.toggle('flipped'); sfx('pop'); } };
     const close = function () { if (timer) clearTimeout(timer); pop.classList.remove('show'); cardState = null; btn.onclick = null; big.onclick = null; useCooldown = performance.now() + 350; sfx('click'); res(); };
     btn.onclick = close; cardState = { close: close, n: n };
@@ -1514,8 +1517,9 @@ ui.card = function (n, side) {
 ui.wallet = function (album) {
   const S = HNR.S; if (!S) return;
   let h = '';
-  for (let n = 1; n <= 5; n++) h += state.hasCard(n) ? cardHtml(n, state.forkSolved(n) ? 'back' : 'front', 'mini') : '<div class="pcard mini locked" data-n="' + n + '"><div class="inner"><div class="face front"><div class="hd"><span>관문 ' + n + '</span><span class="num">?</span></div><div class="tx">' + esc(gateName(n)) + '<br>통과하면 받아요</div></div></div></div>';
+  for (let n = 1; n <= 5; n++) h += state.hasCard(n) ? cardHtml(n, state.forkSolved(n) ? 'back' : 'front', 'mini') : HNR.cards ? HNR.cards.locked(n) : '<div class="pcard mini locked" data-n="' + n + '"><div class="inner"><div class="face front"><div class="hd"><span>관문 ' + n + '</span><span class="num">?</span></div><div class="tx">' + esc(gateName(n)) + '<br>통과하면 받아요</div></div></div></div>';
   $('#walletGrid').innerHTML = h;
+  $('#walletGrid').querySelectorAll('.pcard:not(.locked)').forEach(function (c) { c.setAttribute('role', 'button'); c.tabIndex = 0; });
   $('#walletTitle').textContent = album ? '📚 ' + ST('common.album', '합격 자료집') : '🃏 카드 지갑 (' + S.cards.length + '/5)';
   $('#wallet').classList.add('show'); walletOpen = true; player.stop(); sfx('click');
 };
@@ -1617,6 +1621,7 @@ function initUI() {
   on('#walletClose', 'click', function () { ui.closeWallet(); });
   on('#wallet', 'click', function (e) { if (e.target.id === 'wallet') ui.closeWallet(); });
   on('#walletGrid', 'click', function (e) { const c = e.target.closest ? e.target.closest('.pcard') : null; if (!c) return; const n = +c.getAttribute('data-n'); if (state.hasCard(n)) ui.card(n, state.forkSolved(n) ? 'back' : 'front'); });
+  on('#walletGrid', 'keydown', function (e) { if (e.repeat) { e.preventDefault(); e.stopPropagation(); return; } if (cardState) return; if (e.key !== 'Enter' && e.key !== ' ') return; const c = e.target.closest ? e.target.closest('.pcard:not(.locked)') : null; if (!c) return; e.preventDefault(); e.stopPropagation(); c.click(); });
   on('#endSave', 'click', function () { ui.saveIdCard(); });
   on('#endBook', 'click', function () { ui.wallet(true); });
   on('#endClose', 'click', function () { ui.closeEnding(); });
