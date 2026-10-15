@@ -16,13 +16,15 @@ const profiles={
   daechung:{base:515,type:'triangle',filter:2000,pace:61,level:.058}
 };
 const notes=[0,3,7,5,2,10,7,3];
-let context=null,master=null,burstTimer=null,lastText='',currentWho=null,lastTone=-Infinity;
+let context=null,master=null,burstTimer=null,lastText='',currentWho=null,lastTone=-Infinity,externalSpeech=false;
+let focused=typeof document.hasFocus==='function'?document.hasFocus():true;
+const noSound=!!(H.Q&&H.Q.nosfx==='1');
 const active=new Set();
-const V=H.voice={profiles,stats:{tones:0,lastWho:null},stop,ready:()=>!!context&&context.state==='running',activeCount:()=>active.size};
+const V=H.voice={profiles,stats:{tones:0,lastWho:null},speak,stop,unlock,ready:()=>!!context&&context.state==='running',activeCount:()=>active.size};
 V.status=()=>({state:context?context.state:'locked',time:context?context.currentTime:0,active:active.size});
-function allowed(){return V.ready()&&!H.sfx.isMuted()&&!document.hidden;}
+function allowed(){return !noSound&&focused&&V.ready()&&!H.sfx.isMuted()&&!document.hidden;}
 function unlock(ev){
-  if(!ev.isTrusted||H.sfx.isMuted())return;
+  if(!ev.isTrusted||noSound||H.sfx.isMuted())return;
   try{
     if(!context){
       const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
@@ -59,6 +61,7 @@ function makeTone(ctx,destination,who,char,index,start){
 }
 function stop(){
   if(burstTimer!==null){clearInterval(burstTimer);burstTimer=null;}
+  externalSpeech=false;
   const now=context?context.currentTime:0;
   active.forEach(r=>{
     try{r.gain.gain.cancelScheduledValues(now);r.gain.gain.setTargetAtTime(.0001,now,.003);r.oscs.forEach(o=>o.stop(now+.018));}catch(_){}
@@ -74,21 +77,30 @@ function syllable(who,char,index){
   }catch(_){stop();}
 }
 function voicedCharacters(text){return Array.from(text).filter(c=>/[\p{L}\p{N}]/u.test(c));}
-function burst(who,text){
-  const chars=voicedCharacters(text).slice(0,12);if(!chars.length||!allowed())return;
+function burst(who,text,external){
+  const profile=profiles[who];if(!profile||!allowed())return false;
+  const pace=profile.pace+4,limit=external?Math.min(24,Math.floor(1750/pace)+1):12;
+  const chars=voicedCharacters(text).slice(0,limit);if(!chars.length)return false;
+  externalSpeech=!!external;
+  const deadline=external?context.currentTime+1.85:Infinity;
   let index=0;syllable(who,chars[index],index++);
   burstTimer=setInterval(()=>{
-    if(!allowed()||index>=chars.length||!dialog.classList.contains('show')){clearInterval(burstTimer);burstTimer=null;return;}
+    if(!allowed()||index>=chars.length||context.currentTime>deadline-.1||(!external&&!dialog.classList.contains('show'))){clearInterval(burstTimer);burstTimer=null;externalSpeech=false;return;}
     syllable(who,chars[index],index++);
-  },profiles[who].pace+4);
+  },pace);
+  return true;
 }
+// Opening/cutscene voice uses the same oscillator and pacing, without opening the dialog.
+// This API never unlocks audio; the existing trusted pointer/key input must do that first.
+function speak(who,value){stop();return burst(who,String(value==null?'':value),true);}
 const dialog=document.getElementById('dlg'),text=document.getElementById('dlgTxt'),name=document.getElementById('dlgName');
 if(!dialog||!text||!name)return;
 function speaker(){return Object.keys(profiles).find(key=>H.char.nameOf(key)===name.textContent)||null;}
 const observer=new MutationObserver(records=>{
-  if(!dialog.classList.contains('show')){stop();lastText='';currentWho=null;return;}
+  if(!dialog.classList.contains('show')){if(!externalSpeech)stop();lastText='';currentWho=null;return;}
   // Each line updates the speaker label, including consecutive lines by the same NPC.
   const newLine=records.some(r=>r.target===name),who=speaker(),value=text.textContent||'';
+  if(externalSpeech&&!newLine)return;
   if(text.querySelector('.memo,.board,.sign,.steps,.mcard')||!who){stop();lastText=value;currentWho=null;return;}
   if(newLine||who!==currentWho){
     stop();currentWho=who;lastText='';
@@ -112,7 +124,8 @@ document.addEventListener('keydown',ev=>{
   if(['Enter','Space','Escape','NumpadEnter'].includes(ev.code)&&dialog.classList.contains('show'))stop();
 },true);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
-window.addEventListener('blur',stop);window.addEventListener('pagehide',stop);
+window.addEventListener('blur',()=>{focused=false;stop();});
+window.addEventListener('focus',()=>{focused=true;});window.addEventListener('pagehide',stop);
 const originalMute=H.sfx.mute;
 H.sfx.mute=function(value){originalMute(value);if(value)stop();};
 // Offline preview/QA uses exactly the same synthesizer; it never unlocks live audio.

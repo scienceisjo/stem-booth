@@ -125,7 +125,7 @@ function initRenderer() {
   window.addEventListener('orientationchange', function () { setTimeout(onResize, 250); });
 }
 function buildClouds() {
-  cloudGroup = new THREE.Group(); cloudGroup.userData.dynamic = true;
+  cloudGroup = new THREE.Group(); cloudGroup.name = 'hnr-clouds'; cloudGroup.userData.dynamic = true;
   const m = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.55, fog: true });
   const r = mulberry(77), tmp = new THREE.Group();
   for (let i = 0; i < 14; i++) {
@@ -1388,7 +1388,7 @@ HNR.on('state', function () { hud.refresh(); });
 const ui = HNR.ui = { instant: AUTO };
 let dlgState = null, sayChain = Promise.resolve(), cardState = null, walletOpen = false, endingRes = null, entryOpen = true, fading = false;
 /* 화면을 가리는 창(대화·카드·지갑·엔딩·입장·페이드)이 떠 있나 → 떠 있으면 걷기·말 걸기가 멈춘다 */
-ui.isOpen = function () { return !!(dlgState || cardState || walletOpen || endingRes || entryOpen || fading); };
+ui.isOpen = function () { return !!(dlgState || cardState || walletOpen || endingRes || entryOpen || fading || (HNR.opening && HNR.opening.active)); };
 function fill(t) { return String(t == null ? '' : t).replace(/\{name\}/g, (HNR.S && HNR.S.name) || '연구원'); }
 function fmt(t) { return esc(fill(t)).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>'); }
 function plain(t) { return fill(t).replace(/\*\*/g, ''); }
@@ -1795,7 +1795,7 @@ function start(first) {
   HNR.tick(0);
   lastNow = performance.now(); requestAnimationFrame(loop);
   HNR.emit('start', { first: !!first });
-  if (first && !AUTO) {
+  if (first && !AUTO && !Q.sim && !(HNR.opening && HNR.opening.start({ initial: true }))) {
     const w = ST('welcome', null);
     if (w && !S.seen.welcome) { S.seen.welcome = true; state.save(); setTimeout(function () { ui.say(w, { who: 'bit', buttons: [{ t: '가 볼게요!', v: 'ok', cls: 'green' }] }).then(function () { HNR.emit('welcomed'); }); }, 450); }
   }

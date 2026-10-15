@@ -1,0 +1,73 @@
+/* HNR Tech Inc. — participant briefing, white/blue with navy text. */
+#opening[hidden]{display:none}
+#opening{position:fixed;inset:0;z-index:45;color:#102846;isolation:isolate;touch-action:pan-y;display:flex;flex-direction:column;justify-content:space-between;padding:18px;pointer-events:auto}
+#opening .op-shade{position:absolute;inset:0;background:#102846;opacity:0;z-index:-1;pointer-events:none}
+#opening .op-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#opening .op-actions{display:flex;align-items:center;gap:6px}
+#opening .op-sound{width:44px;padding:10px;display:grid;place-items:center}
+#opening .op-sound svg{display:block;width:20px;height:20px}
+#opening .op-sound .op-slash{display:none}
+#opening .op-sound[aria-pressed="true"] .op-slash{display:block}
+#opening .op-sound[aria-pressed="true"] .op-waves{display:none}
+#opening .op-brand{display:flex;align-items:center;gap:10px;background:#fff;padding:9px 14px;border:1px solid #b8d3ef;border-radius:13px;font-weight:900;font-size:16px;line-height:1.25}
+#opening .op-brand img{width:34px;height:34px;object-fit:contain}
+#opening .op-brand small{display:block;color:#164d80;font-size:11px;font-weight:750;margin-top:3px}
+#opening button{font:inherit;cursor:pointer;min-height:44px;border-radius:10px;border:1px solid #b8d3ef;background:#fff;color:#102846;font-size:14px;font-weight:800;padding:9px 15px;touch-action:manipulation}
+#opening button:focus-visible{outline:3px solid #ffbf35;outline-offset:3px}
+#opening button:disabled{background:#edf5ff;color:#375677;cursor:default}
+#opening .op-skip{background:#102846;color:#fff;border-color:#c5dcf4}
+#opening .op-card{width:min(860px,100%);align-self:center;background:#fff;border:1px solid #b8d3ef;border-radius:20px;padding:18px 22px 14px;box-shadow:0 12px 36px #071b3d33}
+#opening .op-progress{display:flex;gap:5px;margin-bottom:13px;height:4px}
+#opening .op-progress span{flex:1;background:#d6e6f7;border-radius:3px;overflow:hidden}
+#opening .op-progress i{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:#0066cc}
+#opening .op-row{display:flex;gap:16px;align-items:flex-start}
+#opening .op-speaker{flex:none;width:64px;text-align:center}
+#opening canvas{width:64px;height:64px;display:block;background:#edf5ff;border:1px solid #b8d3ef;border-radius:16px}
+#opening .op-speaker b{display:block;font-size:12px;margin-top:4px;color:#164d80}
+#opening .op-copy{min-width:0;flex:1}
+#opening .op-kicker{font-size:12px;font-weight:850;color:#0066cc;letter-spacing:.06em;margin:0 0 5px}
+#opening h1{font-size:clamp(24px,3vw,32px);line-height:1.2;letter-spacing:-.03em;margin:0 0 8px;color:#102846;word-break:keep-all}
+#opening .op-text{font-size:18px;font-weight:650;line-height:1.6;word-break:keep-all;margin:0;color:#102846}
+#opening .op-controls{display:flex;gap:8px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid #d6e6f7}
+#opening .op-status{font-size:12px;color:#164d80;font-weight:750;margin-right:auto}
+#opening .op-next{background:#0066cc;color:#fff;border-color:#0066cc;min-width:100px}
+#opening .op-help{display:none;background:#edf5ff;border-radius:8px;padding:8px 10px;margin-top:9px;color:#102846;font-size:13px;font-weight:700;line-height:1.5}
+#opening[data-last="true"] .op-help{display:block}
+body.opening .hud,body.opening #exploreTools,body.opening #toasts,body.opening #simBrand{visibility:hidden!important;pointer-events:none!important}
+#openingReplay{display:block;width:100%;margin-top:8px;padding:9px 12px;min-height:42px;border:1px solid #bad6f2;border-radius:9px;background:#fff;color:#102846;font:inherit;font-size:12px;font-weight:850;cursor:pointer}
+@media(max-width:640px){
+ #opening{padding:10px;gap:12px}
+ #opening .op-brand{padding:7px 9px;font-size:13px;gap:7px;border-radius:10px}
+ #opening .op-brand img{width:28px;height:28px}
+ #opening .op-brand small{font-size:9px}
+ #opening button{font-size:12px;padding:8px 10px}
+ #opening .op-card{border-radius:16px;padding:13px 14px 12px}
+ #opening .op-progress{margin-bottom:10px}
+ #opening .op-row{gap:10px}
+ #opening .op-speaker{width:42px}
+ #opening canvas{width:42px;height:42px;border-radius:11px}
+ #opening .op-speaker b{font-size:11px}
+ #opening h1{font-size:23px;margin-bottom:7px}
+ #opening .op-kicker{font-size:10px}
+ #opening .op-text{font-size:15px;line-height:1.65}
+ #opening .op-controls{gap:6px;margin-top:11px;padding-top:10px;flex-wrap:wrap}
+ #opening .op-status{font-size:11px;flex:1}
+ #opening .op-next{min-width:72px}
+ #opening .op-help{font-size:11px;padding:6px 8px}
+}
+@media(max-height:520px) and (min-width:641px){
+ #opening{padding:10px}
+ #opening .op-brand{padding:6px 10px;font-size:13px}
+ #opening .op-brand img{width:27px;height:27px}
+ #opening .op-card{width:min(740px,100%);padding:10px 15px}
+ #opening .op-progress{margin-bottom:7px}
+ #opening .op-speaker,#opening canvas{width:44px;height:44px}
+ #opening .op-speaker b{display:none}
+ #opening h1{font-size:22px;margin-bottom:5px}
+ #opening .op-kicker{font-size:10px;margin-bottom:3px}
+ #opening .op-text{font-size:14px;line-height:1.5}
+ #opening .op-controls{margin-top:8px;padding-top:7px}
+ #opening button{min-height:36px;padding:6px 12px;font-size:12px}
+ #opening .op-help{font-size:11px;margin-top:6px;padding:5px 8px}
+}
+@media(prefers-reduced-motion:reduce){#opening *{scroll-behavior:auto!important}}

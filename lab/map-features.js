@@ -205,7 +205,7 @@ const labelPosition=new T.Vector3();
 function readableLabels(){
   const camDistance=H.camera.position.distanceTo(new T.Vector3(H.player.x,65,H.player.z));
   for(const label of E.labels){
-    if(H.sim&&H.sim.active){label.visible=false;continue;}
+    if((H.sim&&H.sim.active)||(H.opening&&H.opening.active)){label.visible=false;continue;}
     label.getWorldPosition(labelPosition);
     const distance=labelPosition.distanceTo(H.camera.position),nearPlayer=Math.hypot(labelPosition.x-H.player.x,labelPosition.z-H.player.z)<1900;
     // Large billboard signs between avatar and camera must not cover the whole scene.
