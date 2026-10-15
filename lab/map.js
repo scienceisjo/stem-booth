@@ -8,12 +8,12 @@
 const H = window.HNR, P = H.P, W = H.world, F = H.flow, B = H.BRICK;
 const PI = Math.PI;
 const rooms = [
-  {n:1,x:-1150,z:1100,color:B.blue,sub:'손을 잡으면 길이 열릴까?',entry:'S',exit:'N'},
-  {n:2,x:-1150,z:-500,color:B.cyan,sub:'손대지 않고 움직여 보아요',entry:'S',exit:'N'},
-  {n:3,x:-1150,z:-2100,color:B.violet,sub:'전선 없이 빛을 깨워요',entry:'S',exit:'E'},
-  {n:4,x:1150,z:-2100,color:B.orange,sub:'출발! 방향을 찾아서',entry:'W',exit:'S'},
-  {n:5,x:1150,z:-500,color:B.copper,sub:'빨리 가는 길이 답일까?',entry:'N',exit:'S'},
-  {n:6,x:1150,z:1100,color:B.green,sub:'비트에게 합격을 기억시켜요',entry:'N',exit:'S'}
+  {n:1,x:-1150,z:1100,color:B.blue,sub:'출입 회로를 연결해요',entry:'S',exit:'N'},
+  {n:2,x:-1150,z:-500,color:B.cyan,sub:'정전기 장치를 점검해요',entry:'S',exit:'N'},
+  {n:3,x:-1150,z:-2100,color:B.violet,sub:'꺼진 형광등을 켜요',entry:'S',exit:'E'},
+  {n:4,x:1150,z:-2100,color:B.orange,sub:'운송과 방향 장치를 복구해요',entry:'W',exit:'S'},
+  {n:5,x:1150,z:-500,color:B.copper,sub:'자기 브레이크를 확인해요',entry:'N',exit:'S'},
+  {n:6,x:1150,z:1100,color:B.green,sub:'준비 신호 1을 기록해요',entry:'N',exit:'S'}
 ];
 const anchors = {
   g1:{x:-1600,z:1100,ry:PI/2}, g2:{x:-1600,z:-500,ry:PI/2},
@@ -21,7 +21,7 @@ const anchors = {
   g4b:{x:1550,z:-2440,ry:0}, g5:{x:1600,z:-500,ry:-PI/2},
   g6:{x:1600,z:1100,ry:-PI/2}
 };
-const M = H.map = {version:'1.0.0', rooms, anchors,
+const M = H.map = {version:'2.0.0-project-one', rooms, anchors,
   spawn:{x:-1150,z:2350,yaw:0}, forks:{}, reservations:{}, checkpoints:{}};
 function rect(x,z,w,d) { return {x1:x-w/2,x2:x+w/2,z1:z-d/2,z2:z+d/2}; }
 function local(o,x,z) { return F.l2w(o.x,o.z,o.ry||0,x,z); }
@@ -58,7 +58,7 @@ function furnishing(r) {
   if(r.n===3){
     // No roof: top view remains usable; dark walls and the exposure zone provide the darkroom.
     for(let i=0;i<6;i++)P.box(12,5,70,B.cyan,r.x+150,6,r.z-390+i*150,{emissive:B.cyan,emissiveIntensity:.6,shadow:false});
-    board('암실 관찰 약속','거리를 바꾸고\n방향도 바꾸어 보아요',r.x+600,r.z-400,0,155);
+    board('암실 관찰 장치','형광등을 눕힌 채\n구에 가까이 가져가요',r.x+600,r.z-400,0,155);
   }
   if(r.n===4){
     [-100,100].forEach(dx=>P.box(9,4,760,B.steel,r.x+dx,5,r.z));
@@ -67,12 +67,13 @@ function furnishing(r) {
   }
   if(r.n===5)board('자이로드롭 통로','구리관 · 아크릴관\n낙하를 비교하는 곳',r.x-550,r.z+430,PI,170);
   if(r.n===6){
-    board('최종 면접','1비트 기억 회로\n오늘의 마지막 실험',r.x-550,r.z+400,PI,170);
+    board('중앙 제어실','1비트 기억 회로\n준비 신호 1을 기록해요',r.x-550,r.z+400,PI,170);
     for(let i=0;i<3;i++){H.props.cabinet(r.x-710,r.z-300+i*150,{color:B.navy,h:115});W.addBlock(rect(r.x-710,r.z-300+i*150,70,45));}
   }
 }
 async function useGate(n) {
   const story=H.story('gates.'+n,{}), ids=story.sims||[];
+  if(F.observedDone&&F.observedDone(n))return F.gate(n);
   if(ids.length&&ids.every(id=>H.sim&&H.sim.defOf&&H.sim.defOf(id)))return F.gate(n);
   // The handed-off snapshot still has empty sims. Do not offer an action that rejects
   // inside core's openSim() and leaves its sim:exit listener waiting indefinitely.
@@ -109,7 +110,7 @@ function room(r) {
     furnishing(r);
   });
   P.bake(stat);
-  const np=F.gateNpc(r.n,{x:r.x+150,z:r.z+(r.n===4?0:r.n<=3?250:-250),ry:r.n<=4?0:PI,r:210});
+    const np=F.gateNpc(r.n,{x:r.x+150,z:r.z+(r.n===4?0:r.n<=3?250:-250),ry:r.n<=4?0:PI,r:210});
   // Keep the guide and touch-to-walk line in the clear central aisle, beside the NPC.
   np.spot.x=r.x;
   np.interact.visible=unlocked;
@@ -135,10 +136,11 @@ function clue(n,f,side) {
         for(let i=0;i<5;i++)P.box(3,42,4,B.cream,lx-81+i*12,55,35);}
     }
     if(n===3){
-      P.ball(28,B.violet,lx-58,65,36,{opacity:.75});
-      P.part(36,15,36,B.black,lx-58,23,36);
-      // The source-to-tube direction is horizontal in this front-facing comparison.
-      P.cyl(6,6,90,B.white,lx+38,65,36,{rz:correct?PI/2:0,emissive:B.white,emissiveIntensity:correct?.7:.05});
+      P.ball(28,B.violet,lx,65,25,{opacity:.75});
+      P.part(36,15,36,B.black,lx,23,25);
+      // Both tubes lie sideways. The cue is only the gap from the globe's surface.
+      P.cyl(5,5,105,B.white,lx,65,correct?65:155,{rz:PI/2,emissive:B.white,emissiveIntensity:correct?.7:.03});
+      P.text(correct?'가까이':'멀리',{x:lx,y:23,z:185,w:125,bg:'#ffffff',color:'#102e54'});
     }
     if(n===4){
       const coilSide=H.CONFIG.compassPointsAway?(H.state.forkCorrect(4)==='L'?'R':'L'):H.state.forkCorrect(4);
@@ -158,7 +160,7 @@ function fork(r) {
   M.forks[n]={...f,...built,back};
   ['L','R'].forEach(s=>clue(n,f,s));
   const sign=local(f,0,30);
-  board('카드를 보고 골라요',H.story('gates.'+n+'.fork.clue','두 문을 비교해 보아요'),sign.x,sign.z,f.ry,125);
+  board('복구 경로 선택',H.story('gates.'+n+'.fork.clue','관찰한 결과로 경로를 선택해요'),sign.x,sign.z,f.ry,125);
   if(n===4){
     const g=P.group(f.x,0,f.z,{ry:f.ry});
     P.with(g,()=>{
@@ -202,16 +204,14 @@ function reserve(id,a) {
   P.with(stat,()=>{
     P.plane(640,440,B.steel,0,0,3);
     H.props.hazardStripe(0,225,640,'x',{w:10});
-    if(!H.sim||!H.sim.defOf(id)){
-      P.part(230,52,100,B.white,0,26,0);
-      board(H.story('sims.'+id+'.title','실험 장치'),'장치 준비 중\n시험관에게 실물 실험을 확인받아요',0,0,0,220);
-    }
+    // mission-world.js fills unregistered reservations with usable apparatus.
+    // Registered simulations mount their own persistent models after map.build().
   });P.bake(stat);
   if(!H.sim||!H.sim.defOf(id))W.addBlock({id:'reserved:'+id,...footprint});
 }
 function atrium() {
   W.addWalk('atrium',rect(0,2250,3900,600));
-  W.addZone({id:'atrium',rect:rect(0,2250,3900,600),name:'HNR Tech · 채용 아트리움',exposure:1.05});
+  W.addZone({id:'atrium',rect:rect(0,2250,3900,600),name:'HNR Tech · PROJECT ONE',exposure:1.05});
   W.addWalk('entry',rect(-1150,1825,700,350));
   W.addWalk('graduation',rect(1150,1825,280,350),()=>H.state.gatePassed(6));
   const stat=P.group(0,0,0);
@@ -220,30 +220,31 @@ function atrium() {
     P.stud(700,350,B.floor,-1150,1825,2);P.stud(280,350,B.floor,1150,1825,2);
     P.part(500,30,40,B.blue,-1150,230,1950);
     [-1420,-880].forEach(x=>{P.part(40,230,40,B.blue,x,115,1950);W.addBlock(rect(x,1950,40,40));});
-    P.text('HNR TECH  /  신입 연구원 모집',{x:-1150,y:280,z:1950,w:540,bg:'#0d69ac'});
-    board('길은 실험이 알려 줘요','관문 6개 · 합격 카드 5장\n정문에서 첫 실험을 시작해요',-1780,2200,PI/4,200);
+    P.text('HNR TECH  /  PROJECT ONE',{x:-1150,y:280,z:1950,w:540,bg:'#0d69ac'});
+    board('시연 라인을 복구해요','6개 구역을 재가동하고\n준비 신호 1을 기록해요',-1780,2200,PI/4,200);
     H.props.bench(-300,2470);H.props.bench(300,2470);
     [-300,300].forEach(x=>W.addBlock(rect(x,2470,170,65)));
     [-1810,1810].forEach(x=>{H.props.plant(x,2470);H.props.lampPost(x,2040);W.addBlock(rect(x,2470,60,60));});
     solid(-1950,1950,-1950,2550,B.blue,70);solid(1950,1950,1950,2550,B.blue,70);solid(-1950,2550,1950,2550,B.white,70);
     P.part(500,170,25,B.navy,700,85,2480);
-    P.text('HNR TECH · 오늘부터 연구원',{x:700,y:135,z:2458,w:440,bg:'#162333',color:'#ffe46b'});
+    P.text('HNR TECH · PROJECT ONE COMPLETE',{x:700,y:135,z:2458,w:440,bg:'#162333',color:'#ffe46b'});
     // Central garden is scenery, with no walk polygon that could bypass the gates.
     P.stud(560,4300,B.grass,0,-450,0);
     for(let i=0;i<5;i++)H.props.tree(0,-2450+i*800,{s:1.5});
     [-2400,2400].forEach(x=>{H.props.building(x,-1900,500,650,600,{color:B.steel});H.props.building(x,0,400,430,600,{color:B.white});});
   });P.bake(stat);
-  const door=H.props.door(1150,1700,{w:250,h:140,color:B.gold,label:'합격 후 아트리움으로'});
+  const door=H.props.door(1150,1700,{w:250,h:140,color:B.gold,label:'복구 완료 · 아트리움으로'});
   W.addBlock(rect(1150,1700,270,28),()=>!H.state.gatePassed(6));
   const sync=()=>door.userData.setOpen(H.state.gatePassed(6),true);sync();H.on('state',sync);
-  F.endingSpot(700,2280,{label:'합격 기념 포토존',ry:PI});
+  F.endingSpot(700,2280,{label:'PROJECT ONE · 완료 기념',ry:PI});
   const bit=W.addNpc('bit',-1450,2220,{block:false});
   W.addInteract({id:'welcome-bit',x:-1450,z:2220,r:150,mesh:bit,label:'💬 비트 · 연구소 이용 안내',onUse:()=>H.ui.say([
-    {who:'bit',t:'시험관을 만나 실험하고 합격 카드를 받아요. 카드의 수수께끼가 다음 문을 알려 줘요.'},
-    {who:'bit',t:'화면의 화살표를 따라가 보아요. 틀려도 괜찮아요! 다시 생각하는 방에서 카드를 함께 읽어요.'}
+    {who:'bit',t:'축제 시연 라인의 준비 신호가 꺼졌어요. 각 구역의 장치를 직접 움직여 원인을 찾고, 마지막 제어실에서 준비 신호 1을 기록해 주세요.'},
+    {who:'bit',t:'장비 앞의 파란 표시로 가면 직접 조작할 수 있어요. 복구 보드에서 지금 할 일을 확인하고, 과학 카드로 다음 경로를 골라 보아요.'}
   ])});
 }
 M.spawnFor=function(){return H.S&&H.S.passed.length?F.suggestSpawn():M.spawn;};
+M.useGate=useGate;
 M.build=function(){
   if(M.built)return;M.built=true;
   if(!F.gateNpc)throw new Error('map.js 앞에 lab/flow.js를 로드해 주세요.');

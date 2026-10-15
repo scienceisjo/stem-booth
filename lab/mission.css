@@ -1,0 +1,42 @@
+:root{--ink:#102846;--ink2:#233f60;--blue:#0066cc}
+#brand .school-mark,#simBrand img{width:27px;height:27px;object-fit:contain}
+#missionLine{margin-top:9px;padding-top:8px;border-top:1px solid #ffffff55;display:flex;gap:10px;align-items:center;max-width:345px}
+#missionGoal{color:#fff;font-size:12px;line-height:1.55;flex:1;word-break:keep-all}
+#missionLine button{flex:none;font-size:12px;font-weight:800;color:#102846;background:#fff;padding:8px;border:1px solid #c5dcf4;border-radius:8px;min-height:36px}
+#badges .bd{width:49px}#badges .bd em{color:#f5f9ff}#topR .bar i{background:#30ad77}
+#simBrand{display:none;position:fixed;top:12px;left:12px;z-index:24;padding:8px 12px;gap:8px;align-items:center;border:1px solid #c5dcf4;background:#fff;color:#102846;border-radius:12px;font-size:14px;font-weight:800;pointer-events:none}
+body.sim #simBrand{display:flex}
+#enter{background:#102846e6;overflow:auto;touch-action:pan-y}
+#enter .ecard{background:#fff;border:1px solid #c5dcf4;box-shadow:none;color:#102846}
+#enter .notice{background:#edf5ff;color:#102846;transform:none;box-shadow:none;border-color:#c5dcf4}
+#enter .notice .pin,#enter .notice .tag{background:#0066cc;color:#fff;border:0}
+#nameIn::placeholder{color:#365470;opacity:1}
+#enter .notice h1{color:#102846;font-size:clamp(26px,4vw,38px)}
+#enter li,#enter label,#enter #app-credit{color:#102846}
+#enter .hbtn{background:#0066cc;box-shadow:none;text-shadow:none;border:1px solid #0066cc}
+#enter .hbtn.grey{background:#edf5ff;color:#102846;border-color:#c5dcf4}
+#enter #app-credit{line-height:1.6;font-size:12px}
+#simPanel{color:#102846;background:#fff;border-color:#c5dcf4}
+#simPanel .sp-head{background:#edf5ff;color:#102846;border-color:#c5dcf4}
+#simPanel .sp-title small,#simPanel .sp-label{color:#233f60}
+#simPanel .sp-note,#simPanel .sp-lead{color:#102846;background:#edf5ff;border:1px solid #c5dcf4;border-radius:10px;padding:10px}
+#simPanel .hbtn{box-shadow:none;text-shadow:none;white-space:normal}
+#simPanel .sp-task{color:#102846}
+#simPanel .sp-predict.done{opacity:1}
+#simPanel .sp-predict .hbtn:disabled{filter:none;background:#edf5ff;color:#102846;border:1px solid #c5dcf4}
+#simPanel .sp-pass{background:#e4f6ed;color:#123c2a}
+#simPanel .sp-readout{color:#fff;background:#102846}
+#simPanel .sp-readout span{color:#fff}
+#simPanel .sp-meter .track i{background:#0066cc}
+.research-card .research-label{color:#0066cc}
+@media(max-width:640px){
+  #missionLine{max-width:none;margin-top:5px;padding-top:5px;gap:7px}
+  #missionGoal{font-size:11px;line-height:1.4}#missionLine button{padding:5px;min-height:32px;font-size:11px}
+  #exploreTools{top:237px!important}
+  #simBrand{top:8px;left:8px;font-size:12px;padding:5px 8px}
+  #simBrand img{width:23px;height:23px}
+}
+@media(max-height:520px) and (min-width:641px){
+  #missionLine{max-width:290px}#missionGoal{font-size:11px}
+  #exploreTools{top:173px!important}
+}

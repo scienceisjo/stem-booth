@@ -36,7 +36,7 @@ flow.gateNpc = function (n, opt) {
   const npc = world.addNpc(key, x, z, { ry: ry, parent: opt.parent });
   const name = HNR.char.nameOf(key);
   const it = world.addInteract({ id: 'gate' + n, x: x, z: z, r: opt.r || 140, mesh: npc,
-    label: function () { return state.gatePassed(n) ? '💬 ' + name + ' (통과함)' : '💬 ' + name + '에게 말 걸기'; },
+    label: function () { return state.gatePassed(n) ? '💬 ' + name + ' · 점검 완료' : '💬 ' + name + ' · 장치 점검'; },
     onUse: function () { return flow.gate(n); } });
   const front = l2w(x, z, ry, 0, 100);
   const spot = { x: front.x, z: front.z, yaw: ry, n: n, key: key };
@@ -71,10 +71,11 @@ flow.forkDoors = function (n, opt) {
     const ip = l2w(x, z, ry, lx, 80);
     interacts[side] = world.addInteract({ id: 'fork' + n + side, x: ip.x, z: ip.z, r: opt.r || 110, mesh: door,
       visible: function () { return !state.forkSolved(n) || side === correct; },
-      label: function () { return state.forkSolved(n) ? '🚪 열린 문 · 지나가요' : '🚪 「' + label + '」 열기'; },
+      label: function () { return state.forkSolved(n) ? '🚪 복구된 경로 · 지나가요' : '🚪 「' + label + '」 선택'; },
       onUse: function () {
-        if (state.forkSolved(n)) return HNR.ui.say([{ who: 'bit', t: '이 문은 벌써 열렸어요. 다음 관문으로 가 보아요!' }]);
-        return flow.fork(n, side, { onOpen: function () { return door.userData.setOpen(true); }, think: opt.think || flow.spots.think || null, back: opt.back || spot });
+        if (state.forkSolved(n)) return HNR.ui.say([{ who: 'bit', t: '이 구역 설정은 복구됐어요. 다음 장치를 점검하러 가요!' }]);
+        // 오답도 관찰의 일부다. 별도 방으로 옮기지 않고 장치 앞에서 다시 고른다.
+        return flow.fork(n, side, { onOpen: function () { return door.userData.setOpen(true); }, think: null, back: opt.back || spot });
       } });
     doors[side] = door;
   });
@@ -86,7 +87,7 @@ flow.forkDoors = function (n, opt) {
   if (opt.wallLen) {
     const L = opt.wallLen, hw = w / 2 + 14, c = opt.wallColor != null ? opt.wallColor : BRICK.white, wh = h + 14, wt = 22;
     const segs = [[-L / 2, -gap / 2 - hw], [-gap / 2 + hw, gap / 2 - hw], [gap / 2 + hw, L / 2]];
-    P.with(group, function () { segs.forEach(function (s) { if (s[1] - s[0] > 4) P.wall(s[0], 0, s[1], 0, { h: wh, t: wt, color: c }); }); P.text('갈림길 ' + CIRC[n], { w: 200, y: wh + 60, x: 0, z: 0 }); });
+    P.with(group, function () { segs.forEach(function (s) { if (s[1] - s[0] > 4) P.wall(s[0], 0, s[1], 0, { h: wh, t: wt, color: c }); }); P.text('복구 설정 ' + CIRC[n], { w: 200, y: wh + 60, x: 0, z: 0 }); });
   }
   // 대충이: 오답 문 곁에서 문을 밀고 있다
   if (opt.rival) { const wrong = correct === 'L' ? 'R' : 'L', lx = (wrong === 'L' ? -gap / 2 : gap / 2) + (wrong === 'L' ? -1 : 1) * (w / 2 + 50); const rp = l2w(x, z, ry, lx, 60); world.addNpc('daechung', rp.x, rp.z, { ry: ry + Math.PI, look: false }); }
@@ -98,7 +99,7 @@ flow.forkDoors = function (n, opt) {
 flow.thinkRoom = function (x, z, opt) {
   opt = opt || NOOPT;
   const s = opt.size || 320, ry = opt.ry || 0, half = s / 2, h = 120, t = 16;
-  const poster = ST('think.poster', '괜찮아요. 연구는 원래 틀리면서 하는 거예요'), m = /^(.+?[.!?])\s+(.+)$/.exec(poster);
+  const poster = ST('think.poster', '관찰을 다시 보면 다음 시도가 보여요'), m = /^(.+?[.!?])\s+(.+)$/.exec(poster);
   const g = P.group(x, 0, z, { ry: ry, parent: opt.parent });
   P.with(g, function () {
     P.stud(s, s, BRICK.cream, 0, 0, 2.2);
@@ -107,12 +108,12 @@ flow.thinkRoom = function (x, z, opt) {
     props.chair(0, 10, { ry: Math.PI, color: BRICK.violet });
     P.poster(m ? m[1] : poster, m ? m[2].replace(/\s+/, '\n') : '', { x: 0, y: 72, z: -half + t / 2 + 2, w: 96, bg: '#fff6b0' });
     props.plant(-half + 42, -half + 42); props.plant(half - 42, -half + 42);
-    P.text('다시 생각하는 방', { w: 240, y: h + 50, bg: 'rgba(107,50,124,.95)', color: '#ffffff' });
+    P.text('연구팀 휴게실', { w: 240, y: h + 50, bg: 'rgba(18,53,93,.95)', color: '#ffffff' });
   });
   P.bake(g);
   const inner = half - t - 14, rect = rectOf(x, z, inner * 2, inner * 2, ry);
   world.addWalk('think', rect);
-  world.addZone({ id: 'think', rect: rect, name: '다시 생각하는 방', exposure: 0.9 });
+  world.addZone({ id: 'think', rect: rect, name: '연구팀 휴게실', exposure: 0.9 });
   const sp = l2w(x, z, ry, 0, 70), spot = { x: sp.x, z: sp.z, yaw: ry };
   flow.spots.think = spot;
   return spot;
@@ -124,7 +125,7 @@ flow.endingSpot = function (x, z, opt) {
   props.checkpoint(x, z, { color: BRICK.gold, label: opt.label || '🏢 HNR Tech 아트리움', size: 150, labelY: 150, parent: opt.parent });
   world.addInteract({ id: 'ending', x: x, z: z, r: 150, visible: function () { return state.gatePassed(6); }, label: '📸 사원증 다시 보기', onUse: function () { return HNR.ui.ending(); } });
   world.addTrigger({ id: 'ending', rect: { x1: x - 110, x2: x + 110, z1: z - 110, z2: z + 110 }, cond: function () { return state.gatePassed(6); },
-    onEnter: function () { const S = HNR.S; if (S && !S.seen.atrium) { S.seen.atrium = true; state.save(); HNR.ui.toast('합격을 축하해요! 여기가 포토존이에요', { icon: '📸', cls: 'gold', ms: 3400 }); } } });
+    onEnter: function () { const S = HNR.S; if (S && !S.seen.atrium) { S.seen.atrium = true; state.save(); HNR.ui.toast('PROJECT ONE 준비 완료! 팀 사진을 남겨요', { icon: '📸', cls: 'gold', ms: 3400 }); } } });
   flow.spots.ending = { x: x, z: z, yaw: opt.ry || 0 };
   return flow.spots.ending;
 };
@@ -134,9 +135,15 @@ flow.nextTarget = function () {
   const S = HNR.S; if (!S) return null;
   const sp = flow.spots, n = state.nextGate();
   if (n > 6) return sp.ending ? { x: sp.ending.x, z: sp.ending.z, label: '아트리움 · 포토존', kind: 'ending', n: 7 } : null;
-  if (n >= 2 && !state.forkSolved(n - 1)) { const f = sp.fork[n - 1]; return f ? { x: f.x, z: f.z, label: '갈림길 ' + CIRC[n - 1] + ' · 카드 수수께끼', kind: 'fork', n: n - 1 } : null; }
+  if (n >= 2 && !state.forkSolved(n - 1)) { const f = sp.fork[n - 1]; return f ? { x: f.x, z: f.z, label: ST('gates.' + (n - 1) + '.system', '장치') + ' · 관찰한 설정 선택', kind: 'fork', n: n - 1 } : null; }
   const g = sp.gate[n]; if (!g) return null;
-  return { x: g.x, z: g.z, label: '관문 ' + CIRC[n] + ' · ' + HNR.char.nameOf(g.key), kind: 'gate', n: n };
+  const pending = ST('gates.' + n + '.sims', []).find(id => !(HNR.sim && HNR.sim.tasksDone(id)) && !S.seen['apparatus:' + id]);
+  if (pending) {
+    const ctx = HNR.sim && HNR.sim.ctxOf(pending), exhibit = HNR.missionWorld && HNR.missionWorld.apparatus[pending];
+    const at = ctx ? ctx.stand : exhibit && exhibit.interact;
+    if (at) return { x: at.x, z: at.z, label: ST('sims.' + pending + '.title', '장치') + ' · 직접 조작', kind: 'gate', n: n };
+  }
+  return { x: g.x, z: g.z, label: ST('gates.' + n + '.system', '장치 ' + CIRC[n]) + ' · ' + HNR.char.nameOf(g.key), kind: 'gate', n: n };
 };
 /* 가이드 비콘을 진행 상태에 맞춰 자동으로 가리키게 한다. 돌려주는 값 = 쓰인 함수(HNR.guide.set 에 다시 넣을 수 있다) */
 flow.guideAuto = function () {

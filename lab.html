@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#87ceeb">
-<title>HNR Tech 연구소 · 어쩌다 반도체 연구원!</title>
+<title>HNR Tech Inc. · PROJECT ONE</title>
 <style>
 /* ═══════════ HNR Tech 3D 연구소 v4 — 셸 CSS (core 담당) ═══════════ */
 :root{
@@ -139,7 +139,7 @@ body.dlg #joy,body.dlg #botR,body.dlg #talk,body.dlg #hint,body.dlg #guide{displ
 #dlgDots i.on{background:var(--blue)}
 #dlgBtns{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;flex:1}
 
-/* ── 카드(합격 카드) ── */
+/* ── 카드(연구 카드) ── */
 .pcard{position:relative;width:min(300px,72vw);aspect-ratio:3/4.1;perspective:1100px}
 .pcard .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.3,1.3,.5,1)}
 .pcard.flipped .inner{transform:rotateY(180deg)}
@@ -301,20 +301,22 @@ body.showtest #test-out{display:block}
 }
 </style>
 <link rel="stylesheet" href="lab/cards.css?v=20261016-cards1">
+<link rel="stylesheet" href="lab/mission.css?v=project-one1">
 </head>
 <body class="pre">
 <div id="game"></div>
+<div id="simBrand"><img src="lab/cards/hnr-mark.webp" alt="해누리 마크">HNR Tech Inc.</div>
 
 <!-- ═══ HUD ═══ -->
 <div class="hud" id="topL">
   <div class="row">
-    <div class="chip" id="brand"><i class="logo">H</i><span>HNR Tech Inc.</span></div>
+    <div class="chip" id="brand"><img class="school-mark" src="lab/cards/hnr-mark.webp" alt="해누리 마크"><span>HNR Tech Inc.</span></div>
     <div class="chip" id="who"></div>
   </div>
   <div class="chip" id="zone"></div>
 </div>
 <div class="hud" id="topR"><div class="panel">
-  <div class="t"><span id="rateT">입사 진행률</span><b id="rateN">0%</b></div>
+  <div class="t"><span id="rateT">시연 라인 복구</span><b id="rateN">0%</b></div>
   <div class="bar"><i id="rateI"></i></div>
   <div id="badges"></div>
 </div></div>
@@ -345,18 +347,18 @@ body.showtest #test-out{display:block}
   <div class="foot"><div id="dlgDots"></div><div id="dlgBtns"></div></div>
 </div></div>
 
-<!-- ═══ 합격 카드 팝업 · 카드 지갑 ═══ -->
+<!-- ═══ 연구 카드 팝업 · 카드 지갑 ═══ -->
 <div class="overlay" id="cardPop">
   <div class="cap" id="cardCap"></div>
   <div class="pcard" id="cardBig"><div class="inner">
-    <div class="face front"><div class="hd"><span id="cardFrontHd">합격 카드</span><span class="num" id="cardNumF">1</span></div><div class="tx" id="cardFrontTx"></div><div class="ft">다음 갈림길의 수수께끼예요</div></div>
-    <div class="face back"><div class="hd"><span>과학 한 줄</span><span class="num" id="cardNumB">1</span></div><div class="tx" id="cardBackTx"></div><div class="ft">HNR Tech Inc. 합격 자료집</div></div>
+    <div class="face front"><div class="hd"><span id="cardFrontHd">연구 카드</span><span class="num" id="cardNumF">1</span></div><div class="tx" id="cardFrontTx"></div><div class="ft">다음 장치 설정의 단서예요</div></div>
+    <div class="face back"><div class="hd"><span>과학 한 줄</span><span class="num" id="cardNumB">1</span></div><div class="tx" id="cardBackTx"></div><div class="ft">HNR Tech Inc. 연구 기록</div></div>
   </div></div>
   <button class="hbtn lg yellow" id="cardBtn" type="button">🃏 카드 지갑에 넣기</button>
 </div>
 <div class="overlay" id="wallet"><div class="sheet">
   <h2><span id="walletTitle">🃏 카드 지갑</span><button class="hbtn sm grey" id="walletClose" type="button">닫기</button></h2>
-  <p id="walletSub">관문을 통과하면 합격 카드를 받아요. 갈림길을 맞히면 카드가 뒤집혀 과학 한 줄이 나타나요. 카드를 누르면 뒤집어 볼 수 있어요.</p>
+  <p id="walletSub">장치를 관찰하면 연구 카드가 생겨요. 관찰 결과로 경로를 설정하면 과학 한 줄이 나타나요. 카드를 눌러 크게 읽어 보세요.</p>
   <div id="walletGrid"></div>
 </div></div>
 
@@ -367,12 +369,12 @@ body.showtest #test-out{display:block}
 
 <!-- ═══ 엔딩: 사원증 ═══ -->
 <div class="overlay" id="ending"><div id="confetti"></div><div class="wrap">
-  <h2 id="endTitle">🎉 합격! 사원증이 나왔어요</h2>
+  <h2 id="endTitle">PROJECT ONE · 시연 준비 완료</h2>
   <canvas id="idCanvas" width="960" height="600"></canvas>
   <div id="endLines"></div>
   <div class="btns">
     <button class="hbtn green" id="endSave" type="button">📸 사진으로 저장</button>
-    <button class="hbtn yellow" id="endBook" type="button">🃏 합격 자료집 보기</button>
+    <button class="hbtn yellow" id="endBook" type="button">🃏 연구 기록 보기</button>
     <button class="hbtn grey" id="endClose" type="button">연구소 더 둘러보기</button>
     <button class="hbtn red" id="endTeam" type="button">🔄 다음 팀</button>
   </div>
@@ -381,56 +383,58 @@ body.showtest #test-out{display:block}
 <!-- ═══ 입장 카드: 채용 공고 ═══ -->
 <div id="enter"><div class="ecard">
   <div class="notice">
-    <span class="pin">📌 채용 공고</span>
-    <h1 id="noticeTitle">HNR Tech Inc. 신입 연구원 모집</h1>
+    <span class="pin">PROJECT ONE · 복구팀 호출</span>
+    <h1 id="noticeTitle">HNR Tech Inc. · PROJECT ONE</h1>
     <ul id="noticeLines">
-      <li>서류 없음. 필기시험 없음.</li>
-      <li>연구소 안 관문을 모두 통과해 최종 면접실에 도착하면 그 자리에서 합격.</li>
-      <li>단, 지도는 없습니다. 길은 실험이 알려 줍니다.</li>
+      <li>축제 시연을 앞두고 연구소에 정전이 났습니다.</li>
+      <li>전원은 돌아왔지만, 여섯 장치의 준비 표시는 아직 0입니다.</li>
+      <li>장치를 직접 움직여 원인을 찾고, 마지막 준비 신호 1을 써 주세요.</li>
     </ul>
-    <div class="tag">관문 6개 · 역량 배지 6개 · 합격 카드 5장</div>
+    <div class="tag">장치 6구역 복구 · 준비 신호 1 완성</div>
   </div>
   <div class="form" id="enterForm">
-    <label for="nameIn">지원자 이름을 적어 보아요</label>
+    <label for="nameIn">연구원 이름 또는 별명을 적어 보아요</label>
     <input id="nameIn" maxlength="12" placeholder="이름 또는 별명" autocomplete="off" enterkeyhint="done" inputmode="text">
     <label>바지 색을 골라 보아요 (연구원 가운은 흰색이에요)</label>
     <div id="avs"></div>
-    <button class="hbtn green lg wide" id="goBtn" type="button" disabled>📝 지원하기</button>
+    <button class="hbtn green lg wide" id="goBtn" type="button" disabled>연구소 재가동 시작</button>
   </div>
   <div class="form back" id="enterBack" hidden>
     <h1 id="backTitle">다시 오셨군요!</h1>
     <p id="backSub"></p>
     <button class="hbtn green lg wide" id="contBtn" type="button">▶ 이어서 하기</button>
-    <button class="hbtn grey wide" id="newBtn" type="button" style="margin-top:12px">새 지원자로 시작하기</button>
+    <button class="hbtn grey wide" id="newBtn" type="button" style="margin-top:12px">새 연구팀으로 시작하기</button>
   </div>
-  <div id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved · 최종 업데이트 2026-10-05</div>
+  <div id="app-credit">HNR Tech Inc. · 2026 서울STEM축제 - 해누리중학교<br>PROJECT ONE · 2026-10-16</div>
 </div></div>
 
 <pre id="test-out"></pre>
 
 <script src="lib/three.min.js"></script>
 <script src="lab/config.js"></script>
-<script src="lab/story.js?v=20261016-cards1"></script>
-<script src="lab/cards.js?v=20261016-cards1"></script>
-<script src="lab/core.js?v=20261016-cards1"></script>
-<script src="lab/sim.js"></script>
-<script src="lab/flow.js"></script>
+<script src="lab/story.js?v=project-one1"></script>
+<script src="lab/cards.js?v=project-one1"></script>
+<script src="lab/core.js?v=project-one1"></script>
+<script src="lab/sim.js?v=project-one1"></script>
+<script src="lab/flow.js?v=project-one1"></script>
 <script src="lab/models/g1.js"></script>
 <script src="lab/models/g2.js"></script>
-<script src="lab/models/g3.js"></script>
+<script src="lab/models/g3.js?v=project-one1"></script>
 <script src="lab/models/g4a.js"></script>
 <script src="lab/models/g4b.js"></script>
 <script src="lab/models/g5.js"></script>
-<script src="lab/models/g6.js"></script>
+<script src="lab/models/g6.js?v=project-one1"></script>
 <script src="lab/sims/g1.js"></script>
 <script src="lab/sims/g2.js"></script>
-<script src="lab/sims/g3.js"></script>
+<script src="lab/sims/g3.js?v=project-one1"></script>
 <script src="lab/sims/g4a.js"></script>
 <script src="lab/sims/g4b.js"></script>
 <script src="lab/sims/g5.js"></script>
-<script src="lab/sims/g6.js"></script>
-<script src="lab/map.js"></script>
-<script src="lab/map-features.js"></script>
+<script src="lab/sims/g6.js?v=project-one1"></script>
+<script src="lab/map.js?v=project-one1"></script>
+<script src="lab/map-features.js?v=project-one1"></script>
+<script src="lab/mission-world.js?v=project-one1"></script>
+<script src="lab/mission-ui.js?v=project-one1"></script>
 <script src="lab/dialogue-audio.js"></script>
 <script>HNR.boot();</script>
 </body>

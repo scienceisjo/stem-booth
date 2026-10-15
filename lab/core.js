@@ -544,14 +544,14 @@ function updateTweens(dt) {
 function ST(path, fb) { let o = HNR.STORY; const ks = String(path).split('.'); for (let i = 0; i < ks.length; i++) { if (o == null) return fb; o = o[ks[i]]; } return o == null ? fb : o; }
 HNR.story = ST;
 const FB = {
-  gateName: { 1:'정문 보안 게이트', 2:'클린룸', 3:'암실', 4:'터널 열차', 5:'자이로드롭 통로', 6:'최종 면접실' },
+  gateName: { 1:'정문 보안 게이트', 2:'클린룸', 3:'암실', 4:'터널 열차', 5:'자이로드롭 통로', 6:'중앙 제어실' },
   badge: { 1:'협동력', 2:'섬세함', 3:'관찰력', 4:'방향 감각', 5:'인내심', 6:'기억력' },
   gateNpc: { 1:'gatebot', 2:'dustzero', 3:'kkamppak', 4:'jjirit', 5:'keeper', 6:'boss' },
   gateSims: { 1:['g1'], 2:['g2'], 3:['g3'], 4:['g4a', 'g4b'], 5:['g5'], 6:['g6'] },
   card: {
     1:{ front:'불이 켜졌을 때처럼, 끊긴 데 없는 길로.', back:'전류는 끊긴 데 없이 한 바퀴 이어진 길로만 흘러요. 전기는 스틱 안 전지가 보내고, 몸은 그 길의 일부예요.' },
     2:{ front:'캔이 따라온 빨대가 걸린 문으로.', back:'캔은 원래 +도 −도 아닌 중성이에요. 문지른 빨대가 다가오면 캔 속 전하가 자리를 바꿔서 캔이 끌려와요.' },
-    3:{ front:'형광등이 가장 밝게 깨어났던 방향으로 든 문으로.', back:'볼 주변의 빠르게 변하는 전기장이 형광등 속 기체를 자극해 빛나요. 관의 어디를 잡느냐에 따라 빛나는 구간이 달라져요.' },
+    3:{ front:'형광등을 켜려면 플라즈마볼 가까이 둘까요, 멀리 둘까요?', back:'볼 주변의 빠르게 변하는 전기장이 형광등 속 기체를 자극해 빛나요. 관의 어디를 잡느냐에 따라 빛나는 구간이 달라져요.' },
     4:{ front:'스위치를 눌렀을 때 실험대 나침반 N극이 가리킨 쪽. 황금 나침반도 똑같이 깨어난다.', back:'전류가 흐르는 코일 주위에는 자기장이 생겨요. 스위치를 끄면 바늘은 다시 북쪽으로 돌아가요.' },
     5:{ front:'급할수록 돌아가라 했지… 자석이 천천히 내려온 길로 가시게.', back:'자석이 움직이면 구리관에 전류가 생기고, 그 전류가 자석의 움직임을 방해해요. 전기가 잘 통하는 길일수록 더 세게 붙잡아요.' }
   }
@@ -566,14 +566,14 @@ HNR.info = { gateName: gateName, badgeName: badgeName, cardText: cardText, badge
 /* ═══════════ 캐릭터 (R6 블록 리그 · NPC 8종) ═══════════ */
 const char = HNR.char = {};
 const NPCS = {
-  bit:      { kind:'bit', name:'비트', role:'채용 안내 로봇', bg:'#d9efff' },
+  bit:      { kind:'bit', name:'비트', role:'연구소 안내 로봇', bg:'#d9efff' },
   gatebot:  { kind:'gatebot', name:'게이트봇', role:'정문 보안 로봇', bg:'#dfe3e8' },
   dustzero: { kind:'r6', name:'먼지제로 반장', role:'클린룸 반장', shirt:BRICK.white, pants:BRICK.white, hand:0x8fd0ea, hat:'hood', hatColor:BRICK.white, mask:true, face:'stern', bg:'#e3f5ff' },
   kkamppak: { kind:'r6', name:'깜빡이', role:'암실지기', shirt:0x2f2745, pants:BRICK.black, hat:'hood', hatColor:0x2f2745, face:'shh', item:'flashlight', bg:'#4a4168' },
   jjirit:   { kind:'r6', name:'찌릿 기관사', role:'터널 열차 기관사', shirt:BRICK.blue, pants:BRICK.navy, vest:BRICK.orange, hat:'cap', hatColor:BRICK.navy, face:'grin', bg:'#ffe6cc' },
   keeper:   { kind:'r6', name:'터널지기 할아버지', role:'자이로드롭 통로 관리인', shirt:BRICK.brown, pants:BRICK.dgrey, hat:'brim', hatColor:BRICK.sand, beard:true, face:'old', bg:'#efe4c8' },
-  boss:     { kind:'r6', name:'소장', role:'최종 면접관', shirt:BRICK.black, pants:BRICK.black, suit:true, glasses:true, hair:BRICK.dgrey, face:'calm', bg:'#dde2ea' },
-  daechung: { kind:'r6', name:'대충이', role:'경쟁 지원자', shirt:BRICK.red, pants:BRICK.blue, hat:'hood', hatColor:BRICK.red, face:'smirk', bg:'#ffdcd6' }
+  boss:     { kind:'r6', name:'소장', role:'PROJECT ONE 책임 연구원', shirt:BRICK.black, pants:BRICK.black, suit:true, glasses:true, hair:BRICK.dgrey, face:'calm', bg:'#dde2ea' },
+  daechung: { kind:'r6', name:'대충이', role:'신입 연구원 동료', shirt:BRICK.red, pants:BRICK.blue, hat:'hood', hatColor:BRICK.red, face:'smirk', bg:'#ffdcd6' }
 };
 char.NPCS = NPCS;
 char.keys = Object.keys(NPCS);
@@ -1339,7 +1339,7 @@ const state = HNR.state = {
   forkCorrect: function (n) { return HNR.S ? HNR.S.forkSide[n] : 'L'; },
   /* 다음에 할 관문 번호(1~6), 전부 통과했으면 7 */
   nextGate: function () { for (let n = 1; n <= 6; n++) if (!state.gatePassed(n)) return n; return 7; },
-  /* 관문 n 통과 처리: 저장 + 'state' 이벤트 + 배지 토스트 + (n≤5) 합격 카드 팝업.
+  /* 관문 n 통과 처리: 저장 + 'state' 이벤트 + 배지 토스트 + (n≤5) 연구 카드 팝업.
      Promise<처음 통과했나>. 카드 팝업을 닫으면 풀린다. opt:{silent:true} 면 화면 연출 없이 */
   passGate: function (n, opt) {
     const S = HNR.S; if (!S || !(n >= 1 && n <= 6)) return Promise.resolve(false);
@@ -1378,7 +1378,7 @@ const hud = HNR.hud = {
     let h = '';
     for (let i = 1; i <= 6; i++) { const got = S.passed.indexOf(i) >= 0; h += '<span class="bd' + (got ? ' got' : '') + '" data-n="' + i + '"><i>' + (got ? BADGE_ICON[i] : i) + '</i><em>' + esc(badgeName(i)) + '</em></span>'; }
     $('#badges').innerHTML = h;
-    $('#who').innerHTML = '<span class="no">No.' + ('00' + S.no).slice(-3) + '</span><b>' + esc(S.name) + '</b><span class="st">' + (n >= 6 ? '연구원' : '지원자') + '</span>';
+    $('#who').innerHTML = '<span class="no">No.' + ('00' + S.no).slice(-3) + '</span><b>' + esc(S.name) + '</b><span class="st">' + (n >= 6 ? '연구원' : '연구원') + '</span>';
     const wn = $('#walletN'); wn.textContent = S.cards.length; wn.setAttribute('data-n', S.cards.length);
   }
 };
@@ -1389,7 +1389,7 @@ const ui = HNR.ui = { instant: AUTO };
 let dlgState = null, sayChain = Promise.resolve(), cardState = null, walletOpen = false, endingRes = null, entryOpen = true, fading = false;
 /* 화면을 가리는 창(대화·카드·지갑·엔딩·입장·페이드)이 떠 있나 → 떠 있으면 걷기·말 걸기가 멈춘다 */
 ui.isOpen = function () { return !!(dlgState || cardState || walletOpen || endingRes || entryOpen || fading); };
-function fill(t) { return String(t == null ? '' : t).replace(/\{name\}/g, (HNR.S && HNR.S.name) || '지원자'); }
+function fill(t) { return String(t == null ? '' : t).replace(/\{name\}/g, (HNR.S && HNR.S.name) || '연구원'); }
 function fmt(t) { return esc(fill(t)).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>'); }
 function plain(t) { return fill(t).replace(/\*\*/g, ''); }
 ui.fill = fill;
@@ -1401,7 +1401,7 @@ function speaker(line, opt) {
   if (line.sign != null) return { key: 'memo', name: '표지판', role: '' };
   if (line.steps) return { key: 'memo', name: line.title || '이렇게 해 보아요', role: '' };
   const who = line.who || opt.who || 'bit';
-  if (who === 'me' || who === 'player') return { key: 'me', name: (HNR.S && HNR.S.name) || '나', role: '지원자' };
+  if (who === 'me' || who === 'player') return { key: 'me', name: (HNR.S && HNR.S.name) || '나', role: '연구원' };
   if (who === 'sys' || who === 'none') return { key: 'sys', name: '안내', role: '' };
   if (NPCS[who]) return { key: who, name: char.nameOf(who), role: char.roleOf(who) };
   return { key: 'sys', name: String(who), role: '' };
@@ -1409,8 +1409,8 @@ function speaker(line, opt) {
 function cardHtml(n, side, cls) {
   if (HNR.cards) return HNR.cards.html(n, side, cls, fmt(cardText(n, 'front')), fmt(cardText(n, 'back')));
   return '<div class="pcard ' + (cls || '') + (side === 'back' ? ' flipped' : '') + '" data-n="' + n + '"><div class="inner">' +
-    '<div class="face front"><div class="hd"><span>' + esc(ST('common.card', '합격 카드')) + '</span><span class="num">' + n + '</span></div><div class="tx">' + fmt(cardText(n, 'front')) + '</div><div class="ft">다음 갈림길의 수수께끼예요</div></div>' +
-    '<div class="face back"><div class="hd"><span>과학 한 줄</span><span class="num">' + n + '</span></div><div class="tx">' + fmt(cardText(n, 'back')) + '</div><div class="ft">HNR Tech Inc. ' + esc(ST('common.album', '합격 자료집')) + '</div></div></div></div>';
+    '<div class="face front"><div class="hd"><span>' + esc(ST('common.card', '연구 카드')) + '</span><span class="num">' + n + '</span></div><div class="tx">' + fmt(cardText(n, 'front')) + '</div><div class="ft">다음 장치 설정의 단서예요</div></div>' +
+    '<div class="face back"><div class="hd"><span>과학 한 줄</span><span class="num">' + n + '</span></div><div class="tx">' + fmt(cardText(n, 'back')) + '</div><div class="ft">HNR Tech Inc. ' + esc(ST('common.album', '연구 기록')) + '</div></div></div></div>';
 }
 /* 대화창. lines: 문자열 | {who,t} | {memo} | {board} | {sign} | {steps:[...],title} | {card:n,side,t} 또는 그 배열.
    opt:{who:기본 화자(NPC 키·'me'·'sys'·아무 이름), buttons:[{t,v,cls}] (마지막 줄에 뜬다), instant}
@@ -1445,7 +1445,7 @@ function runSay(lines, opt) {
       else if (line.board != null) { txt.innerHTML = '<div class="board">' + fmt(line.board) + '</div>'; showButtons(); }
       else if (line.sign != null) { txt.innerHTML = '<div class="sign">' + fmt(line.sign) + '</div>'; showButtons(); }
       else if (line.steps) { txt.innerHTML = (line.t ? fmt(line.t) : '') + '<ol class="steps">' + line.steps.map(function (s) { return '<li>' + fmt(s) + '</li>'; }).join('') + '</ol>'; showButtons(); }
-      else if (line.card != null) { txt.innerHTML = '<div class="mcard">' + cardHtml(line.card, line.side || 'front', 'mini') + '<div>' + fmt(line.t || (line.side === 'back' ? '카드 뒷면에 과학 한 줄이 나타났어요.' : '합격 카드 ' + line.card + '번의 수수께끼예요.')) + '</div></div>'; showButtons(); }
+      else if (line.card != null) { txt.innerHTML = '<div class="mcard">' + cardHtml(line.card, line.side || 'front', 'mini') + '<div>' + fmt(line.t || (line.side === 'back' ? '카드 뒷면에 과학 한 줄이 나타났어요.' : '연구 카드 ' + line.card + '번의 관찰 기록이에요.')) + '</div></div>'; showButtons(); }
       else {
         const full = plain(line.t); fullHtml = fmt(line.t);
         if (ui.instant || opt.instant || full.length < 2) completeText();
@@ -1493,16 +1493,16 @@ ui.badge = function (n) {
   ui.toast(ST('common.badge', '역량 배지') + ' 「' + badgeName(n) + '」 획득!', { icon: BADGE_ICON[n] || '🏅', cls: 'gold', ms: 3400 });
   const el = document.querySelector('#badges .bd[data-n="' + n + '"]'); if (el) { el.classList.add('pop'); setTimeout(function () { el.classList.remove('pop'); }, 900); }
 };
-/* 합격 카드 팝업. side: 'front'(앞면 수수께끼) | 'flip'(앞면에서 뒷면으로 뒤집는 연출) | 'back'(뒷면). 닫으면 풀리는 Promise */
+/* 연구 카드 팝업. side: 'front'(앞면 수수께끼) | 'flip'(앞면에서 뒷면으로 뒤집는 연출) | 'back'(뒷면). 닫으면 풀리는 Promise */
 ui.card = function (n, side) {
   side = side || 'front';
   return new Promise(function (res) {
     const pop = $('#cardPop'), big = $('#cardBig'), btn = $('#cardBtn'); let timer = null;
     if (HNR.cards) { big.innerHTML = HNR.cards.faces(n, fmt(cardText(n, 'front')), fmt(cardText(n, 'back')), true); big.classList.add('research-card'); big.setAttribute('data-n', n); }
-    $('#cardFrontHd').textContent = ST('common.card', '합격 카드'); $('#cardNumF').textContent = n; $('#cardNumB').textContent = n;
+    $('#cardFrontHd').textContent = ST('common.card', '연구 카드'); $('#cardNumF').textContent = n; $('#cardNumB').textContent = n;
     $('#cardFrontTx').innerHTML = fmt(cardText(n, 'front')); $('#cardBackTx').innerHTML = fmt(cardText(n, 'back'));
     big.classList.toggle('flipped', side === 'back');
-    $('#cardCap').textContent = side === 'front' ? '🎉 합격 카드 ' + n + '번을 받았어요!' : side === 'flip' ? '🚪 문이 열렸어요! 카드를 뒤집어 볼까요?' : '합격 카드 ' + n + '번 · 과학 한 줄';
+    $('#cardCap').textContent = side === 'front' ? '연구 카드 ' + n + '번 · 관찰 기록' : side === 'flip' ? '🚪 문이 열렸어요! 카드를 뒤집어 볼까요?' : '연구 카드 ' + n + '번 · 과학 한 줄';
     btn.textContent = side === 'front' ? '🃏 카드 지갑에 넣기' : '확인';
     const canFlip = side !== 'front' || state.forkSolved(n);
     big.classList.toggle('can-flip', canFlip);
@@ -1520,7 +1520,7 @@ ui.wallet = function (album) {
   for (let n = 1; n <= 5; n++) h += state.hasCard(n) ? cardHtml(n, state.forkSolved(n) ? 'back' : 'front', 'mini') : HNR.cards ? HNR.cards.locked(n) : '<div class="pcard mini locked" data-n="' + n + '"><div class="inner"><div class="face front"><div class="hd"><span>관문 ' + n + '</span><span class="num">?</span></div><div class="tx">' + esc(gateName(n)) + '<br>통과하면 받아요</div></div></div></div>';
   $('#walletGrid').innerHTML = h;
   $('#walletGrid').querySelectorAll('.pcard:not(.locked)').forEach(function (c) { c.setAttribute('role', 'button'); c.tabIndex = 0; });
-  $('#walletTitle').textContent = album ? '📚 ' + ST('common.album', '합격 자료집') : '🃏 카드 지갑 (' + S.cards.length + '/5)';
+  $('#walletTitle').textContent = album ? '📚 ' + ST('common.album', '연구 기록') : '🃏 카드 지갑 (' + S.cards.length + '/5)';
   $('#wallet').classList.add('show'); walletOpen = true; player.stop(); sfx('click');
 };
 ui.closeWallet = function () { $('#wallet').classList.remove('show'); walletOpen = false; };
@@ -1549,7 +1549,7 @@ function drawAvatar(g, cx, by, k, pants) {
   drawFace(g, 'smile', cx - 0.6 * u, yh, 1.2 * u);
 }
 function drawIdCard(cv) {
-  const g = cv.getContext('2d'), W = cv.width, H = cv.height, S = HNR.S || { name: '지원자', avatar: AVS[0][0], no: 1, passed: [] };
+  const g = cv.getContext('2d'), W = cv.width, H = cv.height, S = HNR.S || { name: '연구원', avatar: AVS[0][0], no: 1, passed: [] };
   g.clearRect(0, 0, W, H); g.save(); roundRect(g, 0, 0, W, H, 40); g.clip();
   g.fillStyle = '#fbfcfe'; g.fillRect(0, 0, W, H);
   g.fillStyle = '#0d69ac'; g.fillRect(0, 0, W, 128); g.fillStyle = '#084a7a'; g.fillRect(0, 122, W, 10);
@@ -1570,7 +1570,7 @@ function drawIdCard(cv) {
   g.textAlign = 'left'; g.fillStyle = '#1b1d21'; fitFont(g, S.name, '900', 78, W - tx - 50, 30); g.fillText(S.name, tx, 262);
   g.font = '700 26px ' + FONT; g.fillStyle = '#5b6068';
   const d = new Date(), ds = d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate() + '.';
-  g.fillText('사번', tx, 330); g.fillText('입사일', tx, 372); g.fillText('소속', tx, 414);
+  g.fillText('사번', tx, 330); g.fillText('참여일', tx, 372); g.fillText('소속', tx, 414);
   g.fillStyle = '#1b1d21'; g.font = '800 26px ' + FONT;
   g.fillText('HNR-' + d.getFullYear() + '-' + ('00' + S.no).slice(-3), tx + 96, 330); g.fillText(ds, tx + 96, 372); g.fillText('반도체 기억 연구실', tx + 96, 414);
   // 줄무늬(바코드 느낌)
@@ -1636,8 +1636,8 @@ function initEntry(start) {
   const prev = loadS();
   if (prev) {
     $('#enterForm').hidden = true; $('#enterBack').hidden = false;
-    $('#backTitle').textContent = prev.name + ' 지원자님, 다시 오셨군요!';
-    $('#backSub').textContent = '통과한 관문 ' + prev.passed.length + '개 · 합격 카드 ' + prev.cards.length + '장. 이어서 해 볼까요?';
+    $('#backTitle').textContent = prev.name + ' 연구원님, 다시 오셨군요!';
+    $('#backSub').textContent = '확인한 장치 ' + prev.passed.length + '개 · 연구 카드 ' + prev.cards.length + '장. 이어서 해 볼까요?';
     $('#contBtn').onclick = function () { sfxUnlock(); HNR.S = prev; start(false); };
     $('#newBtn').onclick = function () { sfxUnlock(); state.reset({ reload: false }); $('#enterBack').hidden = true; $('#enterForm').hidden = false; $('#nameIn').focus(); };
   }
@@ -1652,9 +1652,10 @@ function initEntry(start) {
 
 /* ═══════════ 진행 도우미(선택): 관문 대화 · 갈림길 문 ═══════════ */
 const flow = HNR.flow = {};
-function simReady(id) { return !!(HNR.sim && typeof HNR.sim.open === 'function'); }
+function simReady(id) { return !!(HNR.sim && typeof HNR.sim.open === 'function' && (!id || HNR.sim.defOf(id))); }
 function simsOf(n) { return ST('gates.' + n + '.sims', FB.gateSims[n] || []); }
-function simsDone(n) { const ids = simsOf(n); if (!HNR.sim || typeof HNR.sim.tasksDone !== 'function' || !ids.length) return false; for (let i = 0; i < ids.length; i++) if (!HNR.sim.tasksDone(ids[i])) return false; return true; }
+function simsDone(n) { const ids = simsOf(n), S = HNR.S; if (!S || !ids.length) return false; return ids.every(function (id) { return !!((HNR.sim && HNR.sim.tasksDone(id)) || S.seen['apparatus:' + id]); }); }
+flow.observedDone = simsDone;
 function openSim(id) { return new Promise(function (res) { if (!simReady(id)) { res(false); return; } HNR.once('sim:exit', function () { res(true); }); try { const p = HNR.sim.open(id); if (p && p.catch) p.catch(function (e) { console.error('[HNR] sim.open 오류', e); res(false); }); } catch (e) { console.error('[HNR] sim.open 오류', e); res(false); } }); }
 /* 관문 n 통과 연출 한 벌: passGate(배지·카드) → 통과 대사 → 비트 개그 → (6이면) 엔딩 */
 flow.pass = async function (n) {
@@ -1662,13 +1663,13 @@ flow.pass = async function (n) {
   const npc = ST('gates.' + n + '.npc', FB.gateNpc[n]);
   const pass = ST('gates.' + n + '.pass', null); if (pass) await ui.say(pass, { who: npc });
   const gag = ST('gates.' + n + '.gag', null); if (gag && n < 6) await ui.say([{ who: 'bit', t: gag }]);
-  if (n === 6) await ui.ending();
+  if (n === 6) { HNR.S.seen.projectOneReady = true; state.save(); await ui.ending(); }
   return true;
 };
 /* 시험관에게 말 걸었을 때의 표준 흐름. 돌려주는 값: 'passed' | 'sim' | 'later' | 'done' */
 flow.gate = async function (n) {
   const G = ST('gates.' + n, {}), npc = G.npc || FB.gateNpc[n], ids = simsOf(n), title = function (id) { return ST('sims.' + id + '.title', id); };
-  const simBtns = function () { if (!simReady()) return []; return ids.length > 1 ? ids.map(function (id) { return { t: '🔬 ' + title(id), v: 'sim:' + id, cls: 'blue' }; }) : (ids.length ? [{ t: '🔬 가상 실험 하기', v: 'sim:' + ids[0], cls: 'blue' }] : []); };
+  const simBtns = function () { const ready = ids.filter(simReady); return ready.map(function (id) { return { t: '🔬 ' + title(id), v: 'sim:' + id, cls: 'blue' }; }); };
   if (state.gatePassed(n)) {
     const v = await ui.say(G.done || [{ who: npc, t: '이미 통과한 관문이에요. 실험은 언제든 다시 해 볼 수 있어요.' }], { who: npc, buttons: simBtns().concat([{ t: '닫기', v: 'close', cls: 'ghost' }]) });
     if (v && String(v).indexOf('sim:') === 0) { await openSim(v.slice(4)); return 'sim'; }
@@ -1696,9 +1697,9 @@ flow.gate = async function (n) {
 flow.fork = async function (n, side, opt) {
   opt = opt || NOOPT;
   if (state.forkSolved(n)) return 'open';
-  if (!state.hasCard(n)) { sfx('no'); await ui.say([{ who: 'bit', t: ST('common.needCard', '앞 관문 합격 카드가 필요해요') + '.' }]); return 'nocard'; }
+  if (!state.hasCard(n)) { sfx('no'); await ui.say([{ who: 'bit', t: ST('common.needCard', '앞 관문 연구 카드가 필요해요') + '.' }]); return 'nocard'; }
   const F = ST('gates.' + n + '.fork', {}), right = state.forkCorrect(n) === side, label = right ? F.ok : F.no;
-  const v = await ui.say([{ card: n, side: 'front', t: (label ? '「' + label + '」 앞이에요. ' : '') + '카드 수수께끼를 떠올려 보아요. 이 문으로 갈까요?' }], { who: 'bit', buttons: [{ t: '다시 볼래요', v: 'no', cls: 'ghost' }, { t: '🚪 이 문으로 갈래요', v: 'go', cls: 'blue' }] });
+  const v = await ui.say([{ card: n, side: 'front', t: (label ? '「' + label + '」 앞이에요. ' : '') + '장치의 관찰 결과를 떠올려 보아요. 이 문으로 갈까요?' }], { who: 'bit', buttons: [{ t: '다시 볼래요', v: 'no', cls: 'ghost' }, { t: '🚪 이 문으로 갈래요', v: 'go', cls: 'blue' }] });
   if (v !== 'go') return 'cancel';
   if (right) {
     sfx('open'); if (opt.onOpen) { try { await opt.onOpen(); } catch (e) { console.error(e); } }
@@ -1748,7 +1749,7 @@ function buildYard() {
   world.addWalk('yard', { x1: 30, x2: W - 30, z1: 30, z2: H - 30 });
   [[215, 305, 167, 213], [360, 400, 155, 185], [453, 490, 173, 207], [1320, 1440, 840, 960], [1320, 1440, 1010, 1070], [1240, 1280, 880, 920]].forEach(function (b) { world.addBlock({ x1: b[0], x2: b[1], z1: b[2], z2: b[3] }); });
   char.keys.forEach(function (k, i) { world.addNpc(k, 436 + i * 104, 780, { ry: 0 }); });
-  world.addInteract({ id: 'yard-bit', x: 436, z: 780, r: 130, mesh: world.npcs.bit, label: '💬 비트에게 말 걸기', onUse: function () { return ui.say([{ who: 'bit', t: '여기는 시험 마당이에요, {name} 지원자님. 지도(map.js)가 아직 없어서 제가 대신 서 있어요.' }, { who: 'bit', t: '조이스틱으로 걷고, 화면을 밀어 둘러보아요.' }]); } });
+  world.addInteract({ id: 'yard-bit', x: 436, z: 780, r: 130, mesh: world.npcs.bit, label: '💬 비트에게 말 걸기', onUse: function () { return ui.say([{ who: 'bit', t: '여기는 시험 마당이에요, {name} 연구원님. 지도(map.js)가 아직 없어서 제가 대신 서 있어요.' }, { who: 'bit', t: '조이스틱으로 걷고, 화면을 밀어 둘러보아요.' }]); } });
   const door = props.door(800, 420, { label: '시험 문', w: 150 }); scene.add(door);
   world.addBlock({ x1: 711, x2: 889, z1: 408, z2: 432 }, function () { return !door.userData.isOpen(); });
   world.addInteract({ id: 'yard-door', x: 800, z: 470, r: 110, label: function () { return door.userData.isOpen() ? '🚪 문 닫기' : '🚪 문 열기'; }, onUse: function () { sfx('open'); door.userData.setOpen(!door.userData.isOpen()); } });

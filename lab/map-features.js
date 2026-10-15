@@ -67,7 +67,7 @@ function station(r){
     onUse:async()=>{
       H.S.seen['facility'+r.n]=true;H.state.save();lamp.material.emissiveIntensity=1;
       await H.ui.say([{who:'bit',t:H.story('sims.'+simIds[r.n]+'.lead','이 방의 장비를 살펴보아요.')},
-        {who:'bit',t:H.story('sims.'+simIds[r.n]+'.science','시험관과 함께 실험해 보아요.')}]);
+        {who:'bit',t:H.story('sims.'+simIds[r.n]+'.science','연구팀과 함께 장치를 확인해 보아요.')}]);
       return 'observed';
     }});
 }
@@ -77,14 +77,14 @@ function dressRoom(r){
     const sign=r.n<=3?1:-1;
     if(r.n!==4){
       rack(r.x+sign*690,r.z-60,r.color,r.n===3?'optics':'supplies');
-      instrument(r.x+sign*560,r.z+150,r.color,r.n);
+      // Main experiment apparatus now lives at each reserved anchor.
       cart(r.x+sign*410,r.z-430,r.color);
       // Small contents on the existing workbench, counted as objects rather than individual parts.
       prop(()=>{P.part(25,3,35,B.white,r.x+sign*525,45,r.z-330);});
       prop(()=>{P.cyl(9,9,21,r.color,r.x+sign*590,54,r.z-330,{seg:8});});
     }else{
       rack(r.x-690,r.z+350,r.color,'supplies');
-      cart(r.x-490,r.z+410,r.color);instrument(r.x+590,r.z+90,r.color,4);
+      cart(r.x-490,r.z+410,r.color);
     }
     // Corners remain outside the central aisle and the two 640×440 simulator reservations.
     const corners=r.n===4?[[-710,520],[710,520]]:[[-710,-490],[710,-490]];
@@ -148,7 +148,7 @@ E.resetCamera=function(){
 function memo(){
   const seen=E.stations.filter(s=>H.S.seen['facility'+s.n]);
   H.ui.say(seen.length?seen.map(s=>({who:'bit',t:labels[s.n]+'\n'+H.story('sims.'+simIds[s.n]+'.science','')})):
-    [{who:'bit',t:'각 실험실의 안내 단말기를 살펴보면 여기에 관찰 메모가 모여요. 관문 통과와는 별개로 편하게 둘러보아요.'}]);
+    [{who:'bit',t:'각 실험실의 안내 단말기를 살펴보면 여기에 관찰 메모가 모여요. 주변 장비도 눌러 보세요. 직접 움직이는 것을 볼 수 있어요.'}]);
 }
 function installControls(){
   const style=document.createElement('style');style.textContent=`
@@ -205,10 +205,11 @@ const labelPosition=new T.Vector3();
 function readableLabels(){
   const camDistance=H.camera.position.distanceTo(new T.Vector3(H.player.x,65,H.player.z));
   for(const label of E.labels){
+    if(H.sim&&H.sim.active){label.visible=false;continue;}
     label.getWorldPosition(labelPosition);
     const distance=labelPosition.distanceTo(H.camera.position),nearPlayer=Math.hypot(labelPosition.x-H.player.x,labelPosition.z-H.player.z)<1900;
     // Large billboard signs between avatar and camera must not cover the whole scene.
-    const foreground=H.player.view!=='fps'&&distance<camDistance*.85;
+    const foreground=(H.player.view!=='fps'||H.cam.isOverride())&&distance<camDistance*.85;
     const tooClose=distance<100&&label.scale.x>180;
     label.visible=nearPlayer&&!foreground&&!tooClose;
   }

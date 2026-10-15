@@ -19,12 +19,12 @@
   function face(n, side, html, popup) {
     var d = DATA[n], back = side === 'back';
     return '<div class="face ' + side + '">' + brand(n, side, popup) +
-      '<div class="research-label"><span' + (back ? '' : ident('cardFrontHd', popup)) + '>' + (back ? '과학 한 줄' : '합격 카드') + '</span><span>SC–' + code(n) + '</span></div>' +
+      '<div class="research-label"><span' + (back ? '' : ident('cardFrontHd', popup)) + '>' + (back ? '과학 한 줄' : '연구 카드') + '</span><span>SC–' + code(n) + '</span></div>' +
       (back ? '<figure class="card-art"><span class="card-art-fallback" aria-hidden="true">' + esc(d.topic) + '</span><img src="' + ROOT + 'science-card-' + code(n) + '.webp" width="960" height="640" alt="' + esc(d.alt) + '" decoding="async" draggable="false"></figure>' :
         '<div class="research-seal" aria-hidden="true"><span>GATE</span><b>' + code(n) + '</b><i>HNR RESEARCH</i></div>') +
       '<h3 class="research-title">' + esc(back ? d.title : d.place) + '</h3>' +
       '<div class="tx"' + ident(back ? 'cardBackTx' : 'cardFrontTx', popup) + '>' + html + '</div>' +
-      '<div class="research-foot"><span>' + (back ? esc(d.topic) : '다음 갈림길의 수수께끼') + '</span><span class="card-open-hint">눌러서 크게 보기 ↗</span><span class="card-flip-hint">카드를 눌러 뒤집기 ↻</span></div>' +
+      '<div class="research-foot"><span>' + (back ? esc(d.topic) : '다음 장치 설정의 단서') + '</span><span class="card-open-hint">눌러서 크게 보기 ↗</span><span class="card-flip-hint">카드를 눌러 뒤집기 ↻</span></div>' +
       '<div class="research-credit">2026 서울STEM축제 - 해누리중학교</div></div>';
   }
   function faces(n, front, back, popup) { return '<div class="inner">' + face(n, 'front', front, popup) + face(n, 'back', back, popup) + '</div>'; }
@@ -34,7 +34,7 @@
       return '<div class="pcard research-card ' + (cls || '') + (side === 'back' ? ' flipped' : '') + '" data-n="' + n + '" aria-label="' + esc(DATA[n].place) + ' 카드 크게 보기">' + faces(n, front, back, false) + '</div>';
     },
     locked: function(n) {
-      return '<div class="pcard research-card mini locked" data-n="' + n + '"><div class="inner"><div class="face front">' + brand(n, 'front', false) + '<div class="research-label"><span>연구 기록</span><span>SC–' + code(n) + '</span></div><div class="research-seal" aria-hidden="true"><span>GATE</span><b>' + code(n) + '</b><i>HNR RESEARCH</i></div><h3 class="research-title">' + esc(DATA[n].place) + '</h3><div class="tx">관문을 통과하면<br>카드를 받을 수 있어요.</div><div class="research-foot"><span>아직 탐험하지 않은 관문</span></div></div></div></div>';
+      return '<div class="pcard research-card mini locked" data-n="' + n + '"><div class="inner"><div class="face front">' + brand(n, 'front', false) + '<div class="research-label"><span>연구 기록</span><span>SC–' + code(n) + '</span></div><div class="research-seal" aria-hidden="true"><span>GATE</span><b>' + code(n) + '</b><i>HNR RESEARCH</i></div><h3 class="research-title">' + esc(DATA[n].place) + '</h3><div class="tx">장치를 확인하면<br>카드를 받을 수 있어요.</div><div class="research-foot"><span>아직 확인하지 않은 장치</span></div></div></div></div>';
     }
   };
   document.addEventListener('error', function(e) {
