@@ -1038,32 +1038,43 @@ html{color-scheme:light}
   };
   function magnet(x,y,attrs='') { return `<g transform="translate(${x} ${y})" ${attrs}><rect x="-38" y="-45" width="76" height="90" rx="10" fill="#dfeeea" stroke="${C.field}" stroke-width="4"/><path d="M-37 0H37" stroke="${C.field}" stroke-width="3"/>${txt(0,-11,'S',30,C.field)}${txt(0,35,'N',30,C.field)}</g>`; }
   function tubes() {
-    return svg('같은 자석을 같은 높이에서 떨어뜨리면 구리관 속 자석이 더 천천히 내려가며 두 관 모두 통과한다. 안이 보이게 그린 비교 모형.', id=>`<defs><clipPath id="${id}-acrylic-clip"><rect x="205" y="90" width="190" height="405"/></clipPath><clipPath id="${id}-copper-clip"><rect x="705" y="90" width="190" height="405"/></clipPath></defs>${txt(300,57,'아크릴관',38,C.muted)}${txt(800,57,'구리관',38,C.copper)}<rect x="205" y="90" width="190" height="405" rx="22" fill="#f1f8fb" stroke="#9cb9c9" stroke-width="6"/><rect x="705" y="90" width="190" height="405" rx="22" fill="#fff3e9" stroke="${C.copper}" stroke-width="8"/><path d="M240 102V479M360 102V479" stroke="#e3eff4" stroke-width="3"/><path d="M735 102V479M865 102V479" stroke="#eac3a7" stroke-width="4"/><g clip-path="url(#${id}-acrylic-clip)">${magnet(300,146,'data-fall-acrylic')}</g><g clip-path="url(#${id}-copper-clip)">${magnet(800,146,'data-fall-copper')}</g>${txt(300,544,'같은 높이에서 출발',30,C.muted).replace('<text ','<text data-fall-acrylic-status ')}${txt(800,544,'같은 높이에서 출발',30,C.muted).replace('<text ','<text data-fall-copper-status ')}`);
+    return svg('구리관 한 개의 바깥 모습. 불투명한 관 안의 자석은 보이지 않으므로 놓은 순간과 출구에서 나온 순간을 관찰한다.', id=>`
+      ${txt(550,47,'놓기 → 기다리기 → 출구 확인',36)}
+      ${magnet(550,105,'data-fall-copper')}
+      <rect x="445" y="156" width="210" height="254" rx="15" fill="#c78a5d" stroke="${C.copper}" stroke-width="7"/>
+      <ellipse cx="550" cy="156" rx="105" ry="18" fill="#8d5736" stroke="${C.copper}" stroke-width="5"/>
+      <path d="M425 522H675" stroke="#17324d" stroke-width="7" stroke-linecap="round"/>
+      ${txt(205,210,'구리관 1개',36,C.copper)}${txt(205,260,'관 벽은 불투명해요',30)}
+      ${txt(870,220,'관 안의 자석은',30)}${txt(870,265,'겉에서 안 보여요',30)}
+      ${arrow(id,735,315,630,450,'ink',5)}${txt(885,370,'출구와 받침을 봐요',29)}
+      ${txt(550,555,'놓기 전',27,C.ink).replace('<text ','<text data-fall-copper-status ')}
+    `);
   }
   function fallSetup(root,c) {
-    const a=root.querySelector('[data-fall-acrylic]'), b=root.querySelector('[data-fall-copper]'), button=root.querySelector('[data-fall-replay]'), aStatus=root.querySelector('[data-fall-acrylic-status]'), bStatus=root.querySelector('[data-fall-copper-status]');
-    if(!a||!b)return;
-    let elapsed=0, running=!c.reduced&&!c.still;
-    function render(t, staticComparison=false) {
-      const ya=146+300*t*t,yb=146+82*(t-.137*(1-Math.exp(-t/.137)));
-      const passedA=ya>=540,passedB=yb>=540;
-      a.setAttribute('transform',`translate(300 ${ya.toFixed(2)})`);b.setAttribute('transform',`translate(800 ${yb.toFixed(2)})`);
-      a.setAttribute('visibility',passedA?'hidden':'visible');b.setAttribute('visibility',passedB?'hidden':'visible');
-      const status=(passed)=>staticComparison?`같은 시간: ${passed?'통과 ↓':'낙하 중 ↓'}`:t===0?'같은 높이에서 출발':passed?'통과 ↓':'낙하 중 ↓';
-      if(aStatus)aStatus.textContent=status(passedA);if(bStatus)bStatus.textContent=status(passedB);
-      return passedA&&passedB;
+    const b=root.querySelector('[data-fall-copper]'), button=root.querySelector('[data-fall-replay]'), status=root.querySelector('[data-fall-copper-status]');
+    if(!b)return;
+    let elapsed=0, running=!c.reduced&&!c.still, snapshot=0;
+    function render(t) {
+      const y=Math.min(476,105+90*(t-.15*(1-Math.exp(-t/.15))));
+      b.setAttribute('transform',`translate(550 ${y.toFixed(2)})`);
+      b.dataset.position=y.toFixed(2);
+      if(status)status.textContent=y>=476?'출구 통과 · 받침에 도착':t===0?'놓기 전':'놓은 뒤 · 출구에 나타나는 순간을 기다려요';
+      return y>=476;
     }
-    render(c.reduced||c.still?1.2:0,Boolean(c.reduced||c.still));
-    const replay=()=>{elapsed=0;running=true;render(0);if(c.reduced||c.still){render(1.2,true);running=false;}};
+    render(0);
+    const replay=()=>{
+      if(c.reduced||c.still){snapshot=(snapshot+1)%3;render(snapshot===1?2:snapshot===2?5:0);running=false;}
+      else{elapsed=0;running=true;render(0);}
+    };
     if(button){button.addEventListener('click',replay);c.onDispose(()=>button.removeEventListener('click',replay));}
     c.loop((t,dt)=>{if(!running)return;elapsed+=dt;if(render(elapsed))running=false;});
   }
   const eddy = {
     slug:'eddy',title:'구리관 속 느려지는 자석',gate:'관문 5',lead:'떨어지는 자석에 걸리는 전자기 브레이크',minutes:'약 1분',keywords:['느려진 낙하','맴돌이 전류','움직임을 방해하는 힘'],
     scenes:[
-      {title:'구리관 속 느려지는 자석',kicker:'실험 뒤 1분 설명',body:'<p>같은 자석을 떨어뜨렸는데,</p><p><b>구리관</b>에서는<br>왜 천천히 내려왔을까요?</p><button data-interactive data-fall-replay>같이 다시 떨어뜨리기</button>',visual:tubes(),takeaway:'구리관에서는 자석이 느리게, 계속 내려와요.',notes:'같은 자석을 같은 높이에서 떨어뜨리면 아크릴관에서는 빨리, 구리관에서는 천천히 내려와요. 구리관에 붙어서 멈춘 걸까요? 실제로는 아래로 계속 내려오고 있어요.',keyword:0,setup:fallSetup},
+      {title:'구리관 속 느려지는 자석',kicker:'실험 뒤 1분 설명',body:'<p>자석을 놓았어요.</p><p><b>구리관의 출구</b>에는<br>언제 나타날까요?</p><button data-interactive data-fall-replay>출구 관찰 다시 보기</button>',visual:tubes(),takeaway:'놓은 순간과 출구에 나온 순간을 함께 관찰해요.',notes:'구리관 하나로 하는 실험이에요. 자석을 놓은 순간과 아래 출구로 나온 순간을 함께 관찰해요. 관은 불투명하므로 겉에서 안의 움직임을 직접 볼 수는 없어요. 자석은 관에 붙어 멈춘 것이 아니라 제동력을 받으며 내려옵니다. 기다리는 동안 다음 자석을 넣지 않아요. 그림의 움직임은 관찰 순서를 보여 주며 실제 낙하 시간을 예측하지 않습니다.',keyword:0,setup:fallSetup},
       {title:'세 가지 순서로 설명해요',kicker:'오늘의 핵심',body:'<p>자석이 <b>움직이고</b>,</p><p>구리 안에 <b>전류</b>가 생기고,</p><p>낙하를 방해하는<br><b>힘</b>이 생겨요.</p>',visual:concepts(['움직이는 자석','맴돌이 전류','브레이크 힘']),takeaway:'움직임 → 전류 → 움직임을 방해하는 힘',notes:'세 단계로 생각하면 쉬워요. 자석이 움직이고, 구리 안에 전류가 생겨요. 그 전류가 만든 자기장이 자석의 움직임을 방해하는 힘을 만들어요.',keyword:0},
-      {title:'구리에 붙은 것이 아니에요',kicker:'관찰을 정확히 말하기',body:'<p>구리는 철처럼<br>자석에 강하게 붙지 않아요.</p><p>그래도 <b>움직이는 자석</b>은<br>구리관에서 느려져요.</p><button data-interactive data-fall-replay>낙하 비교 다시 보기</button>',visual:tubes(),takeaway:'“붙어서 멈춤”이 아니라 “힘을 받아 느려짐”이에요.',notes:'구리는 철처럼 자석에 강하게 붙는 물질이 아니에요. 또 자석이 관에 붙어 멈춰 있는 것도 아니고요. 자석이 구리관 안에서 움직일 때 나타나는 현상이라는 점을 기억해 주세요.',keyword:0,setup:fallSetup},
+      {title:'구리에 붙은 것이 아니에요',kicker:'관찰을 정확히 말하기',body:'<p>구리는 철처럼<br>자석에 강하게 붙지 않아요.</p><p>그래도 <b>움직이는 자석</b>은<br>구리관에서 느려져요.</p><button data-interactive data-fall-replay>출구 관찰 다시 보기</button>',visual:tubes(),takeaway:'“붙어서 멈춤”이 아니라 “힘을 받아 느려짐”이에요.',notes:'구리는 철처럼 자석에 강하게 붙는 물질이 아니에요. 또 자석이 관에 붙어 멈춰 있는 것도 아니고요. 자석이 구리관 안에서 움직일 때 나타나는 현상이라는 점을 기억해 주세요.',keyword:0,setup:fallSetup},
       {title:'구리 안에서 전류가 돌아요',kicker:'맴돌이 전류가 생기는 까닭',body:'<p>자석이 내려오면<br>구리를 통과하는<br><b>자기장이 변해요.</b></p><p>그 변화 때문에<br>구리 안에 전류가 생겨요.</p>',visual:svg('아래로 움직이는 자석 때문에 구리 부분을 통과하는 자기장이 변해 맴돌이 전류가 생긴다',id=>`${txt(550,58,'자기장의 변화 → 맴돌이 전류',36)}<rect x="240" y="115" width="420" height="370" rx="28" fill="#fff3e9" stroke="${C.copper}" stroke-width="7"/>${magnet(450,220)}${arrow(id,780,150,780,310,'ink',9)}${txt(875,225,'낙하',34)}<g data-pop="1"><ellipse cx="450" cy="383" rx="194" ry="47" fill="none" stroke="${C.current}" stroke-width="12"/><ellipse cx="450" cy="383" rx="194" ry="47" fill="none" stroke="#fff3e9" stroke-width="5" stroke-dasharray="5 21"/>${line(650,383,740,400,C.current,4)}${txt(890,390,'구리 속을 도는',32,C.current)}${txt(890,435,'맴돌이 전류',36,C.current)}</g>${txt(550,542,'구리관의 한 부분을 확대해 단순화한 그림',30,C.muted)}`),takeaway:'건전지 없이도, 자기장이 변하면 전류가 생길 수 있어요.',notes:'자석이 내려오면 구리관의 각 부분을 통과하는 자기장이 변해요. 그 변화가 구리 안에서 빙글빙글 도는 전류를 만들어요. 이 전류를 맴돌이 전류라고 해요. 건전지를 연결하지 않았는데도 전류가 생긴 거예요.',keyword:1},
       {title:'아래로 떨어지면서, 위로 힘을 받아요',kicker:'전자기 브레이크',body:'<p>맴돌이 전류가 만든 자기장은<br><b>떨어지는 움직임을 방해해요.</b></p><p>중력은 여전히 아래쪽!<br>자석은 느리게 내려와요.</p>',visual:svg('거의 일정한 속도로 낙하하는 자석에 아래쪽 중력과 위쪽 자기력이 작용한다',id=>`${txt(550,58,'거의 일정한 속도로 떨어질 때',34)}<rect x="400" y="105" width="290" height="370" rx="22" fill="#fff3e9" stroke="${C.copper}" stroke-width="8"/>${magnet(545,275)}${arrow(id,255,180,255,380,'ink',10)}${txt(160,265,'중력',34)}${txt(160,310,'아래로',32)}${arrow(id,825,380,825,180,'force',10)}${txt(950,265,'자기력',34,C.force)}${txt(950,310,'위로',32,C.force)}${arrow(id,545,355,545,450,'field',7)}${txt(550,540,'힘이 균형을 이뤄도, 이미 움직이던 자석은 계속 내려가요.',30,C.muted)}`),takeaway:'공중에 멈추는 현상이 아니라, 낙하를 늦추는 현상이에요.',notes:'이 전류가 만든 자기장 때문에 자석에는 위쪽 힘이 생겨요. 중력은 아래로 작용하죠. 낙하 속도가 거의 일정해질 때는 두 힘의 크기가 거의 같아요. 하지만 이미 움직이고 있던 자석은 멈추지 않고 계속 내려가요. 힘이 균형이면 반드시 정지한다는 뜻은 아니에요.',keyword:2},
       {title:'구리관은 전자기 브레이크',kicker:'한 문장으로 설명하기',body:'<p><b>움직이는 자석</b>이<br>구리 안에 전류를 만들고,</p><p>그 전류가 만든 힘이<br>자석의 낙하를 늦춰요.</p>',visual:concepts(['자기장 변화','전류 발생','낙하가 느려짐']),takeaway:'“움직이는 자석이 만든 전류가, 다시 자석의 움직임을 방해해요.”',notes:'구리관 안에서 움직이는 자석이 전류를 만들고, 그 전류가 만든 힘이 자석의 낙하를 늦춰요. 자석과 관이 서로 움직이지 않고 외부 자기장도 변하지 않으면 이런 맴돌이 전류는 유지되지 않아요. 낙하 중 에너지 일부는 구리에서 열로 바뀌어요.',keyword:2}
@@ -1602,75 +1613,62 @@ html{color-scheme:light}
     notes: '황금나침반 관문의 자기장 시험 장치예요. 왼쪽의 위쪽 화살표는 지구 자기장, 초록 화살표는 코일 자기장, 보라 화살표는 두 자기장을 더한 결과입니다. 오른쪽 나침반 N극은 보라 화살표와 정확히 같은 방향이에요. 상대 세기를 높일수록 더 크게 기울고, 전류 방향을 바꾸면 반대쪽으로 기울어요. 끄거나 세기를 0으로 하면 북쪽으로 돌아옵니다. 위에서 보았을 때 지구 자기장은 북쪽, 코일 자기장은 동서 방향인 배치만 다룬 교육용 모형입니다. 실제 전류나 각도 측정값은 아니며 바늘의 진동은 생략했어요. 흐름 표시 재생과 멈춤은 초록 화살표의 표시만 바꾸고 물리 조건은 바꾸지 않아요.', setup: compassSetup
   });
 
-  const eddyVisual = graphic('선택한 관과 기준 아크릴관에 같은 물체를 같은 높이에서 떨어뜨려 비교하는 실험', id => `
-    ${text(310,45,'선택한 관: 구리',31,COLORS.ink,'data-live-eddy-material-label')}${text(800,45,'비교관: 아크릴',31)}
-    <rect data-live-eddy-tube x="235" y="102" width="150" height="318" rx="18" fill="#fff4e9" stroke="${COLORS.copper}" stroke-width="7"/>
-    <rect x="725" y="102" width="150" height="318" rx="18" fill="#f1f8ff" stroke="#a7c1db" stroke-width="6"/>
-    <path d="M260 110V408M360 110V408M750 110V408M850 110V408" fill="none" stroke="#d9e3ed" stroke-width="3"/>
-    <path d="M215 497H405M705 497H895" stroke="#a4b7c9" stroke-width="5" stroke-linecap="round"/>
-    <g data-live-eddy-selected transform="translate(310 145)"><rect data-live-eddy-body x="-25" y="-25" width="50" height="50" rx="7" fill="#d7eaf4" stroke="${COLORS.ink}" stroke-width="3"/>${text(0,8,'N',25,COLORS.ink,'data-live-eddy-symbol')}</g>
-    <g data-live-eddy-reference transform="translate(800 145)"><rect data-live-eddy-body x="-25" y="-25" width="50" height="50" rx="7" fill="#d7eaf4" stroke="${COLORS.ink}" stroke-width="3"/>${text(0,8,'N',25,COLORS.ink,'data-live-eddy-symbol')}</g>
-    <g data-live-eddy-current opacity="0"><ellipse cx="310" cy="230" rx="72" ry="20" fill="none" stroke="${COLORS.current}" stroke-width="6"/><ellipse cx="310" cy="260" rx="72" ry="20" fill="none" stroke="${COLORS.current}" stroke-width="6"/></g>
-    ${arrow(id, 130, 185, 130, 278, 'ink')}${text(130,323,'중력',26)}
-    ${arrow(id, 485, 286, 485, 200, 'force', 'data-live-eddy-brake opacity="0"')}${text(505,335,'제동력',26,COLORS.force,'data-live-eddy-brake-label opacity="0"')}
-    ${text(310,544,'같은 높이에서 출발',25,COLORS.muted,'data-live-eddy-selected-status')}${text(800,544,'같은 높이에서 출발',25,COLORS.muted,'data-live-eddy-reference-status')}
+  const eddyVisual = graphic('구리관 하나에서 자석이 낙하하는 설명 모형. 관 안 보기로 내부를 드러내거나 실제처럼 불투명하게 볼 수 있다.', id => `
+    ${text(550,43,'구리관 한 개 · 낙하 관찰',34)}
+    ${text(550,84,'관 안 보기: 원리를 위해 내부를 드러낸 모형',26,COLORS.ink,'data-live-eddy-view-label')}
+    <g data-live-eddy-selected transform="translate(550 145)"><rect x="-26" y="-26" width="52" height="52" rx="7" fill="#d7eaf4" stroke="${COLORS.ink}" stroke-width="3"/>${text(0,9,'N',27)}</g>
+    <rect data-live-eddy-tube x="450" y="120" width="200" height="310" rx="16" fill="#c88b5b" fill-opacity=".16" stroke="${COLORS.copper}" stroke-width="7"/>
+    <g data-live-eddy-current opacity="0"><ellipse cx="550" cy="230" rx="100" ry="22" fill="none" stroke="${COLORS.current}" stroke-width="7"/><ellipse cx="550" cy="275" rx="100" ry="22" fill="none" stroke="${COLORS.current}" stroke-width="7"/></g>
+    <path d="M420 510H680" stroke="${COLORS.ink}" stroke-width="6" stroke-linecap="round"/>
+    <g data-live-eddy-gravity opacity="0">${arrow(id,260,215,260,305,'ink')}${text(260,355,'중력 ↓',32)}</g>
+    ${arrow(id,820,305,820,215,'force','data-live-eddy-brake opacity="0"')}${text(825,355,'제동력 ↑',32,COLORS.force,'data-live-eddy-brake-label opacity="0"')}
+    ${text(550,548,'설명용 모형 · 실제 길이·시간·힘의 비율 아님',25,COLORS.ink)}
   `);
   function eddySetup(root, c) {
-    const get = s => root.querySelector(s), material = get('[data-live-eddy-material]'), object = get('[data-live-eddy-object]'), run = get('[data-live-eddy-run]');
-    let a = { y:145, v:0 }, b = { y:145, v:0 }, running = false, elapsed = 0, snapshot = false;
-    const end = 470, g = 460, damping = 4.2;
-    function resetState() { a = { y:145, v:0 }; b = { y:145, v:0 }; running = false; elapsed = 0; snapshot = false; }
-    function step(dt) {
-      const braking = material.value === 'copper' && object.value === 'magnet';
-      // Small equal time steps avoid different numerical errors in the two lanes.
-      let remain = dt;
-      while (remain > 1e-9) {
-        const h = Math.min(1 / 180, remain); remain -= h;
-        for (const [state, useBrake] of [[a, braking], [b, false]]) {
-          if (state.y >= end) continue;
-          const k = useBrake && state.y < 445 ? damping : 0;
-          if (k) {
-            const e = Math.exp(-k * h), terminal = g / k, oldV = state.v;
-            state.y += terminal * h + (oldV - terminal) * (1 - e) / k;
-            state.v = terminal + (oldV - terminal) * e;
-          } else { state.y += state.v * h + .5 * g * h * h; state.v += g * h; }
-          if (state.y >= end) { state.y = end; state.v = 0; }
-        }
-        elapsed += h;
+    const get=s=>root.querySelector(s), run=get('[data-live-eddy-run]'), inside=get('[data-live-eddy-inside]');
+    const end=480, g=460, damping=4.2;
+    let y=145,v=0,running=false,started=false,snapshot=false;
+    function resetState(){y=145;v=0;running=false;started=false;snapshot=false;}
+    function step(dt){
+      let remain=dt;
+      while(remain>1e-9&&y<end){
+        const h=Math.min(1/180,remain);remain-=h;
+        const k=y<446?damping:0;
+        if(k){const e=Math.exp(-k*h),terminal=g/k,oldV=v;y+=terminal*h+(oldV-terminal)*(1-e)/k;v=terminal+(oldV-terminal)*e;}
+        else{y+=v*h+.5*g*h*h;v+=g*h;}
+        if(y>=end){y=end;v=0;}
       }
     }
-    function render() {
-      const copper = material.value === 'copper', magnet = object.value === 'magnet', active = copper && magnet && a.v > 0 && a.y < 445;
-      const tube = get('[data-live-eddy-tube]'); tube.setAttribute('fill', copper ? '#fff4e9' : '#f1f8ff'); tube.setAttribute('stroke', copper ? COLORS.copper : '#a7c1db');
-      get('[data-live-eddy-material-label]').textContent = '선택한 관: ' + (copper ? '구리' : '아크릴');
-      root.querySelectorAll('[data-live-eddy-symbol]').forEach(el => el.textContent = magnet ? 'N' : '●');
-      root.querySelectorAll('[data-live-eddy-body]').forEach(el => el.setAttribute('fill', magnet ? '#d7eaf4' : '#d9dde2'));
-      [['selected', a, 310], ['reference', b, 800]].forEach(([name, state, x]) => {
-        const el = get('[data-live-eddy-' + name + ']'); el.setAttribute('transform', `translate(${x} ${state.y.toFixed(3)})`); el.dataset.position = state.y.toFixed(3);
-        get('[data-live-eddy-' + name + '-status]').textContent = state.y >= end ? '관 통과 · 받침에 도착' : elapsed === 0 ? '같은 높이에서 출발' : (snapshot ? '같은 시간: ' : '') + (name === 'selected' && copper && magnet ? '천천히 낙하 중' : '낙하 중');
-      });
-      get('[data-live-eddy-current]').setAttribute('opacity', active ? '.8' : '0'); get('[data-live-eddy-current]').setAttribute('transform', `translate(0 ${(clamp(a.y,170,385)-245).toFixed(2)})`);
-      get('[data-live-eddy-brake]').setAttribute('opacity', active ? '1' : '0'); get('[data-live-eddy-brake-label]').setAttribute('opacity', active ? '1' : '0');
-      run.textContent = running ? '일시 정지' : (a.y >= end && b.y >= end) ? '다시 떨어뜨리기' : still(c) && snapshot ? '끝까지 보기' : elapsed > 0 ? '계속 떨어뜨리기' : '함께 떨어뜨리기';
-      run.setAttribute('aria-pressed', String(running));
-      get('[data-live-eddy-model-status]').textContent = copper && magnet ? '구리 + 움직이는 자석: 전자기 제동' : '이 조건에서는 전자기 제동 없음';
+    function render(){
+      const falling=started&&y<end,braking=falling&&v>0&&y<446,cutaway=inside.checked;
+      const magnet=get('[data-live-eddy-selected]');magnet.setAttribute('transform',`translate(550 ${y.toFixed(3)})`);magnet.dataset.position=y.toFixed(3);
+      get('[data-live-eddy-tube]').setAttribute('fill-opacity',cutaway?'.16':'1');
+      get('[data-live-eddy-view-label]').textContent=cutaway?'관 안 보기: 원리를 위해 내부를 드러낸 모형':'실제 관 벽은 불투명 · 출구에 나타나는 때를 봐요';
+      get('[data-live-eddy-current]').setAttribute('opacity',braking&&cutaway?'.9':'0');
+      get('[data-live-eddy-current]').setAttribute('transform',`translate(0 ${(clamp(y,180,380)-252).toFixed(2)})`);
+      get('[data-live-eddy-gravity]').setAttribute('opacity',falling?'1':'0');
+      const brake=get('[data-live-eddy-brake]');brake.setAttribute('opacity',braking?'1':'0');brake.setAttribute('y2',String(305-Math.min(90,90*damping*v/g)));
+      get('[data-live-eddy-brake-label]').setAttribute('opacity',braking?'1':'0');
+      run.textContent=running?'화면 일시 정지':y>=end?'다시 떨어뜨리기':still(c)&&snapshot?'출구까지 보기':started?'계속 보기':'자석 놓기';
+      run.setAttribute('aria-pressed',String(running));
+      get('[data-live-eddy-model-status]').textContent=!started?'입구에서 대기 · 자석을 놓아 보세요.':y>=end?'출구 통과 · 받침에 도착했어요.':running?'관을 통과하는 중 · 출구를 관찰해요.':'시간을 멈춘 설명 화면 · 실제 자석이 공중에 멈춘다는 뜻은 아니에요.';
     }
-    function play() {
-      if (running) { running = false; render(); return; }
-      if (a.y >= end && b.y >= end) resetState();
-      if (still(c)) { if (!snapshot) { step(1.2); snapshot = true; } else { for (let i = 0; i < 900 && (a.y < end || b.y < end); i++) step(1 / 60); } render(); return; }
-      running = true; render();
+    function play(){
+      if(running){running=false;render();return;}
+      if(y>=end)resetState();started=true;
+      if(still(c)){if(!snapshot){step(1.2);snapshot=true;}else{for(let i=0;i<900&&y<end;i++)step(1/60);}render();return;}
+      running=true;render();
     }
-    listen(root, c, '[data-live-eddy-run]', 'click', play);
-    listen(root, c, '[data-live-eddy-reset]', 'click', () => { material.value = 'copper'; object.value = 'magnet'; resetState(); render(); });
-    listen(root, c, '[data-live-eddy-material], [data-live-eddy-object]', 'change', () => { resetState(); render(); });
-    render(); c.loop((t, dt) => { if (!running) return; step(Math.min(dt, .15)); if (a.y >= end && b.y >= end) running = false; render(); });
+    listen(root,c,'[data-live-eddy-run]','click',play);
+    listen(root,c,'[data-live-eddy-reset]','click',()=>{resetState();render();});
+    listen(root,c,'[data-live-eddy-inside]','change',render);
+    render();c.loop((t,dt)=>{if(!running)return;step(Math.min(dt,.15));if(y>=end)running=false;render();});
   }
   insert('eddy', {
-    kind: 'sim', title: '자이로드롭 통로를 시험해요', kicker: '관문 5 · 터널지기 할아버지의 낙하 실험', keyword: 2,
-    body: '<p>같은 물체를 같은 높이에서!<br><b>관의 재질</b>을 바꾸어 비교해요.</p><div class="sim-controls" data-interactive><label>선택한 관 <select data-live-eddy-material aria-label="낙하관 재질"><option value="copper">구리관</option><option value="acrylic">아크릴관</option></select></label><label>떨어뜨릴 물체 <select data-live-eddy-object aria-label="떨어뜨릴 물체"><option value="magnet">자석</option><option value="plain">자석이 아닌 물체</option></select></label><div><button data-live-eddy-run>함께 떨어뜨리기</button> <button data-live-eddy-reset>조건 초기화</button></div><p data-live-eddy-model-status>구리 + 움직이는 자석: 전자기 제동</p></div>',
-    visual: eddyVisual, takeaway: '구리관을 통과하는 자석은 제동력을 받아 천천히 내려와요. 관 안에 멈추지는 않아요.',
-    notes: '터널지기 할아버지의 자이로드롭 통로예요. 오른쪽은 비교 기준인 아크릴관입니다. 같은 물체를 같은 높이에서 동시에 놓아요. 왼쪽이 구리관이고 물체가 자석일 때만 맴돌이 전류가 생겨 위쪽 제동력이 나타납니다. 왼쪽도 아크릴관으로 바꾸거나 물체를 자석이 아닌 것으로 바꾸면 둘은 같이 떨어져요. 크기와 질량이 같은 물체, 공기 저항과 마찰을 생략한 교육용 모형입니다. 구리 속 자석의 제동력을 속도에 비례하게 둔 단순 모형이며 실제 재료의 낙하 시간이나 속도를 측정한 값이 아닙니다. 모든 물체는 관을 완전히 빠져나와 아래 받침에 도착합니다. 움직임 줄이기 모드에서는 첫 버튼이 같은 시간 뒤의 비교 장면을, 다음 버튼이 끝까지 통과한 결과를 보여 줍니다.', setup: eddySetup
+    kind:'sim',title:'구리관 안에서는 무슨 일이?',kicker:'관문 5 · 자기 제동 점검',keyword:2,
+    body:'<p><b>자석을 놓고</b><br>출구에 나올 때까지 관찰해요.</p><div class="sim-controls" data-interactive><label><input type="checkbox" data-live-eddy-inside checked> 관 안 보기 · 설명 모형</label><div><button data-live-eddy-run>자석 놓기</button> <button data-live-eddy-reset>처음 상태</button></div><p data-live-eddy-model-status>입구에서 대기 · 자석을 놓아 보세요.</p></div>',
+    visual:eddyVisual,takeaway:'움직이는 자석 → 유도 전류 → 낙하를 늦추는 자기력',
+    notes:'현장에서는 구리관 한 개를 사용합니다. 먼저 자석을 관에 가만히 대 보고 철처럼 달라붙는지 확인해요. 관 아래 받침을 준비한 뒤 자석을 놓은 순간과 출구로 나오는 순간을 관찰합니다. 실제 구리관은 불투명하므로 관 속 자석을 겉에서 볼 수 없습니다. 관 안 보기를 켜면 설명을 위해 내부와 유도 전류를 드러내며, 끄면 실제처럼 가립니다. 낙하를 늦추는 힘을 속도에 비례하게 둔 교육용 모형으로 실제 관의 낙하 시간이나 힘을 계산한 값은 아닙니다. 화면 일시 정지는 시간을 멈춰 보는 기능이며 실제 자석이 관 안에 멈춘다는 뜻은 아닙니다. 움직임 줄이기에서는 자석 놓기 → 출구까지 보기 순서로 중간과 끝 상태를 봅니다. 자석이 나오지 않으면 다음 자석을 넣지 않고 담당 교사를 부릅니다.',setup:eddySetup
   });
 })();
 
@@ -1682,7 +1680,7 @@ html{color-scheme:light}
     plasma:{gate:3,place:'암실',npc:'깜빡이',skill:'관찰력',mission:'잡는 손의 위치와 빛나는 구간의 관계를 찾으세요.',line:'쉿… 끝을 잡았을 때와 가운데를 잡았을 때, 빛이 어디까지 남나요?',clue:'가운데를 잡았을 때, 볼과 손 사이에 빛이 남는 그림을 기억하세요.',next:'train'},
     train:{gate:4,place:'터널 열차',npc:'찌릿 기관사',skill:'방향 감각',mission:'열차를 움직이고 전류 방향을 바꿔 보세요.',line:'열차 출발 시험! 다음에는 황금 나침반도 깨워 봅시다.',clue:'열차와 나침반, 전류 방향에 따른 변화를 관찰하세요.',next:'compass'},
     compass:{gate:4,place:'황금 나침반',npc:'찌릿 기관사',skill:'방향 감각',mission:'전류를 켰을 때 N극이 가리키는 방향을 찾으세요.',line:'실험대의 N극을 잘 봐 두세요. 황금 나침반도 같은 원리로 깨어납니다.',clue:'현장 실험대에서 관찰한 N극 방향을 기준으로 문을 고르세요.',next:'eddy'},
-    eddy:{gate:5,place:'자이로드롭 통로',npc:'터널지기 할아버지',skill:'인내심',mission:'자석이 천천히 내려오는 통로를 찾으세요.',line:'급할수록 돌아가라 했지. 두 통로에 같은 자석을 떨어뜨려 보시게.',clue:'자석이 천천히 내려온 구리 ROAD로 가시게.',next:'dram'},
+    eddy:{gate:5,place:'자이로드롭 통로',npc:'터널지기 할아버지',skill:'자기 제동',mission:'구리관에서 자석을 놓고 출구에 나오는 때를 관찰하세요.',line:'가만히 대면 붙지 않는데, 관 안으로 놓으면 어떨까? 출구를 함께 살펴보세.',clue:'제동 설정은 ‘움직임을 늦춘다’. 확인 뒤 중앙 제어실로 가요.',next:'dram'},
     dram:{gate:6,place:'최종 면접실',npc:'소장 · 비트',skill:'기억력',mission:'1비트 기억 회로로 비트에게 합격을 기억시키세요.',line:'마지막 시험일세. 안내 로봇 비트에게 합격을 기억시켜 보게.',clue:'저장 상태 하나에 합격이라는 뜻을 붙여요. 기억을 유지하려면 다시 써야 해요.',next:'index'}
   };
   window.HNR_DECKS.forEach(d=>{

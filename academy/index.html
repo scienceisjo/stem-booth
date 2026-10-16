@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0066cc"><title>HNR Tech Inc. | 부스 운영팀 공부방</title><meta name="description" content="해누리중학교 HNR Tech Inc. 운영팀의 공통 학습 자료. 일곱 실험의 원리와 안전, RAM 부품의 역할, 방문객 설명 화면과 짝 연습을 한곳에서."><style>:root{--blue:#0066cc;--ink:#102e54;--deep:#08274a;--pale:#edf5ff;--line:#cadbed;--white:#fff;--gold:#ffce64;--warn:#783b0b;color-scheme:light;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;color:var(--ink);background:#fff;font-size:17px;line-height:1.7;font-synthesis:none}*{box-sizing:border-box}body{margin:0}a{color:var(--blue);text-underline-offset:4px}button,input,select,textarea{font:inherit}button,a,input,summary,select{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:wait}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #0071e3;outline-offset:4px}button:active,.button:active{transform:scale(.98)}[hidden]{display:none!important}h1,h2,h3,p,figure{margin:0}h1,h2,h3{word-break:keep-all;overflow-wrap:anywhere;line-height:1.35;letter-spacing:-.035em}h1{font-size:clamp(2rem,4.1vw,3.55rem);font-weight:750}h2{font-size:clamp(1.55rem,2.3vw,2.15rem)}h3{font-size:1.21rem}p+p{margin-top:12px}ul,ol{margin:12px 0;padding-left:1.3em}li+li{margin-top:10px}strong{font-weight:730}img{max-width:100%;height:auto;display:block}button{border:0}a.button{text-decoration:none}small{font-size:.82rem}#main:focus{outline:none}.skip{position:fixed;top:-100px;left:12px;z-index:100;background:#fff;padding:12px}.skip:focus{top:12px}.brandbar{max-width:1264px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 32px}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-size:1.3rem;font-weight:750;line-height:1.35}.brand img{object-fit:contain}.brand small{display:block;font-size:.75rem;font-weight:600;margin-top:5px}.crew-label{font-size:.68rem;letter-spacing:.12em;text-align:right;color:#174675}.crew-label b{font-size:.85rem;letter-spacing:0;display:block;margin-top:3px}.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 max(24px,calc((100vw - 1200px)/2));border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:20;min-height:64px}.nav>div{display:flex;gap:25px}.nav a{white-space:nowrap;text-decoration:none;font-size:.9rem;font-weight:650;display:block;padding:19px 0 16px;color:var(--ink);border-bottom:3px solid transparent}.nav a[aria-current=page]{color:var(--blue);border-color:var(--blue)}.nav .live-link{color:var(--blue);font-size:.82rem}.wrap{max-width:1200px;margin:auto;padding:50px 32px 80px}.eyebrow{display:block;color:var(--blue);font-size:.76rem;font-weight:750;letter-spacing:.1em;margin-bottom:14px}.lead{font-size:1.12rem;max-width:770px;margin-top:22px;line-height:1.85}.actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:22px}.button{display:inline-flex;justify-content:center;align-items:center;gap:8px;background:var(--blue);color:#fff;border:1px solid var(--blue);border-radius:999px;padding:11px 22px;font-size:.92rem;line-height:1.6;font-weight:650}.button.secondary{background:#fff;color:var(--blue);border-color:#8bb7e3}.button.quiet,.quiet{color:var(--blue);background:transparent;padding:10px 12px;font-weight:650;border-radius:9px}.text-link{font-weight:700;text-decoration:none}.text-link:hover{text-decoration:underline}.hero{display:grid;grid-template-columns:1.12fr 1fr;align-items:center;gap:44px;margin-bottom:48px}.hero .lead{max-width:540px}.hero-art{background:var(--pale);border-radius:26px;overflow:hidden;position:relative}.hero-art img{aspect-ratio:1.12;object-fit:cover;width:100%}.hero-art figcaption{background:var(--deep);color:#fff;padding:14px 20px;font-size:.83rem}.intro-strip{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:30px 0 60px;padding:22px 0}.intro-strip div{padding:0 24px;border-left:1px solid var(--line)}.intro-strip div:first-child{padding-left:0;border-left:0}.intro-strip b{display:block;font-size:1.3rem;letter-spacing:-.035em}.intro-strip span{display:block;margin-top:4px;font-size:.88rem}.section{margin-top:62px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px}.section-head p{margin-top:10px}.section-head .text-link{flex-shrink:0;font-size:.88rem}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:26px;border:1px solid var(--line);border-radius:20px;background:#fff}.panel.pale,.pale{background:var(--pale)}.panel p{margin-top:12px}.panel h3+.note{margin-top:10px}.step-num{color:var(--blue);font-size:.76rem;font-weight:750;display:block;margin-bottom:12px;letter-spacing:.06em}.study-card{position:relative;display:block;color:var(--ink);text-decoration:none}.study-card:hover{border-color:var(--blue);background:var(--pale)}.study-card .arrow{display:block;color:var(--blue);font-size:1.4rem;margin-top:14px}.photo-card{border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;background:#fff}.photo-card img{width:100%;aspect-ratio:1.65;object-fit:cover;background:var(--pale)}.photo-card-body{padding:22px;display:flex;flex-direction:column;flex:1}.photo-card .zone{font-size:.73rem;color:var(--blue);font-weight:750;margin-bottom:8px}.photo-card h3{font-size:1.25rem}.photo-card p{font-size:.9rem;margin-top:10px;flex:1}.photo-card .actions{gap:14px;margin-top:20px}.photo-card .text-link{font-size:.85rem}.notice{border-radius:16px;background:var(--pale);border-left:4px solid var(--blue);padding:21px 24px;margin-top:24px}.notice p{margin-top:8px}.notice strong{display:block;font-size:1.08rem}.notice.warm{background:#fff5df;border-color:#ab5d0a;color:#59350c}.note{background:#edf5ff;border:1px solid #cadbed;border-radius:10px;padding:11px 15px;font-size:.84rem;color:#153c65;line-height:1.7}.muted-box{display:inline-block;color:#153c65;background:var(--pale);padding:4px 10px;border-radius:6px;font-size:.77rem}.dark{background:var(--deep);color:#fff}.dark .eyebrow{color:#92c9ff}.dark .button.secondary{background:transparent;color:#fff;border-color:#92b9de}.dark .text-link{color:#a9d4ff}.dark p{color:#fff}.resource-list{border-top:1px solid var(--line)}.resource-row{display:grid;grid-template-columns:1fr 2fr auto;align-items:center;gap:24px;padding:22px 0;border-bottom:1px solid var(--line)}.resource-row p{font-size:.9rem}.resource-row .text-link{font-size:.85rem}.page-intro{margin-bottom:34px}.page-intro .lead{font-size:1.04rem}.station-layout{display:grid;grid-template-columns:210px minmax(0,1fr);align-items:start;gap:34px}.station-nav{position:sticky;top:92px;border:1px solid var(--line);border-radius:14px;overflow:hidden}.station-nav a{display:block;text-decoration:none;color:var(--ink);font-size:.85rem;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:600}.station-nav a:last-child{border-bottom:0}.station-nav a[aria-current=page]{background:var(--blue);color:#fff}.station-nav a:hover{background:var(--pale);color:var(--blue)}.station-title{display:grid;grid-template-columns:1fr 220px;align-items:center;gap:20px;padding-bottom:26px;border-bottom:1px solid var(--line)}.station-title h1{font-size:clamp(1.7rem,3vw,2.6rem)}.station-title img{width:220px;aspect-ratio:1.12;object-fit:cover;border-radius:20px}.station-title .eyebrow{margin-bottom:8px}.station-content .section{margin-top:36px}.station-content .section h2{font-size:1.5rem;margin-bottom:16px}.station-content .actions{margin-top:16px}.station-content .lead{font-size:1rem;margin-top:14px}.script{font-size:1.1rem;line-height:1.9;border-left:3px solid var(--blue);padding-left:20px;margin-top:18px}.quote-mark{font-size:1.9rem;color:var(--blue);line-height:1}.safety ul{padding-left:1.1em}.safety li{font-size:.9rem}.sentence{background:var(--pale);padding:24px;border-radius:16px;font-size:1.06rem;line-height:1.9}.segments{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.segments button{border:1px solid #87add4;background:#fff;color:var(--ink);border-radius:9px;padding:10px 16px;font-size:.88rem;font-weight:650}.segments button[aria-pressed=true]{background:var(--blue);color:#fff;border-color:var(--blue)}.audience-output{min-height:155px;padding:24px;background:var(--pale);border-radius:16px;font-size:1.03rem;line-height:1.9}.details-list{border-top:1px solid var(--line);margin-top:18px}details{border-bottom:1px solid var(--line);padding:16px 0}summary{cursor:pointer;font-weight:700;line-height:1.7}details>p,details>div{margin-top:14px}details p{font-size:.95rem}.back-link{display:inline-block;margin-bottom:22px;font-size:.86rem;font-weight:650}.ram-lede{display:grid;grid-template-columns:1.25fr .75fr;gap:30px;align-items:center}.bit-tile{border:1px solid #b2cbe6;background:var(--pale);border-radius:24px;padding:32px;text-align:center}.bit-tile .bits{font-size:4.4rem;line-height:1.2;font-weight:750;color:var(--blue);letter-spacing:.08em}.bit-tile b{display:block;font-size:1.15rem;margin-top:14px}.bit-tile p{font-size:.87rem;margin-top:12px}.analogy-card{padding:24px 0;border-top:3px solid var(--blue)}.analogy-card .bigword{display:block;font-size:1.8rem;font-weight:750;line-height:1.4;letter-spacing:-.035em;margin:8px 0}.analogy-card p{font-size:.94rem}.part-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:22px;align-items:start}.part-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}.part-button{padding:16px;text-align:left;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}.part-button b{display:block;font-size:1rem}.part-button span{display:block;font-size:.76rem;margin-top:5px}.part-button[aria-pressed=true]{border-color:var(--blue);background:var(--pale);outline:1px solid var(--blue)}.part-detail{min-height:355px;background:var(--pale);border-radius:20px;padding:28px}.part-detail h3{font-size:1.6rem}.part-detail .part-job{font-size:1.08rem;font-weight:700;margin-top:14px}.part-detail p{margin-top:14px}.part-detail .note{background:#fff;margin-top:24px}.paths{display:grid;gap:12px}.path-row{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}.path-row strong{font-size:.82rem;min-width:60px;color:var(--blue)}.path-row span{font-weight:650}.path-row i{font-style:normal;color:var(--blue)}.memory-demo{display:grid;grid-template-columns:250px 1fr;gap:36px;align-items:center;padding:32px;border:1px solid var(--line);border-radius:20px}.tank{width:160px;height:190px;border:5px solid var(--ink);border-top:0;position:relative;overflow:hidden;border-radius:0 0 16px 16px;margin:16px auto;background:#fff}.water{position:absolute;bottom:0;left:0;right:0;background:#84bffe;height:0;transition:height .25s linear;border-top:3px solid var(--blue)}.tank .tank-caption{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:.84rem;font-weight:750;z-index:1;background:#fff;padding:5px;margin:0 16px;border-radius:4px}.demo-caption{text-align:center;font-size:.82rem}.led-line{display:flex;align-items:center;justify-content:center;gap:10px;font-size:.85rem;font-weight:650;margin-top:16px}.led{display:inline-block;width:25px;height:25px;border:2px solid #597797;border-radius:50%;background:#e7edf4}.led.on{background:#f7b400;border-color:#ab6500}.memory-demo h3{font-size:1.4rem}.memory-demo #memoryText{min-height:110px;margin-top:16px}.memory-demo .segments button{padding:10px 12px}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px}.compare-table{border-collapse:collapse;width:100%;font-size:.92rem;text-align:left}.compare-table th,.compare-table td{padding:18px;vertical-align:top;border-bottom:1px solid var(--line)}.compare-table th{background:var(--pale);font-weight:750}.compare-table th:first-child{width:18%}.compare-table tr:last-child td{border-bottom:0}.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.flow .panel{padding:22px}.flow p{font-size:.89rem}.flow .step-num{font-size:1.6rem;line-height:1}.flow-card{border:1px solid var(--line);border-radius:18px;padding:26px}.flow-card p{margin-top:12px}.dialogue{display:grid;gap:18px;margin-top:24px}.sayline{display:grid;grid-template-columns:90px 1fr;gap:20px;align-items:start}.sayline b{padding-top:14px;font-size:.86rem}.sayline p{background:var(--pale);border-radius:0 16px 16px 16px;padding:16px 22px;font-size:1rem}.practice-list{counter-reset:practice;list-style:none;padding:0;margin-top:24px}.practice-list li{display:grid;grid-template-columns:48px 1fr;gap:18px;border-bottom:1px solid var(--line);padding:22px 0}.practice-list li:before{counter-increment:practice;content:counter(practice);width:44px;height:44px;background:var(--pale);color:var(--blue);border-radius:50%;text-align:center;line-height:44px;font-weight:750}.practice-list h3{font-size:1.2rem}.practice-list p{margin-top:10px}.check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.check-item{display:flex;align-items:flex-start;gap:12px;padding:20px;background:var(--pale);border-radius:14px}.check-item input{margin-top:7px;accent-color:var(--blue);width:20px;height:20px;flex-shrink:0}.check-item span{font-size:.9rem}.check-item b{display:block;font-size:1rem;margin-bottom:7px}.practice-prompt{margin-top:20px;padding:26px;background:var(--pale);border-radius:18px}.practice-prompt h3{margin-top:8px}.practice-prompt p{margin-top:12px}.field{display:grid;gap:8px}.field label{font-weight:700}select,input[type=text]{border:1px solid #83a5c8;background:#fff;color:var(--ink);border-radius:9px;padding:11px 14px;width:100%}.timer-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}.timing{padding:14px 18px;background:var(--pale);border-radius:12px;font-size:.87rem}.timing b{display:block}.link-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.link-grid a{padding:14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;font-size:.9rem;font-weight:650}.link-grid a:hover{background:var(--pale)}#app-credit{padding:35px 24px 40px;border-top:1px solid var(--line);text-align:center;background:var(--pale);font-size:.8rem;color:#173f66}#app-credit strong{font-size:.93rem}#app-credit p{margin:10px 0}#app-credit a{font-weight:650}#voiceBanner:not([hidden]){position:sticky;top:64px;z-index:19;background:#fff3d2;color:#53330c;padding:12px 24px;border-bottom:1px solid #dba549}.print-action{margin-left:auto}.source-list{font-size:.83rem}.source-list a{display:inline-block;margin-right:15px}
+@media(min-width:1500px){:root{font-size:19px}.wrap{max-width:1350px}.brandbar{max-width:1414px}.nav{padding-left:max(32px,calc((100vw - 1286px)/2));padding-right:max(32px,calc((100vw - 1286px)/2))}}
+@media(max-width:1000px){.nav{padding:0 24px;gap:16px}.nav>div{gap:18px}.nav .live-link{display:none}.hero{gap:26px}.station-layout{grid-template-columns:175px minmax(0,1fr);gap:24px}.station-title{grid-template-columns:1fr 170px}.station-title img{width:170px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.flow{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-demo{grid-template-columns:190px 1fr;gap:22px}.resource-row{grid-template-columns:1fr 1.6fr auto}}
+@media(max-width:700px){:root{font-size:16px}.brandbar{padding:15px 20px;gap:8px}.brand{font-size:1.08rem;gap:9px}.brand small{font-size:.64rem}.brand img{width:44px;height:44px}.crew-label{display:none}.nav{padding:0 18px;min-height:57px}.nav>div{gap:19px;overflow:auto;scrollbar-width:thin;width:100%}.nav a{font-size:.83rem;padding:17px 0 13px}.wrap{padding:30px 20px 56px}.hero{grid-template-columns:1fr;gap:26px;margin-bottom:26px}.hero h1{font-size:2.4rem}.hero .lead{font-size:1.03rem;margin-top:18px}.hero-art img{aspect-ratio:1.9}.hero-art figcaption{padding:12px 18px;font-size:.8rem}.hero-art{border-radius:18px}.intro-strip{margin:24px 0 40px;padding:18px 0}.intro-strip div{padding:0 12px}.intro-strip b{font-size:1rem}.intro-strip span{font-size:.76rem}.section{margin-top:42px}.section-head{align-items:flex-start;flex-direction:column;gap:12px}.section-head p{font-size:.93rem}.grid,.grid.two{grid-template-columns:1fr}.grid.compact{grid-template-columns:1fr 1fr}.panel{padding:22px}.photo-card img{aspect-ratio:1.9}.photo-card-body{padding:20px}.notice{padding:19px 20px}.resource-row{grid-template-columns:1fr auto;gap:10px 20px}.resource-row p{grid-column:1/-1;grid-row:2;font-size:.87rem}.resource-row strong{font-size:1rem}.station-layout{display:block}.station-nav{position:static;display:flex;overflow:auto;margin-bottom:24px;border-radius:10px;scrollbar-width:thin}.station-nav a{flex-shrink:0;border-bottom:0;border-right:1px solid var(--line);font-size:.83rem;padding:12px}.station-title{grid-template-columns:1fr;gap:18px}.station-title img{width:100%;aspect-ratio:2.1;order:-1;border-radius:14px}.station-title h1{font-size:2rem}.station-content .section{margin-top:30px}.station-content .grid.two{grid-template-columns:1fr}.audience-output{min-height:0;padding:20px}.segments{gap:7px}.segments button{padding:9px 12px;font-size:.83rem}.ram-lede{grid-template-columns:1fr;gap:24px}.bit-tile{padding:22px}.bit-tile .bits{font-size:3.3rem}.part-layout{grid-template-columns:1fr}.part-buttons{gap:8px}.part-button{padding:14px}.part-button b{font-size:.95rem}.part-detail{min-height:0;padding:23px}.memory-demo{grid-template-columns:1fr;padding:24px;gap:24px}.memory-visual{display:grid;grid-template-columns:1fr 1fr;align-items:center}.tank{width:130px;height:150px;margin:10px auto}.memory-demo #memoryText{min-height:0}.compare-table{font-size:.83rem;min-width:570px}.compare-table th,.compare-table td{padding:14px}.flow{grid-template-columns:1fr}.flow .panel{display:grid;grid-template-columns:38px 1fr;gap:0 14px}.flow .step-num{grid-row:1/3;font-size:1.3rem}.flow p{grid-column:2;margin-top:8px}.check-grid{grid-template-columns:1fr}.sayline{grid-template-columns:1fr;gap:8px}.sayline b{padding:0}.sayline p{padding:16px 18px}.practice-list li{gap:12px;grid-template-columns:38px 1fr}.practice-list li:before{width:36px;height:36px;line-height:36px}.link-grid{grid-template-columns:1fr}.actions .button{font-size:.86rem;padding:10px 17px}.print-action{margin-left:0}#voiceBanner:not([hidden]){top:57px;padding:12px 18px}}
+body{word-break:keep-all;overflow-wrap:anywhere}.section,.part-layout,.memory-demo{scroll-margin-top:90px}
+@media(max-width:700px){.nav{min-height:64px;padding:0 14px}.nav>div{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;overflow:visible}.nav a{white-space:normal;line-height:1.4;text-align:center;font-size:.8rem;padding:13px 0 10px}#voiceBanner:not([hidden]){top:64px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media print{.brandbar{padding:0 0 20px}.nav,.skip,#voiceBanner,.print-action,#voiceTool,.segments,.button{display:none!important}.wrap{max-width:none;padding:18px 0}.hero-art{max-width:300px}.station-nav{display:none}.station-layout{display:block}.section,.panel,.photo-card,.notice{break-inside:avoid}.section{margin-top:24px}.grid{grid-template-columns:repeat(2,1fr)}.grid.two{grid-template-columns:repeat(2,1fr)}h1{font-size:28pt}h2{font-size:20pt}.part-buttons{display:none}.part-layout{display:block}.part-detail{min-height:0}.compare-table{min-width:0}.dark{color:#102e54;background:#fff;border:2px solid #102e54}.dark p{color:#102e54}.dark .eyebrow{color:#0066cc}#app-credit{background:#fff;font-size:9pt}.table-wrap{overflow:visible}.text-link{color:#0066cc}}
+
+.voice-panel{color:#122a4c}.voice-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:18px}.voice-heading h3{margin:7px 0 0;font-size:1.6rem;line-height:1.3}.voice-eyebrow{font-size:.8rem;letter-spacing:.06em;color:#0755b2;font-weight:800}.voice-badge{background:#e7f1ff;color:#064fa6;border:1px solid #b6d5ff;border-radius:999px;padding:7px 12px;white-space:nowrap;font-size:.85rem;font-weight:800}.voice-panel .field{display:grid;gap:8px;margin:24px 0 16px;font-weight:700}.voice-panel select{width:100%;min-height:46px;padding:10px 12px;border:1px solid #8bacd7;border-radius:10px;background:#fff;color:#122a4c;font:inherit}.voice-panel .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.voice-controls{margin-top:20px}.voice-timer{font-variant-numeric:tabular-nums;font-size:1.4rem;font-weight:800;color:#074b9e;padding:4px 8px}.voice-state{font-size:.95rem;font-weight:700;margin:15px 0;color:#153d6c}.voice-player audio{display:block;width:100%;margin:16px 0 22px}.voice-file-label{position:relative;overflow:hidden;cursor:pointer}.voice-file-label input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.voice-file-label:focus-within{outline:3px solid #296bd4;outline-offset:3px}.voice-disabled{opacity:.55;cursor:not-allowed}.voice-delete{color:#933127!important}.voice-small{font-size:.85rem;line-height:1.7;color:#183a63;margin:16px 0}.voice-storage,.voice-prompt{line-height:1.75}.voice-notice{padding:12px 15px;border-radius:10px;background:#edf4ff;border:1px solid #adcdf9;color:#123d72;margin:16px 0;line-height:1.6}.voice-error{background:#fff2ed;border-color:#efb9a5;color:#852c18}.voice-success{background:#eaf6ee;border-color:#a5d0b2;color:#195f36}.voice-banner-inner{display:flex;justify-content:space-between;align-items:center;gap:18px;background:#e8f2ff;border:1px solid #a4c8f5;border-radius:14px;padding:14px 18px;color:#103c71;margin:12px 0}.voice-banner-inner p{margin:4px 0 0}.voice-banner-inner .actions{display:flex;flex-wrap:wrap;gap:8px}.voice-panel [hidden],#voiceBanner[hidden]{display:none!important}@media(max-width:600px){.voice-heading{display:block}.voice-badge{display:inline-block;margin-top:12px}.voice-banner-inner{align-items:stretch;flex-direction:column;gap:12px}.voice-controls .button{flex:1 1 auto}.voice-panel .button{min-height:44px}}
+</style></head><body>
+<a class="skip" href="#main">본문으로 바로가기</a>
+<header class="brandbar"><a class="brand" href="#home"><img src="assets/mark.webp" width="52" height="52" alt="해누리 HNR Tech Inc. 마크"><span>HNR Tech Inc.<small>2026 서울STEM축제 - 해누리중학교</small></span></a><span class="crew-label">PROJECT ONE <b>운영팀 공부방</b></span></header>
+<nav class="nav" aria-label="공부방 메뉴"><div id="navLinks"></div><a class="live-link" href="../explain/index.html" target="_blank" rel="noopener">현장 설명 화면 ↗</a></nav>
+<aside id="voiceBanner" aria-live="polite" hidden></aside>
+<main id="main" tabindex="-1"></main>
+<footer id="app-credit"><strong>HNR Tech Inc. · 함께 이해하고, 함께 설명해요.</strong><p>2026 서울STEM축제 - 해누리중학교 · © 2026 조승재 · 업데이트 2026.10.16</p><a href="#home">공부할 자료로 돌아가기 ↑</a></footer>
+<script id="course-data" type="application/json">{"stations": [{"id": "energy", "title": "에너지스틱", "zone": "정문 보안 게이트", "question": "한 사람만 손을 놓으면 불과 소리는 어떻게 될까요?", "principle": "스틱 안 전지가 에너지를 공급해요. 양 끝 금속 부분과 사람들의 손이 한 바퀴 이어지면 몸이 전기의 길 일부가 되고, 스틱이 아주 작은 전류가 흐르는 연결을 감지해 빛과 소리를 내요. 한 명이 손을 놓으면 경로가 끊어져요. 우리 몸이 전기를 만들어 낸 것은 아니에요.", "steps": ["양 끝의 두 사람이 금속 접촉부를 하나씩 잡고, 옆 사람과 손을 이어 고리를 만들도록 안내해요.", "한 사람이 손을 놓았을 때와 다시 잡았을 때의 빛·소리를 비교하게 해요.", "어디에서 길이 끊겼는지 물어본 뒤 내부 전지와 닫힌 경로를 설명해요.", "손을 놓고 스틱을 내려놓아요. 반응이 없으면 접촉부와 연결부터 확인하고 전지는 진행자가 점검해요."], "safety": ["사람을 잇는 실험은 제공된 에너지스틱으로만 해요. 콘센트나 다른 전원에 연결하지 않아요.", "잘 작동하지 않아도 손에 물이나 침을 묻히지 않아요.", "손이나 스틱을 세게 당기지 않고, 원하지 않는 방문객에게 손잡기를 강요하지 않아요."], "myth": "사람들이 전기를 만들어서 켜지는 것이 아니에요. 에너지원은 내부 전지이고 몸은 감지 경로의 일부예요. 스틱이 조용해졌다고 전지가 즉시 소모됐다고 판단하지 않아요.", "script": "손을 이으니 불과 소리가 나죠? 안의 전지가 에너지를 주고, 스틱은 우리 몸을 포함해 길이 이어졌는지 알아차려요. 한 사람이 손을 놓으면 그 길이 끊겨요. 이번에는 누가 손을 놓아 볼까요? 어느 부분에서 연결이 끊겼는지 함께 찾아보세요.", "faq": [{"q": "전기는 우리 몸에서 만들어지나요?", "a": "스틱 안 전지가 공급해요. 몸은 연결된 경로의 일부가 돼요."}, {"q": "손을 놓으니 왜 조용해졌나요?", "a": "고리가 끊겨 스틱이 이어진 경로를 감지하지 못하기 때문이에요. 접촉을 다시 이었을 때도 비교해 보세요."}, {"q": "손에 물을 묻히면 더 잘될까요?", "a": "이 부스에서는 물을 묻히지 않아요. 금속 접촉부와 손 연결을 먼저 살피고, 계속 반응이 없으면 진행자가 장치를 점검해요."}], "welcome": "정문 연결을 함께 확인해 볼까요? 손을 이었을 때와 놓았을 때를 비교해 봐요.", "explainAfter": "한 사람이 손을 놓자 빛과 소리가 어떻게 달라졌나요? 어디에서 연결이 끊겼나요?", "audience": {"young": "손을 이으니 불과 소리가 났죠? 스틱은 안의 전지로 작동하고, 우리 몸을 포함한 길이 이어졌는지 알아차려요. 손을 놓으면 길이 끊겨요.", "older": "스틱 안 전지가 에너지를 공급해요. 몸과 금속 부분이 한 바퀴 이어지면 아주 작은 전류가 흐르는 연결을 스틱이 감지해요. 한 명이 놓으면 길이 끊겨 빛과 소리가 달라져요.", "teen": "전지는 에너지원이고 몸은 회로의 경로 일부예요. 스틱은 몸을 포함한 닫힌 경로에 작은 감지 전류가 흐르는지 알아차려 빛과 소리를 내요. 손을 놓으면 경로가 끊겨요. 사람이 전기를 만든 것은 아니에요."}}, {"id": "static", "title": "정전기 캔", "zone": "클린룸", "question": "빨대가 캔에 닿지 않아도 캔을 움직일 수 있을까요?", "principle": "마른 천으로 문지른 빨대에는 전하가 모일 수 있어요. 빨대를 가까이 대면 금속 캔 안에서 움직일 수 있는 전자의 분포가 바뀌어요. 빨대와 가까운 쪽의 끌어당기는 효과가 더 커져 캔이 움직일 수 있죠. 캔 전체가 처음부터 반대 전하를 띠어야 하는 것은 아니에요.", "steps": ["빈 캔을 평평한 책상 가운데 눕히고 잘 굴러가는지 확인해요.", "문지르기 전의 빨대를 캔에 닿지 않게 가까이 대고 반응을 봐요.", "빨대를 마른 천으로 문지른 뒤 닿지 않게 가까이 대고 천천히 옮겨요.", "문지르기 전후와 비접촉 상태를 비교해요. 캔은 출발 위치로 돌려놓아요."], "safety": ["캔은 책상 가운데에서 굴리고 떨어지기 전에 체험을 멈춰요.", "빨대로 얼굴을 가리키지 않아요. 찌그러지거나 날카로운 캔은 교체해요.", "반응을 만들려고 캔을 밀거나 입김을 불지 않아요. 마른 재료와 평평한 면부터 점검해요."], "myth": "빨대로 밀어서 움직인 결과와 전기력에 의한 결과를 구분해야 해요. 캔 속 양성자가 자유롭게 이동한 것이 아니며, 캔 전체가 처음부터 빨대와 반대 전하였다고 단정하지 않아요.", "script": "빨대가 닿았는지 먼저 봐 주세요. 닿지 않았는데도 캔이 따라오죠? 문지른 빨대의 전하 때문에 캔 속 전자의 자리가 조금 달라져요. 가까운 쪽에서 끌어당기는 효과가 더 커져 캔이 움직이는 거예요. 문지르기 전과 후도 비교해 볼까요?", "faq": [{"q": "캔을 문지르지 않았는데 왜 따라와요?", "a": "빨대의 전하가 캔 속 전자의 분포를 바꿔요. 가까운 쪽에서 끌어당기는 효과가 더 커질 수 있어요."}, {"q": "빨대를 캔에 붙여도 되나요?", "a": "지금은 닿지 않게 해야 전기력으로 움직였는지 확인하기 좋아요. 닿으면 빨대로 밀었을 수도 있어요."}, {"q": "왜 오늘은 잘 안 움직여요?", "a": "캔이 가볍게 굴러가는지, 빨대와 천이 마른지 확인해요. 다시 문지르고 거리를 조절하되 밀거나 바람을 불지는 않아요."}], "welcome": "클린룸의 캔을 손대지 않고 움직여 볼까요? 책상 가운데에서 빨대가 닿지 않게 해 봐요.", "explainAfter": "빨대가 캔에 닿았나요? 문지르기 전과 후에 캔의 움직임은 어떻게 달랐나요?", "audience": {"young": "닿지 않았는데 캔이 따라왔죠? 문지른 빨대가 전기적인 힘으로 캔을 끌어당겼어요. 빨대로 밀어서 움직인 건 아니에요.", "older": "문지른 빨대에는 전하가 모일 수 있어요. 가까이 대면 캔 속 전하의 자리가 달라지고, 가까운 쪽을 끌어당기는 효과가 더 커져요. 그래서 닿지 않아도 캔이 따라와요.", "teen": "대전된 빨대를 가까이 대면 금속 캔의 전자 분포가 달라져요. 가까운 쪽의 인력이 더 크게 작용해 중성이던 캔도 끌려올 수 있어요. 캔 전체가 처음부터 반대 전하였다는 뜻은 아니에요. 접촉이나 입김 없이 움직였는지 확인하는 것이 중요해요."}}, {"id": "plasma", "title": "플라즈마볼과 형광등", "zone": "암실", "question": "형광등의 긴 옆면을 구 가까이 대고 잡는 손을 옮기면 어디가 빛날까요?", "principle": "플라즈마볼 주변의 빠르게 변하는 전기장이 형광등에 에너지를 전해요. 관 속 기체의 방전과 형광 물질을 통해 빛이 나요. 손과 몸도 유리를 사이에 두고 관 속 전하에 영향을 주고 주변 환경과 전기적으로 연결되는 조건을 바꿔요. 이 장치에서는 먼 끝을 잡으면 긴 구간이, 가운데를 잡으면 주로 구와 손 사이가 빛나는 모습을 볼 수 있어요. 손이 빛을 가린 것이 아니라 방전이 유지되는 조건이 바뀐 것으로 설명할 수 있어요. 실제 밝기는 장치·위치·주변에 따라 달라져요.", "steps": ["플라즈마볼은 받침대에 세워요. 진행자가 형광등을 받치고 방문객은 구에서 먼 쪽 유리 부분을 잡게 해요.", "형광등을 눕혀 관의 긴 옆면을 구에 살며시 가까이 대요. 끝의 금속 단자를 구에 대지 않아요.", "관을 계속 받친 상태에서 손을 가운데로 옮겨 빛나는 구간을 비교해요.", "구와 손 사이를 가리키며 관찰한 만큼 설명하고, 관을 전용 받침에 내려놓아요."], "safety": ["진행자와 함께 유리를 받치며 짧게 시연해요. 구의 같은 곳에 오래 대거나 세게 누르지 않아요.", "금속 단자를 구에 대지 않아요. 금·파손·열감·따가움이 있으면 즉시 멈추고 교사에게 알려요.", "유리가 깨지면 사람을 물리고 교사를 불러요. 학생이 맨손으로 파편을 줍지 않아요."], "myth": "형광등은 플라즈마볼의 빛을 관 끝까지 운반하는 관이 아니에요. 손이 빛을 막거나, 전자가 유리를 뚫고 흐른다고 설명하지 않아요. 손 너머의 전기장이 정확히 0이라고 단정하지도 않아요.", "script": "구 가까이 대니 형광등이 켜지죠? 변하는 전기장이 관에 에너지를 전달해요. 이번에는 잡는 손을 가운데로 옮겨 볼게요. 구와 손 사이가 주로 빛나네요. 손이 빛을 가린 게 아니라, 손과 몸이 전기적 연결 조건을 바꾸어 빛나는 구간이 달라진 거예요.", "faq": [{"q": "가운데를 잡으면 왜 손 너머는 어두워져요?", "a": "손이 관 속 전하와 유리를 사이에 두고 영향을 주고받으며 주변과의 연결 조건을 바꿔요. 이번 배치에서는 주로 구와 손 사이에서 방전이 유지되고, 손 너머는 빛을 낼 조건이 약해지는 것으로 설명할 수 있어요."}, {"q": "유리는 전기가 잘 통하지 않는데 어떻게 영향을 주나요?", "a": "유리를 사이에 둔 양쪽 전하가 서로 영향을 줄 수 있어요. 축전기와 비슷한 용량성 결합이에요. 전자가 유리를 뚫고 지나가는 전선 연결을 뜻하지 않아요."}, {"q": "손으로 빛을 막아서 어두운 것 아닌가요?", "a": "관 안의 각 부분이 에너지를 받아 빛을 내요. 손은 빛의 통로를 막는 마개가 아니라, 관 안에서 빛을 내는 전기적 조건에 영향을 주어요."}], "welcome": "제가 형광등을 받칠게요. 구는 세워 두고 관을 눕혀 긴 옆면을 가까이 대 봐요. 어디가 빛날까요?", "explainAfter": "먼 끝을 잡았을 때와 가운데를 잡았을 때, 빛나는 구간이 어떻게 달랐나요? 구와 손 사이를 함께 찾아볼까요?", "audience": {"young": "구 가까이에서 형광등이 에너지를 받아 빛나요. 손도 전기의 움직임에 영향을 줘요. 잡는 곳을 바꾸면 빛나는 구간이 달라질 수 있어요.", "older": "플라즈마볼 주변의 변하는 전기장이 관에 에너지를 전달해요. 손과 몸은 전기적으로 연결되는 조건을 바꿔요. 이 배치에서는 가운데를 잡으면 주로 구와 손 사이가 빛날 수 있어요. 손으로 빛을 막은 건 아니에요.", "teen": "빠르게 변하는 전기장이 형광등에 에너지를 전해 관 속 방전과 형광 물질을 통해 빛이 나요. 손과 몸은 유리를 사이에 둔 용량성 결합에 참여해 관의 전기적 조건을 바꿔요. 그래서 가운데를 잡으면 구와 손 사이에서 주로 방전이 유지되는 모습을 볼 수 있어요. 실제 밝기는 배치에 따라 달라지며, 전자가 유리를 뚫고 흐른다는 뜻은 아니에요."}}, {"id": "train", "title": "코일 열차", "zone": "터널 열차", "question": "바퀴 없는 건전지 열차가 손으로 밀지 않아도 달릴까요?", "principle": "건전지 양 끝의 자석이 피복 없는 구리 코일에 닿으면 그 사이 코일에 전류가 흘러요. 전류가 만든 자기장과 자석이 서로 힘을 주고받아 열차가 움직여요. 자석은 접촉을 이어 주는 역할도 해요. 열차가 멈춰도 전류가 흐를 수 있고, 이 구성은 전류가 많이 흘러 열이 날 수 있어요.", "steps": ["교사가 작동을 확인한 건전지·자석 열차와 코일을 준비하고 출구를 비워요.", "자석과 코일의 접촉 위치를 보여 준 뒤 열차를 입구에 살며시 넣고 손을 놓아요.", "손으로 계속 밀지 않아도 움직이는지 관찰하게 해요.", "출구에 도착하거나 도중에 멈추면 진행자가 바로 분리해요. 코일 밖에 두고 열과 손상을 확인해요."], "safety": ["열차를 코일 안에 보관하지 않아요. 멈췄을 때도 바로 꺼내고, 안전하게 다루기 어려우면 교사를 불러요.", "자석을 분해하거나 서로 충돌시키지 않아요. 손 끼임과 입에 넣는 행동을 막아요.", "접촉·배치 점검은 열차를 꺼내 식힌 뒤에 해요. 실제 장치의 검증된 배치를 유지해요."], "myth": "열차가 멈췄다고 전류도 끊긴 것은 아니에요. 자석 배치와 접촉이 맞아야 움직이며, 코일 안에 둔 채 손으로 밀어 해결하지 않아요.", "script": "바퀴도 없는데 건전지가 달리죠? 양 끝 자석이 구리선에 닿으면 코일에 전류가 흐르고 자기장이 생겨요. 그 자기장과 자석이 서로 힘을 주고받아 열차가 움직여요. 멈춰도 전류가 흐를 수 있으니, 멈추면 제가 바로 꺼낼게요.", "faq": [{"q": "건전지만 넣으면 달리나요?", "a": "이 장치에는 건전지·자석·코일이 함께 필요해요. 자석은 접촉을 잇고 자기력을 받아요."}, {"q": "안 움직이면 계속 밀어 볼까요?", "a": "먼저 코일에서 꺼내요. 멈춰도 전류가 흐를 수 있어 뜨거워질 수 있어요. 식힌 뒤 배치와 접촉을 점검해요."}, {"q": "전선에 색깔 피막이 있어도 되나요?", "a": "이 방식은 자석이 구리선에 전기적으로 닿아야 해요. 접촉 부위에 절연 피막이 있으면 같은 방식으로 작동하지 않아요. 준비된 코일을 사용해요."}], "welcome": "바퀴 없는 열차를 출발시켜 볼까요? 손을 놓고 움직임을 봐요. 멈추면 제가 바로 꺼낼게요.", "explainAfter": "손으로 계속 밀었나요? 건전지 양 끝의 자석은 코일의 어디에 닿아 있었나요?", "audience": {"young": "건전지의 전기가 코일에 흐르면 자석에 힘을 줄 수 있어요. 그 힘으로 열차가 움직여요. 멈췄을 때는 뜨거워질 수 있어서 바로 꺼내야 해요.", "older": "양 끝 자석이 구리선에 닿으면 코일에 전류가 흘러요. 전류가 만드는 자기장과 자석이 힘을 주고받아 열차가 움직여요. 멈춰도 전류가 흐를 수 있으니 코일 밖으로 바로 꺼내요.", "teen": "건전지 양 끝 자석이 피복 없는 구리선에 접촉하면 그 사이 코일에 전류가 흘러요. 전류의 자기장과 자석의 상호작용으로 추진력이 생겨요. 자석은 전기적 접촉을 잇는 역할도 해요. 저항이 작은 경로라 열이 날 수 있으므로 정지하거나 출구에 도착하면 바로 분리해요."}}, {"id": "compass", "title": "황금 나침반", "zone": "터널 열차 · 방향 점검대", "question": "나침반을 돌리지 않고 스위치만 켜면 바늘이 달라질까요?", "principle": "나침반 바늘은 작은 자석이에요. 스위치를 켜 코일에 전류가 흐르면 코일의 자기장이 생겨요. 바늘은 지구와 코일, 주변 물체의 자기장 영향을 함께 받아 방향을 바꿔요. 전류 방향을 반대로 바꾸면 코일이 만드는 자기장 방향도 반대가 돼요. 실제 바늘의 최종 방향과 각도는 장치 배치에 따라 달라져요. 이 활동은 실물 장치로 체험해요.", "steps": ["스위치를 끄고 나침반을 평평하게 놓아요. 주변의 다른 자석·휴대전화·철제 물체를 치워요.", "바늘이 멎으면 N극이 가리키는 쪽을 함께 확인해요.", "스위치를 잠깐 켜고 N극이 움직이는 쪽을 관찰한 뒤 꺼요.", "꺼진 뒤 방향을 다시 비교해요. 연결을 바꿀 때는 전원을 끄고 교사가 확인한 방식으로 진행해요."], "safety": ["스위치는 관찰할 동안만 잠깐 켜고, 체험이 끝나면 꺼요.", "연결 변경은 전원을 끈 뒤 진행자가 해요. 코일·전지에 열이 나면 사용을 멈춰요.", "방향을 맞추려고 나침반 전체를 손으로 돌리지 않아요. 바늘이 안정되기를 기다려요."], "myth": "바늘이 언제나 코일 쪽이나 같은 왼쪽으로 움직인다고 외우지 않아요. 지구 자기장과 장치 배치가 함께 영향을 줘요. 스위치 없이 나침반 통을 돌린 결과와도 구분해요.", "script": "빨간 N극이 어디를 보는지 기억해 주세요. 스위치를 잠깐 켜 볼게요. 바늘이 달라졌죠? 코일의 전류가 자기장을 만들었기 때문이에요. 바늘은 지구와 코일의 영향을 함께 받아요. 이제 끄고 어떻게 달라지는지 비교해 보세요.", "faq": [{"q": "바늘은 코일 쪽으로 끌려가나요?", "a": "방향을 바꾸는 모습을 봐요. 전류 방향과 코일의 배치, 지구 자기장이 함께 작용하므로 한쪽 방향으로 고정해 말하지 않아요."}, {"q": "전지 연결을 반대로 하면 어떻게 되나요?", "a": "전류 방향이 바뀌면 코일의 자기장 방향도 반대가 돼요. 전원을 끈 뒤 진행자가 연결을 바꾸고 실제 N극의 변화를 관찰해요."}, {"q": "바늘이 계속 흔들리면 바로 켜도 되나요?", "a": "먼저 안정되기를 기다려요. 켜기 전 방향을 알아야 코일 전류 때문에 어떻게 달라졌는지 비교하기 좋아요."}], "welcome": "황금 나침반의 방향 신호를 확인해 봐요. 바늘이 멎으면 스위치를 잠깐 켜 볼게요.", "explainAfter": "나침반 통을 돌리지 않았는데 N극이 움직였나요? 스위치를 끈 뒤에는 어떻게 달라졌나요?", "audience": {"young": "나침반 바늘은 작은 자석이에요. 코일에 전기가 흐르면 바늘에 영향을 줘서 방향이 달라져요. 이제 끄고 다시 비교해 봐요.", "older": "코일에 전류가 흐르면 자기장이 생겨요. 작은 자석인 바늘은 그 영향을 받아 방향을 바꾸어요. 지구의 자기장도 함께 작용하므로 언제나 같은 쪽으로 움직인다고 외우지는 않아요.", "teen": "나침반 바늘은 지구와 코일이 만드는 자기장의 영향을 함께 받아요. 전류를 켜면 코일 자기장이 더해져 바늘의 방향이 달라질 수 있어요. 전류 방향을 반대로 하면 코일 자기장도 반대가 되지만, 최종 각도는 배치에 따라 달라져요. 연결 변경은 전원을 끄고 진행자가 해요."}}, {"id": "eddy", "title": "구리관 전자기 브레이크", "zone": "자이로드롭 통로", "question": "자석이 철처럼 붙지 않는 구리가, 움직이는 자석을 늦출 수 있을까요?", "principle": "구리관에 자석을 가만히 대면 철처럼 달라붙지 않아요. 하지만 자석이 움직이면 구리를 지나는 자기장이 변해 빙 도는 전류, 즉 와전류가 생겨요. 그 전류가 만든 자기력은 이 낙하 실험에서 자석의 움직임을 늦추는 쪽으로 작용해요. 자석이 구리에 붙어서 정지한 것이 아니라 내려오는 동안 전자기 제동을 받는 거예요. 낙하 에너지 일부는 열로 바뀌어요.", "steps": ["구리관을 안정되게 세우고 아래 받침을 비워요. 앞 체험의 자석이 회수되었는지 확인해요.", "진행자와 함께 자석을 구리관 옆에 가만히 대어 철처럼 붙는지 살펴요.", "검증된 장치의 방법에 따라 구리관 위쪽에서 자석을 놓고 도착할 때까지 관찰해요.", "움직일 때 느려지는 현상을 설명한 뒤 자석을 회수해요. 이 실험에는 아크릴관 비교가 필요하지 않아요."], "safety": ["관 아래에 손이나 얼굴을 넣지 않아요. 자석은 아래 받침으로 받아요.", "앞 자석을 회수한 다음에만 다음 체험을 시작해요. 나오지 않으면 더 넣지 말고 교사를 불러요.", "자석을 입에 넣거나 서로 세게 충돌시키지 않아요. 관이 넘어지지 않도록 받침을 확인해요."], "myth": "느려졌다는 사실이 구리에 철처럼 붙었다는 뜻은 아니에요. 자석이 영원히 떠 있는 것도 아니고, 유도 자기장이 모든 위치에서 원래 자기장과 정반대라는 뜻도 아니에요.", "script": "가만히 대면 구리는 철처럼 붙지 않죠? 그런데 자석이 움직이면 구리에 빙 도는 전류가 생겨요. 그 전류가 만드는 자기력은 자석의 움직임을 늦춰요. 그래서 붙어서 멈춘 게 아니라 천천히 내려오는 거예요. 자이로드롭의 전자기 브레이크와 연결되는 원리예요.", "faq": [{"q": "구리에 붙어서 느린 건가요?", "a": "이번 현상은 움직임 때문에 생긴 전류의 자기력이 운동을 늦추는 거예요. 가만히 대었을 때 철처럼 붙는지와 비교해 보세요."}, {"q": "전지가 없는데 전류가 생겨요?", "a": "자석의 움직임으로 구리를 지나는 자기장이 달라지면 전류가 생길 수 있어요. 내려오는 에너지 일부가 열로 바뀌어요."}, {"q": "자석이 안 나오면 다른 자석으로 밀까요?", "a": "더 넣지 않아요. 다음 체험을 멈추고 담당 교사를 불러 걸림과 장치를 확인해요."}], "welcome": "구리관의 브레이크를 확인해 볼까요? 자석을 놓으면 아래 받침에 도착할 때까지 기다려요.", "explainAfter": "자석을 구리에 가만히 댔을 때 철처럼 붙었나요? 움직이며 내려올 때는 어떤 모습을 보았나요?", "audience": {"young": "구리는 철처럼 자석에 붙지 않죠? 그런데 자석이 움직이면 구리에 전류가 생기고, 그 전류가 자석을 천천히 내려오게 하는 힘을 만들어요.", "older": "자석이 움직이면 구리를 지나는 자기장이 달라져 빙 도는 전류가 생겨요. 그 전류의 자기력이 자석의 움직임을 늦춰요. 붙잡혀 멈춘 것이 아니라 내려오는 동안 브레이크가 작용하는 거예요.", "teen": "움직이는 자석 때문에 구리를 지나는 자기장이 변하면 와전류가 생겨요. 그 전류가 만든 자기력은 이 낙하에서 운동을 방해하는 쪽으로 작용해요. 낙하 에너지 일부는 열로 바뀌어요. 구리관에서 관찰하는 전자기 제동은 자이로드롭의 자기 브레이크와 연결되는 원리예요."}}, {"id": "dram", "title": "RAM 한 조각 만들기", "zone": "중앙 제어실", "question": "쓰기 버튼에서 손을 떼고도 기억한 신호를 다시 꺼내 볼 수 있을까요?", "principle": "RAM은 컴퓨터가 지금 쓸 자료를 펼쳐 놓는 작업 책상에 비유할 수 있어요. 널리 쓰이는 DRAM에는 0 또는 1을 구별하는 작은 기억 칸이 많아요. 우리 작품은 그 한 칸의 전하 저장 원리를 큰 부품으로 보여 주는 1비트 DRAM 원리 모형이에요. 축전기를 물통이라고 생각해요. 쓰기는 물 채우기, 두 버튼에서 손 떼기는 잠시 담아 두기, 읽기는 물을 흘려 물레 대신 LED를 켜 보는 일과 비슷해요. 읽는 동안 저장 전하가 줄어들어요. 두 버튼을 놓아 LED가 꺼져도 기억은 남을 수 있어요. 실제 DRAM 셀은 보통 축전기 하나와 트랜지스터 하나로 이루어지고, 셀 밖 감지 회로가 값을 읽고 복원해요. 우리 버튼 두 개가 트랜지스터 두 개를 뜻하지 않으며, LED를 달았다고 반도체 칩을 제조한 것은 아니에요.", "steps": ["전원을 분리한 상태에서 현장에서 검증된 도안으로 조립해요. 교사나 담당 진행자에게 연결·부품 방향을 확인받아요.", "쓰기 버튼만 눌러 축전기를 충전하고, 두 버튼에서 모두 손을 떼요.", "읽기 버튼만 눌러 LED가 켜지는지 봐요. 계속 읽을 때 밝기가 달라지는지도 관찰해요.", "다시 쓰기 → 모두 놓기 → 읽기를 반복하고, 물통 비유로 축전기·버튼·LED의 역할을 설명해요."], "safety": ["연결 검사를 받은 뒤 전원을 연결해요. 열이 나거나 이상하면 전원을 분리하고 담당자에게 알려요.", "쓰기와 읽기를 동시에 누르지 않아요. 축전기의 두 다리를 직접 맞대어 초기화하지 않아요.", "전지와 작은 부품은 고정해 관리하고 입에 넣지 않아요. 배선 변경은 전원을 분리한 뒤 해요."], "myth": "LED가 꺼졌다고 축전기에 전하가 하나도 없다고 결론 내리지 않아요. 실제 DRAM의 리프레시는 원래 0·1을 유지하는 작업이지 모두 1로 채우는 일이 아니에요. 우리 작품은 자동으로 주소를 골라 저장·읽기·복원하는 완성 RAM이나 직접 제조한 반도체 칩이 아니에요.", "script": "컴퓨터 메모리에는 작은 기억 칸이 아주 많아요. 우리는 그 한 칸의 원리를 만들었어요. 축전기를 물통처럼 생각해 보세요. 쓰기로 채우고 손을 떼어 담아 둔 다음, 읽기로 꺼내 LED를 켜요. 꺼내 쓰면 줄어드니 다시 채워야 해요. 실제 칩은 아주 작은 전자 스위치와 축전기, 값을 읽고 유지하는 회로를 사용해요.", "faq": [{"q": "LED가 꺼져 있으면 0인가요?", "a": "두 버튼을 놓아 읽기 길이 끊겨 꺼진 것일 수 있어요. 쓰기를 놓은 상태에서 읽기만 눌러 봐요. 읽는 중 꺼져도 남은 전하가 정확히 0이라고 판정할 수는 없어요."}, {"q": "쓰기와 읽기를 함께 누르면 더 잘 보이지 않나요?", "a": "그렇게 하면 전지가 LED를 직접 켤 수 있어요. 저장했던 전하로 켜진 것인지 보려면 쓰기를 놓은 뒤 읽어야 해요."}, {"q": "이게 실제 반도체의 어느 부분과 닮았나요?", "a": "축전기가 전하를 저장하는 기능은 실제 DRAM 셀의 저장 축전기와 가장 직접적으로 닮았어요. 실제 셀의 전자 스위치는 트랜지스터이며, LED 대신 바깥 감지 회로가 값을 읽어요."}, {"q": "실제 RAM도 다시 채워야 하나요?", "a": "DRAM은 시간이 지나 전하가 새고 읽을 때도 저장 상태에 변화가 생겨요. 원래 0·1을 복원하고 주기적으로 유지하는 리프레시가 필요해요. 모든 칸을 1로 만드는 것이 아니에요."}], "welcome": "마지막으로 기억 한 칸을 만들어 봐요. 도안대로 조립하고 연결을 확인받은 뒤 전원을 연결해요.", "explainAfter": "쓰기 버튼을 놓은 뒤 읽기만 눌러도 LED가 켜졌나요? 두 버튼을 놓고 있을 때 LED가 꺼졌다고 기억도 바로 사라진 걸까요?", "audience": {"young": "축전기를 작은 물통이라고 생각해 봐요. 쓰기로 채우고 손을 떼어 담아 둔 뒤, 읽기로 꺼내 불을 켜요. 우리는 컴퓨터가 기억하는 원리를 큰 부품으로 만든 거예요.", "older": "컴퓨터 메모리에는 0이나 1을 기억하는 작은 칸이 많아요. 우리 작품은 축전기라는 물통에 전하를 담아 기억 한 칸의 원리를 보여 줘요. 쓰기만 누르고 모두 놓은 뒤 읽기만 눌러 확인해요. LED가 꺼져 있어도 물통에 물이 남듯 전하는 남을 수 있어요.", "teen": "우리 작품은 축전기로 전하를 저장하고 읽는 1비트 DRAM 원리 모형이에요. 실제 DRAM 셀은 보통 축전기 하나와 전자 스위치인 트랜지스터 하나로 이루어져요. 셀 밖 감지 회로가 값을 읽고 복원하며 주기적으로 원래 0·1을 유지해요. 우리 두 버튼과 LED가 그 구조와 같은 것은 아니고, 반도체 칩 자체를 제조한 것도 아니에요. 저장 시험은 쓰기만 → 모두 놓기 → 읽기만 순서예요."}}], "pairedPractice": [{"step": 1, "title": "같은 실험을 먼저 익히기", "action": "A와 B가 함께 원리·진행 순서·안전 안내를 읽어요. A는 방문객, B는 진행자가 돼요. 초등 저학년·고학년·중학생 중 이번 방문객의 나이를 정해요."}, {"step": 2, "title": "맞이하고 체험 안내하기", "action": "B는 시작말과 예상 질문을 건네요. 만지는 곳·기다릴 곳·멈출 조건을 알려 주고 체험을 도와요. A는 방문객처럼 행동하고 궁금한 점을 물어요."}, {"step": 3, "title": "관찰한 뒤 원리 설명하기", "action": "B는 방금 무엇이 달라졌는지 묻고, A가 답하면 그 관찰에 원리를 연결해요. 나이에 맞는 쉬운 말로 설명한 뒤 장치를 안전하게 정리해요. 모르는 질문은 교사에게 확인해요."}, {"step": 4, "title": "서로 알려 주고 다시 말하기", "action": "A는 안전 안내·체험 진행·원리의 정확성·나이에 맞는 말 네 가지를 돌아봐요. 이해된 말 하나와 어려웠던 말 하나를 알려 주면 B가 그 부분을 다시 설명해요."}, {"step": 5, "title": "역할과 방문객 나이 바꾸기", "action": "이번에는 B가 방문객, A가 진행자가 되어 같은 흐름을 연습해요. 일곱 실험을 모두 살펴보고 두 사람 모두 안전·진행·원리·나이 맞춤 설명을 연습해요. 실물 연습은 교사가 안내한 순서로 해요."}], "visitorFlow": [{"step": 1, "title": "반갑게 맞이하기", "action": "HNR Tech Inc.에 온 방문객에게 인사해요. 앞으로 할 활동과 기다릴 자리를 짧게 안내하고, 장치를 만지기 전에 진행자의 설명을 듣도록 알려 줘요."}, {"step": 2, "title": "안전하게 직접 체험하기", "action": "실험마다 예상 질문 하나와 구체적인 안전 행동을 알려 줘요. 방문객이 직접 변화를 관찰하도록 돕고, 장치에 이상이 있으면 체험을 멈춰요."}, {"step": 3, "title": "방금 본 원리 알아보기", "action": "체험이 끝나면 무엇이 달라졌는지 먼저 물어요. 방문객의 나이에 맞춰 원리를 설명하고 질문을 들어요. 정리가 끝나면 다음 활동을 안내해요."}, {"step": 4, "title": "RAM 작품 완성하고 받기", "action": "마지막에 RAM 한 조각을 만들어요. 각 실험과 RAM의 원리 설명을 들었는지 함께 확인해요. 쓰기만 → 모두 놓기 → 읽기만으로 작동을 확인하고 부품·전지 고정과 안전을 살펴요. 사용·보관 안내까지 마친 뒤 자신의 작품을 가져가요."}]}</script><script>/* HNR Tech Inc. — local voice practice. No microphone access until start(). */
+(function (global) {
+  'use strict';
+  const DB_NAME = 'hnr-academy-audio-v1', STORE = 'clips';
+  const MAX_BYTES = 10 * 1024 * 1024, MAX_TOTAL = 30 * 1024 * 1024;
+  const MAX_SECONDS = 120, MAX_CLIPS = 32;
+  const MIME = new Set(['audio/webm', 'audio/ogg', 'audio/mp4', 'audio/mpeg', 'audio/wav']);
+  // Some operating systems label voice-only .webm/.mp4 files by container rather than track type.
+  const ALIASES = { 'audio/x-wav': 'audio/wav', 'audio/wave': 'audio/wav', 'audio/vnd.wave': 'audio/wav', 'audio/x-m4a': 'audio/mp4', 'audio/mp3': 'audio/mpeg', 'video/webm': 'audio/webm', 'video/mp4': 'audio/mp4', 'application/ogg': 'audio/ogg' };
+  let dbPromise = null, session = null;
+
+  function error(code, message, cause) {
+    const e = new Error(message);
+    e.code = code;
+    if (cause) e.cause = cause;
+    return e;
+  }
+  function storageError(e) {
+    if (e && typeof e.code === 'string') return e;
+    if (e && e.name === 'QuotaExceededError') return error('storage-full', '기기 저장 공간이 부족해 음성을 저장하지 못했어요. 결과 파일을 내려받고 공간을 확보한 뒤 다시 시도해 주세요.', e);
+    return error('storage-unavailable', '이 브라우저에 음성을 저장하지 못했어요. 일반 브라우저 창에서 다시 열거나 브라우저의 사이트 저장 허용 여부를 확인해 주세요.', e);
+  }
+  function micError(e) {
+    if (e && typeof e.code === 'string') return e;
+    const name = e && e.name;
+    if (name === 'NotAllowedError' || name === 'SecurityError') return error('microphone-denied', '마이크 사용이 허용되지 않았어요. 주소창의 사이트 설정에서 마이크를 허용하거나, 기기의 녹음 앱으로 녹음한 파일을 첨부해 주세요.', e);
+    if (name === 'NotFoundError' || name === 'DevicesNotFoundError') return error('microphone-missing', '사용할 마이크를 찾지 못했어요. 마이크를 연결하거나 녹음한 음성 파일을 첨부해 주세요.', e);
+    if (name === 'NotReadableError' || name === 'TrackStartError') return error('microphone-busy', '마이크를 켜지 못했어요. 다른 녹음·화상 통화 앱을 닫고 다시 시도하거나 음성 파일을 첨부해 주세요.', e);
+    return error('recording-failed', '녹음을 완료하지 못했어요. 다시 녹음하거나 기기의 녹음 앱에서 만든 음성 파일을 첨부해 주세요.', e);
+  }
+  function checkSlot(slot) {
+    if (typeof slot !== 'string' || !/^[a-z0-9][a-z0-9_-]{0,63}$/i.test(slot)) throw error('invalid-slot', '음성 과제 번호가 올바르지 않아요. 페이지를 새로 열고 다시 시도해 주세요.');
+    return slot;
+  }
+  function baseMime(value) {
+    const base = typeof value === 'string' ? value.toLowerCase().split(';')[0].trim() : '';
+    return ALIASES[base] || base;
+  }
+  function metadata(clip) {
+    const result = { slot: clip.slot, mime: clip.mime, bytes: clip.bytes, duration: clip.duration, createdAt: clip.createdAt };
+    if (clip.filename) result.filename = clip.filename;
+    return result;
+  }
+  function filename(value) {
+    return typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f<>:"/\\|?*]/g, '_').slice(0, 100) : '';
+  }
+  function detectMime(bytes) {
+    const ascii = (start, n) => String.fromCharCode(...bytes.slice(start, start + n));
+    if (bytes.length >= 4 && bytes[0] === 0x1a && bytes[1] === 0x45 && bytes[2] === 0xdf && bytes[3] === 0xa3) return 'audio/webm';
+    if (bytes.length >= 4 && ascii(0, 4) === 'OggS') return 'audio/ogg';
+    if (bytes.length >= 12 && ascii(0, 4) === 'RIFF' && ascii(8, 4) === 'WAVE') return 'audio/wav';
+    if (bytes.length >= 12 && ascii(4, 4) === 'ftyp') return 'audio/mp4';
+    if (bytes.length >= 3 && ascii(0, 3) === 'ID3') return 'audio/mpeg';
+    if (bytes.length >= 2 && bytes[0] === 255 && (bytes[1] & 0xe0) === 0xe0 && (bytes[1] & 0x06) !== 0) return 'audio/mpeg';
+    return '';
+  }
+  async function prepare(slot, blob, meta) {
+    checkSlot(slot);
+    if (!(blob instanceof Blob) || !blob.size) throw error('empty-audio', '음성 파일이 비어 있어요. 다시 녹음하거나 다른 파일을 선택해 주세요.');
+    if (blob.size > MAX_BYTES) throw error('file-too-large', '음성 파일은 하나당 10MB까지 첨부할 수 있어요. 짧게 녹음한 파일을 선택해 주세요.');
+    const detected = detectMime(new Uint8Array(await blob.slice(0, 32).arrayBuffer()));
+    const declared = baseMime(blob.type || meta.mime);
+    if (!detected || (declared && (!MIME.has(declared) || declared !== detected))) throw error('invalid-audio', 'WebM, OGG, M4A/MP4, MP3, WAV 형식의 음성 파일을 선택해 주세요. 파일의 형식 정보가 맞지 않으면 첨부할 수 없어요.');
+    const rawDuration = meta.duration == null ? null : Number(meta.duration);
+    if (rawDuration !== null && (!Number.isFinite(rawDuration) || rawDuration < 0 || rawDuration > 86400)) throw error('invalid-metadata', '음성 길이 정보가 올바르지 않아요. 파일을 다시 선택해 주세요.');
+    const createdAt = meta.createdAt == null ? new Date().toISOString() : meta.createdAt;
+    if (typeof createdAt !== 'string' || !Number.isFinite(Date.parse(createdAt)) || createdAt.length > 40) throw error('invalid-metadata', '음성 저장 날짜가 올바르지 않아요.');
+    return { slot, blob: blob.type === detected ? blob : blob.slice(0, blob.size, detected), mime: detected, bytes: blob.size, duration: rawDuration, createdAt: new Date(createdAt).toISOString(), filename: filename(meta.filename || blob.name) };
+  }
+  async function database() {
+    if (!global.indexedDB) throw storageError();
+    if (!dbPromise) {
+      dbPromise = new Promise((resolve, reject) => {
+        let req, settled = false;
+        try { req = global.indexedDB.open(DB_NAME, 1); } catch (e) { reject(storageError(e)); return; }
+        req.onupgradeneeded = () => {
+          if (!req.result.objectStoreNames.contains(STORE)) req.result.createObjectStore(STORE, { keyPath: 'slot' });
+        };
+        req.onerror = () => { settled = true; reject(storageError(req.error)); };
+        req.onblocked = () => { settled = true; reject(error('storage-blocked', '이 학습 공간이 열린 다른 탭을 닫고 다시 시도해 주세요.')); };
+        req.onsuccess = () => {
+          const db = req.result;
+          if (settled) { db.close(); return; }
+          settled = true;
+          db.onversionchange = () => { db.close(); dbPromise = null; };
+          resolve(db);
+        };
+      });
+      dbPromise.catch(() => { dbPromise = null; });
+    }
+    return dbPromise;
+  }
+  async function transaction(mode, work) {
+    const db = await database();
+    return new Promise((resolve, reject) => {
+      let tx, result, failure;
+      try { tx = db.transaction(STORE, mode); } catch (e) { reject(storageError(e)); return; }
+      const fail = e => { failure = e; try { tx.abort(); } catch (_) { reject(storageError(e)); } };
+      tx.oncomplete = () => resolve(result);
+      tx.onerror = () => { failure = failure || tx.error; };
+      tx.onabort = () => reject(storageError(failure || tx.error));
+      try { work(tx.objectStore(STORE), value => { result = value; }, fail); } catch (e) { fail(e); }
+    });
+  }
+  function checkCapacity(clips) {
+    if (clips.length > MAX_CLIPS) throw error('too-many-clips', '저장 가능한 음성 개수를 초과했어요.');
+    if (clips.reduce((sum, c) => sum + c.bytes, 0) > MAX_TOTAL) throw error('audio-total-too-large', '음성 파일 전체는 30MB까지 저장할 수 있어요. 기존 결과를 내려받고 불필요한 음성을 지우거나 더 작은 파일을 선택해 주세요.');
+  }
+  async function storeClips(clips, replace) {
+    return transaction('readwrite', (store, result, fail) => {
+      const request = store.getAll();
+      request.onsuccess = () => {
+        try {
+          const map = new Map((replace ? [] : request.result).map(c => [c.slot, c]));
+          for (const clip of clips) map.set(clip.slot, clip);
+          checkCapacity([...map.values()]);
+          if (replace) store.clear();
+          for (const clip of clips) store.put(clip);
+          result(clips.map(metadata));
+        } catch (e) { fail(e); }
+      };
+    });
+  }
+  async function init() { await database(); return true; }
+  async function put(slot, blob, meta = {}) {
+    const clip = await prepare(slot, blob, meta);
+    return (await storeClips([clip], false))[0];
+  }
+  async function get(slot) {
+    checkSlot(slot);
+    return transaction('readonly', (store, result) => {
+      const request = store.get(slot);
+      request.onsuccess = () => result(request.result ? { ...metadata(request.result), blob: request.result.blob } : null);
+    });
+  }
+  async function list() {
+    return transaction('readonly', (store, result) => {
+      const request = store.getAll();
+      request.onsuccess = () => result(request.result.map(metadata).sort((a, b) => a.slot.localeCompare(b.slot)));
+    });
+  }
+  async function remove(slot) {
+    checkSlot(slot);
+    if (session && session.slot === slot) throw error('recording-active', '녹음을 끝낸 뒤 음성을 삭제해 주세요.');
+    return transaction('readwrite', (store, result) => { store.delete(slot); result(true); });
+  }
+  function encodeBase64(bytes) {
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+    return global.btoa(binary);
+  }
+  async function exportAll() {
+    if (session) throw error('recording-active', '녹음과 저장이 끝난 뒤 결과를 내려받아 주세요.');
+    const clips = await transaction('readonly', (store, result) => {
+      const request = store.getAll(); request.onsuccess = () => result(request.result);
+    });
+    checkCapacity(clips);
+    const output = [];
+    for (const clip of clips) output.push({ ...metadata(clip), base64: encodeBase64(new Uint8Array(await clip.blob.arrayBuffer())) });
+    return output;
+  }
+  async function importAll(items, options = {}) {
+    if (session) throw error('recording-active', '녹음과 저장이 끝난 뒤 결과 파일을 불러와 주세요.');
+    if (!Array.isArray(items) || items.length > MAX_CLIPS) throw error('invalid-import', '음성 기록의 형식이나 개수가 올바르지 않아요.');
+    const seen = new Set(), clips = [];
+    let total = 0;
+    for (const item of items) {
+      if (!item || typeof item !== 'object') throw error('invalid-import', '음성 기록의 형식이 올바르지 않아요.');
+      checkSlot(item.slot);
+      if (seen.has(item.slot)) throw error('invalid-import', '같은 과제의 음성이 중복되어 있어요.');
+      seen.add(item.slot);
+      if (!MIME.has(baseMime(item.mime)) || !Number.isInteger(item.bytes) || item.bytes <= 0 || item.bytes > MAX_BYTES) throw error('invalid-import', '음성 기록의 형식이나 파일 크기가 올바르지 않아요.');
+      total += item.bytes;
+      if (total > MAX_TOTAL) throw error('audio-total-too-large', '불러올 음성 파일 전체가 30MB를 초과해요.');
+      const value = item.base64;
+      const padding = item.bytes % 3 === 0 ? 0 : 3 - (item.bytes % 3);
+      if (typeof value !== 'string' || value.length !== 4 * Math.ceil(item.bytes / 3) || /[^A-Za-z0-9+/]/.test(value.slice(0, value.length - padding)) || value.slice(value.length - padding) !== '='.repeat(padding)) throw error('invalid-import', '음성 파일 데이터가 손상되었어요. 원래 결과 파일을 다시 선택해 주세요.');
+      let decoded;
+      try { decoded = global.atob(value); } catch (e) { throw error('invalid-import', '음성 파일 데이터를 읽을 수 없어요.', e); }
+      if (decoded.length !== item.bytes) throw error('invalid-import', '음성 파일의 크기 정보가 일치하지 않아요.');
+      const bytes = new Uint8Array(decoded.length);
+      for (let i = 0; i < decoded.length; i++) bytes[i] = decoded.charCodeAt(i);
+      clips.push(await prepare(item.slot, new Blob([bytes], { type: baseMime(item.mime) }), item));
+    }
+    return storeClips(clips, options.replace === true);
+  }
+  function supported() {
+    return global.isSecureContext !== false && !!(global.navigator && global.navigator.mediaDevices && typeof global.navigator.mediaDevices.getUserMedia === 'function' && global.MediaRecorder);
+  }
+  function notify(callback, ...args) {
+    if (typeof callback === 'function') { try { callback(...args); } catch (_) { /* A UI callback cannot interrupt microphone cleanup or storage. */ } }
+  }
+  function cleanup(s) {
+    clearInterval(s.tickTimer); clearTimeout(s.limitTimer); clearTimeout(s.stopTimer);
+    if (s.stream) s.stream.getTracks().forEach(track => { try { track.stop(); } catch (_) {} });
+  }
+  function settle(s, result, failure) {
+    if (s.settled) return;
+    s.settled = true; cleanup(s);
+    if (session === s) session = null;
+    if (failure) s.reject(failure); else s.resolve(result);
+    notify(s.onEnded, result || null, failure || null);
+  }
+  async function finish(s) {
+    if (s.settled || s.finishing) return;
+    s.finishing = true;
+    cleanup(s);
+    try {
+      const mime = s.recorder.mimeType || (s.chunks[0] && s.chunks[0].type) || '';
+      const blob = new Blob(s.chunks, { type: mime });
+      const duration = Math.max(0, (s.endedAt || Date.now()) - s.startedAt) / 1000;
+      const result = await put(s.slot, blob, { duration, createdAt: new Date(s.startedAt).toISOString() });
+      settle(s, result, null);
+    } catch (e) { settle(s, null, typeof e.code === 'string' ? e : storageError(e)); }
+  }
+  function stop() {
+    const s = session;
+    if (!s) return Promise.reject(error('not-recording', '현재 녹음 중인 음성이 없어요.'));
+    if (!s.recorder) return Promise.reject(error('microphone-pending', '마이크 허용 여부를 먼저 선택해 주세요. 취소하려면 녹음 취소를 눌러 주세요.'));
+    if (!s.stopping && !s.finishing) {
+      s.stopping = true; s.endedAt = Date.now();
+      clearInterval(s.tickTimer); clearTimeout(s.limitTimer);
+      try {
+        if (s.recorder.state !== 'inactive') s.recorder.stop();
+        else finish(s);
+        s.stream.getTracks().forEach(track => { try { track.stop(); } catch (_) {} });
+        s.stopTimer = setTimeout(() => settle(s, null, error('recording-timeout', '녹음 종료가 지연되어 저장하지 못했어요. 다시 녹음하거나 음성 파일을 첨부해 주세요.')), 10000);
+      } catch (e) { settle(s, null, micError(e)); }
+    }
+    return s.done;
+  }
+  async function start(slot, onTick, onEnded) {
+    checkSlot(slot);
+    if (session) throw error('recording-active', '진행 중인 녹음을 먼저 끝내 주세요.');
+    if (global.isSecureContext === false) throw error('insecure-context', '직접 녹음은 HTTPS 주소 또는 localhost에서 가능해요. 선생님이 공유한 보안 주소로 열거나 음성 파일을 첨부해 주세요.');
+    if (!supported()) throw error('recording-unsupported', '이 브라우저는 직접 녹음을 지원하지 않아요. Chrome·Edge·Safari의 최신 버전에서 열거나 음성 파일을 첨부해 주세요.');
+    const s = { slot, onTick, onEnded, chunks: [], bytes: 0, stream: null, recorder: null, settled: false, finishing: false, stopping: false };
+    s.done = new Promise((resolve, reject) => { s.resolve = resolve; s.reject = reject; });
+    s.done.catch(() => {});
+    session = s;
+    try {
+      await init();
+      if (s.settled) throw error('recording-cancelled', '녹음을 취소했어요.');
+      s.stream = await global.navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true }, video: false });
+      if (s.settled) { cleanup(s); throw error('recording-cancelled', '녹음을 취소했어요.'); }
+      const candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+      const mimeType = candidates.find(type => typeof global.MediaRecorder.isTypeSupported === 'function' && global.MediaRecorder.isTypeSupported(type));
+      s.recorder = new global.MediaRecorder(s.stream, mimeType ? { mimeType, audioBitsPerSecond: 64000 } : { audioBitsPerSecond: 64000 });
+      s.recorder.ondataavailable = event => {
+        if (s.settled || !event.data || !event.data.size) return;
+        s.bytes += event.data.size;
+        if (s.bytes > MAX_BYTES) {
+          settle(s, null, error('file-too-large', '녹음이 10MB를 초과해 저장하지 못했어요. 더 짧게 녹음해 주세요.'));
+          try { if (s.recorder.state !== 'inactive') s.recorder.stop(); } catch (_) {}
+          return;
+        }
+        s.chunks.push(event.data);
+      };
+      s.recorder.onerror = event => { settle(s, null, micError(event.error)); try { if (s.recorder.state !== 'inactive') s.recorder.stop(); } catch (_) {} };
+      s.recorder.onstop = () => finish(s);
+      s.startedAt = Date.now();
+      s.recorder.start(1000);
+      notify(onTick, 0, MAX_SECONDS);
+      s.tickTimer = setInterval(() => notify(onTick, Math.min(MAX_SECONDS, Math.floor((Date.now() - s.startedAt) / 1000)), MAX_SECONDS), 250);
+      s.limitTimer = setTimeout(() => { if (session === s) stop().catch(() => {}); }, MAX_SECONDS * 1000);
+      return { slot, maxSeconds: MAX_SECONDS };
+    } catch (e) {
+      cleanup(s);
+      const failure = typeof e.code === 'string' ? e : micError(e);
+      settle(s, null, failure);
+      throw failure;
+    }
+  }
+  function cancel() {
+    const s = session;
+    if (!s) return false;
+    if (s.finishing) return false;
+    settle(s, null, error('recording-cancelled', '녹음을 취소했어요. 이전에 저장한 음성은 그대로 남아 있어요.'));
+    try { if (s.recorder && s.recorder.state !== 'inactive') s.recorder.stop(); } catch (_) {}
+    return true;
+  }
+  global.addEventListener('pagehide', () => {
+    if (session) {
+      const s = session;
+      cleanup(s);
+      if (!s.finishing) cancel();
+    }
+  });
+  global.HNRAudio = Object.freeze({ init, start, stop, cancel, put, get, list, remove, exportAll, importAll, supported, isRecording: () => !!session, limits: Object.freeze({ maxSeconds: MAX_SECONDS, maxFileBytes: MAX_BYTES, maxTotalBytes: MAX_TOTAL }) });
+})(window);
+</script><script>/* Optional local voice practice. Depends only on window.HNRAudio. */
+(function (global) {
+  'use strict';
+  const experiments = [
+    ['energy', '에너지스틱'], ['static', '정전기 캔'], ['plasma', '플라즈마볼과 형광등'],
+    ['train', '코일 열차'], ['compass', '황금 나침반'], ['eddy', '구리관 전자기 브레이크'], ['dram', 'RAM 한 조각 만들기']
+  ];
+  const prompts = {
+    energy: '손을 연결했을 때와 놓았을 때 무엇이 다른지 관찰하게 하고, 전류가 흐르는 길을 설명해 보세요.',
+    static: '캔을 만지지 않아도 움직이는 까닭을 설명해 보세요. 캔 전체가 빨대와 반대 전하로 바뀌었다고 말하지 않도록 주의해요.',
+    plasma: '형광등이 켜지는 까닭과, 가운데를 잡으면 주로 구와 손 사이가 빛나는 까닭을 설명해 보세요.',
+    train: '전지·자석·코일의 역할을 짚고, 코일 속에서 열차가 움직이는 까닭을 설명해 보세요.',
+    compass: '전류가 흐를 때 나침반 바늘이 달라지는 모습을 먼저 보여 주고, 전류 주위의 자기장과 연결해 보세요.',
+    eddy: '구리관 속에서 자석이 천천히 떨어지는 모습을 소개하고, 움직임을 방해하는 자기력과 연결해 보세요.',
+    dram: '축전기를 물통에 비유해 쓰기·보관·읽기를 설명하고, 실제 DRAM 셀과 닮은 부분을 짚어 보세요.'
+  };
+  const KEY = 'hnr-academy-hub-voice-choice-v1';
+  let selected = 'plasma', host = null, bannerHost = null, playerURL = null, renderVersion = 0;
+  let phase = 'idle', activeId = null, elapsed = 0, serial = 0, uploadBusy = false;
+  let clips = [], available = true, message = '', messageKind = '', bannerMessage = '';
+  try { const saved = localStorage.getItem(KEY); if (experiments.some(x => x[0] === saved)) selected = saved; } catch (_) {}
+  const esc = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const title = id => (experiments.find(x => x[0] === id) || ['', '설명 연습'])[1];
+  const slot = id => 'hub-' + id;
+  const busy = () => phase !== 'idle' || uploadBusy;
+  const clock = seconds => { const n = Math.max(0, Math.floor(seconds || 0)); return String(Math.floor(n / 60)).padStart(2, '0') + ':' + String(n % 60).padStart(2, '0'); };
+  function setMessage(text, kind, showBanner) {
+    message = text; messageKind = kind || '';
+    if (showBanner) bannerMessage = text;
+    const output = host && host.querySelector('[data-voice-status]');
+    if (output) { output.textContent = message; output.className = 'notice voice-notice ' + messageKind; output.hidden = !message; }
+    drawBanner();
+  }
+  function releasePlayer() {
+    if (host) host.querySelectorAll('[data-voice-player] audio').forEach(audio => { audio.pause(); audio.removeAttribute('src'); audio.load(); });
+    if (playerURL) { URL.revokeObjectURL(playerURL); playerURL = null; }
+  }
+  function attachBanner(container) {
+    const next = container || document.getElementById('voiceBanner');
+    if (next && next !== bannerHost) {
+      if (bannerHost) bannerHost.removeEventListener('click', handleClick);
+      bannerHost = next; bannerHost.addEventListener('click', handleClick);
+    }
+  }
+  function drawBanner() {
+    if (!bannerHost || !bannerHost.isConnected) attachBanner();
+    if (!bannerHost) return;
+    bannerHost.hidden = phase === 'idle' && !bannerMessage;
+    if (bannerHost.hidden) { bannerHost.replaceChildren(); return; }
+    if (phase === 'idle') {
+      bannerHost.innerHTML = '<div class="voice-banner-inner"><p role="status">' + esc(bannerMessage) + '</p><button type="button" class="button secondary" data-voice-action="dismiss-banner">닫기</button></div>';
+      return;
+    }
+    const label = phase === 'requesting' ? '마이크 허용을 기다리는 중' : phase === 'saving' ? '음성 저장 중' : '설명 녹음 중';
+    bannerHost.innerHTML = '<div class="voice-banner-inner"><div><strong>' + label + '</strong><p>' + esc(title(activeId)) + ' · <span data-voice-timer>' + clock(elapsed) + '</span></p></div><div class="actions"><button type="button" class="button" data-voice-action="stop" ' + (phase !== 'recording' ? 'disabled' : '') + '>녹음 끝내기</button><button type="button" class="button secondary" data-voice-action="cancel" ' + (phase === 'saving' ? 'disabled' : '') + '>취소</button></div></div>';
+  }
+  async function loadPlayer(version, id) {
+    try {
+      const clip = await global.HNRAudio.get(slot(id));
+      if (!host || renderVersion !== version || selected !== id || !clip) return;
+      const target = host.querySelector('[data-voice-player]');
+      if (!target) return;
+      releasePlayer(); playerURL = URL.createObjectURL(clip.blob);
+      const audio = document.createElement('audio'); audio.controls = true; audio.preload = 'metadata'; audio.src = playerURL;
+      audio.setAttribute('aria-label', title(id) + ' 설명 녹음');
+      audio.addEventListener('error', () => { if (renderVersion === version) setMessage('저장된 음성을 이 브라우저에서 재생하지 못했어요. 음성을 내려받아 다른 재생 앱에서 확인하거나 다시 녹음해 주세요.', 'voice-error'); });
+      target.replaceChildren(audio);
+    } catch (e) { if (renderVersion === version) setMessage(e.message || '저장된 음성을 불러오지 못했어요.', 'voice-error'); }
+  }
+  function render() {
+    drawBanner();
+    if (!host) return;
+    const version = ++renderVersion; releasePlayer();
+    const clip = clips.find(c => c.slot === slot(selected));
+    const isCurrent = activeId === selected && phase !== 'idle';
+    host.innerHTML = '<section class="panel voice-panel" aria-label="선택형 말하기 연습">' +
+      '<div class="voice-heading"><div><span class="voice-eyebrow">선택해서 연습하기</span><h3>내 설명을 녹음해 들어 보기</h3></div><span class="voice-badge">45–90초 권장</span></div>' +
+      '<p>짝이 방문객이라고 생각하고, <strong>관찰 질문 → 체험 안내 → 원리 → 안전</strong> 순서로 말해 보세요. 필요할 때 사용하는 연습 도구예요.</p>' +
+      '<label class="field"><span>어떤 실험을 설명할까요?</span><select data-voice-select ' + (busy() ? 'disabled' : '') + '>' + experiments.map(x => '<option value="' + x[0] + '" ' + (selected === x[0] ? 'selected' : '') + '>' + esc(x[1]) + '</option>').join('') + '</select></label>' +
+      '<p class="note voice-prompt">' + esc(prompts[selected]) + '</p>' +
+      '<div class="actions voice-controls"><button type="button" class="button" data-voice-action="record" ' + (busy() || !available ? 'disabled' : '') + '>' + (clip ? '다시 녹음' : '녹음 시작') + '</button>' +
+      '<button type="button" class="button secondary" data-voice-action="stop" ' + (!isCurrent || phase !== 'recording' ? 'disabled' : '') + '>녹음 끝내기</button>' +
+      '<button type="button" class="button secondary" data-voice-action="cancel" ' + (!isCurrent || phase === 'saving' ? 'disabled' : '') + '>취소</button>' +
+      '<span class="voice-timer" data-voice-timer>' + clock(isCurrent ? elapsed : 0) + '</span></div>' +
+      '<p class="voice-state" aria-live="polite">' + (isCurrent ? (phase === 'requesting' ? '마이크 허용 여부를 선택해 주세요. 기다리지 않으려면 취소할 수 있어요.' : phase === 'saving' ? '음성을 이 브라우저에 저장하고 있어요.' : '녹음 중입니다. 최대 2분 후 자동으로 마쳐요.') : clip ? '저장된 음성 · ' + Math.round(clip.duration || 0) + '초 · ' + Math.round(clip.bytes / 1024) + 'KB' : '이 실험의 녹음이 아직 없어요.') + '</p>' +
+      '<div class="voice-player" data-voice-player></div>' +
+      '<div class="actions voice-files"><label class="button secondary voice-file-label ' + (busy() || !available ? 'voice-disabled' : '') + '">음성 파일 첨부<input type="file" data-voice-upload accept="audio/*,.webm,.ogg,.mp3,.m4a,.mp4,.wav" ' + (busy() || !available ? 'disabled' : '') + '></label>' +
+      '<button type="button" class="button secondary" data-voice-action="download" ' + (!clip || busy() ? 'disabled' : '') + '>음성 내려받기</button>' +
+      '<button type="button" class="button secondary voice-delete" data-voice-action="delete" ' + (!clip || busy() ? 'disabled' : '') + '>이 음성 지우기</button></div>' +
+      '<p class="voice-small">WebM·OGG·MP3·M4A·MP4·WAV · 파일당 10MB 이하 · 최대 2분<br>실험마다 음성 1개를 보관합니다. 다시 녹음한 음성은 저장 성공 후 이전 음성을 바꿉니다.</p>' +
+      '<p class="notice voice-notice ' + messageKind + '" data-voice-status role="status" ' + (!message ? 'hidden' : '') + '>' + esc(message) + '</p>' +
+      '<p class="note voice-storage">녹음은 <strong>이 브라우저에 저장</strong>됩니다. 교사에게 전달하려면 음성을 내려받아 직접 전달하세요. 브라우저 저장 공간을 지우거나 기기를 바꾸기 전에는 필요한 음성을 내려받아 두세요.</p></section>';
+    if (clip) loadPlayer(version, selected);
+  }
+  async function refresh() { clips = (await global.HNRAudio.list()).filter(c => c.slot.startsWith('hub-')); }
+  async function startRecording() {
+    if (busy()) return;
+    const id = selected, token = ++serial; activeId = id; phase = 'requesting'; elapsed = 0; bannerMessage = ''; message = ''; render();
+    try {
+      await global.HNRAudio.start(slot(id), seconds => {
+        if (token !== serial) return;
+        elapsed = seconds;
+        if (host) host.querySelectorAll('[data-voice-timer]').forEach(el => { el.textContent = clock(seconds); });
+        if (bannerHost) bannerHost.querySelectorAll('[data-voice-timer]').forEach(el => { el.textContent = clock(seconds); });
+      }, async (meta, error) => {
+        if (token !== serial) return;
+        phase = 'idle'; activeId = null;
+        try {
+          if (meta) await refresh();
+          setMessage(error ? error.message : title(id) + ' 설명을 저장했어요. 다시 들으며 고칠 부분을 찾아보세요.', error ? 'voice-error' : 'voice-success', true);
+        } catch (_) { setMessage('음성 목록을 확인하지 못했어요. 새로고침 후 저장된 음성을 확인해 주세요.', 'voice-error', true); }
+        if (token === serial) render();
+      });
+      if (token === serial && activeId) { phase = 'recording'; render(); }
+    } catch (e) {
+      if (token !== serial) return;
+      phase = 'idle'; activeId = null; setMessage(e.message || '녹음을 시작하지 못했어요. 음성 파일을 첨부할 수도 있어요.', 'voice-error', true); render();
+    }
+  }
+  async function stopRecording() {
+    if (phase !== 'recording') return;
+    phase = 'saving'; render();
+    try { await global.HNRAudio.stop(); } catch (e) { phase = 'idle'; activeId = null; setMessage(e.message || '녹음을 저장하지 못했어요.', 'voice-error', true); render(); }
+  }
+  function cancelRecording() {
+    if (phase === 'idle' || phase === 'saving') return;
+    // Invalidate the callback before cancel() synchronously notifies it.
+    const previousSerial = serial; serial++;
+    if (global.HNRAudio.cancel()) {
+      activeId = null; phase = 'idle'; elapsed = 0;
+      setMessage('녹음을 취소했어요. 이전에 저장한 음성은 그대로 남아 있어요.', '', true); render();
+    } else { serial = previousSerial; phase = 'saving'; setMessage('음성 저장이 끝날 때까지 잠시 기다려 주세요.'); render(); }
+  }
+  function durationOf(blob) {
+    return new Promise((resolve, reject) => {
+      const audio = new Audio(), url = URL.createObjectURL(blob); let settled = false;
+      const finish = (failure, duration) => {
+        if (settled) return; settled = true; clearTimeout(timeout);
+        audio.onloadedmetadata = audio.ontimeupdate = audio.onerror = null;
+        audio.removeAttribute('src'); audio.load(); URL.revokeObjectURL(url);
+        if (failure) reject(failure); else resolve(duration);
+      };
+      const timeout = setTimeout(() => finish(new Error('음성 길이를 확인하지 못했어요. MP3·M4A·WAV로 저장하거나 직접 녹음해 주세요.')), 10000);
+      audio.onerror = () => finish(new Error('재생할 수 없는 음성 파일이에요. 다른 파일을 선택해 주세요.'));
+      audio.onloadedmetadata = () => { if (Number.isFinite(audio.duration) && audio.duration > 0) finish(null, audio.duration); else audio.currentTime = 1e9; };
+      audio.ontimeupdate = () => { if (Number.isFinite(audio.duration) && audio.duration > 0) finish(null, audio.duration); };
+      audio.preload = 'metadata'; audio.src = url;
+    });
+  }
+  async function upload(file) {
+    if (!file || busy()) return;
+    if (!file.size || file.size > 10 * 1024 * 1024) { setMessage('빈 파일은 첨부할 수 없어요. 10MB 이하의 음성 파일을 선택해 주세요.', 'voice-error'); return; }
+    const id = selected; uploadBusy = true; message = '음성 파일을 확인하고 있어요.'; render();
+    try {
+      const duration = await durationOf(file);
+      if (duration > 120) throw new Error('2분 이하의 설명 음성을 첨부해 주세요.');
+      await global.HNRAudio.put(slot(id), file, { duration }); await refresh();
+      setMessage(title(id) + ' 음성을 저장했어요. 재생해 확인해 보세요.', 'voice-success');
+    } catch (e) { setMessage(e.message || '파일을 저장하지 못했어요.', 'voice-error'); }
+    finally { uploadBusy = false; render(); }
+  }
+  async function downloadClip() {
+    const clip = await global.HNRAudio.get(slot(selected));
+    if (!clip) throw new Error('내려받을 음성이 없어요.');
+    const extension = { 'audio/webm': 'webm', 'audio/ogg': 'ogg', 'audio/mp4': 'm4a', 'audio/mpeg': 'mp3', 'audio/wav': 'wav' }[clip.mime] || 'webm';
+    const url = URL.createObjectURL(clip.blob), a = document.createElement('a');
+    a.href = url; a.download = 'HNR-' + selected + '-설명.' + extension;
+    document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+    setMessage('음성 내려받기를 요청했어요. 다운로드한 파일을 확인한 뒤 원하는 곳에 직접 전달하세요.');
+  }
+  async function handleClick(event) {
+    const button = event.target.closest('[data-voice-action]');
+    if (!button || button.disabled) return;
+    const action = button.dataset.voiceAction;
+    try {
+      if (action === 'record') await startRecording();
+      else if (action === 'stop') await stopRecording();
+      else if (action === 'cancel') cancelRecording();
+      else if (action === 'dismiss-banner') { bannerMessage = ''; drawBanner(); }
+      else if (action === 'download' && !busy()) await downloadClip();
+      else if (action === 'delete' && !busy()) {
+        if (!global.confirm(title(selected) + '의 저장된 음성을 지울까요?')) return;
+        await global.HNRAudio.remove(slot(selected)); await refresh(); setMessage('선택한 실험의 음성을 지웠어요.'); render();
+      }
+    } catch (e) { setMessage(e.message || '작업을 마치지 못했어요. 다시 시도해 주세요.', 'voice-error'); }
+  }
+  function handleChange(event) {
+    if (event.target.matches('[data-voice-select]') && !busy()) {
+      const next = event.target.value; if (!experiments.some(x => x[0] === next)) return;
+      selected = next; message = ''; try { localStorage.setItem(KEY, selected); } catch (_) {} render();
+    }
+    if (event.target.matches('[data-voice-upload]')) {
+      const file = event.target.files[0]; event.target.value = ''; upload(file);
+    }
+  }
+  function unmount() {
+    renderVersion++; releasePlayer();
+    if (host) { host.removeEventListener('click', handleClick); host.removeEventListener('change', handleChange); }
+    host = null; drawBanner();
+  }
+  async function mount(container) {
+    unmount();
+    if (!container || typeof container.addEventListener !== 'function') throw new Error('녹음 도구를 표시할 영역이 없어요.');
+    host = container; host.addEventListener('click', handleClick); host.addEventListener('change', handleChange);
+    attachBanner();
+    try {
+      if (!global.HNRAudio) throw new Error('녹음 도구를 불러오지 못했어요. 페이지를 새로 열어 주세요.');
+      await global.HNRAudio.init(); await refresh(); available = true;
+    } catch (e) { available = false; setMessage(e.message || '브라우저 음성 저장 공간을 사용할 수 없어요.', 'voice-error'); }
+    render();
+  }
+  function banner(container) { attachBanner(container); drawBanner(); }
+  global.addEventListener('beforeunload', event => { if (phase !== 'idle' || uploadBusy) { event.preventDefault(); event.returnValue = ''; } });
+  global.HNRVoice = Object.freeze({ mount, unmount, banner });
+})(window);
+</script><script>(function(){
+ 'use strict';
+ const DATA=JSON.parse(document.getElementById('course-data').textContent), stations=DATA.stations;
+ const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const tabs=[['home','공부할 자료'],['learn','실험 익히기'],['ram','RAM 이해하기'],['welcome','방문객 안내'],['practice','짝과 연습']];
+ let currentRoute='',audience='young',part='capacitor',memoryTimer=null,charge=0,memoryMode='ready';
+ const parts=[
+ {id:'capacitor',name:'축전기',short:'전하를 담아 두는 기억 칸',job:'정보를 저장하는 핵심 부품',text:'축전기는 전하를 저장해 두는 부품이에요. 물통에 물을 담아 두듯, 쓰기 버튼을 놓아도 잠시 전하를 담아 둘 수 있어요. 같은 축전기에서는 저장된 전하가 많을수록 양단의 전압이 높아져요.',analogy:'물통에 담긴 물의 양은 전하량, 물높이는 전압에 비유할 수 있어요. 물통의 크기는 전하를 담을 수 있는 정도인 정전용량과 연결해 생각해요.',caution:'전해 축전기는 +와 − 방향이 있어요. 현장 도안의 극성과 전원 전압을 확인해 연결해요.'},
+ {id:'battery',name:'전지',short:'쓰기에 필요한 에너지 공급',job:'축전기를 충전할 에너지원',text:'쓰기 버튼을 누를 때 축전기를 충전할 에너지를 공급해요. 전지는 기억을 저장하는 칸이 아니라 그 칸을 준비해 주는 전원이에요.',analogy:'물통을 채우는 물 공급원에 비유할 수 있어요. 이 비유에서 전기에너지를 공급하는 부품이 전지예요.',caution:'정해진 전지와 홀더를 사용하고 +와 −를 바로 연결하지 않아요. 뜨거워지면 손대지 말고 교사를 불러요.'},
+ {id:'write',name:'쓰기 버튼',short:'전지 → 축전기 길 열기',job:'저장 상태를 만드는 스위치',text:'누르면 전지와 축전기 사이의 충전 경로가 이어져요. 손을 떼면 그 경로가 끊어져요. 먼저 쓰기 버튼만 눌러 충전한 뒤, 두 버튼에서 모두 손을 떼어요.',analogy:'물통에 물을 넣는 쪽의 밸브예요. 우리 실물 모형에서는 주로 충전해 높은 전압 상태를 만드는 동작을 관찰해요.',caution:'쓰기와 읽기를 동시에 눌러 불을 켜면, 저장한 것을 읽은 것인지 구분하기 어려워요.'},
+ {id:'read',name:'읽기 버튼',short:'축전기 → LED 길 열기',job:'저장한 전하로 빛을 확인하는 스위치',text:'누르면 축전기와 읽기 저항·LED가 이어져요. 전지가 이어진 쓰기 길을 끊은 다음 읽어야, 축전기에 남아 있던 에너지로 빛이 났다는 것을 확인할 수 있어요.',analogy:'물통에서 물을 꺼내는 쪽의 밸브예요. 물을 꺼낼수록 물이 줄듯, 우리 모형은 읽는 동안 전하가 줄어요.',caution:'두 버튼은 학습을 위해 쓰기와 읽기를 나눈 장치예요. 실제 DRAM 셀에 버튼 두 개가 들어가는 것은 아니에요.'},
+ {id:'resistor',name:'읽기 저항',short:'LED에 흐르는 전류 제한',job:'읽기 경로의 전류를 조절하는 부품',text:'읽기 버튼을 눌렀을 때 LED에 너무 큰 전류가 흐르지 않도록 제한해요. 저항과 축전기 등 회로 조건에 따라 빛의 밝기와 줄어드는 모습이 달라져요.',analogy:'물을 내보내는 관의 좁은 구간에 비유해요. 통로를 지나가는 흐름을 제한하는 역할이지, 기억을 담는 역할은 아니에요.',caution:'LED와 이어진 저항을 빼거나 임의로 다른 값으로 바꾸지 않아요. 현장에 준비된 도안의 값을 따라요.'},
+ {id:'led',name:'LED',short:'읽는 순간을 보여 주는 표시등',job:'저장한 에너지를 빛으로 확인',text:'읽기 경로에 충분한 전류가 흐르면 빛나요. 우리 눈에 보이도록 덧붙인 표시 장치예요. 두 버튼을 놓고 있을 때는 LED가 꺼져 있어도 축전기에 전하가 남아 있을 수 있어요.',analogy:'물의 흐름을 눈으로 보게 해 주는 작은 물레방아에 비유해요. 물레방아가 멈췄다고 물통이 반드시 빈 것은 아니에요.',caution:'LED에도 연결 방향이 있어요. LED가 안 켜지는 이유는 방전 외에도 반대 연결·접촉 불량·부족한 전압 등이 있어요.'},
+ {id:'wire',name:'전선·구리테이프',short:'각 부품 사이의 길 연결',job:'전류가 흐를 연결 경로',text:'전지, 버튼, 축전기, 저항, LED를 도안대로 이어 줘요. 도안에서 만나야 하는 곳은 잘 닿고, 떨어져 있어야 하는 곳은 서로 닿지 않아야 해요.',analogy:'물통·밸브·물레방아를 잇는 관처럼 생각해요. 단, 실제 회로에서는 전류가 이어진 경로를 따라 흘러요.',caution:'테이프가 겹쳐도 접착면 때문에 잘 연결되지 않을 수 있어요. 작동하지 않으면 임의로 누르기보다 진행자와 접촉을 확인해요.'},
+ {id:'write-resistor',name:'쓰기 저항',short:'도안에 있을 때 · 충전 전류 제한',job:'충전 시작의 큰 전류를 줄이는 부품',text:'개선형 도안에서 쓰기 경로에 넣는 저항이에요. 빈 축전기를 충전하기 시작할 때 흐르는 전류를 제한해요. 쓰기 저항이 없는 기존 도안과 있는 개선형 도안을 섞어 연결하지 않아요.',analogy:'물을 채우는 쪽의 흐름을 제한하는 구간이에요. LED와 이어진 읽기 저항과는 위치와 역할이 달라요.',caution:'현장 도안에 있는 경우에만 그 위치와 저항값을 따라요. 모든 작품에 쓰기 저항이 별도로 들어가는 것은 아니에요.'}
+ ];
+ const openLink=(href,label,cls='text-link')=>`<a class="${cls}" href="${href}" target="_blank" rel="noopener">${label} ↗</a>`;
+ const explainLink=(s,label='방문객 설명 화면',cls='button')=>openLink(`../explain/${s.id}.html`,label,cls);
+ function section(title,body,subtitle=''){return `<section class="section"><div class="section-head"><div><h2>${title}</h2>${subtitle?`<p>${subtitle}</p>`:''}</div></div>${body}</section>`;}
+ function flow(){return `<div class="flow">${DATA.visitorFlow.map(x=>`<article class="panel"><span class="step-num">0${x.step}</span><h3>${esc(x.title)}</h3><p>${esc(x.action)}</p></article>`).join('')}</div>`;}
+ function stationCards(){return `<div class="grid">${stations.map((s,i)=>`<article class="photo-card"><a href="#learn/${s.id}" aria-label="${esc(s.title)} 공부하기"><img src="assets/${s.id}.webp" alt="" width="540" height="328" loading="lazy"></a><div class="photo-card-body"><span class="zone">0${i+1} · ${esc(s.zone)}</span><h3>${esc(s.title)}</h3><p>${esc(s.question)}</p><div class="actions"><a class="text-link" href="#learn/${s.id}">원리·진행·안전 →</a>${explainLink(s,'설명 HTML','text-link')}</div></div></article>`).join('')}</div>`;}
+ function home(){return `<div class="wrap"><section class="hero"><div><span class="eyebrow">PROJECT ONE · CREW STUDY GUIDE</span><h1>실험을 이해하고,<br>방문객에게 전하기.</h1><p class="lead">HNR Tech Inc.의 학생 운영팀을 위한 공부방.<br>일곱 실험과 RAM의 원리를 익히고, 짝과 번갈아 방문객을 맞이해 봐요.</p><div class="actions"><a class="button" href="#learn">실험 자료 살펴보기</a><a class="button secondary" href="#ram">우리가 만드는 RAM은?</a></div></div><figure class="hero-art"><img src="assets/hero.webp" width="900" height="800" alt="HNR Tech Inc. 반도체 연구소를 표현한 이미지"><figcaption>작은 기억 한 칸으로 이어지는 일곱 번의 발견.</figcaption></figure></section>
+ <div class="intro-strip"><div><b>7개 실험</b><span>모두 함께 익히는 원리와 안전</span></div><div><b>1비트 메모리</b><span>우리가 만드는 작품의 의미</span></div><div><b>두 역할, 번갈아</b><span>방문객도, 진행자도 되어 보기</span></div></div>
+ <section><div class="section-head"><div><span class="eyebrow">START HERE</span><h2>무엇부터 공부할까요?</h2></div></div><div class="grid"><a class="panel study-card" href="#learn"><span class="step-num">01 · 실험 이해</span><h3>무엇을 보고, 왜 그럴까?</h3><p>원리 한 줄, 진행 순서, 안전 안내를 함께 읽어요. 현장에서 띄울 설명 화면도 미리 열어 봐요.</p><span class="arrow">→</span></a><a class="panel study-card" href="#ram"><span class="step-num">02 · 작품 이해</span><h3>이 회로가 어떻게 기억할까?</h3><p>전지부터 LED까지. 부품의 역할과 실제 반도체 속 DRAM과 닮은 점을 알아봐요.</p><span class="arrow">→</span></a><a class="panel study-card" href="#practice"><span class="step-num">03 · 함께 연습</span><h3>내 말로 안내해 볼까?</h3><p>짝과 역할을 바꾸어 인사·안전·실험·원리 설명까지 이어서 연습해요.</p><span class="arrow">→</span></a></div></section>
+ ${section('실험별 공부 자료',stationCards(),'각 카드에서 학생용 정리와 방문객에게 보여 줄 설명 HTML을 바로 열 수 있어요.')}
+ <section class="section panel dark"><span class="eyebrow">EXPERIENCE → EXPLANATION → TAKE HOME</span><h2>해 보고, 이해하고,<br>내가 만든 RAM을 가져가요.</h2><p class="lead">방문객은 실험만 하고 끝내지 않아요. <strong>체험 뒤 원리 설명을 듣고</strong>, 마지막에 만든 RAM도 설명과 작동·안전 확인을 마친 뒤 가져가요. 처음 맞이할 때부터 이 흐름을 알려 주세요.</p><div class="actions"><a class="button" href="#welcome">방문객 안내 말 익히기</a>${openLink('../explain/index.html','현장 설명 자료 전체','button secondary')}</div></section>
+ ${resources()}
+ </div>`;}
+ function resources(){return section('설명할 때 꺼내 쓰는 자료',`<div class="resource-list"><div class="resource-row"><strong>부스 설명용 HTML</strong><p>체험을 마친 방문객과 함께 보는 원리 설명 화면. 각 실험의 조작형 시뮬레이터도 들어 있어요.</p>${openLink('../explain/index.html','열기')}</div><div class="resource-row"><strong>책상용 설명·회로 안내</strong><p>실험 안내와 플라즈마·RAM의 자세한 설명. 프린트하거나 화면에서 확인해요. PDF 22쪽.</p>${openLink('resources/desk-guide.pdf','PDF 열기')}</div><div class="resource-row"><strong>교사·학생 운영 가이드</strong><p>체험 준비와 현장 운영을 함께 확인해요. PDF 6쪽.</p>${openLink('resources/operations.pdf','PDF 열기')}</div><div class="resource-row"><strong>PROJECT ONE 연구소 맵</strong><p>우리 부스의 장소와 이야기를 살펴봐요. 실제 실험 진행은 현장 안전 안내를 따라요.</p>${openLink('../lab.html','맵 열기')}</div></div><details><summary>실험대 표지와 부스 게시물도 보기</summary><div class="actions">${openLink('resources/station-signs.pdf','실험대 표지 7종')}${openLink('resources/posters.pdf','부스 포스터 6종')}${openLink('resources/notices.pdf','현장 안내 표찰')}</div></details>`);}
+ function learn(id){const s=stations.find(x=>x.id===id);if(!s)return `<div class="wrap"><div class="page-intro"><span class="eyebrow">EXPERIMENT LIBRARY</span><h1>일곱 실험, 모두의 설명.</h1><p class="lead">관찰한 현상에서 원리로 이어지는 말을 익혀요. 각 실험의 <strong>진행 순서와 안전 안내</strong>까지 함께 읽어 주세요.</p><div class="actions">${openLink('../explain/index.html','방문객 설명 HTML 전체','button')}<a class="button secondary" href="#ram">RAM 부품 자세히 보기</a></div></div>${stationCards()}<div class="notice"><strong>설명 화면은 체험이 끝난 뒤에 함께 봐요.</strong><p>“방금 무엇이 달라졌나요?”로 시작한 뒤 그림과 시뮬레이터를 보여 주세요. 화면을 처음부터 끝까지 읽어 주기보다, 방문객이 본 현상과 연결되는 부분을 짚어 주세요.</p></div></div>`;
+ return `<div class="wrap"><a class="back-link" href="#learn">← 실험 자료 전체</a><div class="station-layout"><aside class="station-nav" aria-label="실험 선택">${stations.map(x=>`<a href="#learn/${x.id}" ${s.id===x.id?'aria-current="page"':''}>${esc(x.title)}</a>`).join('')}</aside><article class="station-content"><header class="station-title"><div><span class="eyebrow">${esc(s.zone)}</span><h1>${esc(s.title)}</h1><p class="lead">${esc(s.question)}</p></div><img src="assets/${s.id}.webp" alt="" width="540" height="480"></header><div class="actions">${explainLink(s)}${openLink(`../explain/${s.id}.html?p=${s.id==='dram'?8:6}`,'시뮬레이터','button secondary')}${s.id==='dram'?'<a class="text-link" href="#ram">RAM 부품의 역할 →</a>':''}</div><p class="note" style="margin-top:14px">설명 HTML과 시뮬레이터는 새 탭으로 열려요. 체험 후 방문객과 함께 볼 화면을 미리 익혀 두세요.</p>
+ ${section('먼저 이해할 원리',`<div class="sentence">${esc(s.principle)}</div>`)}
+ ${section('실험은 이렇게 이끌어요',`<div class="panel pale"><span class="step-num">처음 건네는 말</span><p class="script">“${esc(s.welcome)}”</p></div><div class="grid two" style="margin-top:20px"><div class="panel"><h3>진행 순서</h3><ol>${s.steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></div><div class="panel safety"><h3>시작 전에 말할 안전</h3><ul>${s.safety.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></div>`)}
+ ${section('체험 뒤, 관찰에서 설명으로',`<div class="panel"><span class="step-num">방금 본 것을 먼저 물어봐요</span><h3>“${esc(s.explainAfter)}”</h3><p>방문객의 말을 들은 뒤 아래 표현을 골라 설명해요. 학년은 참고만 하고, 이미 아는 것과 궁금한 것에 맞춰 말을 바꿔요.</p>${audienceBlock(s)}</div><div class="notice"><strong>이 말은 꼭 정확하게</strong><p>${esc(s.myth)}</p></div>`)}
+ ${section('자주 듣는 질문',`<div class="details-list">${s.faq.map(x=>`<details><summary>${esc(x.q)}</summary><p>${esc(x.a)}</p></details>`).join('')}</div>`)}
+ <div class="notice"><strong>${s.id==='dram'?'설명과 확인이 끝나면 작품을 건네요.':'실험 뒤 원리 설명까지가 한 활동이에요.'}</strong><p>${s.id==='dram'?'이것이 1비트 DRAM 원리 모형이라는 설명을 마치고, 쓰기만 → 모두 놓기 → 읽기만으로 작동을 확인해요. 부품·전지 고정과 이상 여부, 사용·보관 방법까지 확인한 다음 완성품을 가져가도록 안내해요.':'설명 화면에서 방금 관찰한 부분을 짚고, 질문을 받은 뒤 다음 체험으로 안내해요. 마지막 RAM 작품은 설명과 작동·안전 확인까지 마친 뒤 가져가요.'}</p><div class="actions">${explainLink(s,'설명 화면 열어 연습하기','button secondary')}<a class="text-link" href="#practice">짝과 연습 방법 →</a></div></div></article></div></div>`;}
+ function audienceBlock(s){return `<div class="audience" data-station="${s.id}"><div class="segments" role="group" aria-label="설명 예시 수준"><button data-audience="young" aria-pressed="${audience==='young'}">초등 저학년</button><button data-audience="older" aria-pressed="${audience==='older'}">초등 고학년</button><button data-audience="teen" aria-pressed="${audience==='teen'}">중학생</button></div><p class="audience-output" aria-live="polite">“${esc(s.audience[audience])}”</p></div>`;}
+ function partDetail(p){return `<span class="eyebrow">RAM COMPONENT</span><h3>${p.name}</h3><p class="part-job">${p.job}</p><p>${p.text}</p><p><strong>비유하면</strong> ${p.analogy}</p><div class="note">${p.caution}</div>`;}
+ function ram(){return `<div class="wrap"><header class="ram-lede"><div><span class="eyebrow">ONE BIT, ONE MEMORY CELL</span><h1>우리가 만드는<br>RAM 한 조각은?</h1><p class="lead"><strong>전기를 잠시 담아 두었다가 읽어 보는,<br>‘1비트 DRAM 원리 모형’</strong>이에요.<br>컴퓨터 속 아주 작은 기억 칸의 원리를 손으로 만질 수 있는 큰 부품으로 만들어 봐요.</p><div class="actions">${openLink('../explain/dram.html','만들기 전 함께 볼 설명 HTML','button')}${openLink('resources/desk-guide.pdf#page=19','RAM 비유·회로 PDF','button secondary')}</div></div><div class="bit-tile"><div class="bits">0 / 1</div><b>한 칸에 둘 중 하나.</b><p>1비트는 0 또는 1 한 가지를 나타내는<br>정보의 작은 단위예요.<br>한 칸만으로 사진이나 문장을 담지는 못해요.</p></div></header>
+ ${section('컴퓨터의 RAM은 ‘작업 책상’ 같아요.',`<div class="grid"><article class="analogy-card"><span class="step-num">CPU · 작업하는 사람</span><span class="bigword">생각하고 계산해요.</span><p>계산하고 명령을 처리하는 역할이에요. 책상에 꺼내 놓은 자료를 사용해 일을 한다고 생각해 봐요.</p></article><article class="analogy-card"><span class="step-num">RAM · 작업 책상</span><span class="bigword">지금 쓸 것을 펼쳐요.</span><p>실행 중인 프로그램과 지금 필요한 데이터를 빠르게 꺼내 쓰는 작업 공간이에요. 일반적인 DRAM은 전원이 끊기면 내용을 유지하지 못해요.</p></article><article class="analogy-card"><span class="step-num">SSD · 자료를 보관하는 책장</span><span class="bigword">나중에도 꺼내 봐요.</span><p>프로그램과 저장한 파일을 오래 보관해요. 전원을 꺼도 남겨 둘 자료는 이런 저장장치에 저장해요.</p></article></div><div class="notice"><strong>우리 작품은 그 책상 전체가 아니라, 아주 작은 ‘기억 한 칸’의 원리예요.</strong><p>RAM은 메모리의 이름이고, DRAM은 그중 축전기에 전하를 저장하는 방식이에요. 실제 DRAM에는 이런 기억 칸이 매우 많이 모여 있어요. 모든 종류의 RAM이 축전기를 사용하는 것은 아니에요.</p></div>`)}
+ ${section('각 부품은 무슨 일을 할까요?',`<div class="part-layout"><div class="part-buttons" role="group" aria-label="RAM 부품 선택">${parts.map(p=>`<button class="part-button" data-part="${p.id}" aria-pressed="${part===p.id}"><b>${p.name}</b><span>${p.short}</span></button>`).join('')}</div><div class="part-detail" id="partDetail" aria-live="polite">${partDetail(parts.find(p=>p.id===part))}</div></div><p class="note" style="margin-top:18px">부품의 역할을 이해하는 공통 설명이에요. 전지 종류·축전기 용량·저항값은 준비된 현장 도안을 따라요. 쓰기 저항은 도안에 있을 때 사용해요.</p>`)}
+ ${section('길이 이어지는 순간을 구분해요.',`<div class="paths"><div class="path-row"><strong>쓰기</strong><span>전지</span><i>→</i><span>쓰기 버튼</span><i>→</i><span>축전기 충전</span></div><div class="path-row"><strong>보관</strong><span>두 버튼에서 손 떼기</span><i>→</i><span>축전기에 전하가 남음</span></div><div class="path-row"><strong>읽기</strong><span>축전기</span><i>→</i><span>읽기 버튼·읽기 저항</span><i>→</i><span>LED로 확인</span></div></div><p class="note" style="margin-top:14px">위 화살표는 기능의 흐름이에요. 실제 회로는 되돌아오는 연결까지 이어져야 해요. 제작할 때는 부품의 정확한 위치가 표시된 현장 회로 도안을 사용해요.</p>`)}
+ ${section('물통으로 ‘쓰기 → 저장 → 읽기’ 이해하기',`<div class="memory-demo"><div class="memory-visual"><div><div class="tank" aria-label="축전기에 남은 전하를 물높이로 비유"><div class="water" id="memoryWater"></div><span class="tank-caption">축전기 = 물통</span></div></div><div><p class="demo-caption">같은 물통에서<br>물높이 ↔ 전압</p><div class="led-line"><span class="led" id="memoryLed"></span><span id="ledLabel">LED 꺼짐</span></div></div></div><div><span class="eyebrow">버튼을 순서대로 눌러 보세요</span><h3 id="memoryHeading">손을 떼면, 빛과 기억은 어떻게 될까요?</h3><p id="memoryText" aria-live="polite">① 쓰기로 채운 다음 ② 두 버튼을 놓아 보세요. LED가 꺼져도 축전기에 전하가 남아 있을 수 있다는 점을 확인해요.</p><div class="segments" role="group" aria-label="메모리 동작"><button data-memory="write" aria-pressed="false">① 쓰기</button><button data-memory="hold" aria-pressed="false">② 손 떼고 저장</button><button data-memory="read" aria-pressed="false">③ 읽기</button></div><button class="quiet" data-memory="reset">처음으로</button></div></div><p class="note" style="margin-top:16px">동작을 이해하는 비유이며 실제 충전 시간·전압·밝기의 측정값은 아니에요. 물통은 전하를 완전히 가둬 두는 장치처럼 보이지만, 실제 축전기에는 누설이 있어 시간이 지나면 저장 상태가 약해질 수 있어요.</p><div class="notice"><strong>LED가 꺼졌다고 곧바로 ‘0’이라고 말하지 않아요.</strong><p>읽기 버튼을 놓아 길이 끊겨 있을 수도 있고, LED를 켤 만큼 전압이 높지 않을 수도 있어요. 0·1은 정해 둔 기준으로 구분하는 상태예요. 실제 DRAM은 작은 전압 차이를 감지 회로로 읽어요.</p></div>`)}
+ ${section('반도체 속 DRAM과 어디가 닮았나요?',`<div class="table-wrap" tabindex="0" role="region" aria-label="우리 모형과 실제 DRAM 비교 표, 좁은 화면에서는 옆으로 스크롤"><table class="compare-table"><thead><tr><th>역할</th><th>우리가 만드는 모형</th><th>실제 DRAM</th></tr></thead><tbody><tr><td><strong>저장</strong></td><td>큰 축전기에 전하를 담아요.</td><td>아주 작은 축전기에 전하를 저장해요.</td></tr><tr><td><strong>연결 제어</strong></td><td>두 버튼으로 쓰기·읽기 경로를 나눠 조작해요.</td><td>보통 셀 하나에 트랜지스터 1개가 있어요. 전기 신호로 켜고 끄는 스위치예요.</td></tr><tr><td><strong>읽기</strong></td><td>저장한 에너지로 LED를 켜요. 읽는 동안 전하가 줄어요.</td><td>셀 밖 감지 회로가 미세한 차이를 구별해 0·1을 읽고, 읽은 상태를 다시 복원해요.</td></tr><tr><td><strong>오래 유지</strong></td><td>자동 복원 장치가 없어요. 충전한 뒤 읽기와 방전을 관찰해요.</td><td>누설로 약해지는 정보를 주기적으로 다시 유지해요. 이것이 리프레시예요.</td></tr><tr><td><strong>크기·구조</strong></td><td>손으로 만질 수 있는 부품을 연결한 교육 모형이에요.</td><td>반도체 칩 안에 많은 셀과 선택·감지·제어 회로가 함께 있어요.</td></tr></tbody></table></div><div class="grid two" style="margin-top:22px"><div class="panel pale"><span class="step-num">1T1C</span><h3>트랜지스터 1개 + 축전기 1개</h3><p>일반적인 DRAM 셀의 기본 구성이에요. <strong>우리 모형의 버튼 두 개와 LED</strong>가 실제 셀에 그대로 들어가지는 않아요. LED는 읽는 모습을 보여 주려고 붙인 부품이에요.</p></div><div class="panel pale"><span class="step-num">REFRESH</span><h3>원래 기억을 다시 살려 줘요.</h3><p>리프레시는 모든 칸을 꽉 채워 1로 만드는 일이 아니에요. 원래 0이던 칸은 0으로, 1이던 칸은 1로 유지하도록 해요. 우리 모형에는 이 자동 기능이 없어요.</p></div></div><div class="notice"><strong>“반도체 칩을 만들었어요”보다 이렇게 말해요.</strong><p>“반도체 메모리 안의 <b>기억 한 칸이 작동하는 원리</b>를 큰 부품으로 만들었어요. 축전기에 전하를 저장하고 읽는 점이 실제 DRAM과 닮았어요.”</p></div>`)}
+ ${section('방문객에게 한 번에 설명해 보기',audienceBlock(stations.find(s=>s.id==='dram')))}
+ ${section('작품을 건네기 전, 마지막 확인',`<div class="grid two"><div class="panel"><h3>작동을 확인해요.</h3><ol><li>전원 연결 전, 도안과 극성·접촉을 확인해요.</li><li><strong>쓰기만 → 두 버튼 모두 놓기 → 읽기만</strong> 순서로 확인해요.</li><li>반응이 없으면 LED·축전기 방향과 접촉을 교사와 점검해요. 두 버튼을 동시에 눌러 통과시키지 않아요.</li></ol></div><div class="panel"><h3>설명을 듣고 가져가요.</h3><ol><li>각 실험의 원리 설명과 RAM 작품 설명을 들었는지 대화로 확인해요.</li><li>전지·부품이 잘 고정됐는지, 뜨거움·손상이 없는지 확인해요.</li><li>버튼을 놓아 보관하고 금속 물건으로 전지 양극을 잇지 않도록 알려 줘요. 분리 가능한 전지는 교사 안내대로 보관해요.</li><li>작은 부품을 입에 넣거나 어린 동생에게 주지 않도록 안내한 뒤 작품을 건네요.</li></ol></div></div><div class="actions"><a class="button" href="#practice">짝에게 설명해 보기</a>${openLink('../explain/dram.html','현장 RAM 설명 화면','button secondary')}</div>`)}
+ <details class="section"><summary>원리를 더 확인할 자료</summary><p class="source-list">${openLink('https://semiconductor.samsung.com/kr/dram/','삼성전자 DRAM 소개')}${openLink('https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/pages/c5/c5s1/','MIT 메모리 강의 자료')}</p></details></div>`;}
+ function welcome(){return `<div class="wrap"><div class="page-intro"><span class="eyebrow">VISITOR EXPERIENCE</span><h1>맞이하는 말부터,<br>작품을 건네는 순간까지.</h1><p class="lead">우리는 장치를 보여 주는 사람인 동시에, 방문객이 발견한 것을 이해하도록 돕는 안내자예요. 먼저 묻고, 안전하게 해 보고, 방금 본 현상을 설명해요.</p></div>${flow()}
+ ${section('첫 인사에 전체 흐름을 알려 주세요.',`<div class="panel pale"><p class="script">“HNR Tech Inc.에 오신 걸 환영해요! 연구소의 실험을 직접 해 보고, 왜 그런지 함께 알아볼 거예요. 마지막에는 RAM 한 조각도 만들어요. <strong>체험 뒤 설명을 듣고, 완성한 작품의 작동과 안전을 확인받으면 직접 만든 작품을 가져갈 수 있어요.</strong> 장치는 제가 안내한 다음에 만져 주세요.”</p></div>`)}
+ ${section('실험 하나를 진행하는 말의 순서',`<div class="dialogue"><div class="sayline"><b>① 예상</b><p>“이렇게 바꾸면 어떻게 될 것 같아요?”<br>한 번에 한 가지 질문을 하고 대답할 시간을 줘요.</p></div><div class="sayline"><b>② 안전</b><p>“여기를 잡아 주세요. 이 부분은 제가 다룰게요. 멈추면 더 조작하지 말고 진행자의 안내를 기다려 주세요.”<br>‘조심하세요’ 대신 해야 할 행동을 구체적으로 말해요.</p></div><div class="sayline"><b>③ 체험</b><p>“직접 해 볼까요? 무엇이 달라지는지 봐 주세요.”<br>방문객의 관찰을 기다리고, 장치 이상은 바로 중단해요.</p></div><div class="sayline"><b>④ 원리</b><p>“방금 무엇이 달라졌나요? 이 그림에서 그 이유를 찾아볼게요.”<br>체험 후 설명 HTML을 열고 관찰 → 원인 → 한 줄 정리로 말해요.</p></div><div class="sayline"><b>⑤ 다음 안내</b><p>“궁금한 점이 있나요? 장치를 정리하고 다음 체험으로 갈게요.”<br>마지막에는 RAM 설명과 작동·안전 확인을 마친 뒤 작품을 건네요.</p></div></div><div class="actions">${openLink('../explain/index.html','함께 볼 설명 HTML 전체','button')}<a class="button secondary" href="#learn">실험마다 쓸 설명 예시</a></div>`)}
+ ${section('같은 원리, 듣는 사람에 맞는 말',`<div class="grid"><div class="panel"><span class="step-num">처음 듣는 어린 방문객</span><h3>하나를 보고, 한 문장씩.</h3><p>“전하를 저장하는 축전기예요”보다 “전기를 잠시 담아 두는 부품이에요”로 시작해요. 손짓과 실물을 짚고, 한 번에 한 행동을 안내해요.</p></div><div class="panel"><span class="step-num">원인을 궁금해하는 방문객</span><h3>새 용어는 뜻과 함께.</h3><p>“전하를 담아 두는 부품을 축전기라고 해요.” 관찰한 변화에 용어 하나를 붙여요. 비유를 한 뒤 실제 부품과 연결해요.</p></div><div class="panel"><span class="step-num">더 깊이 알고 싶은 방문객</span><h3>과정과 한계까지.</h3><p>“읽는 동안 전하가 줄어서 실제 DRAM은 원래 값을 복원해요.” 왜 그런지 이어 말하고, 우리 모형과 실제 장치의 차이도 알려 줘요.</p></div></div><div class="notice"><strong>학년만으로 이해 수준을 단정하지 않아요.</strong><p>“이 부품을 본 적 있나요?”, “좀 더 자세히 들어 볼까요?”로 확인해요. 쉬운 말로 바꾸되 사실을 바꾸지는 않아요. 말없이 고개만 끄덕이면 관찰한 것을 하나 짚어 달라고 해 봐요.</p></div>`)}
+ ${section('막히는 상황에서는 이렇게 말해요.',`<div class="details-list"><details open><summary>설명은 안 듣고 작품만 가져가고 싶대요.</summary><p>“이 작품을 어떻게 쓰는지 알고 가져가면 더 재미있어요. 방금 한 실험의 원리와 작품의 쓰기·읽기를 짧게 함께 볼게요. 설명과 작동·안전 확인이 끝나면 가져갈 수 있어요.”</p><p>길게 붙잡아 두거나 시험을 치르게 하지 않아요. 필요한 설명을 짧게 하고, 아직 듣지 못한 내용과 안전 안내를 마쳐요.</p></details><details><summary>모르는 질문을 받았어요.</summary><p>“좋은 질문이에요. 그 부분은 제가 정확히 확인하고 말씀드릴게요. 선생님께 함께 여쭤볼까요?” 관찰한 사실과 아직 모르는 이유를 나누어 말하고 지어내지 않아요.</p></details><details><summary>실험이 예상대로 안 돼요.</summary><p>“지금은 조건이 맞지 않을 수 있어요. 잠깐 멈추고 연결과 배치를 확인할게요.” 반복해서 무리하게 작동시키지 않아요. 실험별 점검 순서를 따르고, 발열·파손·이상 소리가 나면 교사를 불러요.</p></details><details><summary>무서워하거나 직접 만지기 싫어해요.</summary><p>“보기만 해도 괜찮아요. 제가 해 볼 테니 어떤 변화가 생기는지 함께 봐 주세요.” 참여를 강요하지 않고 관찰과 대화로 경험하도록 도와요.</p></details><details><summary>뒤에서 기다리는 사람이 많아요.</summary><p>“차례대로 한 가지씩 해 볼게요. 기다리는 동안 손은 장치에서 떨어뜨려 주세요.” 설명을 생략하기보다 관찰 한 가지와 원리 한 문장을 골라 짧게 마무리하고, 혼잡해지면 교사에게 도움을 요청해요.</p></details></div>`)}
+ ${section('안전 안내도 설명의 일부예요.',`<div class="grid two"><article class="panel"><h3>시작 전에는 구체적으로</h3><p>손으로 잡을 곳, 진행자가 다룰 곳, 기다릴 위치를 먼저 알려 줘요. 자석·전지·유리관은 장난감처럼 자유롭게 만지게 두지 않아요.</p></article><article class="panel"><h3>이상하면 바로 멈추기</h3><p>뜨거움·손상·파손·이상한 냄새가 보이면 작동을 멈추고 주변 손을 치우게 해요. 뜨거운 부품이나 깨진 유리를 학생이 직접 처리하지 않고 교사를 불러요.</p></article></div><div class="actions"><a class="button secondary" href="#learn">실험별 안전 안내 확인하기</a><a class="text-link" href="#practice">짝과 응대 연습 →</a></div>`)}
+ </div>`;}
+ const scenarios=[
+ ['처음 온 초등학생','“전기가 제 몸에서 나오는 거예요?”라고 물어요. 에너지스틱에서 에너지원과 몸의 역할을 쉬운 말로 나누어 설명해 보세요.'],
+ ['설명보다 체험이 급한 방문객','“빨리 해 볼래요!” 하며 형광등을 먼저 잡으려 해요. 반갑게 응대하면서 잡을 위치와 진행자의 역할을 먼저 안내해 보세요.'],
+ ['꼼꼼히 묻는 중학생','“LED가 꺼져 있으니까 기억이 없어진 것 아닌가요?”라고 물어요. 두 버튼을 놓은 상태와 읽는 상태를 구분해 설명해 보세요.'],
+ ['기다리는 사람이 있는 상황','코일 열차가 안에서 멈췄어요. 기다리는 방문객에게 한 문장으로 안내하고, 안전하게 중단·분리하는 대응을 말해 보세요.'],
+ ['완성품을 바로 가져가려는 방문객','RAM을 만든 뒤 “이제 갈게요!”라고 해요. 아직 듣지 못한 원리 설명과 작동·안전 확인을 자연스럽게 이어서 안내해 보세요.'],
+ ['더 깊이 궁금한 방문객','“구리는 자석에 안 붙는데 왜 자석이 늦게 떨어져요?”라고 물어요. 가만히 있을 때와 움직일 때를 구분해 설명해 보세요.']
+ ];let scenarioIndex=0;
+ function practice(){return `<div class="wrap"><div class="page-intro"><span class="eyebrow">PAIR REHEARSAL</span><h1>한 번은 방문객,<br>한 번은 진행자.</h1><p class="lead">짝과 같은 실험을 익힌 뒤 역할을 바꿔요. 두 사람 모두 <strong>맞이하기·안전 안내·실험 진행·원리 설명</strong>을 해 봐요. 모든 실험을 돌아가며 익히되, 여기서는 연습 방법만 기억하면 돼요.</p></div><div class="grid two"><div class="panel pale"><span class="step-num">첫 번째</span><h3>A는 방문객 · B는 진행자</h3><p>방문객은 궁금한 점을 실제로 물어요. 진행자는 실험과 설명 화면을 이용해 처음부터 끝까지 안내해요.</p></div><div class="panel pale"><span class="step-num">두 번째</span><h3>B는 방문객 · A는 진행자</h3><p>같은 실험에서 역할을 바꿔요. 이번에는 방문객의 나이나 아는 정도도 바꾸어 설명해 봐요.</p></div></div>
+ ${section('짝과 연습하는 다섯 단계',`<ol class="practice-list">${DATA.pairedPractice.map(x=>`<li><div><h3>${esc(x.title)}</h3><p>${esc(x.action)}</p></div></li>`).join('')}</ol>`)}
+ ${section('방문객 역할의 짝은 네 가지를 살펴봐요.',`<div class="check-grid">${[['안전','실험 전에 잡을 곳·기다릴 곳·멈출 조건을 구체적으로 알려 줬나요?'],['진행','내가 직접 관찰할 시간을 줬나요? 예상 → 체험 → 정리의 흐름이 자연스러웠나요?'],['원리','방금 본 현상과 이유를 연결했나요? 틀린 설명 없이 설명 화면을 활용했나요?'],['듣는 사람','어려운 용어를 풀어 주고 내 질문에 맞춰 말했나요? 설명 후 내 반응도 살폈나요?']].map(([a,b])=>`<label class="check-item"><input type="checkbox"><span><b>${a}</b>${b}</span></label>`).join('')}</div><div class="notice"><strong>“잘했어”에서 한 걸음 더.</strong><p>“<b>이해가 잘된 말 하나</b>는 ___였어. <b>어려웠던 말 하나</b>는 ___였어.”라고 말해 주세요. 진행자는 어려웠던 부분을 더 쉬운 말로 한 번만 다시 설명해요. 이 체크는 연습 중 함께 보는 메모예요.</p></div>`)}
+ ${section('익숙해졌다면, 상황을 바꿔 봐요.',`<div class="practice-prompt"><span class="step-num" id="scenarioCount">상황 ${scenarioIndex+1} / ${scenarios.length}</span><h3 id="scenarioTitle">${scenarios[scenarioIndex][0]}</h3><p id="scenarioText">${scenarios[scenarioIndex][1]}</p><button class="button secondary" id="nextScenario" style="margin-top:20px">다른 상황으로 연습하기</button></div><p class="note" style="margin-top:14px">위험한 상황은 실제로 만들지 않고 말로 대응해요. 실제 장치 조작은 교사가 안내한 안전한 순서로 연습해요.</p>`)}
+ ${section('연습하면서 설명 화면도 직접 열어 봐요.',`<div class="link-grid">${stations.map(s=>explainLink(s,s.title,'')).join('')}</div><div class="actions"><a class="text-link" href="#learn">실험별 원리·안전 정리 →</a><a class="text-link" href="#ram">RAM 부품과 비유 →</a></div>`)}
+ <section class="section"><div class="section-head"><div><span class="eyebrow">OPTIONAL · SPEAK & LISTEN</span><h2>내 설명을 녹음해 들어 보기</h2><p>원하면 실험을 골라 30~60초로 설명해 보세요. 들으면서 말의 길이와 어려운 표현을 찾아요.</p></div></div><div id="voiceTool"></div></section>
+ <details class="section"><summary>약 3시간 연습할 때의 흐름</summary><div class="timer-row"><div class="timing"><b>처음 15분</b>부스 전체 흐름과 방문객 안내</div><div class="timing"><b>35분</b>일곱 실험 원리·안전 함께 보기</div><div class="timing"><b>40분</b>짝과 실험 진행·설명 연습</div><div class="timing"><b>10분</b>휴식과 장치 정리</div><div class="timing"><b>30분</b>RAM 부품·쓰기·읽기 익히기</div><div class="timing"><b>40분</b>역할 교환·나이에 맞춘 재연습</div><div class="timing"><b>마지막 10분</b>입장부터 작품 수령까지 이어 보기</div></div><p>시간은 교사의 현장 안내에 맞춰 조정해요. 한 실험의 담당자를 고정하는 대신 서로 역할을 바꾸고, 부족한 부분을 다시 연습해요.</p></details></div>`;}
+ function memory(action){clearInterval(memoryTimer);memoryTimer=null;memoryMode=action;if(action==='reset'){charge=0;memoryMode='ready';}if(action==='write')charge=85;
+ const text={ready:['손을 떼면, 빛과 기억은 어떻게 될까요?','① 쓰기로 채운 다음 ② 두 버튼을 놓아 보세요. LED가 꺼져도 축전기에 전하가 남아 있을 수 있다는 점을 확인해요.'],write:['쓰기 · 전지에서 축전기로','쓰기 경로가 이어져 축전기가 충전돼요. 읽기 버튼은 놓고 있으므로 LED는 꺼져 있어요.'],hold:['저장 · 두 버튼에서 손 떼기',charge>0?'쓰기와 읽기 경로가 모두 끊겼어요. LED는 꺼져 있지만 축전기에는 전하가 남아 있어요. 실제 부품은 누설 때문에 시간이 지나면 전하가 줄 수 있어요.':'아직 충전하지 않았어요. 쓰기를 눌러 축전기를 채운 다음 두 버튼을 놓은 상태를 살펴보세요.'],read:['읽기 · 저장한 에너지로 확인',charge>20?'전지는 쓰기 경로에서 끊겨 있어요. 축전기에 남은 에너지로 LED가 켜지고, 읽는 동안 전하가 줄어요. 시간이 지나면 빛이 약해져요.':'현재 모형의 전압은 LED를 켜기에 충분하지 않아요. 빛이 없다는 사실만으로 전하가 정확히 0이라고 판단하지 않아요.']};
+ $('#memoryHeading').textContent=text[memoryMode][0];$('#memoryText').textContent=text[memoryMode][1];document.querySelectorAll('[data-memory]').forEach(b=>{if(b.hasAttribute('aria-pressed'))b.setAttribute('aria-pressed',b.dataset.memory===memoryMode)});drawMemory();if(action==='read'&&charge>8){memoryTimer=setInterval(()=>{charge=Math.max(8,charge-2);drawMemory();if(charge<=8){clearInterval(memoryTimer);memoryTimer=null;$('#memoryText').textContent='읽는 동안 전하가 줄어 LED가 꺼졌어요. 실제 DRAM은 읽은 0·1을 복원하지만, 우리 모형은 자동 복원하지 않아요. 다시 쓰기로 충전해 볼 수 있어요.'}},120);}}
+ function drawMemory(){if(!$('#memoryWater'))return;$('#memoryWater').style.height=charge+'%';const lit=memoryMode==='read'&&charge>20;$('#memoryLed').classList.toggle('on',lit);$('#ledLabel').textContent=lit?'LED 켜짐':'LED 꺼짐';}
+ function render(){let hash=location.hash.slice(1)||'home';if(hash==='main'){history.replaceState(null,'',location.pathname+location.search+'#'+(currentRoute||'home'));$('#main').focus();return}let [route,id]=hash.split('/');if(!tabs.some(t=>t[0]===route)){route='home';history.replaceState(null,'',location.pathname+location.search+'#home')}currentRoute=route+(id?'/'+id:'');clearInterval(memoryTimer);memoryTimer=null;window.HNRVoice?.unmount();$('#navLinks').innerHTML=tabs.map(([k,t])=>`<a href="#${k}" ${k===route?'aria-current="page"':''}>${t}</a>`).join('');$('#main').innerHTML=route==='home'?home():route==='learn'?learn(id):route==='ram'?ram():route==='welcome'?welcome():practice();document.title=`HNR Tech Inc. | ${tabs.find(t=>t[0]===route)[1]}`;if(route==='ram'){charge=0;memoryMode='ready';drawMemory()}if(route==='practice')window.HNRVoice?.mount($('#voiceTool'));window.scrollTo({top:0,behavior:'instant'});}
+ document.addEventListener('click',e=>{const audienceBtn=e.target.closest('[data-audience]');if(audienceBtn){audience=audienceBtn.dataset.audience;const area=audienceBtn.closest('.audience'),s=stations.find(s=>s.id===area.dataset.station);area.querySelectorAll('[data-audience]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.audience===audience));area.querySelector('.audience-output').textContent='“'+s.audience[audience]+'”';}
+ const partBtn=e.target.closest('[data-part]');if(partBtn){part=partBtn.dataset.part;document.querySelectorAll('[data-part]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.part===part));$('#partDetail').innerHTML=partDetail(parts.find(p=>p.id===part));}
+ const memoryBtn=e.target.closest('[data-memory]');if(memoryBtn)memory(memoryBtn.dataset.memory);
+ if(e.target.closest('#nextScenario')){scenarioIndex=(scenarioIndex+1)%scenarios.length;$('#scenarioCount').textContent=`상황 ${scenarioIndex+1} / ${scenarios.length}`;$('#scenarioTitle').textContent=scenarios[scenarioIndex][0];$('#scenarioText').textContent=scenarios[scenarioIndex][1];}
+ if(e.target.closest('.skip')){e.preventDefault();$('#main').focus();$('#main').scrollIntoView({block:'start'});}
+ });
+ window.addEventListener('hashchange',render);window.HNRVoice?.banner($('#voiceBanner'));render();
+})();
+</script></body></html>
