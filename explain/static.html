@@ -280,6 +280,8 @@ html{color-scheme:light}
 .world-tag{top:101px;font-size:22px;line-height:1.2;padding:4px 10px;background:#eef5ff;border:1px solid #b8cce5;border-radius:6px}
 .stage-foot,#app-credit{padding:6px 12px;border:1px solid #b8cce5;background:#eef5ff;border-radius:6px;color:#132742!important;max-width:1000px}.stage-number{color:#0054aa}
 .sim-controls small{color:#132742}.sim-controls label>output{color:#0054aa}.mobile-hint{color:#132742}
+.lab-menu{position:relative}.lab-menu summary{cursor:pointer;font-weight:700;padding:6px 9px;color:#0054aa;list-style:none;border-radius:10px;background:#edf5ff;white-space:nowrap}.lab-menu summary::-webkit-details-marker{display:none}.lab-menu-list{position:absolute;right:0;top:calc(100% + 10px);width:360px;max-width:calc(100vw - 24px);background:#fff;border:2px solid #8cafcf;border-radius:15px;padding:10px;display:grid;gap:5px}.lab-menu-list a{display:flex;align-items:flex-start;gap:12px;padding:12px!important;font-size:15px;line-height:1.5;border-radius:9px;color:#132742}.lab-menu-list a:hover{background:#edf5ff}.lab-menu-list span{color:#0066cc;font-weight:750}.lab-menu summary:focus-visible{outline:3px solid #0066cc;outline-offset:3px}.sim-controls button[aria-pressed="true"]{background:#0066cc;color:#fff}.sim-controls button:disabled{opacity:.6;cursor:default}
+@media(max-width:700px) and (orientation:portrait){.lab-menu{position:static}.lab-menu summary{font-size:11px;padding:5px}.lab-menu-list{top:auto;bottom:calc(100% + 8px);right:0;width:calc(100vw - 20px);max-height:52vh;overflow:auto}.lab-menu-list a{font-size:15px}}
 #kwbar .kw:not(.cur){color:#132742!important;background:#e8f1ff!important;border:1px solid #b8cce5}
 @media(max-width:700px) and (orientation:portrait){.brand{top:20px;gap:9px;font-size:21px}.brand-logo{width:40px;height:40px}.world-tag{display:table;font-size:13px;padding:5px 9px}.stage-foot,#app-credit{display:table;max-width:100%;padding:7px 9px}.gate{top:79px}.slide.is-on{padding-top:118px}}
 </style></head><body><div id="viewport"><div id="stage"><div id="gridov"></div></div></div><script>/* ═══════════════════════════════════════════════════════════════
@@ -1038,32 +1040,43 @@ html{color-scheme:light}
   };
   function magnet(x,y,attrs='') { return `<g transform="translate(${x} ${y})" ${attrs}><rect x="-38" y="-45" width="76" height="90" rx="10" fill="#dfeeea" stroke="${C.field}" stroke-width="4"/><path d="M-37 0H37" stroke="${C.field}" stroke-width="3"/>${txt(0,-11,'S',30,C.field)}${txt(0,35,'N',30,C.field)}</g>`; }
   function tubes() {
-    return svg('같은 자석을 같은 높이에서 떨어뜨리면 구리관 속 자석이 더 천천히 내려가며 두 관 모두 통과한다. 안이 보이게 그린 비교 모형.', id=>`<defs><clipPath id="${id}-acrylic-clip"><rect x="205" y="90" width="190" height="405"/></clipPath><clipPath id="${id}-copper-clip"><rect x="705" y="90" width="190" height="405"/></clipPath></defs>${txt(300,57,'아크릴관',38,C.muted)}${txt(800,57,'구리관',38,C.copper)}<rect x="205" y="90" width="190" height="405" rx="22" fill="#f1f8fb" stroke="#9cb9c9" stroke-width="6"/><rect x="705" y="90" width="190" height="405" rx="22" fill="#fff3e9" stroke="${C.copper}" stroke-width="8"/><path d="M240 102V479M360 102V479" stroke="#e3eff4" stroke-width="3"/><path d="M735 102V479M865 102V479" stroke="#eac3a7" stroke-width="4"/><g clip-path="url(#${id}-acrylic-clip)">${magnet(300,146,'data-fall-acrylic')}</g><g clip-path="url(#${id}-copper-clip)">${magnet(800,146,'data-fall-copper')}</g>${txt(300,544,'같은 높이에서 출발',30,C.muted).replace('<text ','<text data-fall-acrylic-status ')}${txt(800,544,'같은 높이에서 출발',30,C.muted).replace('<text ','<text data-fall-copper-status ')}`);
+    return svg('구리관 한 개의 바깥 모습. 불투명한 관 안의 자석은 보이지 않으므로 놓은 순간과 출구에서 나온 순간을 관찰한다.', id=>`
+      ${txt(550,47,'놓기 → 기다리기 → 출구 확인',36)}
+      ${magnet(550,105,'data-fall-copper')}
+      <rect x="445" y="156" width="210" height="254" rx="15" fill="#c78a5d" stroke="${C.copper}" stroke-width="7"/>
+      <ellipse cx="550" cy="156" rx="105" ry="18" fill="#8d5736" stroke="${C.copper}" stroke-width="5"/>
+      <path d="M425 522H675" stroke="#17324d" stroke-width="7" stroke-linecap="round"/>
+      ${txt(205,210,'구리관 1개',36,C.copper)}${txt(205,260,'관 벽은 불투명해요',30)}
+      ${txt(870,220,'관 안의 자석은',30)}${txt(870,265,'겉에서 안 보여요',30)}
+      ${arrow(id,735,315,630,450,'ink',5)}${txt(885,370,'출구와 받침을 봐요',29)}
+      ${txt(550,555,'놓기 전',27,C.ink).replace('<text ','<text data-fall-copper-status ')}
+    `);
   }
   function fallSetup(root,c) {
-    const a=root.querySelector('[data-fall-acrylic]'), b=root.querySelector('[data-fall-copper]'), button=root.querySelector('[data-fall-replay]'), aStatus=root.querySelector('[data-fall-acrylic-status]'), bStatus=root.querySelector('[data-fall-copper-status]');
-    if(!a||!b)return;
-    let elapsed=0, running=!c.reduced&&!c.still;
-    function render(t, staticComparison=false) {
-      const ya=146+300*t*t,yb=146+82*(t-.137*(1-Math.exp(-t/.137)));
-      const passedA=ya>=540,passedB=yb>=540;
-      a.setAttribute('transform',`translate(300 ${ya.toFixed(2)})`);b.setAttribute('transform',`translate(800 ${yb.toFixed(2)})`);
-      a.setAttribute('visibility',passedA?'hidden':'visible');b.setAttribute('visibility',passedB?'hidden':'visible');
-      const status=(passed)=>staticComparison?`같은 시간: ${passed?'통과 ↓':'낙하 중 ↓'}`:t===0?'같은 높이에서 출발':passed?'통과 ↓':'낙하 중 ↓';
-      if(aStatus)aStatus.textContent=status(passedA);if(bStatus)bStatus.textContent=status(passedB);
-      return passedA&&passedB;
+    const b=root.querySelector('[data-fall-copper]'), button=root.querySelector('[data-fall-replay]'), status=root.querySelector('[data-fall-copper-status]');
+    if(!b)return;
+    let elapsed=0, running=!c.reduced&&!c.still, snapshot=0;
+    function render(t) {
+      const y=Math.min(476,105+90*(t-.15*(1-Math.exp(-t/.15))));
+      b.setAttribute('transform',`translate(550 ${y.toFixed(2)})`);
+      b.dataset.position=y.toFixed(2);
+      if(status)status.textContent=y>=476?'출구 통과 · 받침에 도착':t===0?'놓기 전':'놓은 뒤 · 출구에 나타나는 순간을 기다려요';
+      return y>=476;
     }
-    render(c.reduced||c.still?1.2:0,Boolean(c.reduced||c.still));
-    const replay=()=>{elapsed=0;running=true;render(0);if(c.reduced||c.still){render(1.2,true);running=false;}};
+    render(0);
+    const replay=()=>{
+      if(c.reduced||c.still){snapshot=(snapshot+1)%3;render(snapshot===1?2:snapshot===2?5:0);running=false;}
+      else{elapsed=0;running=true;render(0);}
+    };
     if(button){button.addEventListener('click',replay);c.onDispose(()=>button.removeEventListener('click',replay));}
     c.loop((t,dt)=>{if(!running)return;elapsed+=dt;if(render(elapsed))running=false;});
   }
   const eddy = {
     slug:'eddy',title:'구리관 속 느려지는 자석',gate:'관문 5',lead:'떨어지는 자석에 걸리는 전자기 브레이크',minutes:'약 1분',keywords:['느려진 낙하','맴돌이 전류','움직임을 방해하는 힘'],
     scenes:[
-      {title:'구리관 속 느려지는 자석',kicker:'실험 뒤 1분 설명',body:'<p>같은 자석을 떨어뜨렸는데,</p><p><b>구리관</b>에서는<br>왜 천천히 내려왔을까요?</p><button data-interactive data-fall-replay>같이 다시 떨어뜨리기</button>',visual:tubes(),takeaway:'구리관에서는 자석이 느리게, 계속 내려와요.',notes:'같은 자석을 같은 높이에서 떨어뜨리면 아크릴관에서는 빨리, 구리관에서는 천천히 내려와요. 구리관에 붙어서 멈춘 걸까요? 실제로는 아래로 계속 내려오고 있어요.',keyword:0,setup:fallSetup},
+      {title:'구리관 속 느려지는 자석',kicker:'실험 뒤 1분 설명',body:'<p>자석을 놓았어요.</p><p><b>구리관의 출구</b>에는<br>언제 나타날까요?</p><button data-interactive data-fall-replay>출구 관찰 다시 보기</button>',visual:tubes(),takeaway:'놓은 순간과 출구에 나온 순간을 함께 관찰해요.',notes:'구리관 하나로 하는 실험이에요. 자석을 놓은 순간과 아래 출구로 나온 순간을 함께 관찰해요. 관은 불투명하므로 겉에서 안의 움직임을 직접 볼 수는 없어요. 자석은 관에 붙어 멈춘 것이 아니라 제동력을 받으며 내려옵니다. 기다리는 동안 다음 자석을 넣지 않아요. 그림의 움직임은 관찰 순서를 보여 주며 실제 낙하 시간을 예측하지 않습니다.',keyword:0,setup:fallSetup},
       {title:'세 가지 순서로 설명해요',kicker:'오늘의 핵심',body:'<p>자석이 <b>움직이고</b>,</p><p>구리 안에 <b>전류</b>가 생기고,</p><p>낙하를 방해하는<br><b>힘</b>이 생겨요.</p>',visual:concepts(['움직이는 자석','맴돌이 전류','브레이크 힘']),takeaway:'움직임 → 전류 → 움직임을 방해하는 힘',notes:'세 단계로 생각하면 쉬워요. 자석이 움직이고, 구리 안에 전류가 생겨요. 그 전류가 만든 자기장이 자석의 움직임을 방해하는 힘을 만들어요.',keyword:0},
-      {title:'구리에 붙은 것이 아니에요',kicker:'관찰을 정확히 말하기',body:'<p>구리는 철처럼<br>자석에 강하게 붙지 않아요.</p><p>그래도 <b>움직이는 자석</b>은<br>구리관에서 느려져요.</p><button data-interactive data-fall-replay>낙하 비교 다시 보기</button>',visual:tubes(),takeaway:'“붙어서 멈춤”이 아니라 “힘을 받아 느려짐”이에요.',notes:'구리는 철처럼 자석에 강하게 붙는 물질이 아니에요. 또 자석이 관에 붙어 멈춰 있는 것도 아니고요. 자석이 구리관 안에서 움직일 때 나타나는 현상이라는 점을 기억해 주세요.',keyword:0,setup:fallSetup},
+      {title:'구리에 붙은 것이 아니에요',kicker:'관찰을 정확히 말하기',body:'<p>구리는 철처럼<br>자석에 강하게 붙지 않아요.</p><p>그래도 <b>움직이는 자석</b>은<br>구리관에서 느려져요.</p><button data-interactive data-fall-replay>출구 관찰 다시 보기</button>',visual:tubes(),takeaway:'“붙어서 멈춤”이 아니라 “힘을 받아 느려짐”이에요.',notes:'구리는 철처럼 자석에 강하게 붙는 물질이 아니에요. 또 자석이 관에 붙어 멈춰 있는 것도 아니고요. 자석이 구리관 안에서 움직일 때 나타나는 현상이라는 점을 기억해 주세요.',keyword:0,setup:fallSetup},
       {title:'구리 안에서 전류가 돌아요',kicker:'맴돌이 전류가 생기는 까닭',body:'<p>자석이 내려오면<br>구리를 통과하는<br><b>자기장이 변해요.</b></p><p>그 변화 때문에<br>구리 안에 전류가 생겨요.</p>',visual:svg('아래로 움직이는 자석 때문에 구리 부분을 통과하는 자기장이 변해 맴돌이 전류가 생긴다',id=>`${txt(550,58,'자기장의 변화 → 맴돌이 전류',36)}<rect x="240" y="115" width="420" height="370" rx="28" fill="#fff3e9" stroke="${C.copper}" stroke-width="7"/>${magnet(450,220)}${arrow(id,780,150,780,310,'ink',9)}${txt(875,225,'낙하',34)}<g data-pop="1"><ellipse cx="450" cy="383" rx="194" ry="47" fill="none" stroke="${C.current}" stroke-width="12"/><ellipse cx="450" cy="383" rx="194" ry="47" fill="none" stroke="#fff3e9" stroke-width="5" stroke-dasharray="5 21"/>${line(650,383,740,400,C.current,4)}${txt(890,390,'구리 속을 도는',32,C.current)}${txt(890,435,'맴돌이 전류',36,C.current)}</g>${txt(550,542,'구리관의 한 부분을 확대해 단순화한 그림',30,C.muted)}`),takeaway:'건전지 없이도, 자기장이 변하면 전류가 생길 수 있어요.',notes:'자석이 내려오면 구리관의 각 부분을 통과하는 자기장이 변해요. 그 변화가 구리 안에서 빙글빙글 도는 전류를 만들어요. 이 전류를 맴돌이 전류라고 해요. 건전지를 연결하지 않았는데도 전류가 생긴 거예요.',keyword:1},
       {title:'아래로 떨어지면서, 위로 힘을 받아요',kicker:'전자기 브레이크',body:'<p>맴돌이 전류가 만든 자기장은<br><b>떨어지는 움직임을 방해해요.</b></p><p>중력은 여전히 아래쪽!<br>자석은 느리게 내려와요.</p>',visual:svg('거의 일정한 속도로 낙하하는 자석에 아래쪽 중력과 위쪽 자기력이 작용한다',id=>`${txt(550,58,'거의 일정한 속도로 떨어질 때',34)}<rect x="400" y="105" width="290" height="370" rx="22" fill="#fff3e9" stroke="${C.copper}" stroke-width="8"/>${magnet(545,275)}${arrow(id,255,180,255,380,'ink',10)}${txt(160,265,'중력',34)}${txt(160,310,'아래로',32)}${arrow(id,825,380,825,180,'force',10)}${txt(950,265,'자기력',34,C.force)}${txt(950,310,'위로',32,C.force)}${arrow(id,545,355,545,450,'field',7)}${txt(550,540,'힘이 균형을 이뤄도, 이미 움직이던 자석은 계속 내려가요.',30,C.muted)}`),takeaway:'공중에 멈추는 현상이 아니라, 낙하를 늦추는 현상이에요.',notes:'이 전류가 만든 자기장 때문에 자석에는 위쪽 힘이 생겨요. 중력은 아래로 작용하죠. 낙하 속도가 거의 일정해질 때는 두 힘의 크기가 거의 같아요. 하지만 이미 움직이고 있던 자석은 멈추지 않고 계속 내려가요. 힘이 균형이면 반드시 정지한다는 뜻은 아니에요.',keyword:2},
       {title:'구리관은 전자기 브레이크',kicker:'한 문장으로 설명하기',body:'<p><b>움직이는 자석</b>이<br>구리 안에 전류를 만들고,</p><p>그 전류가 만든 힘이<br>자석의 낙하를 늦춰요.</p>',visual:concepts(['자기장 변화','전류 발생','낙하가 느려짐']),takeaway:'“움직이는 자석이 만든 전류가, 다시 자석의 움직임을 방해해요.”',notes:'구리관 안에서 움직이는 자석이 전류를 만들고, 그 전류가 만든 힘이 자석의 낙하를 늦춰요. 자석과 관이 서로 움직이지 않고 외부 자기장도 변하지 않으면 이런 맴돌이 전류는 유지되지 않아요. 낙하 중 에너지 일부는 구리에서 열로 바뀌어요.',keyword:2}
@@ -1602,75 +1615,62 @@ html{color-scheme:light}
     notes: '황금나침반 관문의 자기장 시험 장치예요. 왼쪽의 위쪽 화살표는 지구 자기장, 초록 화살표는 코일 자기장, 보라 화살표는 두 자기장을 더한 결과입니다. 오른쪽 나침반 N극은 보라 화살표와 정확히 같은 방향이에요. 상대 세기를 높일수록 더 크게 기울고, 전류 방향을 바꾸면 반대쪽으로 기울어요. 끄거나 세기를 0으로 하면 북쪽으로 돌아옵니다. 위에서 보았을 때 지구 자기장은 북쪽, 코일 자기장은 동서 방향인 배치만 다룬 교육용 모형입니다. 실제 전류나 각도 측정값은 아니며 바늘의 진동은 생략했어요. 흐름 표시 재생과 멈춤은 초록 화살표의 표시만 바꾸고 물리 조건은 바꾸지 않아요.', setup: compassSetup
   });
 
-  const eddyVisual = graphic('선택한 관과 기준 아크릴관에 같은 물체를 같은 높이에서 떨어뜨려 비교하는 실험', id => `
-    ${text(310,45,'선택한 관: 구리',31,COLORS.ink,'data-live-eddy-material-label')}${text(800,45,'비교관: 아크릴',31)}
-    <rect data-live-eddy-tube x="235" y="102" width="150" height="318" rx="18" fill="#fff4e9" stroke="${COLORS.copper}" stroke-width="7"/>
-    <rect x="725" y="102" width="150" height="318" rx="18" fill="#f1f8ff" stroke="#a7c1db" stroke-width="6"/>
-    <path d="M260 110V408M360 110V408M750 110V408M850 110V408" fill="none" stroke="#d9e3ed" stroke-width="3"/>
-    <path d="M215 497H405M705 497H895" stroke="#a4b7c9" stroke-width="5" stroke-linecap="round"/>
-    <g data-live-eddy-selected transform="translate(310 145)"><rect data-live-eddy-body x="-25" y="-25" width="50" height="50" rx="7" fill="#d7eaf4" stroke="${COLORS.ink}" stroke-width="3"/>${text(0,8,'N',25,COLORS.ink,'data-live-eddy-symbol')}</g>
-    <g data-live-eddy-reference transform="translate(800 145)"><rect data-live-eddy-body x="-25" y="-25" width="50" height="50" rx="7" fill="#d7eaf4" stroke="${COLORS.ink}" stroke-width="3"/>${text(0,8,'N',25,COLORS.ink,'data-live-eddy-symbol')}</g>
-    <g data-live-eddy-current opacity="0"><ellipse cx="310" cy="230" rx="72" ry="20" fill="none" stroke="${COLORS.current}" stroke-width="6"/><ellipse cx="310" cy="260" rx="72" ry="20" fill="none" stroke="${COLORS.current}" stroke-width="6"/></g>
-    ${arrow(id, 130, 185, 130, 278, 'ink')}${text(130,323,'중력',26)}
-    ${arrow(id, 485, 286, 485, 200, 'force', 'data-live-eddy-brake opacity="0"')}${text(505,335,'제동력',26,COLORS.force,'data-live-eddy-brake-label opacity="0"')}
-    ${text(310,544,'같은 높이에서 출발',25,COLORS.muted,'data-live-eddy-selected-status')}${text(800,544,'같은 높이에서 출발',25,COLORS.muted,'data-live-eddy-reference-status')}
+  const eddyVisual = graphic('구리관 하나에서 자석이 낙하하는 설명 모형. 관 안 보기로 내부를 드러내거나 실제처럼 불투명하게 볼 수 있다.', id => `
+    ${text(550,43,'구리관 한 개 · 낙하 관찰',34)}
+    ${text(550,84,'관 안 보기: 원리를 위해 내부를 드러낸 모형',26,COLORS.ink,'data-live-eddy-view-label')}
+    <g data-live-eddy-selected transform="translate(550 145)"><rect x="-26" y="-26" width="52" height="52" rx="7" fill="#d7eaf4" stroke="${COLORS.ink}" stroke-width="3"/>${text(0,9,'N',27)}</g>
+    <rect data-live-eddy-tube x="450" y="120" width="200" height="310" rx="16" fill="#c88b5b" fill-opacity=".16" stroke="${COLORS.copper}" stroke-width="7"/>
+    <g data-live-eddy-current opacity="0"><ellipse cx="550" cy="230" rx="100" ry="22" fill="none" stroke="${COLORS.current}" stroke-width="7"/><ellipse cx="550" cy="275" rx="100" ry="22" fill="none" stroke="${COLORS.current}" stroke-width="7"/></g>
+    <path d="M420 510H680" stroke="${COLORS.ink}" stroke-width="6" stroke-linecap="round"/>
+    <g data-live-eddy-gravity opacity="0">${arrow(id,260,215,260,305,'ink')}${text(260,355,'중력 ↓',32)}</g>
+    ${arrow(id,820,305,820,215,'force','data-live-eddy-brake opacity="0"')}${text(825,355,'제동력 ↑',32,COLORS.force,'data-live-eddy-brake-label opacity="0"')}
+    ${text(550,548,'설명용 모형 · 실제 길이·시간·힘의 비율 아님',25,COLORS.ink)}
   `);
   function eddySetup(root, c) {
-    const get = s => root.querySelector(s), material = get('[data-live-eddy-material]'), object = get('[data-live-eddy-object]'), run = get('[data-live-eddy-run]');
-    let a = { y:145, v:0 }, b = { y:145, v:0 }, running = false, elapsed = 0, snapshot = false;
-    const end = 470, g = 460, damping = 4.2;
-    function resetState() { a = { y:145, v:0 }; b = { y:145, v:0 }; running = false; elapsed = 0; snapshot = false; }
-    function step(dt) {
-      const braking = material.value === 'copper' && object.value === 'magnet';
-      // Small equal time steps avoid different numerical errors in the two lanes.
-      let remain = dt;
-      while (remain > 1e-9) {
-        const h = Math.min(1 / 180, remain); remain -= h;
-        for (const [state, useBrake] of [[a, braking], [b, false]]) {
-          if (state.y >= end) continue;
-          const k = useBrake && state.y < 445 ? damping : 0;
-          if (k) {
-            const e = Math.exp(-k * h), terminal = g / k, oldV = state.v;
-            state.y += terminal * h + (oldV - terminal) * (1 - e) / k;
-            state.v = terminal + (oldV - terminal) * e;
-          } else { state.y += state.v * h + .5 * g * h * h; state.v += g * h; }
-          if (state.y >= end) { state.y = end; state.v = 0; }
-        }
-        elapsed += h;
+    const get=s=>root.querySelector(s), run=get('[data-live-eddy-run]'), inside=get('[data-live-eddy-inside]');
+    const end=480, g=460, damping=4.2;
+    let y=145,v=0,running=false,started=false,snapshot=false;
+    function resetState(){y=145;v=0;running=false;started=false;snapshot=false;}
+    function step(dt){
+      let remain=dt;
+      while(remain>1e-9&&y<end){
+        const h=Math.min(1/180,remain);remain-=h;
+        const k=y<446?damping:0;
+        if(k){const e=Math.exp(-k*h),terminal=g/k,oldV=v;y+=terminal*h+(oldV-terminal)*(1-e)/k;v=terminal+(oldV-terminal)*e;}
+        else{y+=v*h+.5*g*h*h;v+=g*h;}
+        if(y>=end){y=end;v=0;}
       }
     }
-    function render() {
-      const copper = material.value === 'copper', magnet = object.value === 'magnet', active = copper && magnet && a.v > 0 && a.y < 445;
-      const tube = get('[data-live-eddy-tube]'); tube.setAttribute('fill', copper ? '#fff4e9' : '#f1f8ff'); tube.setAttribute('stroke', copper ? COLORS.copper : '#a7c1db');
-      get('[data-live-eddy-material-label]').textContent = '선택한 관: ' + (copper ? '구리' : '아크릴');
-      root.querySelectorAll('[data-live-eddy-symbol]').forEach(el => el.textContent = magnet ? 'N' : '●');
-      root.querySelectorAll('[data-live-eddy-body]').forEach(el => el.setAttribute('fill', magnet ? '#d7eaf4' : '#d9dde2'));
-      [['selected', a, 310], ['reference', b, 800]].forEach(([name, state, x]) => {
-        const el = get('[data-live-eddy-' + name + ']'); el.setAttribute('transform', `translate(${x} ${state.y.toFixed(3)})`); el.dataset.position = state.y.toFixed(3);
-        get('[data-live-eddy-' + name + '-status]').textContent = state.y >= end ? '관 통과 · 받침에 도착' : elapsed === 0 ? '같은 높이에서 출발' : (snapshot ? '같은 시간: ' : '') + (name === 'selected' && copper && magnet ? '천천히 낙하 중' : '낙하 중');
-      });
-      get('[data-live-eddy-current]').setAttribute('opacity', active ? '.8' : '0'); get('[data-live-eddy-current]').setAttribute('transform', `translate(0 ${(clamp(a.y,170,385)-245).toFixed(2)})`);
-      get('[data-live-eddy-brake]').setAttribute('opacity', active ? '1' : '0'); get('[data-live-eddy-brake-label]').setAttribute('opacity', active ? '1' : '0');
-      run.textContent = running ? '일시 정지' : (a.y >= end && b.y >= end) ? '다시 떨어뜨리기' : still(c) && snapshot ? '끝까지 보기' : elapsed > 0 ? '계속 떨어뜨리기' : '함께 떨어뜨리기';
-      run.setAttribute('aria-pressed', String(running));
-      get('[data-live-eddy-model-status]').textContent = copper && magnet ? '구리 + 움직이는 자석: 전자기 제동' : '이 조건에서는 전자기 제동 없음';
+    function render(){
+      const falling=started&&y<end,braking=falling&&v>0&&y<446,cutaway=inside.checked;
+      const magnet=get('[data-live-eddy-selected]');magnet.setAttribute('transform',`translate(550 ${y.toFixed(3)})`);magnet.dataset.position=y.toFixed(3);
+      get('[data-live-eddy-tube]').setAttribute('fill-opacity',cutaway?'.16':'1');
+      get('[data-live-eddy-view-label]').textContent=cutaway?'관 안 보기: 원리를 위해 내부를 드러낸 모형':'실제 관 벽은 불투명 · 출구에 나타나는 때를 봐요';
+      get('[data-live-eddy-current]').setAttribute('opacity',braking&&cutaway?'.9':'0');
+      get('[data-live-eddy-current]').setAttribute('transform',`translate(0 ${(clamp(y,180,380)-252).toFixed(2)})`);
+      get('[data-live-eddy-gravity]').setAttribute('opacity',falling?'1':'0');
+      const brake=get('[data-live-eddy-brake]');brake.setAttribute('opacity',braking?'1':'0');brake.setAttribute('y2',String(305-Math.min(90,90*damping*v/g)));
+      get('[data-live-eddy-brake-label]').setAttribute('opacity',braking?'1':'0');
+      run.textContent=running?'화면 일시 정지':y>=end?'다시 떨어뜨리기':still(c)&&snapshot?'출구까지 보기':started?'계속 보기':'자석 놓기';
+      run.setAttribute('aria-pressed',String(running));
+      get('[data-live-eddy-model-status]').textContent=!started?'입구에서 대기 · 자석을 놓아 보세요.':y>=end?'출구 통과 · 받침에 도착했어요.':running?'관을 통과하는 중 · 출구를 관찰해요.':'시간을 멈춘 설명 화면 · 실제 자석이 공중에 멈춘다는 뜻은 아니에요.';
     }
-    function play() {
-      if (running) { running = false; render(); return; }
-      if (a.y >= end && b.y >= end) resetState();
-      if (still(c)) { if (!snapshot) { step(1.2); snapshot = true; } else { for (let i = 0; i < 900 && (a.y < end || b.y < end); i++) step(1 / 60); } render(); return; }
-      running = true; render();
+    function play(){
+      if(running){running=false;render();return;}
+      if(y>=end)resetState();started=true;
+      if(still(c)){if(!snapshot){step(1.2);snapshot=true;}else{for(let i=0;i<900&&y<end;i++)step(1/60);}render();return;}
+      running=true;render();
     }
-    listen(root, c, '[data-live-eddy-run]', 'click', play);
-    listen(root, c, '[data-live-eddy-reset]', 'click', () => { material.value = 'copper'; object.value = 'magnet'; resetState(); render(); });
-    listen(root, c, '[data-live-eddy-material], [data-live-eddy-object]', 'change', () => { resetState(); render(); });
-    render(); c.loop((t, dt) => { if (!running) return; step(Math.min(dt, .15)); if (a.y >= end && b.y >= end) running = false; render(); });
+    listen(root,c,'[data-live-eddy-run]','click',play);
+    listen(root,c,'[data-live-eddy-reset]','click',()=>{resetState();render();});
+    listen(root,c,'[data-live-eddy-inside]','change',render);
+    render();c.loop((t,dt)=>{if(!running)return;step(Math.min(dt,.15));if(y>=end)running=false;render();});
   }
   insert('eddy', {
-    kind: 'sim', title: '자이로드롭 통로를 시험해요', kicker: '관문 5 · 터널지기 할아버지의 낙하 실험', keyword: 2,
-    body: '<p>같은 물체를 같은 높이에서!<br><b>관의 재질</b>을 바꾸어 비교해요.</p><div class="sim-controls" data-interactive><label>선택한 관 <select data-live-eddy-material aria-label="낙하관 재질"><option value="copper">구리관</option><option value="acrylic">아크릴관</option></select></label><label>떨어뜨릴 물체 <select data-live-eddy-object aria-label="떨어뜨릴 물체"><option value="magnet">자석</option><option value="plain">자석이 아닌 물체</option></select></label><div><button data-live-eddy-run>함께 떨어뜨리기</button> <button data-live-eddy-reset>조건 초기화</button></div><p data-live-eddy-model-status>구리 + 움직이는 자석: 전자기 제동</p></div>',
-    visual: eddyVisual, takeaway: '구리관을 통과하는 자석은 제동력을 받아 천천히 내려와요. 관 안에 멈추지는 않아요.',
-    notes: '터널지기 할아버지의 자이로드롭 통로예요. 오른쪽은 비교 기준인 아크릴관입니다. 같은 물체를 같은 높이에서 동시에 놓아요. 왼쪽이 구리관이고 물체가 자석일 때만 맴돌이 전류가 생겨 위쪽 제동력이 나타납니다. 왼쪽도 아크릴관으로 바꾸거나 물체를 자석이 아닌 것으로 바꾸면 둘은 같이 떨어져요. 크기와 질량이 같은 물체, 공기 저항과 마찰을 생략한 교육용 모형입니다. 구리 속 자석의 제동력을 속도에 비례하게 둔 단순 모형이며 실제 재료의 낙하 시간이나 속도를 측정한 값이 아닙니다. 모든 물체는 관을 완전히 빠져나와 아래 받침에 도착합니다. 움직임 줄이기 모드에서는 첫 버튼이 같은 시간 뒤의 비교 장면을, 다음 버튼이 끝까지 통과한 결과를 보여 줍니다.', setup: eddySetup
+    kind:'sim',title:'구리관 안에서는 무슨 일이?',kicker:'관문 5 · 자기 제동 점검',keyword:2,
+    body:'<p><b>자석을 놓고</b><br>출구에 나올 때까지 관찰해요.</p><div class="sim-controls" data-interactive><label><input type="checkbox" data-live-eddy-inside checked> 관 안 보기 · 설명 모형</label><div><button data-live-eddy-run>자석 놓기</button> <button data-live-eddy-reset>처음 상태</button></div><p data-live-eddy-model-status>입구에서 대기 · 자석을 놓아 보세요.</p></div>',
+    visual:eddyVisual,takeaway:'움직이는 자석 → 유도 전류 → 낙하를 늦추는 자기력',
+    notes:'현장에서는 구리관 한 개를 사용합니다. 먼저 자석을 관에 가만히 대 보고 철처럼 달라붙는지 확인해요. 관 아래 받침을 준비한 뒤 자석을 놓은 순간과 출구로 나오는 순간을 관찰합니다. 실제 구리관은 불투명하므로 관 속 자석을 겉에서 볼 수 없습니다. 관 안 보기를 켜면 설명을 위해 내부와 유도 전류를 드러내며, 끄면 실제처럼 가립니다. 낙하를 늦추는 힘을 속도에 비례하게 둔 교육용 모형으로 실제 관의 낙하 시간이나 힘을 계산한 값은 아닙니다. 화면 일시 정지는 시간을 멈춰 보는 기능이며 실제 자석이 관 안에 멈춘다는 뜻은 아닙니다. 움직임 줄이기에서는 자석 놓기 → 출구까지 보기 순서로 중간과 끝 상태를 봅니다. 자석이 나오지 않으면 다음 자석을 넣지 않고 담당 교사를 부릅니다.',setup:eddySetup
   });
 })();
 
@@ -1682,7 +1682,7 @@ html{color-scheme:light}
     plasma:{gate:3,place:'암실',npc:'깜빡이',skill:'관찰력',mission:'잡는 손의 위치와 빛나는 구간의 관계를 찾으세요.',line:'쉿… 끝을 잡았을 때와 가운데를 잡았을 때, 빛이 어디까지 남나요?',clue:'가운데를 잡았을 때, 볼과 손 사이에 빛이 남는 그림을 기억하세요.',next:'train'},
     train:{gate:4,place:'터널 열차',npc:'찌릿 기관사',skill:'방향 감각',mission:'열차를 움직이고 전류 방향을 바꿔 보세요.',line:'열차 출발 시험! 다음에는 황금 나침반도 깨워 봅시다.',clue:'열차와 나침반, 전류 방향에 따른 변화를 관찰하세요.',next:'compass'},
     compass:{gate:4,place:'황금 나침반',npc:'찌릿 기관사',skill:'방향 감각',mission:'전류를 켰을 때 N극이 가리키는 방향을 찾으세요.',line:'실험대의 N극을 잘 봐 두세요. 황금 나침반도 같은 원리로 깨어납니다.',clue:'현장 실험대에서 관찰한 N극 방향을 기준으로 문을 고르세요.',next:'eddy'},
-    eddy:{gate:5,place:'자이로드롭 통로',npc:'터널지기 할아버지',skill:'인내심',mission:'자석이 천천히 내려오는 통로를 찾으세요.',line:'급할수록 돌아가라 했지. 두 통로에 같은 자석을 떨어뜨려 보시게.',clue:'자석이 천천히 내려온 구리 ROAD로 가시게.',next:'dram'},
+    eddy:{gate:5,place:'자이로드롭 통로',npc:'터널지기 할아버지',skill:'자기 제동',mission:'구리관에서 자석을 놓고 출구에 나오는 때를 관찰하세요.',line:'가만히 대면 붙지 않는데, 관 안으로 놓으면 어떨까? 출구를 함께 살펴보세.',clue:'제동 설정은 ‘움직임을 늦춘다’. 확인 뒤 중앙 제어실로 가요.',next:'dram'},
     dram:{gate:6,place:'최종 면접실',npc:'소장 · 비트',skill:'기억력',mission:'1비트 기억 회로로 비트에게 합격을 기억시키세요.',line:'마지막 시험일세. 안내 로봇 비트에게 합격을 기억시켜 보게.',clue:'저장 상태 하나에 합격이라는 뜻을 붙여요. 기억을 유지하려면 다시 써야 해요.',next:'index'}
   };
   window.HNR_DECKS.forEach(d=>{
@@ -1702,6 +1702,718 @@ html{color-scheme:light}
     d.simIndex=d.scenes.findIndex(s=>s.kind==='sim')+1;
   });
 })();
+
+(function () {
+  'use strict';
+  // Four qualitative, manipulable explanations. Preserve the original first sim.
+  const C={ink:'#102e54',blue:'#0066cc',pale:'#edf5ff',line:'#bed5f2',orange:'#bd4d24',gold:'#ffd25c',green:'#086a4b'};
+  const text=(x,y,s,size=32,color=C.ink,attrs='')=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Arial,'Malgun Gothic',sans-serif" font-size="${size}" font-weight="650" fill="${color}" ${attrs}>${s}</text>`;
+  const box=(x,y,w,h,fill=C.pale,attrs='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="22" fill="${fill}" stroke="${C.line}" stroke-width="3" ${attrs}/>`;
+  const circle=(x,y,r,fill,attrs='')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" ${attrs}/>`;
+  const path=(d,color=C.blue,width=7,attrs='')=>`<path d="${d}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" ${attrs}/>`;
+  const arrow=(x1,y,x2,color=C.blue,attrs='')=>{const dir=Math.sign(x2-x1)||1;return `<g ${attrs}>${path(`M${x1} ${y}H${x2}`,color)}${path(`M${x2-dir*17} ${y-12}L${x2} ${y}L${x2-dir*17} ${y+12}`,color)}</g>`;};
+  const charge=(x,y,sign,attrs='')=>`<g ${attrs}>${circle(x,y,20,sign==='+'?C.orange:C.blue)}${text(x,y+10,sign,30,'#fff')}</g>`;
+  const svg=(label,body)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" width="1100" height="560" role="img" aria-label="${label}"><rect width="1100" height="560" rx="22" fill="#fff"/>${body}</svg>`;
+  const controls=body=>`<div class="sim-controls" data-interactive>${body}</div>`;
+  const status=name=>`<p class="sim-status" role="status" aria-live="polite" data-${name}-status></p>`;
+  const say=(el,value)=>{if(el.textContent!==value)el.textContent=value;};
+  const add=(slug,scene)=>{const deck=window.HNR_DECKS?.find(d=>d.slug===slug);if(deck&&!deck.scenes.some(s=>s.simId===scene.simId))deck.scenes.splice(deck.scenes.length-1,0,scene);};
+  function managed(root,c){
+    const cleanup=[];let alive=true;
+    c.onDispose(()=>{alive=false;cleanup.forEach(fn=>fn());});
+    return {on(selector,event,fn){root.querySelectorAll(selector).forEach(el=>{el.addEventListener(event,fn);cleanup.push(()=>el.removeEventListener(event,fn));});},alive:()=>alive,still:!!(c.reduced||c.still)};
+  }
+  function focusPulse(el,c){
+    if(!el||c.reduced||c.still)return;
+    if(typeof c.a==='function')c.a(el,[{opacity:.45},{opacity:1}],{dur:350});
+  }
+  const bulb=(x,y)=>`<g transform="translate(${x} ${y})">${circle(0,0,69,'#fff0b3','data-ee-halo opacity="0"')}${circle(0,-7,40,'#d6e5f5',`stroke="${C.ink}" stroke-width="4" data-ee-light`)}${box(-25,28,50,30,C.ink)}${path('M-16 65H16',C.ink,6)}</g>`;
+  const battery=(x,y)=>`<g transform="translate(${x} ${y})" data-ee-cell>${box(0,0,130,94,'#ffdf8c')}${box(130,25,14,44,C.ink)}${text(30,58,'+',36)}${text(96,58,'−',36)}</g>`;
+
+  add('energy',{
+    simId:'energy-inside-jobs',kind:'sim',keyword:1,
+    title:'몸과 전지는 어떤 일을 할까요?',kicker:'게이트봇 · 스틱 안을 나누어 보기',
+    body:'<p>먼저 예상해 보세요.<br>빛을 켜는 에너지는 어디서 올까요?</p>'+controls('<div class="sim-buttons"><button type="button" data-ee-job="hands" aria-pressed="false">손 · 놓음</button><button type="button" data-ee-job="battery" aria-pressed="true">전지 · 있음</button></div><button type="button" data-ee-job="replay">작동 순서 다시 보기</button>'+status('ee-jobs')),
+    visual:svg('몸의 연결 감지 기능과 스틱 내부 전지의 에너지 공급 기능을 분리한 설명 모형',`
+      ${text(550,48,'몸은 길을 연결 · 전지는 에너지를 공급',33)}
+      ${box(35,92,330,355)}${text(200,139,'몸으로 잇는 길',32)}
+      ${circle(125,224,25,'#efc6a6')}${circle(275,224,25,'#efc6a6')}
+      ${path('M125 252V315M275 252V315',C.blue,22)}
+      ${path('M125 280H166 M236 280H275',C.blue,13)}
+      ${path('M166 280L221 250',C.blue,10,'data-ee-hand-link')}
+      ${text(200,392,'감지 경로 끊김',29,C.ink,'data-ee-hands-label')}
+      ${box(395,92,670,355,'#f4f8ff')}${text(730,138,'에너지스틱 안',32)}
+      ${box(445,185,200,110,'#fff','data-ee-sensor')}${text(545,230,'연결을',31)}${text(545,271,'감지하는 회로',30)}
+      ${arrow(365,240,438,C.blue,'data-ee-signal opacity="0"')}
+      ${arrow(657,240,783,C.blue,'data-ee-trigger opacity="0"')}
+      ${bulb(895,236)}${text(895,363,'빛과 소리',32)}
+      ${battery(470,315)}${text(538,440,'내부 전지',29)}
+      ${path('M540 315V306',C.orange,7,'data-ee-power-sensor')}
+      ${path('M613 382H760V310H840',C.orange,7,'data-ee-power-output opacity="0"')}
+      ${text(730,427,'전지의 에너지',28,C.orange)}
+      ${text(550,497,'손 놓기 → 연결 감지 멈춤',32,C.blue,'data-ee-jobs-result')}
+      ${text(550,541,'기능을 나눈 그림이에요. 실제 내부 배선도는 아니에요.',28)}
+    `),
+    takeaway:'손을 잡아도 전지가 없으면, 불을 켤 에너지를 공급할 수 없어요.',
+    notes:'방문객에게 “몸과 전지 중 무엇이 에너지를 줄까요?”라고 먼저 물으세요. 전지는 둔 채 손을 연결하면 연결 감지→출력 순으로 켜집니다. 손은 그대로 두고 전지를 없애 결과를 비교합니다. 전지가 연결 감지 회로와 빛·소리 회로에 필요한 에너지를 공급하고, 몸은 감지 경로를 이어 주는 역할입니다. 화살표는 기능과 에너지 전달 관계를 나타내며 몸속 전자가 그림 화살표 속도로 달린다는 뜻이 아닙니다. 스틱을 실제로 분해하거나 몸에 다른 전원을 연결하지 않습니다.',
+    setup(root,c){
+      const m=managed(root,c);let hands=false,powered=true,stage=0,started=0;
+      const statusEl=root.querySelector('[data-ee-jobs-status]');
+      const paint=()=>{
+        const on=hands&&powered,visible=on&&stage>=2;
+        const hb=root.querySelector('[data-ee-job="hands"]'),bb=root.querySelector('[data-ee-job="battery"]');
+        hb.textContent='손 · '+(hands?'연결':'놓음');hb.setAttribute('aria-pressed',String(hands));
+        bb.textContent='전지 · '+(powered?'있음':'없음');bb.setAttribute('aria-pressed',String(powered));
+        root.querySelector('[data-ee-hand-link]').setAttribute('d',hands?'M166 280H236':'M166 280L221 250');
+        root.querySelector('[data-ee-hands-label]').textContent=hands?'감지 경로 연결':'감지 경로 끊김';
+        root.querySelector('[data-ee-cell]').setAttribute('opacity',powered?'1':'.22');
+        root.querySelector('[data-ee-power-sensor]').setAttribute('opacity',powered?'1':'0');
+        root.querySelector('[data-ee-signal]').setAttribute('opacity',on&&stage>=1?'1':'0');
+        root.querySelector('[data-ee-trigger]').setAttribute('opacity',visible?'1':'0');
+        root.querySelector('[data-ee-power-output]').setAttribute('opacity',visible?'1':'0');
+        root.querySelector('[data-ee-light]').setAttribute('fill',visible?C.gold:'#d6e5f5');
+        root.querySelector('[data-ee-halo]').setAttribute('opacity',visible?'1':'0');
+        root.querySelector('[data-ee-sensor]').setAttribute('fill',on&&stage>=1?'#d4e8ff':'#fff');
+        const answer=!powered?'전지 없음 → 빛과 소리에 에너지 공급 안 됨':!hands?'손 놓기 → 연결 감지 멈춤':stage<2?'연결을 감지해 출력 회로에 알려요':'연결 감지 + 전지의 에너지 → 켜짐';
+        root.querySelector('[data-ee-jobs-result]').textContent=answer;say(statusEl,answer);
+        root.dataset.eeHands=String(hands);root.dataset.eePowered=String(powered);root.dataset.eeOutput=String(visible);root.dataset.eeStage=String(stage);
+      };
+      const change=()=>{started=performance.now();stage=m.still?2:0;paint();};
+      m.on('[data-ee-job]','click',e=>{const action=e.currentTarget.dataset.eeJob;if(action==='hands')hands=!hands;if(action==='battery')powered=!powered;change();});
+      if(!m.still)c.loop(()=>{if(!m.alive()||!hands||!powered||stage===2)return;const next=Math.min(2,Math.floor((performance.now()-started)/420));if(next!==stage){stage=next;paint();}});
+      change();
+    }
+  });
+
+  add('energy',{
+    simId:'energy-repair-bench',kind:'sim',keyword:0,
+    title:'불이 꺼졌어요. 무엇부터 확인할까요?',kicker:'정문 보안 게이트 · 연결 점검대',
+    body:'<p>꺼졌다는 결과는 같아도<br>원인은 다를 수 있어요.<br>한 조건씩 바꾸어 확인해요.</p>'+controls('<div class="sim-buttons"><button type="button" data-ee-repair="hands">손 연결만 복구</button><button type="button" data-ee-repair="battery">전지만 확인·교체</button></div><div class="sim-buttons"><button type="button" data-ee-repair="next">다른 사례 보기</button><button type="button" data-ee-repair="reset">이 사례 처음부터</button></div>'+status('ee-repair')),
+    visual:svg('세 가지 꺼짐 사례에서 손 연결과 전지를 하나씩 복구해 보는 기능 모형',`
+      ${text(550,49,'점검 사례 1',34,C.blue,'data-ee-case-title')}
+      ${box(55,95,990,325)}
+      ${path('M160 235V355H940V235',C.blue,10)}
+      ${path('M160 235H330 M450 235H640 M785 235H940',C.blue,10)}
+      ${path('M330 235L427 190',C.blue,10,'data-ee-repair-link')}
+      ${circle(330,235,10,C.ink)}${circle(450,235,10,C.ink)}
+      ${text(390,152,'손 연결',32)}${text(390,294,'끊김',29,C.ink,'data-ee-repair-hands')}
+      ${battery(645,189)}${text(715,152,'스틱 안 전지',32)}
+      ${path('M640 170L790 302 M790 170L640 302',C.orange,7,'data-ee-repair-cross opacity="0"')}
+      ${text(715,325,'있음',29,C.ink,'data-ee-repair-battery')}
+      ${circle(940,235,56,'#d6e5f5',`stroke="${C.ink}" stroke-width="4" data-ee-repair-lamp`)}
+      ${text(940,246,'OFF',29,C.ink,'data-ee-repair-output')}
+      ${text(550,476,'연결과 전지, 두 조건을 함께 확인해요.',33,C.blue,'data-ee-repair-result')}
+      ${text(550,534,'불빛만 보고 원인을 단정하지 않아요. · 기능을 단순화한 모형',28)}
+    `),
+    takeaway:'연결된 길과 에너지원이 모두 필요해요. 한 번에 한 조건을 바꿔 봐요.',
+    notes:'사례 1은 연결 끊김, 사례 2는 내부 전지 없음, 사례 3은 두 조건 모두 없는 상태입니다. 먼저 바꿀 조건을 방문객이 고르게 하세요. 손만 이어도 해결되지 않는 사례를 통해 “손만 잡으면 무조건 켜진다”는 오해를 점검합니다. 화면의 전지 확인·교체는 원리 비교 조작입니다. 실제 제품을 학생이 분해한다는 뜻이 아니며 실제 장치 이상은 담당 교사에게 알립니다. 이 화면은 감지 회로와 출력 회로의 실제 배선·저항을 나타내지 않습니다.',
+    setup(root,c){
+      const m=managed(root,c),cases=[{hands:false,powered:true},{hands:true,powered:false},{hands:false,powered:false}];let index=0,hands=false,powered=true;
+      const paint=message=>{
+        const on=hands&&powered;
+        root.querySelector('[data-ee-case-title]').textContent='점검 사례 '+(index+1)+' / 3';
+        root.querySelector('[data-ee-repair-link]').setAttribute('d',hands?'M330 235H450':'M330 235L427 190');
+        root.querySelector('[data-ee-repair-hands]').textContent=hands?'이어짐':'끊김';
+        root.querySelector('[data-ee-cell]').setAttribute('opacity',powered?'1':'.18');
+        root.querySelector('[data-ee-repair-cross]').setAttribute('opacity',powered?'0':'1');
+        root.querySelector('[data-ee-repair-battery]').textContent=powered?'있음':'없음';
+        root.querySelector('[data-ee-repair-lamp]').setAttribute('fill',on?C.gold:'#d6e5f5');
+        root.querySelector('[data-ee-repair-output]').textContent=on?'ON':'OFF';
+        root.querySelector('[data-ee-repair-result]').textContent=on?'두 조건이 갖추어져 켜졌어요.':'아직 꺼져 있어요. 다른 조건도 살펴봐요.';
+        root.querySelector('[data-ee-repair-status]').textContent=message;
+        root.dataset.eeRepairCase=String(index+1);root.dataset.eeRepairHands=String(hands);root.dataset.eeRepairPowered=String(powered);root.dataset.eeRepairOn=String(on);
+      };
+      const reset=()=>{({hands,powered}=cases[index]);paint('게이트봇: 꺼진 까닭을 예상하고 한 조건만 바꿔 보세요.');};
+      m.on('[data-ee-repair]','click',e=>{const action=e.currentTarget.dataset.eeRepair;if(action==='next'){index=(index+1)%cases.length;reset();return;}if(action==='reset'){reset();return;}if(action==='hands'){hands=true;paint('손 연결만 확인했어요. 전지 조건은 그대로예요.');focusPulse(root.querySelector('[data-ee-repair-link]'),c);}if(action==='battery'){powered=true;paint('전지만 확인했어요. 손 연결 조건은 그대로예요.');focusPulse(root.querySelector('[data-ee-cell]'),c);}});reset();
+    }
+  });
+
+  const electronStart=Array.from({length:12},(_,i)=>{const k=i%6;return {x:(i<6?140:715)+(k%3)*(i<6?80:90),y:300+Math.floor(k/3)*75};});
+  const nucleus=(offset,tag)=>Array.from({length:6},(_,i)=>charge(offset+(i%3)*100,165+Math.floor(i/3)*65,'+',`data-ee-nucleus="${tag}-${i}"`)).join('');
+  add('static',{
+    simId:'static-electron-ledger',kind:'sim',keyword:0,
+    title:'문지르면 전자가 새로 생길까요?',kicker:'클린룸 · 전하 수를 세어 보기',
+    body:'<p>전자가 2개 옮겨 가면<br>두 물체의 합계는 어떨까요?<br>파란 전자만 따라가 보세요.</p>'+controls('<div class="sim-buttons"><button type="button" data-ee-transfer="one">전자 1개 더 옮기기</button><button type="button" data-ee-transfer="reset">문지르기 전으로</button></div><p>모형의 이동: <output data-ee-transfer-count>0개</output> / 2개</p>'+status('ee-transfer')),
+    visual:svg('전자는 두 물체 사이에서 이동해도 12개로 보존되고 양전하 12개는 고정된 마찰 대전 모형',`
+      ${text(550,48,'전자 합계 12개 · 양전하 합계 12개',33,C.blue)}
+      ${box(65,87,390,355,'#fff6da')}${box(645,87,390,355,'#edf5ff')}
+      ${text(260,129,'빨대',33)}${text(840,129,'천',33)}
+      ${nucleus(140,'straw')}${nucleus(715,'cloth')}
+      ${electronStart.map((p,i)=>charge(p.x,p.y,'−',`data-ee-count-electron="${i}"`)).join('')}
+      ${arrow(630,285,470,C.blue,'data-ee-transfer-arrow opacity="0"')}
+      ${text(550,335,'전자 이동',29,C.blue,'data-ee-transfer-label opacity="0"')}
+      ${text(260,483,'전자 6 · 양전하 6',31,C.ink,'data-ee-straw-count')}
+      ${text(840,483,'전자 6 · 양전하 6',31,C.ink,'data-ee-cloth-count')}
+      ${text(550,538,'전하 수를 줄여 그린 모형 · 양전하의 자리는 그대로예요.',28)}
+    `),
+    takeaway:'전자는 옮겨 갔을 뿐이에요. 두 물체를 합친 전하량은 변하지 않아요.',
+    notes:'이 장면은 해당 재료 조합에서 전자가 천에서 빨대로 옮겨 간 경우를 가정합니다. 전자 기호 12개와 양전하 기호 12개가 처음부터 끝까지 유지됩니다. 첫 조작은 6+6에서 7+5, 다음은 8+4가 됩니다. 양전하를 나타낸 기호는 자리를 옮기지 않습니다. 기호는 극도로 축약한 전하 수 모형이며 실제 원자 배열·전자 궤도·입자 수나 이동 속도를 뜻하지 않습니다. 중성은 전하가 없다는 뜻이 아니라 양·음 전하량이 같은 상태입니다. 원래 상태 버튼은 되돌려 비교하는 조작이지, 현실에서 문지르기를 멈추면 저절로 중성이 된다는 뜻은 아닙니다.',
+    setup(root,c){
+      const m=managed(root,c),electrons=[...root.querySelectorAll('[data-ee-count-electron]')];
+      let count=0,from=electronStart.map(p=>({...p})),now=electronStart.map(p=>({...p})),to=electronStart.map(p=>({...p})),started=0,moving=false;
+      const paint=()=>{
+        electrons.forEach((el,i)=>el.setAttribute('transform',`translate(${now[i].x-electronStart[i].x} ${now[i].y-electronStart[i].y})`));
+        root.querySelector('[data-ee-transfer-count]').textContent=count+'개';
+        root.querySelector('[data-ee-transfer-arrow]').setAttribute('opacity',moving?'1':'0');root.querySelector('[data-ee-transfer-label]').setAttribute('opacity',moving?'1':'0');
+        root.querySelector('[data-ee-straw-count]').textContent=moving?'전자 이동 중 · 합계는 12개':`전자 ${6+count} · 양전하 6`;
+        root.querySelector('[data-ee-cloth-count]').textContent=moving?'양전하는 움직이지 않아요':`전자 ${6-count} · 양전하 6`;
+        root.querySelector('[data-ee-transfer="one"]').disabled=count===2||moving;
+        say(root.querySelector('[data-ee-transfer-status]'),moving?'파란 전자가 옮겨 가는 동안에도, 전체 전자 수는 12개예요.':count===0?'처음: 두 물체 모두 양·음의 양이 같아요.':`옮긴 뒤: ${6+count} + ${6-count} = 12. 빨대는 음(−), 천은 양(+)으로 대전됐어요.`);
+        root.dataset.eeElectronTotal='12';root.dataset.eePositiveTotal='12';root.dataset.eeTransfer=String(count);root.dataset.eeTransferMoving=String(moving);
+      };
+      const change=n=>{count=n;from=now.map(p=>({...p}));to=electronStart.map(p=>({...p}));if(count>=1)to[10]={x:380,y:300};if(count>=2)to[11]={x:380,y:375};started=performance.now();moving=!m.still;if(!moving)now=to.map(p=>({...p}));paint();};
+      m.on('[data-ee-transfer="one"]','click',()=>{if(!moving&&count<2)change(count+1);});
+      m.on('[data-ee-transfer="reset"]','click',()=>{count=0;moving=false;now=electronStart.map(p=>({...p}));paint();});
+      if(!m.still)c.loop(()=>{if(!m.alive()||!moving)return;const p=Math.min(1,(performance.now()-started)/950),ease=p*p*(3-2*p);now=to.map((point,i)=>({x:from[i].x+(point.x-from[i].x)*ease,y:from[i].y+(point.y-from[i].y)*ease}));if(p===1)moving=false;paint();});
+      paint();
+    }
+  });
+
+  const canPositive=Array.from({length:8},(_,i)=>({x:650+(i%4)*95,y:204+Math.floor(i/4)*110}));
+  const canElectron=canPositive.map(p=>({x:p.x,y:p.y+43}));
+  add('static',{
+    simId:'static-return-and-pair',kind:'sim',keyword:1,
+    title:'빨대를 치우면, 캔의 전하는 어떻게 될까요?',kicker:'클린룸 · 다가가기와 치우기',
+    body:'<p>캔에 닿지 않고 비교해요.<br>전자의 수와 분포를 살펴봐요.</p>'+controls('<label>빨대의 대전 상태 <select data-ee-induction-sign aria-label="빨대의 대전 상태"><option value="-1">음(−)으로 대전</option><option value="1">양(+)으로 대전</option></select></label><label>가까이 가져가기 <input type="range" min="0" max="100" value="60" data-ee-induction-distance aria-label="빨대 가까이 가져가기"></label><div class="sim-buttons"><button type="button" data-ee-induction="show">다가가기</button><button type="button" data-ee-induction="remove">치우기</button><button type="button" data-ee-induction="roll">캔 움직이기</button></div>'+status('ee-induction')),
+    visual:svg('대전된 빨대를 치우면 중성 캔의 전자가 다시 고르게 분포하며 두 물체에 같은 크기 반대 방향 전기력이 작용하는 모형',`
+      ${text(550,48,'캔의 양전하 8개 · 전자 8개는 그대로',33,C.blue)}
+      <g data-ee-induction-straw>${box(0,150,70,230,'#fff1c7')}${[198,265,332].map(y=>charge(35,y,'−','data-ee-induction-source')).join('')}${text(35,123,'빨대',31)}</g>
+      <g data-ee-induction-can>${box(590,140,430,265,'#f2f7fd')}${canPositive.map((p,i)=>charge(p.x,p.y,'+',`data-ee-fixed-positive="${i}"`)).join('')}${canElectron.map((p,i)=>charge(p.x,p.y,'−',`data-ee-shift-electron="${i}"`)).join('')}${text(805,112,'캔 전체는 중성',31)}</g>
+      <g data-ee-induction-forces>${path('M300 452H390M373 440L390 452L373 464',C.blue,8,'data-ee-force-straw')}${path('M805 452H715M732 440L715 452L732 464',C.blue,8,'data-ee-force-can')}</g>
+      ${text(300,497,'빨대가 받는 힘',29,C.blue,'data-ee-force-straw-label')}${text(805,497,'캔이 받는 힘',29,C.blue,'data-ee-force-can-label')}
+      ${text(550,539,'서로 당기는 힘은 크기가 같고 방향은 반대예요.',28)}
+    `),
+    takeaway:'닿지 않고 전하가 드나들지 않으면, 캔은 전체적으로 중성을 유지해요.',
+    notes:'캔은 고립된 중성 도체이며 빨대와 닿거나 접지되지 않는 모형입니다. 빨대를 가까이하면 전자만 재배치되고 치우면 고르게 분포합니다. 양전하 기호 8개는 캔 안의 같은 위치에 남고 전자 기호 8개도 사라지지 않습니다. 양·음 어느 쪽의 대전 빨대도 중성 캔을 끌어당길 수 있습니다. 파란 화살표 두 개는 빨대와 캔이 서로 주고받는 전체 전기력으로 길이가 항상 같고 방향은 반대입니다. 캔 내부의 가까운 부분과 먼 부분에 작용하는 두 힘을 비교한 화살표와 혼동하지 마세요. 빨대는 손으로 고정했다고 가정하므로 캔만 굴러가는 모습이 힘의 크기가 다르다는 뜻은 아닙니다. 거리·변위·전자 이동은 경향을 보여 주도록 확대했고 힘·속도의 정량 계산은 하지 않습니다.',
+    setup(root,c){
+      const m=managed(root,c),select=root.querySelector('[data-ee-induction-sign]'),range=root.querySelector('[data-ee-induction-distance]'),statusEl=root.querySelector('[data-ee-induction-status]');
+      const electrons=[...root.querySelectorAll('[data-ee-shift-electron]')],source=[...root.querySelectorAll('[data-ee-induction-source]')];
+      let present=true,progress=0,motion=false,start=0,blend=.6,from=.6,to=.6,transition=false,transitionStart=0;
+      const paint=()=>{
+        const sign=Number(select.value),near=Number(range.value)/100,sx=100+near*300,travel=-65*progress;
+        root.querySelector('[data-ee-induction-straw]').setAttribute('transform',`translate(${sx} 0)`);root.querySelector('[data-ee-induction-straw]').setAttribute('opacity',present?'1':'0');
+        root.querySelector('[data-ee-induction-can]').setAttribute('transform',`translate(${travel} 0)`);
+        source.forEach(g=>{g.querySelector('circle').setAttribute('fill',sign>0?C.orange:C.blue);g.querySelector('text').textContent=sign>0?'+':'−';});
+        electrons.forEach((el,i)=>{const target=sign>0?635+(i%4)*38:840+(i%4)*38;el.setAttribute('transform',`translate(${(target-canElectron[i].x)*blend} 0)`);});
+        const force=present?35+60*near:0,ax=sx+35,bx=805+travel;
+        root.querySelector('[data-ee-force-straw]').setAttribute('d',`M${ax} 452H${ax+force}M${ax+force-17} 440L${ax+force} 452L${ax+force-17} 464`);
+        root.querySelector('[data-ee-force-can]').setAttribute('d',`M${bx} 452H${bx-force}M${bx-force+17} 440L${bx-force} 452L${bx-force+17} 464`);
+        root.querySelector('[data-ee-induction-forces]').setAttribute('opacity',present?'1':'0');
+        const al=root.querySelector('[data-ee-force-straw-label]'),bl=root.querySelector('[data-ee-force-can-label]');al.setAttribute('x',String(ax+force/2));bl.setAttribute('x',String(bx-force/2));
+        al.textContent=present?'빨대가 받는 힘':'빨대 치움';bl.textContent=present?'캔이 받는 힘':'전자 분포가 고르게';
+        root.dataset.eeInductionPresent=String(present);root.dataset.eeInductionSign=String(sign);root.dataset.eeInductionBlend=String(blend);root.dataset.eeInductionElectrons='8';root.dataset.eeInductionPositives='8';root.dataset.eeForceStraw=String(force);root.dataset.eeForceCan=String(force);root.dataset.eeCanTravel=String(travel);
+        range.setAttribute('aria-valuetext',near>.65?'가까이':near<.35?'멀리':'중간 거리');
+      };
+      const condition=()=>{progress=0;motion=false;from=blend;to=present?.25+.75*Number(range.value)/100:0;transitionStart=performance.now();transition=!m.still;if(!transition)blend=to;paint();statusEl.textContent=present?(Number(select.value)<0?'전자는 먼 쪽으로 재배치돼요. 캔 전체는 중성이에요.':'전자는 가까운 쪽으로 재배치돼요. 캔 전체는 중성이에요.'):'빨대를 치우면 전자는 다시 고르게. 총수는 8개 그대로예요.';};
+      m.on('[data-ee-induction-sign]','change',condition);m.on('[data-ee-induction-distance]','input',()=>{present=true;condition();});
+      m.on('[data-ee-induction]','click',e=>{const action=e.currentTarget.dataset.eeInduction;if(action==='show'){present=true;condition();}else if(action==='remove'){present=false;condition();}else{if(!present){statusEl.textContent='먼저 대전된 빨대를 가까이 가져가세요.';return;}start=performance.now();motion=!m.still;progress=m.still?1:0;paint();statusEl.textContent='빨대는 손으로 고정. 서로 당기는 힘의 크기는 같아요.';}});
+      if(!m.still)c.loop(()=>{if(!m.alive())return;let dirty=false;if(transition){const p=Math.min(1,(performance.now()-transitionStart)/650),ease=p*p*(3-2*p);blend=from+(to-from)*ease;if(p===1)transition=false;dirty=true;}if(motion){const p=Math.min(1,(performance.now()-start)/1500);progress=p*p;if(p===1)motion=false;dirty=true;}if(dirty)paint();});condition();
+    }
+  });
+
+  // Sources establish the device roles and the isolated neutral-conductor model.
+  const energy=window.HNR_DECKS?.find(d=>d.slug==='energy'),stat=window.HNR_DECKS?.find(d=>d.slug==='static');
+  if(energy)energy.sources=(energy.sources||[]).concat([{title:'Energy Stick: internal battery, sensing circuit and closed path',url:'https://stevespangler.com/experiments/human-circuit/'}]).filter((s,i,a)=>a.findIndex(x=>x.url===s.url)===i);
+  if(stat)stat.sources=(stat.sources||[]).concat([{title:'IOP: charged object attracting a neutral can',url:'https://spark.iop.org/attracting-can'},{title:'OpenStax: charge separation in neutral conductors',url:'https://openstax.org/books/university-physics-volume-2/pages/5-2-conductors-insulators-and-charging-by-induction'}]).filter((s,i,a)=>a.findIndex(x=>x.url===s.url)===i);
+}());
+
+(function(){
+ 'use strict';
+ const d=window.HNR_DECKS.find(x=>x.slug==='plasma');if(!d)return;
+ const ink='#132742',blue='#0066cc',pale='#edf5ff',purple='#7546a3',gold='#aa6505';
+ const t=(x,y,s,size=30,fill=ink,a='')=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" font-weight="650" fill="${fill}" ${a}>${s}</text>`;
+ const r=(x,y,w,h,fill=pale,a='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="${fill}" ${a}/>`;
+ const circle=(x,y,r,fill,a='')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" ${a}/>`;
+ const svg=(label,inner)=>`<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" role="img" aria-label="${label}">${r(0,0,1100,560,'#fff')}${inner}</svg>`;
+ const on=(el,event,fn,c)=>{el.addEventListener(event,fn);c.onDispose(()=>el.removeEventListener(event,fn));};
+ // A single, gentle onset on existing observation scenes; the final apparatus position is unchanged.
+ d.scenes.slice(0,5).forEach((s,i)=>{
+  const previous=s.setup;
+  s.setup=function(root,c){previous?.(root,c);const glow=root.querySelector('[data-plasma-lit]'),hand=root.querySelector('[data-plasma-hand]');
+   if(c.reduced||c.still)return;
+   if(glow)c.a(glow,[{opacity:.25},{opacity:1}],{dur:1100});
+   const streamers=root.querySelector('[data-plasma-streamers]');
+   if(streamers)c.loop(t=>{streamers.setAttribute('opacity',String(.82+.16*Math.sin(t*1.6)));});
+   if(i===1&&hand&&glow){c.tween(1600,p=>{const x=1000-370*p;hand.setAttribute('transform',`translate(${x} 0)`);glow.setAttribute('width',String(x-260));});}
+  };
+ });
+ const fieldVisual=svg('세워진 플라즈마볼 위에 가로로 놓은 형광등. 전기장의 영향과 관 안 전자의 운동을 구분하는 확대 모형',`
+ ${t(550,38,'유리를 지나오는 것은 전자가 아니라 전기적 영향',31)}
+ <g data-pf-bulb><circle cx="260" cy="345" r="130" fill="#f4f0fa" stroke="#8c77aa" stroke-width="4"/>
+ ${r(181,476,158,44,'#d5e5f4')}${circle(260,345,17,purple)}
+ <g data-pf-stream>${[[-100,-70],[-55,-112],[0,-128],[78,-99],[115,27],[-83,95]].map(([x,y])=>`<path d="M260 345L${260+x*.38+12} ${345+y*.38}L${260+x*.7-12} ${345+y*.7}L${260+x} ${345+y}" fill="none" stroke="${purple}" stroke-width="4"/>`).join('')}</g></g>
+ <g data-pf-tube transform="translate(0 177)"><rect x="230" y="0" width="800" height="36" rx="14" fill="#edf1f5" stroke="${ink}" stroke-width="3"/>
+ <rect x="246" y="4" width="768" height="28" rx="10" fill="#ffdd69" opacity="0" data-pf-light/>
+ <g data-pf-electrons>${Array.from({length:11},(_,i)=>circle(280+i*62,18,7,blue,`data-pf-electron="${i}"`)).join('')}</g>
+ <path d="M976 35V65Q976 82 994 82H1007V35" fill="#ebbd98" stroke="#a66a40" stroke-width="3"/>${t(994,119,'끝을 잡아요',27)}</g>
+ <g data-pf-field>${[470,650,830].map(x=>`<path data-pf-arrow="${x}" d="M${x-52} 293H${x+52}L${x+34} 278M${x+52} 293L${x+34} 308" fill="none" stroke="${purple}" stroke-width="6" stroke-linecap="round"/>`).join('')}</g>
+ ${r(450,345,610,147)}${t(755,385,'전기장 방향도 빠르게 바뀌어요',30,ink)}${t(755,430,'파란 점: 관 안에 있던 전자',29,blue)}${t(755,470,'실제 운동보다 매우 느리게 그린 모형',26,ink)}
+ ${t(260,555,'세워 둔 플라즈마볼',28)}${t(770,545,'가까이 / 멀리 비교',31,blue,'data-pf-label')}
+ `);
+ const field={simId:'plasma-field-lens',kind:'sim',title:'유리 너머로, 무엇이 전달될까요?',kicker:'깜빡이의 관찰 확대경',keyword:0,
+ body:'<p>형광등을 멀리 옮기면<br>관 안의 전자는 어떨까요?</p><div class="sim-controls" data-interactive><div class="sim-buttons"><button data-pf-distance="near" aria-pressed="true">가까이</button><button data-pf-distance="far" aria-pressed="false">멀리</button></div><label><input type="checkbox" data-pf-power checked> 플라즈마볼 켜기</label><label><input type="checkbox" data-pf-lens checked> 전기장·전자 확대 표시</label><button data-pf-reset>처음 상태</button><p class="sim-status" data-pf-status aria-live="polite"></p></div>',
+ visual:fieldVisual,takeaway:'전기장이 관 안 전자에 영향을 줘요. 전자가 볼에서 유리를 뚫고 나오지 않아요.',
+ notes:'먼저 거리 변화의 결과를 예상하게 하세요. 가까이/멀리로 관이 움직이고, 파란 전자 점은 관 안에서만 작은 범위로 움직입니다. 보라색은 전기장의 방향 표현이고 입자의 경로가 아닙니다. 실제 빠른 교류를 눈으로 볼 수 있도록 매우 느리게 그렸으며 실제 전기장 분포·운동 궤적·거리·밝기를 계산하는 모형은 아닙니다. 여기서는 손을 먼 끝에 둔 채 거리만 바꿉니다. 유리를 통과하는 전도 전류나 전자의 이동으로 설명하지 않습니다. 전자는 전기장 방향과 반대 힘을 받습니다. 이 그림은 충돌이 있는 기체에서 전자의 평균적인 이동 방향을 단순화해 표시하며 개별 전자의 실제 운동을 예측하지 않습니다.',
+ setup(root,c){let near=true,phase=0;const q=s=>root.querySelector(s),power=q('[data-pf-power]'),lens=q('[data-pf-lens]');
+  function draw(){const enabled=power.checked,amp=enabled?(near?14:3):0,dir=Math.cos(phase)>=0?1:-1;
+   q('[data-pf-tube]').setAttribute('transform',`translate(0 ${near?177:77})`);
+   q('[data-pf-light]').setAttribute('opacity',enabled&&near?'.82':'0');q('[data-pf-stream]').setAttribute('opacity',enabled?'1':'0');
+   q('[data-pf-field]').setAttribute('opacity',enabled&&lens.checked?'1':'0');q('[data-pf-electrons]').setAttribute('opacity',lens.checked?'1':'0');
+   // Qualitative collisional drift: electron velocity opposes the electric field.
+   root.querySelectorAll('[data-pf-electron]').forEach(el=>{const x=280+Number(el.dataset.pfElectron)*62;el.setAttribute('cx',String(x-Math.sin(phase)*amp));});
+   root.querySelectorAll('[data-pf-arrow]').forEach(el=>{const x=Number(el.dataset.pfArrow),length=near?52:23,head=x+dir*length;el.setAttribute('d',`M${x-dir*length} 293H${head}L${head-dir*18} 278M${head} 293L${head-dir*18} 308`);});
+   q('[data-pf-label]').textContent=!enabled?'전원 꺼짐':near?'가까이: 빛이 관찰돼요':'멀리: 빛이 보이지 않을 수 있어요';
+   const statusText=!enabled?'전원을 끄면 이 모형의 전기적 자극도 사라져요.':near?'가까이에서는 관 안의 방전이 빛으로 이어져요.':'멀어지면 영향이 약해져 빛을 유지하기 어려워질 수 있어요.';if(q('[data-pf-status]').textContent!==statusText)q('[data-pf-status]').textContent=statusText;
+   root.dataset.pfDistance=near?'near':'far';root.dataset.pfPower=String(enabled);root.dataset.pfLit=String(enabled&&near);
+  }
+  root.querySelectorAll('[data-pf-distance]').forEach(b=>on(b,'click',()=>{near=b.dataset.pfDistance==='near';root.querySelectorAll('[data-pf-distance]').forEach(x=>x.setAttribute('aria-pressed',String((x.dataset.pfDistance==='near')===near)));draw();c.sfx('flip');},c));
+  [power,lens].forEach(el=>on(el,'change',draw,c));on(q('[data-pf-reset]'),'click',()=>{near=true;power.checked=true;lens.checked=true;phase=0;root.querySelectorAll('[data-pf-distance]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.pfDistance==='near')));draw();},c);
+  draw();if(!c.reduced&&!c.still)c.loop((t,dt)=>{phase+=dt*1.8;draw();});
+ }
+ };
+ const chainVisual=svg('형광등 안에서 전자의 운동과 충돌, 기체의 자외선, 형광 물질의 가시광선으로 이어지는 과정 모형',`
+ ${t(550,47,'에너지가 빛이 되기까지',35)}
+ ${[25,297,569,841].map((x,i)=>`${r(x,105,234,335,'#edf5ff',`data-pc-card="${i}" stroke="#cadbed" stroke-width="3"`)}${t(x+117,155,['① 전자 운동','② 기체의 변화','③ 형광 물질','④ 보이는 빛'][i],28)}${i<3?`<path d="M${x+244} 270H${x+262}M${x+254} 261L${x+263} 270L${x+254} 279" stroke="${blue}" stroke-width="5" fill="none"/>`:''}`).join('')}
+ ${circle(178,260,30,'#fff',`stroke="${ink}" stroke-width="3"`)}${t(178,270,'원자',25)}${circle(79,260,10,blue,'data-pc-electron')}${t(140,370,'전자가 에너지를',28)}${t(140,411,'전해 줘요',28)}
+ ${circle(414,252,34,'#fff',`stroke="${ink}" stroke-width="3"`)}${circle(414,252,49,'none',`stroke="${purple}" stroke-width="5" data-pc-excited opacity="0"`)}<path d="M448 255L460 245L473 266L488 244L504 259" stroke="${purple}" fill="none" stroke-width="5" data-pc-uv opacity="0"/>${t(414,370,'자외선 방출',28,purple)}${t(414,411,'자외선은 안 보여요',25)}
+ ${r(698,206,34,110,'#aac9e8')}${t(688,185,'관 안쪽 코팅',25)}<path d="M598 260L617 244L632 269L651 248L674 261" stroke="${purple}" stroke-width="5" fill="none" data-pc-absorb opacity="0"/><path d="M739 259L751 248L766 266L789 251" stroke="${gold}" stroke-width="6" fill="none" data-pc-visible opacity="0"/>${t(686,370,'자외선을 받아',28)}${t(686,411,'가시광선으로',28,gold)}
+ ${circle(958,252,55,'#ffdf6d','data-pc-glow opacity="0"')}<path d="M901 252Q958 196 1015 252Q958 308 901 252Z" stroke="${ink}" fill="white" stroke-width="4"/>${circle(958,252,19,blue)}${t(958,370,'우리 눈으로',28)}${t(958,411,'빛을 보아요',28)}
+ ${t(550,502,'과정을 나누어 그린 확대 모형 · 색과 크기는 실제 모습이 아니에요',27)}
+ `);
+ const chain={simId:'plasma-light-chain',kind:'sim',title:'전기가 어떻게 빛이 될까요?',kicker:'암실 안쪽 · 에너지의 변화',keyword:2,
+ body:'<p>관 안에서 벌어지는 일을<br>한 단계씩 확대해 봐요.</p><div class="sim-controls" data-interactive><div class="sim-buttons"><button data-pc-step="0">전자</button><button data-pc-step="1">기체</button><button data-pc-step="2">형광 물질</button><button data-pc-step="3">빛</button></div><button data-pc-play>과정 이어 보기</button><button data-pc-reset>처음 단계</button><p class="sim-status" data-pc-status aria-live="polite"></p></div>',
+ visual:chainVisual,takeaway:'기체에서 나온 자외선을 형광 물질이 받아, 눈에 보이는 빛을 내요.',
+ notes:'형광등의 기본 발광 과정을 네 컷으로 나눈 확대 모형입니다. 전기장으로 에너지를 얻은 전자가 기체 원자와 충돌해 에너지를 전합니다. 들뜬 원자가 에너지를 내놓으며 자외선을 방출하고, 관 안쪽 형광 물질이 이를 받아 가시광선을 냅니다. 보라색 자외선 표시 자체는 실제로 눈에 보이지 않습니다. 단계별 그림의 원자와 전자는 동일한 사건을 확대해 나눈 것으로 실제 위치·개수·시간을 표시한 것이 아닙니다. 볼의 빛이 관 끝까지 운반되어 형광등이 켜진다고 설명하지 않습니다.',
+ setup(root,c){let step=0,run=0,phase=0;const q=s=>root.querySelector(s),descriptions=['전기적 자극을 받은 전자가 기체 원자에 에너지를 전해요.','에너지를 받은 기체 원자가 자외선을 내놓아요.','관 안쪽 형광 물질이 자외선을 받아 가시광선을 내요.','우리는 그 가시광선을 형광등의 빛으로 보아요.'];
+  function draw(){root.querySelectorAll('[data-pc-card]').forEach((el,i)=>{el.setAttribute('stroke',i===step?blue:'#cadbed');el.setAttribute('stroke-width',i===step?'6':'3');});root.querySelectorAll('[data-pc-step]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.pcStep)===step)));q('[data-pc-excited]').setAttribute('opacity',step>=1?'1':'0');q('[data-pc-uv]').setAttribute('opacity',step>=1?'1':'0');q('[data-pc-absorb]').setAttribute('opacity',step>=2?'1':'0');q('[data-pc-visible]').setAttribute('opacity',step>=2?'1':'0');q('[data-pc-glow]').setAttribute('opacity',step>=3?'1':'0');q('[data-pc-status]').textContent=descriptions[step];root.dataset.pcStep=String(step);}
+  root.querySelectorAll('[data-pc-step]').forEach(b=>on(b,'click',()=>{run++;step=Number(b.dataset.pcStep);draw();c.sfx('step');},c));on(q('[data-pc-reset]'),'click',()=>{run++;step=0;draw();},c);
+  on(q('[data-pc-play]'),'click',()=>{const token=++run;step=0;draw();if(c.reduced||c.still){step=3;draw();return;}[1,2,3].forEach(i=>c.timer(()=>{if(token===run){step=i;draw();c.sfx('step');}},i*1500));},c);
+  draw();if(!c.reduced&&!c.still)c.loop((t,dt)=>{phase+=dt;if(step===0){const p=(phase%2)/2;q('[data-pc-electron]').setAttribute('cx',String(p<.5?72+p*150:147-(p-.5)*150));}else q('[data-pc-electron]').setAttribute('cx','79');});c.onDispose(()=>run++);
+ }
+ };
+ d.scenes.splice(d.scenes.length-1,0,field,chain);
+})();
+
+(function () {
+  'use strict';
+  // Load after the existing decks, live simulators, world and legibility adapters.
+  // These qualitative models never predict an apparatus's speed, angle or temperature.
+  // Science checks: https://iypt.icm.hr/wp-content/uploads/2019/07/magnetic_train.pdf
+  // https://openstax.org/books/university-physics-volume-2/pages/12-6-solenoids-and-toroids
+  // https://spark.iop.org/electromagnetic-braking-copper-pipe
+  const P = { ink:'#132742', blue:'#0066cc', pale:'#edf5ff', current:'#bb3b20', field:'#087965', force:'#743cab', copper:'#ba7545' };
+  let serial = 0;
+  const tx = (x,y,s,size=30,color=P.ink,a='') => `<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-size="${size}" font-weight="650" ${a}>${s}</text>`;
+  function svg(label,draw) {
+    const id='engage-magnetic-'+(++serial);
+    return `<svg viewBox="0 0 1100 560" width="1100" height="560" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg"><defs>${['ink','blue','current','field','force'].map(k=>`<marker id="${id}-${k}" markerWidth="18" markerHeight="18" refX="16" refY="9" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L18 9L0 18Z" fill="${P[k]}"/></marker>`).join('')}</defs><rect width="1100" height="560" rx="24" fill="#fff"/><g font-family="Pretendard,Malgun Gothic,sans-serif">${draw(id)}</g></svg>`;
+  }
+  const ar=(id,x1,y1,x2,y2,k='blue',a='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${P[k]}" stroke-width="7" stroke-linecap="round" marker-end="url(#${id}-${k})" ${a}/>`;
+  const box=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="${P.pale}" stroke="#b8cce5" stroke-width="2"/>`;
+  const quiet=c=>Boolean(c.reduced||c.still||c.instant);
+  const say=(el,value)=>{if(el.textContent!==value)el.textContent=value;};
+  function listen(root,c,attr,fn) { root.querySelectorAll('['+attr+']').forEach(b=>{const handler=()=>fn(b.getAttribute(attr));b.addEventListener('click',handler);c.onDispose(()=>b.removeEventListener('click',handler));}); }
+  function pressed(root,attr,val) {root.querySelectorAll('['+attr+']').forEach(b=>b.setAttribute('aria-pressed',String(b.getAttribute(attr)===String(val))));}
+  function buttons(attr,items) {return `<div class="sim-buttons">${items.map(([v,s])=>`<button type="button" ${attr}="${v}" aria-pressed="false">${s}</button>`).join('')}</div>`;}
+  function controls(question,attr,items,help) {return `<div class="sim-controls" data-interactive><p style="font-size:30px;line-height:1.4"><b>${question}</b></p>${buttons(attr,items)}<p class="sim-status" data-em-status aria-live="polite"></p><p>${help}</p></div>`;}
+  function add(slug,scene) {
+    const d=(window.HNR_DECKS||[]).find(x=>x.slug===slug);
+    if(!d)throw Error('Missing magnetic deck: '+slug);
+    if(d.scenes.some(x=>x.simId===scene.simId))return;
+    d.scenes.splice(d.scenes.length-1,0,scene); // Preserve the original p=6 simulator.
+  }
+  const battery=()=>`<rect x="-118" y="-42" width="236" height="84" rx="12" fill="${P.pale}" stroke="${P.blue}" stroke-width="4"/>${tx(-85,12,'−',36)}${tx(85,12,'+',36)}${tx(0,10,'건전지',28)}<rect data-em-left-magnet x="-154" y="-58" width="36" height="116" rx="6" fill="#d3e5f6" stroke="${P.ink}" stroke-width="3"/><rect x="118" y="-58" width="36" height="116" rx="6" fill="#d3e5f6" stroke="${P.ink}" stroke-width="3"/>`;
+  const trainContactVisual=svg('접촉, 전류, 자기력, 운동을 차례로 확인하는 터널 열차',id=>`
+    ${tx(550,48,'찌릿 기관사 · 출발 조건 점검',34)}
+    ${tx(550,94,'물리적인 시간 지연이 아닌, 설명 순서예요.',28)}
+    ${Array.from({length:29},(_,i)=>`<ellipse data-em-coil="${130+i*30}" cx="${130+i*30}" cy="265" rx="22" ry="92" fill="none" stroke="${P.copper}" stroke-width="4" opacity=".6"/>`).join('')}
+    <g data-em-train transform="translate(550 265)">${battery()}<circle data-em-contact cx="-143" r="12" fill="${P.ink}"/><circle data-em-contact cx="143" r="12" fill="${P.ink}"/>
+      <path data-em-current d="M142 -72C70 -125 -70 -125 -142 -72" fill="none" stroke="${P.current}" stroke-width="7" stroke-dasharray="13 9" marker-end="url(#${id}-current)"/>
+    </g>
+    ${ar(id,420,405,680,405,'force','data-em-drive')}
+    ${tx(550,457,'접점이 끊긴 상태',32,P.ink,'data-em-train-label')}
+    ${tx(550,525,'실제 운행은 짧게 · 끝나면 열차를 꺼내요.',28)}
+  `);
+  function trainContactSetup(root,c) {
+    const q=s=>root.querySelector(s);let step=0,t=0,x=550,running=false;
+    function draw() {
+      q('[data-em-train]').setAttribute('transform',`translate(${x.toFixed(2)} 265)`);
+      q('[data-em-train]').dataset.position=x.toFixed(2);
+      q('[data-em-current]').setAttribute('opacity',step>=1?'1':'0');
+      q('[data-em-current]').setAttribute('stroke-dashoffset',String(-t*26));
+      q('[data-em-drive]').setAttribute('opacity',step>=2?'1':'0');
+      q('[data-em-left-magnet]').setAttribute('transform',step?'translate(0 0)':'translate(-26 0)');
+      q('[data-em-contact]').setAttribute('cx',step?'-143':'-169');
+      root.querySelectorAll('[data-em-contact]').forEach(e=>e.setAttribute('fill',step?P.current:P.ink));
+      root.querySelectorAll('[data-em-coil]').forEach(e=>{const on=step>0&&Math.abs(Number(e.dataset.emCoil)-x)<143;e.setAttribute('stroke',on?P.current:P.copper);e.setAttribute('stroke-width',on?'7':'4');});
+      q('[data-em-train-label]').textContent=['접점 끊김 → 지속적인 전류 없음','접점 연결 → 그 사이 코일에 전류','코일과 자석의 상호작용 → 구동력','구동력이 열차를 움직여요'][step];
+      say(q('[data-em-status]'),['접촉을 잇기 전에는 출발하지 않아요.','전류가 흐르는 코일 구간을 찾아요.','자기력이 열차를 미는 방향을 봐요.','이 배치에서는 오른쪽으로 출발해요.'][step]);
+      root.dataset.emStage=String(step);pressed(root,'data-em-train-stage',step);
+    }
+    function set(v){step=Number(v);t=0;x=550;running=step===3&&!quiet(c);if(step===3&&quiet(c))x=775;draw();}
+    listen(root,c,'data-em-train-stage',set);set(0);
+    c.loop((_,dt)=>{if(!running)return;t+=dt;x=550+225*Math.min(1,t/3);draw();if(t>=3)running=false;});
+  }
+  add('train',{kind:'sim',simId:'engage-train-contact',title:'접점이 끊기면 출발할까요?',kicker:'찌릿 기관사 · 예측하고 확인',keyword:0,
+    body:controls('어디가 이어져야 할까요?','data-em-train-stage',[[0,'접점 끊기'],[1,'① 전류'],[2,'② 자기력'],[3,'③ 출발']], '자석은 건전지와 코일을 잇는 전기 접점이기도 해요.'),
+    visual:trainContactVisual,takeaway:'접촉 → 전류 → 자기적 상호작용 → 운동을 연결해 설명해요.',
+    notes:'방문객에게 접점이 끊겨도 출발할지 먼저 물어요. 전류 버튼으로 두 자석 사이 코일만 강조하고, 자기력 버튼과 출발 버튼을 차례로 누릅니다. 이 단계는 설명 순서이며 실제로 전류만 흐르고 자기장은 생기지 않는 별도의 시간이 있다는 뜻은 아닙니다. 정지에서 출발하는 경우이며 관성·마찰과 실제 속도는 계산하지 않습니다. 실제 조립은 진행자가 하고 운행을 마치면 열차를 즉시 꺼내 발열을 줄입니다.',setup:trainContactSetup});
+
+  const trainDirectionVisual=svg('전지와 두 자석의 극 방향을 각각 반전하는 방향 비교 모형',id=>`
+    ${tx(550,48,'코일의 감긴 방향과 접촉은 고정',32)}
+    ${box(350,77,400,90)}${tx(400,134,'−',38,P.ink,'data-em-battery-left')}${tx(700,134,'+',38,P.ink,'data-em-battery-right')}${tx(550,133,'건전지',30)}
+    ${tx(180,230,'왼쪽 자석',30)}${tx(550,230,'코일을 자석으로 표시',30)}${tx(920,230,'오른쪽 자석',30)}
+    ${box(78,250,204,100)}${box(370,250,360,100)}${box(818,250,204,100)}
+    ${tx(125,315,'S',40,P.field,'data-em-pole="0"')}${tx(235,315,'N',40,P.field,'data-em-pole="1"')}
+    ${tx(425,315,'S',40,P.field,'data-em-pole="2"')}${tx(675,315,'N',40,P.field,'data-em-pole="3"')}
+    ${tx(865,315,'N',40,P.field,'data-em-pole="4"')}${tx(975,315,'S',40,P.field,'data-em-pole="5"')}
+    ${ar(id,110,392,250,392,'force','data-em-left-force')}${ar(id,850,392,990,392,'force','data-em-right-force')}
+    ${tx(550,405,'열차에 작용하는 힘',30,P.force)}
+    <path d="M140 472H960" stroke="#b8cce5" stroke-width="4"/><g data-em-mini transform="translate(550 472)"><rect x="-47" y="-22" width="94" height="44" rx="10" fill="${P.blue}"/>${tx(0,10,'열차',28,'#fff')}</g>
+    ${tx(550,539,'오른쪽은 이 기준 배치의 예시 · 화살표는 힘의 방향만 표시',28)}
+  `);
+  function trainDirectionSetup(root,c) {
+    const q=s=>root.querySelector(s);let dir=1,t=0,running=false,mode='base';
+    function position(){const p=quiet(c)?1:Math.min(1,t/2.6);q('[data-em-mini]').setAttribute('transform',`translate(${550+dir*245*p} 472)`);}
+    function set(v){mode=v;const i=(v==='cell'||v==='both')?-1:1,m=(v==='magnets'||v==='both')?-1:1;dir=i*m;t=0;running=!quiet(c);
+      q('[data-em-battery-left]').textContent=i===1?'−':'+';q('[data-em-battery-right]').textContent=i===1?'+':'−';
+      const poles=[m===1?'S':'N',m===1?'N':'S',i===1?'S':'N',i===1?'N':'S',m===1?'N':'S',m===1?'S':'N'];
+      root.querySelectorAll('[data-em-pole]').forEach(e=>e.textContent=poles[Number(e.dataset.emPole)]);
+      for(const [name,a,b] of [['left',110,250],['right',850,990]]){q(`[data-em-${name}-force]`).setAttribute('x1',String(dir===1?a:b));q(`[data-em-${name}-force]`).setAttribute('x2',String(dir===1?b:a));}
+      q('[data-em-status]').textContent={base:'기준 배치: 오른쪽으로 출발',cell:'전지만 반전: 힘도 왼쪽으로',magnets:'두 자석만 각각 반전: 힘도 왼쪽으로',both:'전지와 두 자석을 모두 반전: 처음과 같은 쪽'}[v];
+      root.dataset.emForce=String(dir);root.dataset.emCurrent=String(i);root.dataset.emMagnet=String(m);pressed(root,'data-em-train-preset',v);position();}
+    listen(root,c,'data-em-train-preset',set);set('base');
+    c.loop((_,dt)=>{if(!running)return;t+=dt;position();if(t>=2.6)running=false;});
+  }
+  add('train',{kind:'sim',simId:'engage-train-reversal',title:'하나만 뒤집을까요, 둘 다 뒤집을까요?',kicker:'찌릿 기관사 · 방향 비교실',keyword:2,
+    body:controls('다시 같은 쪽으로 가려면?','data-em-train-preset',[['base','기준 배치'],['cell','전지만 반전'],['magnets','두 자석만 반전'],['both','둘 다 반전']],'두 자석은 각각 N·S 방향을 바꿔요. 코일을 감은 방향은 유지해요.'),visual:trainDirectionVisual,
+    takeaway:'전지 또는 자석만 반전하면 반대쪽, 둘 다 반전하면 처음과 같은 쪽이에요.',
+    notes:'원래 오른쪽으로 출발하는 한 배치를 기준으로 해요. 전지만 뒤집으면 코일의 자기장과 힘이 반전됩니다. 두 자석을 각각 뒤집으면 자석이 받는 힘이 반전됩니다. 전지와 두 자석을 모두 반전하면 상호작용 방향이 원래대로 돌아와요. 자석 하나만 뒤집는 경우와 열차 전체를 뒤집는 경우는 여기의 버튼과 다릅니다. 각 자석을 막대자석처럼 편 그림이며 실제 코일 내부의 자계를 정량 계산하는 그림은 아닙니다. 실제 변경은 진행자가 전류를 끊고 합니다.',setup:trainDirectionSetup});
+
+  function compassVisual(label) {return svg(label,id=>`
+    ${tx(550,44,'위에서 보는 모형 · 지구 자기장의 수평 성분 ↑',30)}
+    ${box(40,100,580,375)}${tx(330,145,'나침반 위치에서 두 자기장 합하기',28)}
+    <path data-em-vector-guide d="M330 265H460V405" fill="none" stroke="${P.field}" stroke-width="3" stroke-dasharray="8 8"/>
+    ${ar(id,330,405,330,265,'ink','data-em-earth')}
+    ${ar(id,330,405,460,405,'field','data-em-coil-vector')}
+    ${ar(id,330,405,460,265,'blue','data-em-sum-vector')}
+    <circle cx="330" cy="405" r="7" fill="${P.ink}"/>
+    <g transform="translate(850 280)"><circle r="145" fill="#fff" stroke="#b8cce5" stroke-width="5"/>${tx(0,-107,'북',28)}${tx(110,10,'동',28)}${tx(0,128,'남',28)}${tx(-110,10,'서',28)}
+    <g data-em-needle><path d="M0 -87L23 0L-23 0Z" fill="${P.current}"/><path d="M0 87L23 0L-23 0Z" fill="${P.blue}"/>${tx(0,-35,'N',28,'#fff')}${tx(0,56,'S',28,'#fff')}<circle r="7" fill="${P.ink}"/></g></g>
+    ${tx(850,110,'빨간 N극을 보세요',30,P.current)}
+    ${tx(850,464,'전류 꺼짐',30,P.ink,'data-em-compass-label')}
+    ${tx(190,525,'지구 자기장',28,P.ink)}${tx(500,525,'코일 자기장',28,P.field)}${tx(850,525,'두 자기장의 합',28,P.blue)}
+  `);}
+  function compassSetup(arrangements) {return function(root,c) {
+    const q=s=>root.querySelector(s);let targetX=0,targetY=0,x=0,y=0,angle=0,label='전류 꺼짐';
+    function draw(){const ex=330+x,ey=265+y;
+      const coil=q('[data-em-coil-vector]');coil.setAttribute('x2',String(330+x));coil.setAttribute('y2',String(405+y));coil.setAttribute('opacity',Math.hypot(x,y)<.01?'0':'1');
+      q('[data-em-sum-vector]').setAttribute('x2',String(ex));q('[data-em-sum-vector]').setAttribute('y2',String(ey));
+      q('[data-em-vector-guide]').setAttribute('d',`M330 265L${ex} ${ey}L${330+x} ${405+y}`);
+      q('[data-em-vector-guide]').setAttribute('opacity',Math.hypot(x,y)<.01?'0':'1');
+      angle=Math.atan2(x,140-y)*180/Math.PI;
+      q('[data-em-needle]').setAttribute('transform',`rotate(${angle.toFixed(3)})`);q('[data-em-needle]').dataset.angle=angle.toFixed(3);
+      q('[data-em-compass-label]').textContent=label;root.dataset.emFieldX=x.toFixed(2);root.dataset.emFieldY=y.toFixed(2);
+    }
+    function set(v){const presets=arrangements?{off:[0,0,'전원 OFF · 원래 방향'],a:[150,0,'배치 A · 오른쪽으로 기울기'],reverse:[-150,0,'배치 A · 전류 반전'],b:[106,-106,'배치 B · 북동향 코일 자기장']}:{off:[0,0,'전원 OFF · 원래 방향'],weak:[90,0,'코일 전류 작게'],strong:[230,0,'코일 전류 크게'],reverse:[-230,0,'전류 반대로']};
+      [targetX,targetY,label]=presets[v];if(quiet(c)){x=targetX;y=targetY;}q('[data-em-status]').textContent=label;
+      root.dataset.emPreset=v;pressed(root,'data-em-compass-preset',v);draw();}
+    listen(root,c,'data-em-compass-preset',set);set('off');
+    c.loop((_,dt)=>{if(Math.abs(targetX-x)+Math.abs(targetY-y)<.02){if(x!==targetX||y!==targetY){x=targetX;y=targetY;draw();}return;}const a=Math.min(1,dt*5);x+=(targetX-x)*a;y+=(targetY-y)*a;draw();});
+  };}
+  add('compass',{kind:'sim',simId:'engage-compass-vector',title:'전류가 커지면 더 기울까요?',kicker:'황금나침반 · 두 자기장 합하기',keyword:1,
+    body:controls('바늘은 어느 화살표를 따를까요?','data-em-compass-preset',[['off','전원 OFF'],['weak','전류 작게'],['strong','전류 크게'],['reverse','전류 반대로']],'이 배치에서 코일 자기장은 동서 방향이에요. 지구 자기장도 계속 있어요.'),visual:compassVisual('지구 자기장과 전류가 만드는 코일 자기장의 합을 따르는 나침반'),
+    takeaway:'N극은 코일 자기장 하나가 아니라, 주변 자기장을 합친 방향을 따라요.',
+    notes:'지구 자기장의 수평 성분을 화면 위쪽으로 놓고 코일 자기장을 동서 방향으로 놓은 예시입니다. 전류를 키우면 코일 자기장이 더 커져 바늘이 더 기울고, 전류를 반전하면 코일 자기장만 반전됩니다. 전원을 끄면 주변의 지구 자기장을 따르는 원래 방향으로 돌아갑니다. 실제 각도·정확한 방위는 코일 위치와 주변 자석 등에 달라지므로 여기의 각도는 측정 예측값이 아닙니다. 수평면 합성만 나타내고 수직 자기장·마찰·관성은 생략했습니다.',setup:compassSetup(false)});
+  add('compass',{kind:'sim',simId:'engage-compass-layout',title:'전류가 같아도 방향은 달라질까요?',kicker:'황금나침반 · 배치 바꾸어 예측',keyword:2,
+    body:controls('다른 실험대도 같은 방향일까요?','data-em-compass-preset',[['a','배치 A · 켜기'],['reverse','A · 전류 반전'],['b','배치 B · 켜기'],['off','전원 OFF']],'A는 코일 자기장이 동쪽, B는 북동쪽인 배치예요. 현장에서는 실제 N극 방향을 관찰해요.'),visual:compassVisual('코일 배치에 따라 다른 자기장 벡터합과 나침반 방향'),
+    takeaway:'배치가 달라지면 합친 자기장도 달라져요. 실제 N극 방향부터 확인해요.',
+    notes:'같은 세기의 코일 자기장이라도 방향이 달라지면 지구 자기장과 합쳐진 방향이 달라집니다. A는 코일 자기장이 동쪽, B는 북동쪽인 위치·방향을 가정했습니다. 두 코일 자기장 벡터의 길이는 거의 같습니다. B에서 실제 기구를 정확히 45도 돌리면 이 값이 나온다는 뜻은 아닙니다. 전류 반전은 A 배치에서만 비교합니다. OFF를 누르면 두 경우 모두 원래 방향으로 돌아옵니다. 부스의 관문 선택은 이 화면의 동서 방향이 아닌 현장에서 관찰한 방향을 기준으로 합니다.',setup:compassSetup(true)});
+
+  const magnet=()=>`<rect x="-35" y="-28" width="70" height="56" rx="9" fill="${P.blue}" stroke="${P.ink}" stroke-width="3"/><path d="M-34 -1H34" stroke="#fff" stroke-width="2"/>${tx(0,-6,'N',28,'#fff')}${tx(0,24,'S',28,'#fff')}`;
+  const eddyObserveVisual=svg('불투명 구리관의 겉모습과 구리관 내부 교육 모형 비교',id=>`
+    ${tx(270,47,'실물: 관 안은 보이지 않아요',30)}${tx(810,47,'내부를 보여 주는 교육 모형',30)}
+    <g data-em-opaque-magnet transform="translate(270 93)">${magnet()}</g>
+    <rect x="185" y="138" width="170" height="284" rx="8" fill="${P.copper}" stroke="#70431e" stroke-width="4"/><ellipse cx="270" cy="138" rx="85" ry="19" fill="#57331e" stroke="#70431e" stroke-width="4"/>
+    <path d="M167 479H373" stroke="${P.ink}" stroke-width="8" stroke-linecap="round"/>
+    <rect x="725" y="138" width="170" height="284" rx="8" fill="#fff5ec" stroke="${P.copper}" stroke-width="6" stroke-dasharray="12 7"/>
+    <g data-em-eddy-rings><ellipse cx="810" cy="232" rx="86" ry="24" fill="none" stroke="${P.current}" stroke-width="6" stroke-dasharray="16 9"/><ellipse cx="810" cy="330" rx="86" ry="24" fill="none" stroke="${P.current}" stroke-width="6" stroke-dasharray="16 9"/></g>
+    <g data-em-inside-magnet transform="translate(810 93)">${magnet()}</g>
+    ${ar(id,945,350,945,220,'force','data-em-observe-brake')}
+    ${tx(270,530,'입구에서 놓기 전',28,P.ink,'data-em-observe-label')}${tx(810,95,'파선 원: 소용돌이 전류의 자리',28)}
+    ${tx(810,530,'실제 속도와 시간은 계산하지 않아요.',28)}
+  `);
+  function eddyObserveSetup(root,c) {
+    const q=s=>root.querySelector(s);let mode='start',time=0,y=93,running=false;
+    function draw(){q('[data-em-opaque-magnet]').setAttribute('transform',`translate(270 ${y})`);q('[data-em-inside-magnet]').setAttribute('transform',`translate(810 ${y})`);
+      // Occlusion is deliberate: never reveal an internal magnet through opaque copper.
+      q('[data-em-opaque-magnet]').setAttribute('opacity',y>112&&y<450?'0':'1');
+      const moving=mode==='drop'&&y<450;
+      q('[data-em-eddy-rings]').setAttribute('opacity',moving?'1':'0');q('[data-em-eddy-rings]').setAttribute('stroke-dashoffset',String(-time*22));q('[data-em-observe-brake]').setAttribute('opacity',moving?'1':'0');
+      q('[data-em-observe-label]').textContent=mode==='hold'?'정지 조건은 모형에서 확인':y>=450?'출구에 나왔어요':y>112?'출구를 기다려요':'입구에서 놓기 전';
+      say(q('[data-em-status]'),mode==='hold'?'손 등으로 잡아 둔 가정: 변화가 없어 지속적인 유도 전류는 없어요.':mode==='drop'?'자석이 움직이면 구리관의 자기장이 변하고 유도 전류가 생겨요.':'놓는 순간과 아래 출구에 나온 순간을 비교해요.');
+      root.dataset.emY=y.toFixed(2);root.dataset.emMoving=String(moving);pressed(root,'data-em-eddy-observe',mode);
+    }
+    function set(v){mode=v;time=0;running=v==='drop'&&!quiet(c);y=v==='hold'?280:v==='drop'&&quiet(c)?280:93;draw();}
+    listen(root,c,'data-em-eddy-observe',set);
+    listen(root,c,'data-em-eddy-result',()=>{mode='drop';running=false;y=450;draw();});set('start');
+    c.loop((_,dt)=>{if(!running)return;time+=dt;y=93+357*Math.min(1,time/4);draw();if(time>=4)running=false;});
+  }
+  add('eddy',{kind:'sim',simId:'engage-eddy-observe',title:'가만히 있을 때도 제동할까요?',kicker:'터널지기 · 구리관 관찰과 내부 모형',keyword:1,
+    body:controls('정지와 움직임을 비교해요.','data-em-eddy-observe',[['start','처음으로'],['hold','정지 조건 모형'],['drop','놓고 관찰']],'정지는 손 등으로 잡아 둔 가정이에요. 손을 놓으면 중력 때문에 내려가요.')+'<div class="sim-controls" data-interactive style="margin-top:24px"><button type="button" data-em-eddy-result>출구 도착 보기</button></div>',
+    visual:eddyObserveVisual,takeaway:'움직임 → 구리관을 지나는 자기장의 변화 → 유도 전류와 제동력',
+    notes:'실제 실험은 불투명 구리관 하나와 자석으로 합니다. 놓은 순간과 아래 출구에 나온 순간을 관찰하세요. 오른쪽만 안을 보여 주는 교육 모형입니다. 정지 버튼은 자석을 손 등으로 잡고 충분히 기다려 유도 전류가 사라진 가정이며 공중에 저절로 떠 있다는 뜻이 아닙니다. 움직일 때 자기장의 변화가 전류와 제동력을 만듭니다. 파선 원은 전류의 자리만 나타내고 정확한 전류 방향과 분포를 그린 것이 아닙니다. 출구 도착 버튼은 관찰의 끝 상태입니다. 모형 시간과 화살표 크기에서 실제 낙하 시간이나 재료 특성을 알아낼 수 없습니다.',setup:eddyObserveSetup});
+
+  const eddyDirectionVisual=svg('구리관 속 자석의 운동, 반대 방향 제동력, 항상 아래쪽인 중력',id=>`
+    ${tx(550,45,'구리관 내부를 펼친 교육 모형 · 실제 관은 불투명',30)}
+    <rect x="430" y="126" width="200" height="319" rx="12" fill="#fff5ec" stroke="${P.copper}" stroke-width="7" stroke-dasharray="12 7"/>
+    <g data-em-direction-magnet transform="translate(530 285)">${magnet()}</g>
+    <g data-em-direction-ring><ellipse cx="530" cy="207" rx="104" ry="24" fill="none" stroke="${P.current}" stroke-width="6" stroke-dasharray="13 9"/><ellipse cx="530" cy="365" rx="104" ry="24" fill="none" stroke="${P.current}" stroke-width="6" stroke-dasharray="13 9"/></g>
+    ${tx(200,135,'움직임',32,P.blue)}${ar(id,200,225,200,355,'blue','data-em-motion-vector')}
+    ${tx(760,135,'제동력',32,P.force)}${ar(id,760,355,760,225,'force','data-em-brake-vector')}
+    ${tx(980,135,'중력',32)}${ar(id,980,225,980,355,'ink')}
+    ${tx(200,428,'아래쪽',30,P.blue,'data-em-motion-label')}${tx(760,428,'위쪽',30,P.force,'data-em-brake-label')}${tx(980,428,'항상 아래',28)}
+    ${tx(550,501,'위로 움직이기는 손 등 외력으로 끌어올리는 가정',28)}
+    ${tx(550,542,'화살표는 방향만 비교 · 끝 화면은 움직임 중 한 순간',28)}
+  `);
+  function eddyDirectionSetup(root,c) {
+    const q=s=>root.querySelector(s);let v=0,t=0,running=false;
+    function draw(){const p=quiet(c)?.5:Math.min(1,t/3);const y=v===0?285:v>0?205+160*p:365-160*p;
+      q('[data-em-direction-magnet]').setAttribute('transform',`translate(530 ${y})`);
+      q('[data-em-direction-ring]').setAttribute('opacity',v?'1':'0');q('[data-em-direction-ring]').setAttribute('stroke-dashoffset',String(-v*t*22));
+      q('[data-em-motion-vector]').setAttribute('opacity',v?'1':'0');q('[data-em-brake-vector]').setAttribute('opacity',v?'1':'0');
+      q('[data-em-motion-vector]').setAttribute('y1',v>0?'225':'355');q('[data-em-motion-vector]').setAttribute('y2',v>0?'355':'225');
+      q('[data-em-brake-vector]').setAttribute('y1',v>0?'355':'225');q('[data-em-brake-vector]').setAttribute('y2',v>0?'225':'355');
+      q('[data-em-motion-label]').textContent=v===0?'잡아 둠':v>0?'아래쪽':'위쪽';q('[data-em-brake-label]').textContent=v===0?'지속 제동 없음':v>0?'위쪽':'아래쪽';
+      root.dataset.emVelocitySign=String(v);root.dataset.emBrakeSign=String(-v);root.dataset.emGravitySign='1';
+      say(q('[data-em-status]'),v===0?'충분히 기다린 정지 상태. 손이 자석을 잡고 중력을 버텨요.':v>0?'내려가면 위로 제동해요. 중력은 아래로 작용해요.':'끌어올리면 아래로 제동해요. 중력도 여전히 아래예요.');
+      pressed(root,'data-em-eddy-direction',v);
+    }
+    function set(n){v=Number(n);t=0;running=v!==0&&!quiet(c);draw();}
+    listen(root,c,'data-em-eddy-direction',set);set(0);
+    c.loop((_,dt)=>{if(!running)return;t+=dt;draw();if(t>=3)running=false;});
+  }
+  add('eddy',{kind:'sim',simId:'engage-eddy-direction',title:'위로 움직이면 제동력은 어디로?',kicker:'터널지기 · 방향을 바꾸어 확인',keyword:2,
+    body:controls('제동력도 늘 위쪽일까요?','data-em-eddy-direction',[[0,'잡아 둔 정지'],[1,'아래로 움직이기'],[-1,'위로 끌어올리기']],'움직임과 제동력은 반대 방향이에요. 위로 끌 때는 손 등 외력이 필요해요.'),visual:eddyDirectionVisual,
+    takeaway:'제동력은 움직임을 방해하는 쪽, 중력은 언제나 아래쪽이에요.',
+    notes:'원래 실험은 중력으로 내려가는 자석이지만 이번에는 방향 관계를 알아보기 위해 외력으로 위로 끌어올리는 모형도 비교해요. 하강할 때 제동력은 위쪽, 상승할 때 제동력은 아래쪽입니다. 중력은 두 경우 모두 아래로 작용합니다. 정지 상태는 손이 잡고 충분히 기다린 조건입니다. 화살표 길이는 힘의 크기나 실제 가속도를 뜻하지 않으며, 재생 끝은 설명을 위해 시간을 멈춘 순간입니다. 균일한 구리관 안에서의 준정상 방향 비교이며 정확한 속도·재료·제동력을 계산하지 않습니다.',setup:eddyDirectionSetup});
+})();
+
+(function () {
+  'use strict';
+  // HNR DRAM-only extension. Load after dram.js/world.js and before legibility.js.
+  // The existing eighth scene remains the simulator entry point.
+  const deck = (window.HNR_DECKS || []).find(d => d.slug === 'dram');
+  if (!deck || deck.scenes.some(s => s.simId === 'dram-component-paths')) return;
+  const C = { ink:'#142d49', blue:'#086bd8', pale:'#eaf3ff', line:'#91b8e7', gold:'#f5b730', white:'#ffffff' };
+  const t = (x,y,s,size=30,color=C.ink,attr='') => `<text x="${x}" y="${y}" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="${size}" font-weight="700" fill="${color}" ${attr}>${s}</text>`;
+  const r = (x,y,w,h,fill=C.pale,attr='') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="${fill}" ${attr}/>`;
+  const p = (d,color=C.ink,width=6,attr='') => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" ${attr}/>`;
+  const svg = (label,body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" width="1100" height="560" role="group" aria-label="${label}">${r(0,0,1100,560,C.white)}${body}</svg>`;
+  const btn = (attr,value,label) => `<button type="button" ${attr}="${value}">${label}</button>`;
+  const listen = (el,name,fn,dispose) => { el.addEventListener(name,fn); dispose.push(() => el.removeEventListener(name,fn)); };
+  const fixed = c => !!(c.reduced || c.still);
+  const clamp = n => Math.max(0,Math.min(1,n));
+  const press = (root,selector,key,value) => root.querySelectorAll(selector).forEach(el => el.setAttribute('aria-pressed',String(el.getAttribute(key) === value)));
+  const clickable = (name,x,y,w,h,label,inside) => `<g data-dram-eg-part="${name}" role="button" tabindex="0" aria-label="${label}" aria-pressed="false" data-interactive style="cursor:pointer">${r(x,y,w,h,C.white,'stroke="'+C.line+'" stroke-width="2" data-dram-eg-halo')}${inside}</g>`;
+  const circuitVisual = svg('부품을 선택하고 쓰기, 보관, 읽기 경로를 비교하는 기억 회로', `
+    ${t(550,44,'부품을 누르면 맡은 일이 보여요.',32)}
+    ${p('M110 270V170H200 M280 170H330 M410 170H760 M840 170H985V235 M985 285V330 M985 380V430H110V335 M580 170V275 M580 305V430',C.line,7)}
+    <g data-dram-eg-current="write" opacity="0">${p('M110 270V170H580V275 M580 305V430H110V335',C.blue,10,'stroke-dasharray="16 16" data-dram-eg-flow')}</g>
+    <g data-dram-eg-current="read" opacity="0">${p('M580 275V170H985V430H580V305',C.blue,10,'stroke-dasharray="16 16" data-dram-eg-flow')}</g>
+    ${clickable('battery',42,247,200,123,'전지의 역할',p('M110 247V270 M110 335V370',C.line,7)+p('M80 270H140 M95 290H125 M80 313H140 M95 335H125')+t(55,277,'+',30,C.blue)+t(55,340,'−',30,C.blue)+t(190,296,'전지',30)+t(190,337,'3 V',28))}
+    <g data-dram-eg-paper>${clickable('write-resistor',182,100,115,126,'쓰기 저항의 역할',p('M182 170H200 M280 170H297',C.line,7)+p('M200 170H209L217 154L229 186L241 154L253 186L264 170H280')+t(240,135,'저항',30)+t(240,214,'쓰기',28))}</g>
+    <g data-dram-eg-booth>${p('M200 170H280',C.line,7)}</g>
+    ${clickable('write',310,91,124,126,'쓰기 버튼의 역할',p('M310 170H330 M410 170H434',C.line,7)+p('M330 170L405 137',C.ink,6,'data-dram-eg-switch="write"')+t(372,126,'쓰기',32)+t(372,207,'버튼',28))}
+    ${clickable('read',740,91,124,126,'읽기 버튼의 역할',p('M740 170H760 M840 170H864',C.line,7)+p('M760 170L835 137',C.ink,6,'data-dram-eg-switch="read"')+t(802,126,'읽기',32)+t(802,207,'버튼',28))}
+    ${clickable('capacitor',490,243,183,125,'축전기의 역할',p('M580 243V275 M580 305V368',C.line,7)+p('M540 275H620 M540 305H620',C.blue,9)+t(435,300,'축전기',30))}
+    ${r(688,265,28,95,C.pale,'stroke="'+C.line+'" stroke-width="2"')}
+    <rect x="688" y="285" width="28" height="75" rx="9" fill="${C.blue}" data-dram-eg-level/>
+    ${t(702,398,'저장',28,C.blue)}
+    ${clickable('resistor',882,222,194,86,'읽기 저항의 역할',p('M985 222V235 M985 285V308',C.line,7)+p('M985 235V240L971 247L999 258L971 269L985 278V285')+t(932,268,'저항',28))}
+    ${clickable('led',886,321,190,82,'LED의 역할',p('M985 321V338 M985 380V403',C.line,7)+`<circle cx="985" cy="362" r="32" fill="${C.gold}" opacity="0" data-dram-eg-glow/><path d="M964 338H1006L985 373Z" fill="${C.pale}" stroke="${C.ink}" stroke-width="4" data-dram-eg-led/>`+p('M964 380H1006',C.ink,4)+t(933,371,'LED',30))}
+    ${r(34,460,1032,82,C.pale)}
+    ${t(550,494,'축전기 · 전하를 저장해 두는 기억 칸',32,C.blue,'data-dram-eg-title')}
+    ${t(550,530,'손을 떼어도 전하가 잠시 남아요.',28,C.ink,'data-dram-eg-note')}
+  `);
+
+  const components = {
+    battery:['전지 · 충전할 에너지를 공급해요.','정보를 저장하는 칸은 축전기예요.'],
+    'write-resistor':['쓰기 저항 · 충전 전류를 제한해요.','개선형 도안에 있을 때 사용하는 부품이에요.'],
+    write:['쓰기 버튼 · 전지와 축전기를 연결해요.','읽기 버튼을 놓고 충전해요.'],
+    read:['읽기 버튼 · 축전기와 LED 경로를 연결해요.','쓰기 버튼을 놓은 뒤 읽어야 저장을 확인해요.'],
+    capacitor:['축전기 · 전하를 저장해 두는 기억 칸','손을 떼어도 전하가 잠시 남아요.'],
+    resistor:['읽기 저항 · LED 전류를 제한해요.','읽기 경로의 저항을 빼지 않아요.'],
+    led:['LED · 읽을 때 저장한 에너지로 빛나요.','꺼져 있다는 사실만으로 저장값을 알 수 없어요.']
+  };
+  const componentScene = {
+    simId:'dram-component-paths',kind:'sim',keyword:1,
+    title:'이 부품은 어느 길에서 일할까요?',kicker:'직접 조작 · 부품과 전류 경로',
+    body:'<p>부품을 누르고, 이어지는 길을 바꿔 보세요.</p><div class="sim-controls" data-interactive><label>살펴볼 부품 <select data-dram-eg-select aria-label="살펴볼 회로 부품"><option value="capacitor">축전기</option><option value="battery">전지</option><option value="write">쓰기 버튼</option><option value="read">읽기 버튼</option><option value="resistor">읽기 저항</option><option value="led">LED</option><option value="write-resistor" data-dram-eg-option-paper>쓰기 저항 · 개선형</option></select></label><div class="sim-buttons">'+btn('data-dram-eg-mode','write','쓰기 경로')+btn('data-dram-eg-mode','hold','두 버튼 놓기')+btn('data-dram-eg-mode','read','읽기 경로')+'</div><p class="sim-status" role="status" data-dram-eg-status>충전한 뒤 두 버튼을 놓은 상태예요.</p></div>',
+    visual:circuitVisual,takeaway:'전지와 저장 칸, 저장 칸과 LED를 번갈아 연결해요.',
+    notes:'부품 클릭 또는 선택상자로 역할을 짚으세요. 파란 점선은 관찰 단계에서 전류가 흐르는 경로를 뜻하며 전자의 이동 속도를 재현하지 않습니다. 쓰기와 읽기 경로는 축전기의 절연층을 가로질러 이어지지 않습니다. 충전이 끝나갈수록 쓰기 전류가 줄고 읽는 동안 저장 전하가 줄어드는 정성 모형입니다. 처음은 이미 충전한 뒤 보관하는 상태로 시작합니다. 상단 회로 선택이 기존 부스이면 쓰기 저항을 숨깁니다. 모든 수치는 상대적인 화면 표현이며 부품값과 배선은 현장 도안을 따릅니다.',
+    setup(root,c) {
+      const dispose=[],paper=window.HNR_CIRCUIT!=='booth',q=s=>root.querySelector(s);
+      let alive=true,mode='hold',focus='capacitor',charge=.85,phase=0,last=performance.now();
+      q('[data-dram-eg-paper]').style.display=paper?'':'none';
+      q('[data-dram-eg-booth]').style.display=paper?'none':'';
+      q('[data-dram-eg-option-paper]').disabled=!paper;
+      q('[data-dram-eg-option-paper]').hidden=!paper;
+      const changeFocus = value => {
+        focus=value; q('[data-dram-eg-select]').value=value;
+        q('[data-dram-eg-title]').textContent=components[value][0];q('[data-dram-eg-note]').textContent=components[value][1];
+        root.querySelectorAll('[data-dram-eg-part]').forEach(el=>{const on=el.dataset.dramEgPart===value;el.setAttribute('aria-pressed',String(on));const halo=el.querySelector('[data-dram-eg-halo]');halo.setAttribute('fill',on?C.pale:C.white);halo.setAttribute('stroke',on?C.blue:C.line);halo.setAttribute('stroke-width',on?'4':'2');});
+        root.dataset.dramEgPart=focus;
+      };
+      const paint = () => {
+        const lit=mode==='read'&&charge>.22;
+        q('[data-dram-eg-switch="write"]').setAttribute('d',mode==='write'?'M330 170H410':'M330 170L405 137');
+        q('[data-dram-eg-switch="read"]').setAttribute('d',mode==='read'?'M760 170H840':'M760 170L835 137');
+        q('[data-dram-eg-current="write"]').setAttribute('opacity',mode==='write'&&charge<.995?String(Math.max(.12,1-charge)):'0');
+        q('[data-dram-eg-current="read"]').setAttribute('opacity',lit?'1':'0');
+        root.querySelectorAll('[data-dram-eg-flow]').forEach(el=>el.setAttribute('stroke-dashoffset',String(-phase)));
+        q('[data-dram-eg-level]').setAttribute('y',String(360-charge*95));q('[data-dram-eg-level]').setAttribute('height',String(charge*95));
+        q('[data-dram-eg-glow]').setAttribute('opacity',lit?String(Math.max(.2,charge)):'0');q('[data-dram-eg-led]').setAttribute('fill',lit?C.gold:C.pale);
+        root.dataset.dramEgMode=mode;root.dataset.dramEgCharge=charge.toFixed(3);root.dataset.dramEgLit=String(lit);root.dataset.dramEgCircuit=paper?'paper':'booth';
+      };
+      const chooseMode = value => {
+        mode=value;last=performance.now();
+        if(fixed(c)){if(mode==='write')charge=.98;if(mode==='read')charge=Math.max(.08,charge*.55);}
+        q('[data-dram-eg-status]').textContent=mode==='write'?'전지 → 축전기. 읽기 길은 끊겨 LED는 꺼져요.':mode==='hold'?'두 길이 끊겼어요. LED가 꺼져도 저장 상태는 남을 수 있어요.':'축전기 → LED. 읽는 동안 저장 전하가 줄어요.';
+        press(root,'[data-dram-eg-mode]','data-dram-eg-mode',mode);paint();
+      };
+      root.querySelectorAll('[data-dram-eg-part]').forEach(el=>{const use=()=>changeFocus(el.dataset.dramEgPart);listen(el,'click',use,dispose);listen(el,'keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();use();}},dispose);});
+      listen(q('[data-dram-eg-select]'),'change',e=>changeFocus(e.target.value),dispose);
+      root.querySelectorAll('[data-dram-eg-mode]').forEach(el=>listen(el,'click',()=>chooseMode(el.dataset.dramEgMode),dispose));
+      changeFocus(focus);chooseMode(mode);
+      if(!fixed(c))c.loop(()=>{if(!alive)return;const now=performance.now(),dt=Math.min((now-last)/1000,.08);last=now;phase=(phase+dt*34)%64;if(mode==='write')charge=Math.min(1,charge+dt*.52);if(mode==='read')charge=Math.max(.08,charge-dt*.22);paint();});
+      c.onDispose(()=>{alive=false;dispose.forEach(fn=>fn());});
+    }
+  };
+
+  const waterVisual=svg('물통 비유로 쓰기와 보관, 읽기의 차이를 비교하는 장면',`
+    ${t(550,48,'불이 꺼져도, 물통은 비어 있지 않을 수 있어요.',32)}
+    ${r(65,93,265,101,C.pale)}${t(197,135,'전지',34)}${t(197,174,'에너지 공급',29)}
+    ${p('M330 145H492V213',C.line,16)}
+    ${p('M330 145H492V213',C.blue,10,'stroke-dasharray="15 13" opacity="0" data-dram-tank-inflow')}
+    <circle cx="403" cy="145" r="25" fill="${C.white}" stroke="${C.ink}" stroke-width="4"/>
+    ${p('M383 145H423',C.ink,6,'data-dram-tank-valve="write"')}${t(403,100,'쓰기',30)}
+    ${r(414,211,242,239,C.pale,'stroke="'+C.blue+'" stroke-width="5"')}
+    <rect x="423" y="430" width="224" height="11" rx="8" fill="${C.blue}" data-dram-tank-water/>
+    ${t(535,491,'축전기 = 물통',32)}
+    ${p('M656 414H913V323',C.line,16)}
+    ${p('M656 414H913V323',C.blue,10,'stroke-dasharray="15 13" opacity="0" data-dram-tank-outflow')}
+    <circle cx="758" cy="414" r="25" fill="${C.white}" stroke="${C.ink}" stroke-width="4"/>
+    ${p('M738 414H778',C.ink,6,'data-dram-tank-valve="read"')}${t(758,475,'읽기',30)}
+    <circle cx="913" cy="247" r="87" fill="${C.pale}" data-dram-tank-halo/>
+    <circle cx="913" cy="247" r="56" fill="${C.white}" stroke="${C.ink}" stroke-width="4" data-dram-tank-led/>
+    ${t(913,260,'LED',35)}${t(913,137,'꺼짐',30,C.ink,'data-dram-tank-ledlabel')}
+    ${r(55,500,990,48,C.pale)}${t(550,534,'보관: 물은 남고, 물레는 멈춘 상태와 같아요.',29,C.ink,'data-dram-tank-caption')}
+  `);
+  const waterScene={
+    simId:'dram-water-memory',kind:'sim',keyword:2,
+    title:'LED는 꺼졌는데, 기억은 남을까요?',kicker:'직접 조작 · 물통으로 기억 이해하기',
+    body:'<p>쓰고 → 손을 떼고 → 읽어 보세요.</p><p>물통은 축전기의 역할을 보여 주는 비유예요.</p><div class="sim-controls" data-interactive><div class="sim-buttons">'+btn('data-dram-tank-action','write','① 쓰기')+btn('data-dram-tank-action','hold','② 두 버튼 놓기')+btn('data-dram-tank-action','read','③ 읽기')+btn('data-dram-tank-action','reset','처음으로')+'</div><p class="sim-status" role="status" data-dram-tank-status>먼저 쓰기로 저장 상태를 만들어 보세요.</p></div>',
+    visual:waterVisual,takeaway:'보관 중 LED 꺼짐과, 저장된 전하가 없다는 말은 달라요.',
+    notes:'같은 물통의 수위는 전압, 담긴 물의 양은 저장 전하량에 비유합니다. 실제 축전기에 물이 들어 있다는 뜻은 아닙니다. 먼저 쓰기, 손 떼기, 읽기를 순서대로 눌러 주세요. 보관에서는 LED만 꺼지고 수위는 남습니다. 모형은 자연 누설을 계산하지 않으며 실제로는 시간이 지나 전하가 줄 수 있습니다. 읽기 버튼을 누르면 저장 에너지가 LED에서 사용되어 수위가 내려갑니다. LED가 꺼진 뒤에도 수위가 조금 남아 있어 소등=정확한 0V가 아님을 보여 줍니다. 동작 줄이기에서는 버튼마다 대표 상태로 바로 전환하며 읽기를 반복하면 저장 상태가 더 줄어듭니다. 실제 충전 시간·방전 곡선·전압 임계값의 측정 자료가 아닙니다.',
+    setup(root,c){
+      const q=s=>root.querySelector(s),dispose=[];let alive=true,mode='ready',level=0,phase=0,last=performance.now(),written=false,released=false;
+      const paint=()=>{
+        const lit=mode==='read'&&level>.23;
+        q('[data-dram-tank-water]').setAttribute('y',String(441-level*220));q('[data-dram-tank-water]').setAttribute('height',String(level*220));
+        q('[data-dram-tank-valve="write"]').setAttribute('d',mode==='write'?'M383 145H423':'M403 125V165');
+        q('[data-dram-tank-valve="read"]').setAttribute('d',mode==='read'?'M738 414H778':'M758 394V434');
+        q('[data-dram-tank-inflow]').setAttribute('opacity',mode==='write'&&level<.98?'1':'0');q('[data-dram-tank-outflow]').setAttribute('opacity',lit?'1':'0');
+        q('[data-dram-tank-inflow]').setAttribute('stroke-dashoffset',String(-phase));q('[data-dram-tank-outflow]').setAttribute('stroke-dashoffset',String(-phase));
+        q('[data-dram-tank-led]').setAttribute('fill',lit?C.gold:C.white);q('[data-dram-tank-halo]').setAttribute('fill',lit?'#fff0b8':C.pale);q('[data-dram-tank-ledlabel]').textContent=lit?'읽는 중 · 켜짐':'꺼짐';
+        root.dataset.dramTankMode=mode;root.dataset.dramTankLevel=level.toFixed(3);root.dataset.dramTankLit=String(lit);
+      };
+      const choose=action=>{
+        const status=q('[data-dram-tank-status]'),caption=q('[data-dram-tank-caption]');
+        if(action==='hold'&&!written){status.textContent='먼저 쓰기 버튼으로 충전해 주세요.';return;}
+        if(action==='read'&&!released){status.textContent='쓰기 다음에는 두 버튼을 놓고 읽어요.';return;}
+        mode=action;last=performance.now();
+        if(action==='reset'){level=0;mode='ready';written=false;released=false;status.textContent='먼저 쓰기로 저장 상태를 만들어 보세요.';caption.textContent='쓰기 → 두 버튼 놓기 → 읽기 순서로 비교해요.';}
+        if(action==='write'){written=true;released=false;if(fixed(c))level=.9;status.textContent='물통을 채우듯 축전기를 충전해요. 읽기 길은 끊겨 있어요.';caption.textContent='쓰기: 축전기는 충전되고 LED는 꺼져 있어요.';}
+        if(action==='hold'){released=true;status.textContent='두 길을 끊었어요. LED는 꺼졌지만 저장 전하는 남을 수 있어요.';caption.textContent='보관: 물은 남고, 물레는 멈춘 상태와 같아요.';}
+        if(action==='read'){if(fixed(c))level=Math.max(.08,level*.55);status.textContent='저장한 에너지로 빛을 내요. 읽는 동안 전하가 줄어요.';caption.textContent='읽기: 빛이 꺼져도 남은 전하가 정확히 0은 아니에요.';}
+        press(root,'[data-dram-tank-action]','data-dram-tank-action',mode);paint();
+      };
+      root.querySelectorAll('[data-dram-tank-action]').forEach(el=>listen(el,'click',()=>choose(el.dataset.dramTankAction),dispose));
+      choose('reset');
+      if(!fixed(c))c.loop(()=>{if(!alive)return;const now=performance.now(),dt=Math.min((now-last)/1000,.08);last=now;phase=(phase+dt*40)%56;if(mode==='write')level=Math.min(.98,level+dt*.35);if(mode==='read')level=Math.max(.08,level-dt*.18);paint();});
+      c.onDispose(()=>{alive=false;dispose.forEach(fn=>fn());});
+    }
+  };
+
+  const bitValues=[1,0,1,0,1,0,1,1,0];
+  const cells=bitValues.map((bit,i)=>{const x=55+(i%3)*136,y=129+Math.floor(i/3)*106;return `<g data-dram-cell="${i}" role="button" tabindex="0" aria-label="기억 칸 ${i+1}, 저장값 ${bit}" aria-pressed="false" data-interactive style="cursor:pointer">${r(x,y,113,86,C.pale,'stroke="'+C.line+'" stroke-width="3" data-dram-cell-box')}${t(x+56,y+55,String(bit),45,C.blue,'data-dram-cell-value')}${r(x+14,y+66,85,10,C.white)}<rect x="${x+14}" y="${y+66}" width="${bit?76:8}" height="10" rx="5" fill="${C.blue}" data-dram-cell-bar/></g>`;}).join('');
+  const cellVisual=svg('기억 칸을 선택해 0 또는 1을 쓰고 읽은 뒤 복원하는 실제 DRAM의 원리 모형',`
+    ${t(248,57,'칩 속의 많은 기억 칸',32)}${t(795,57,'선택한 한 칸을 확대',32)}
+    ${cells}
+    ${t(248,478,'다른 칸도 눌러 보세요.',30,C.blue)}
+    ${r(510,86,555,259,C.pale,'stroke="'+C.blue+'" stroke-width="3" stroke-dasharray="10 8"')}
+    ${t(790,132,'1번 칸 · 저장값 1',32,C.blue,'data-dram-cell-heading')}
+    ${p('M545 218H633 M801 218H908 M932 218H1030',C.line,7)}
+    ${r(634,175,167,86,C.white,'stroke="'+C.blue+'" stroke-width="3"')}
+    ${p('M657 218L778 193',C.ink,7,'data-dram-cell-switch')}
+    ${t(718,306,'트랜지스터 1개',30)}
+    ${p('M908 181V255 M932 181V255',C.blue,8)}${t(942,306,'축전기 1개',30)}
+    ${p('M556 218V390',C.line,7)}
+    ${p('M556 218V390',C.blue,8,'stroke-dasharray="14 12" opacity="0" data-dram-cell-link')}
+    ${r(510,390,555,110,C.ink)}
+    ${t(788,430,'셀 밖의 감지·복원 회로',32,C.white)}
+    ${t(788,475,'작은 차이를 읽고 원래 값으로',30,C.white,'data-dram-cell-sense')}
+    ${t(550,548,'0은 0으로, 1은 1로 유지해요.',31,C.blue,'data-dram-cell-caption')}
+  `);
+  const cellScene={
+    simId:'dram-real-cell-array',kind:'sim',keyword:0,
+    title:'실제 DRAM은 읽은 뒤 어떻게 할까요?',kicker:'직접 조작 · 실제 칩과 비교',
+    body:'<p>한 칸을 고르고 0 또는 1을 써 보세요.</p><p>읽기를 세 단계로 나누어 살펴봐요.</p><div class="sim-controls" data-interactive><div class="sim-buttons">'+btn('data-dram-array-action','zero','0 쓰기')+btn('data-dram-array-action','one','1 쓰기')+'</div><button type="button" data-dram-array-action="read">① 연결해 읽기</button><div class="sim-buttons">'+btn('data-dram-array-action','wait','시간이 지나면')+btn('data-dram-array-action','refresh','리프레시')+btn('data-dram-array-action','reset','처음으로')+'</div><p class="sim-status" role="status" data-dram-cell-status>각 칸의 0과 1이 서로 다르게 저장되어 있어요.</p></div>',
+    visual:cellVisual,takeaway:'우리 모형과 달리 실제 DRAM에는 읽고 복원하는 회로가 있어요.',
+    notes:'실제 DRAM의 한 칸과 셀 밖 감지 회로를 기능 블록으로 확대했습니다. 0 쓰기와 1 쓰기는 이 실제 DRAM 비교 장면의 조작이며 우리 실물 모형의 별도 0 버튼을 뜻하지 않습니다. 읽기 ①에서는 비트라인과 전하를 공유하므로 높은 저장 상태는 낮아지고 낮은 저장 상태는 높아지는 대표 변화를 보여 줍니다. ②는 감지, ③은 원래 상태 복원입니다. 실제 동작은 빠르게 이어지지만 설명을 위해 클릭 단계로 나눴습니다. 시간 경과는 1의 저장 전하가 줄 수 있는 예만 보여 주며 실측 시간이나 모든 누설 양상을 뜻하지 않습니다. 리프레시는 누설로 정보가 훼손되기 전에 읽고 되써 원래 0·1을 유지합니다. 화면의 값 배열은 원리를 보여 주는 수업 모형이지 실제 칩의 숨은 완벽한 원본 복사본이 아닙니다. 실제 행 단위 선택과 공유 배선은 생략하고 한 칸의 기능을 확대했습니다. 모든 RAM이 축전기형이라는 일반화는 하지 않습니다. 근거: MIT 6.004 L05 Memory: Using Capacitors, https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/pages/c5/c5s1/',
+    setup(root,c){
+      const q=s=>root.querySelector(s),dispose=[];let alive=true,selected=0,values=bitValues.slice(),levels=values.map(v=>v?.9:.1),targets=levels.slice(),phase='ready',pulse=0,last=performance.now();
+      const motionTo=next=>{targets=next.slice();if(fixed(c))levels=next.slice();};
+      const resetRead=()=>{phase='ready';q('[data-dram-array-action="read"]').textContent='① 연결해 읽기';q('[data-dram-cell-sense]').textContent='작은 차이를 읽고 원래 값으로';};
+      const paint=()=>{
+        root.querySelectorAll('[data-dram-cell]').forEach((el,i)=>{const on=i===selected;el.setAttribute('aria-pressed',String(on));el.setAttribute('aria-label',`기억 칸 ${i+1}, 저장값 ${values[i]}`);const box=el.querySelector('[data-dram-cell-box]');box.setAttribute('fill',on?'#d5e8ff':C.pale);box.setAttribute('stroke',on?C.blue:C.line);box.setAttribute('stroke-width',on?'5':'2');el.querySelector('[data-dram-cell-value]').textContent=String(values[i]);el.querySelector('[data-dram-cell-bar]').setAttribute('width',String(85*levels[i]));});
+        q('[data-dram-cell-heading]').textContent=`${selected+1}번 칸 · 저장값 ${values[selected]}`;
+        q('[data-dram-cell-switch]').setAttribute('d',phase==='shared'||phase==='sense'?'M657 218H778':'M657 218L778 193');
+        q('[data-dram-cell-link]').setAttribute('opacity',phase==='shared'||phase==='sense'?'1':'0');q('[data-dram-cell-link]').setAttribute('stroke-dashoffset',String(-pulse));
+        root.dataset.dramCellSelected=String(selected);root.dataset.dramCellValue=String(values[selected]);root.dataset.dramCellPhase=phase;root.dataset.dramCellValues=values.join('');root.dataset.dramCellLevels=levels.map(v=>v.toFixed(3)).join(',');
+      };
+      const select=i=>{if(phase==='shared'||phase==='sense'){targets[selected]=values[selected]?.9:.1;levels[selected]=targets[selected];}selected=i;resetRead();q('[data-dram-cell-status]').textContent=`${i+1}번 칸을 골랐어요. 0과 1을 쓰거나 읽기를 차례로 눌러 보세요.`;q('[data-dram-cell-caption]').textContent='한 칸은 0 또는 1, 한 가지를 저장해요.';paint();};
+      const action=value=>{
+        const status=q('[data-dram-cell-status]'),caption=q('[data-dram-cell-caption]'),read=q('[data-dram-array-action="read"]');
+        if(value==='reset'){values=bitValues.slice();selected=0;motionTo(values.map(v=>v?.9:.1));resetRead();status.textContent='각 칸의 0과 1이 서로 다르게 저장되어 있어요.';caption.textContent='0은 0으로, 1은 1로 유지해요.';}
+        if(value==='zero'||value==='one'){values[selected]=value==='one'?1:0;const next=targets.slice();next[selected]=values[selected]?.9:.1;motionTo(next);resetRead();status.textContent=`${selected+1}번 칸에 ${values[selected]}을 썼어요. 다른 칸의 값은 그대로예요.`;caption.textContent='이것은 실제 DRAM의 0·1 쓰기를 비교하는 모형이에요.';}
+        if(value==='read'){
+          if(phase==='ready'||phase==='restored'||phase==='refreshed'){
+            phase='shared';const next=targets.slice();next[selected]=values[selected]?.6:.4;motionTo(next);read.textContent='② 작은 차이 감지';status.textContent='① 저장 축전기와 읽는 연결선이 전하를 나누어 가져요.';caption.textContent='읽을 때 축전기의 저장 상태도 달라져요.';q('[data-dram-cell-sense]').textContent='0과 1이 만드는 작은 차이를 기다려요.';
+          }else if(phase==='shared'){
+            phase='sense';read.textContent='③ 원래 값 복원';status.textContent=`② 감지 회로가 작은 차이를 읽어 ${values[selected]}을 알아냈어요.`;caption.textContent=`읽은 값: ${values[selected]} · 다음은 원래 상태로 복원해요.`;q('[data-dram-cell-sense]').textContent=`${values[selected]}을 읽었어요. 원래 상태로 다시 써요.`;
+          }else{
+            phase='restored';const next=targets.slice();next[selected]=values[selected]?.9:.1;motionTo(next);read.textContent='① 다시 읽기';status.textContent=`③ 읽은 ${values[selected]}을 원래 상태로 복원했어요.`;caption.textContent='실제 DRAM에서는 이 과정이 빠르게 이어져요.';q('[data-dram-cell-sense]').textContent=`감지한 ${values[selected]}을 다시 써서 복원했어요.`;
+          }
+        }
+        if(value==='wait'){resetRead();motionTo(values.map(v=>v?.63:.1));status.textContent='시간이 지나면 누설로 저장 상태가 약해질 수 있어요.';caption.textContent='이 모형은 높은 저장 상태가 약해지는 예를 보여 줘요.';}
+        if(value==='refresh'){resetRead();phase='refreshed';motionTo(values.map(v=>v?.9:.1));status.textContent='원래 값을 읽고 다시 써요. 0은 0, 1은 1로 유지해요.';caption.textContent='모든 칸을 1로 채우는 것이 아니에요.';q('[data-dram-cell-sense]').textContent='원래 0과 1을 유지하도록 감지·복원';}
+        last=performance.now();paint();
+      };
+      root.querySelectorAll('[data-dram-cell]').forEach(el=>{const use=()=>select(Number(el.dataset.dramCell));listen(el,'click',use,dispose);listen(el,'keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();use();}},dispose);});
+      root.querySelectorAll('[data-dram-array-action]').forEach(el=>listen(el,'click',()=>action(el.dataset.dramArrayAction),dispose));
+      select(0);
+      if(!fixed(c))c.loop(()=>{if(!alive)return;const now=performance.now(),dt=Math.min((now-last)/1000,.08);last=now;pulse=(pulse+dt*28)%52;levels=levels.map((v,i)=>Math.abs(v-targets[i])<.001?targets[i]:v+(targets[i]-v)*Math.min(1,dt*4));paint();});
+      c.onDispose(()=>{alive=false;dispose.forEach(fn=>fn());});
+    }
+  };
+
+  deck.scenes.splice(deck.scenes.length-1,0,componentScene,waterScene,cellScene);
+  // Keep existing links to the original sequential circuit simulator stable.
+  deck.simIndex=8;
+  if(!deck.sources.some(s=>s.url==='https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/pages/c5/c5s1/'))deck.sources.push({title:'MIT · 축전기 메모리의 쓰기·읽기·리프레시',url:'https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/pages/c5/c5s1/'});
+}());
 
 (function(){
   'use strict';
@@ -1728,13 +2440,14 @@ window.HNR_LOGO_URI="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABLAAAASgCAIAA
   // Share one decoded logo across every scene without repeating a large data URL in the DOM.
   const logoBytes=Uint8Array.from(atob(window.HNR_LOGO_URI.split(',')[1]),char=>char.charCodeAt(0));
   const logoURL=URL.createObjectURL(new Blob([logoBytes],{type:'image/png'}));
+  const favicon=document.createElement('link');favicon.rel='icon';favicon.href=logoURL;document.head.appendChild(favicon);
   window.HNR_LOGO_URI=logoURL;
   window.HNR_CIRCUIT=new URLSearchParams(location.search).get('circuit')==='booth'?'booth':'paper';
   window.NOTES={};window.KW={items:entry.keywords.map(kw=>({kw})),at:entry.scenes.map((s,i)=>i===0?-1:s.keyword??0)};
   entry.scenes.forEach((s,i)=>{
     const id=entry.slug+'_'+String(i+1).padStart(2,'0');
     const sec=document.createElement('section');sec.className='slide'+(i===0?' cover':'')+(s.kind==='sim'?' sim-scene':'');sec.id=id;
-    sec.dataset.tile='light';sec.dataset.title=s.title;sec.dataset.notes='P'+(i+1);
+    sec.dataset.tile='light';sec.dataset.title=s.title;sec.dataset.notes='P'+(i+1);if(s.simId)sec.dataset.simId=s.simId;
     window.NOTES['P'+(i+1)]=s.notes+(s.tips?'<br><b>진행 팁</b> '+s.tips:'');
     sec.innerHTML=`<div class="brand"><img class="brand-logo" src="${window.HNR_LOGO_URI}" alt="해누리 HNR Tech Inc. 2026 마크">HNR Tech Inc.</div><div class="gate">${esc(entry.gate)}</div><div class="eyebrow">${esc(s.kicker||entry.title)}</div><h1 class="heading" data-in data-fx="rise">${s.title}</h1><div class="copy" data-in="100" data-fx="left">${s.body}</div><div class="graphic" data-in="100" data-fx="scale">${s.visual}</div><div class="takeaway" data-in="350" data-fx="rise">${s.takeaway}</div>${i===entry.scenes.length-1?'<div id="app-credit">2026 서울STEM축제 - 해누리중학교</div>':'<div class="stage-foot">2026 서울STEM축제 - 해누리중학교 <span class="stage-number">'+String(i+1).padStart(2,'0')+' / '+entry.scenes.length+'</span></div>'}`;
     document.getElementById('stage').appendChild(sec);
@@ -1749,12 +2462,26 @@ window.HNR_LOGO_URI="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABLAAAASgCAIAA
   const nav=document.createElement('nav');nav.className='booth-tools';nav.setAttribute('aria-label','설명 자료 메뉴');
   nav.innerHTML='<a href="index.html">관문 안내</a><a href="'+entry.slug+'.html?p='+entry.simIndex+'" class="sim-nav">과학 시뮬레이터</a><a href="guide.html#'+entry.slug+'" target="_blank" rel="noopener">연구원 대본</a>'+(entry.slug==='dram'?'<label>회로 <select aria-label="설명할 회로"><option value="paper">개선 종이회로</option><option value="booth">기존 부스 회로</option></select></label>':'');
   document.body.appendChild(nav);
+  const interactive=entry.scenes.map((s,i)=>({s,i})).filter(x=>x.s.kind==='sim');
+  if(interactive.length>1){
+    const chooser=document.createElement('details');chooser.className='lab-menu';
+    chooser.innerHTML='<summary>조작 장면 '+interactive.length+'개 ▾</summary><div class="lab-menu-list">'+interactive.map(({s,i},j)=>'<a href="'+entry.slug+'.html?p='+(i+1)+'" data-lab-jump="'+i+'"><span>'+String(j+1).padStart(2,'0')+'</span>'+esc(s.title.replace(/<[^>]*>/g,' '))+'</a>').join('')+'</div>';
+    nav.insertBefore(chooser,nav.querySelector('a[href^="guide"]'));
+    chooser.querySelectorAll('[data-lab-jump]').forEach(a=>a.addEventListener('click',e=>{
+      if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
+      e.preventDefault();chooser.open=false;
+      const u=new URL(location.href);['p','k','id','still'].forEach(k=>u.searchParams.delete(k));u.hash='';history.replaceState(null,'',u.pathname+u.search);
+      Deck.go(Number(a.dataset.labJump),0);window.scrollTo(0,0);
+    }));
+    document.addEventListener('click',e=>{if(!chooser.contains(e.target))chooser.open=false;});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')chooser.open=false;});
+  }
   nav.querySelector('.sim-nav').addEventListener('click',e=>{const u=new URL(location.href);['p','k','id','still'].forEach(k=>u.searchParams.delete(k));u.searchParams.set('p',String(entry.simIndex));u.hash='';e.currentTarget.href=u.pathname+u.search;});
   const motion=document.createElement('a');const motionLink=()=>{const u=new URL(location.href);['p','k','id'].forEach(k=>u.searchParams.delete(k));u.searchParams.set('motion',Deck.REDUCED?'full':'reduce');return u.pathname+u.search+u.hash;};motion.href=motionLink();motion.addEventListener('click',()=>motion.href=motionLink());motion.textContent=Deck.REDUCED?'동작 켜기':'동작 줄이기';motion.title='처음에는 운영체제의 동작 줄이기 설정을 따릅니다';nav.appendChild(motion);
   const sel=nav.querySelector('select');if(sel){sel.value=window.HNR_CIRCUIT;sel.addEventListener('change',()=>{window.HNR_CIRCUIT=sel.value;const u=new URL(location.href);u.searchParams.set('circuit',sel.value);history.replaceState(null,'',u);Deck.replay();});}
   const hint=document.createElement('p');hint.className='mobile-hint';hint.textContent='가로 화면에서 그림과 글을 더 크게 볼 수 있어요.';document.body.appendChild(hint);
   // Canonical engine treats Space/Enter as next. Preserve focused control activation.
-  document.addEventListener('keydown',e=>{if((e.key===' '||e.key==='Enter')&&e.target.closest('button,a'))e.stopImmediatePropagation();},true);
+  document.addEventListener('keydown',e=>{if((e.key===' '||e.key==='Enter')&&e.target.closest('button,a,summary'))e.stopImmediatePropagation();},true);
   document.addEventListener('keydown',e=>{if(e.target.closest('.sim-controls input,.sim-controls select')&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End',' ','Enter'].includes(e.key))e.stopImmediatePropagation();},true);
   // Prevent slide navigation while editing the canonical volume popup.
   document.addEventListener('keydown',e=>{if(e.target.closest('#lecture-volume-panel')&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Enter'].includes(e.key))e.stopImmediatePropagation();},true);

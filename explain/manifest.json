@@ -19,6 +19,7 @@
         "id": "energy_01",
         "title": "손을 잡자, 불이 켜졌어요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -26,6 +27,7 @@
         "id": "energy_02",
         "title": "세 가지만 기억해요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -33,6 +35,7 @@
         "id": "energy_03",
         "title": "길이 끊기면 신호도 멈춰요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -40,6 +43,7 @@
         "id": "energy_04",
         "title": "스틱은 아주 작은 전류를 감지해요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -47,6 +51,7 @@
         "id": "energy_05",
         "title": "불을 켜는 에너지는 어디에서 올까요?",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -54,13 +59,31 @@
         "id": "energy_06",
         "title": "누가 손을 놓으면 어떻게 될까요?",
         "kind": "sim",
+        "simId": "energy-live",
         "steps": 0
       },
       {
         "index": 7,
         "id": "energy_07",
+        "title": "몸과 전지는 어떤 일을 할까요?",
+        "kind": "sim",
+        "simId": "energy-inside-jobs",
+        "steps": 0
+      },
+      {
+        "index": 8,
+        "id": "energy_08",
+        "title": "불이 꺼졌어요. 무엇부터 확인할까요?",
+        "kind": "sim",
+        "simId": "energy-repair-bench",
+        "steps": 0
+      },
+      {
+        "index": 9,
+        "id": "energy_09",
         "title": "전류가 흐르려면 길이 이어져야 해요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       }
     ],
@@ -91,6 +114,7 @@
         "id": "static_01",
         "title": "손대지 않았는데 캔이 따라와요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -98,6 +122,7 @@
         "id": "static_02",
         "title": "문지르기 → 자리 바꾸기 → 끌려오기",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -105,6 +130,7 @@
         "id": "static_03",
         "title": "문지르면 전자가 옮겨 가요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -112,6 +138,7 @@
         "id": "static_04",
         "title": "캔 전체는 계속 중성이에요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -119,6 +146,7 @@
         "id": "static_05",
         "title": "가까운 쪽의 끌림이 더 강해요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -126,13 +154,31 @@
         "id": "static_06",
         "title": "빨대가 양전하라면 어떨까요?",
         "kind": "sim",
+        "simId": "static-live",
         "steps": 0
       },
       {
         "index": 7,
         "id": "static_07",
+        "title": "문지르면 전자가 새로 생길까요?",
+        "kind": "sim",
+        "simId": "static-electron-ledger",
+        "steps": 0
+      },
+      {
+        "index": 8,
+        "id": "static_08",
+        "title": "빨대를 치우면, 캔의 전하는 어떻게 될까요?",
+        "kind": "sim",
+        "simId": "static-return-and-pair",
+        "steps": 0
+      },
+      {
+        "index": 9,
+        "id": "static_09",
         "title": "전하가 자리를 바꾸면, 캔도 움직여요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       }
     ],
@@ -140,6 +186,10 @@
       {
         "title": "Institute of Physics · Attracting can",
         "url": "https://spark.iop.org/attracting-can"
+      },
+      {
+        "title": "OpenStax: charge separation in neutral conductors",
+        "url": "https://openstax.org/books/university-physics-volume-2/pages/5-2-conductors-insulators-and-charging-by-induction"
       }
     ]
   },
@@ -163,6 +213,7 @@
         "id": "plasma_01",
         "title": "끝을 잡으니 형광등이 켜졌어요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -170,6 +221,7 @@
         "id": "plasma_02",
         "title": "가운데를 잡으면 어디까지 켜질까요?",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -177,6 +229,7 @@
         "id": "plasma_03",
         "title": "빠르게 변하는 전기장이 작용해요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -184,6 +237,7 @@
         "id": "plasma_04",
         "title": "손도 전기적 조건을 바꿔요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -191,6 +245,7 @@
         "id": "plasma_05",
         "title": "형광등 안에서는 어떤 일이?",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -198,13 +253,31 @@
         "id": "plasma_06",
         "title": "깜빡이의 암실 장비를 조작해요",
         "kind": "sim",
+        "simId": null,
         "steps": 0
       },
       {
         "index": 7,
         "id": "plasma_07",
+        "title": "유리 너머로, 무엇이 전달될까요?",
+        "kind": "sim",
+        "simId": "plasma-field-lens",
+        "steps": 0
+      },
+      {
+        "index": 8,
+        "id": "plasma_08",
+        "title": "전기가 어떻게 빛이 될까요?",
+        "kind": "sim",
+        "simId": "plasma-light-chain",
+        "steps": 0
+      },
+      {
+        "index": 9,
+        "id": "plasma_09",
         "title": "암실의 단서는 손의 위치예요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       }
     ],
@@ -247,6 +320,7 @@
         "id": "train_01",
         "title": "건전지 코일 열차",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -254,6 +328,7 @@
         "id": "train_02",
         "title": "세 가지만 따라가 볼까요?",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -261,6 +336,7 @@
         "id": "train_03",
         "title": "닿아야 전류가 흘러요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -268,6 +344,7 @@
         "id": "train_04",
         "title": "두 힘이 같은 쪽을 향해요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -275,6 +352,7 @@
         "id": "train_05",
         "title": "전류를 뒤집으면?",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -282,13 +360,31 @@
         "id": "train_06",
         "title": "터널 열차를 직접 운행해요",
         "kind": "sim",
+        "simId": null,
         "steps": 0
       },
       {
         "index": 7,
         "id": "train_07",
+        "title": "접점이 끊기면 출발할까요?",
+        "kind": "sim",
+        "simId": "engage-train-contact",
+        "steps": 0
+      },
+      {
+        "index": 8,
+        "id": "train_08",
+        "title": "하나만 뒤집을까요, 둘 다 뒤집을까요?",
+        "kind": "sim",
+        "simId": "engage-train-reversal",
+        "steps": 0
+      },
+      {
+        "index": 9,
+        "id": "train_09",
         "title": "전기가 움직임을 만들었어요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       }
     ],
@@ -323,6 +419,7 @@
         "id": "compass_01",
         "title": "전류로 나침반 움직이기",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -330,6 +427,7 @@
         "id": "compass_02",
         "title": "세 가지 연결을 찾아요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -337,6 +435,7 @@
         "id": "compass_03",
         "title": "켜고, 끄고, 뒤집어 봐요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -344,6 +443,7 @@
         "id": "compass_04",
         "title": "두 자기장을 함께 느껴요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -351,6 +451,7 @@
         "id": "compass_05",
         "title": "전류를 반대로 흘리면",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -358,13 +459,31 @@
         "id": "compass_06",
         "title": "황금나침반의 방향을 바꿔요",
         "kind": "sim",
+        "simId": null,
         "steps": 0
       },
       {
         "index": 7,
         "id": "compass_07",
+        "title": "전류가 커지면 더 기울까요?",
+        "kind": "sim",
+        "simId": "engage-compass-vector",
+        "steps": 0
+      },
+      {
+        "index": 8,
+        "id": "compass_08",
+        "title": "전류가 같아도 방향은 달라질까요?",
+        "kind": "sim",
+        "simId": "engage-compass-layout",
+        "steps": 0
+      },
+      {
+        "index": 9,
+        "id": "compass_09",
         "title": "전류가 자석처럼 작용해요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       }
     ],
@@ -386,10 +505,10 @@
       "gate": 5,
       "place": "자이로드롭 통로",
       "npc": "터널지기 할아버지",
-      "skill": "인내심",
-      "mission": "자석이 천천히 내려오는 통로를 찾으세요.",
-      "line": "급할수록 돌아가라 했지. 두 통로에 같은 자석을 떨어뜨려 보시게.",
-      "clue": "자석이 천천히 내려온 구리 ROAD로 가시게.",
+      "skill": "자기 제동",
+      "mission": "구리관에서 자석을 놓고 출구에 나오는 때를 관찰하세요.",
+      "line": "가만히 대면 붙지 않는데, 관 안으로 놓으면 어떨까? 출구를 함께 살펴보세.",
+      "clue": "제동 설정은 ‘움직임을 늦춘다’. 확인 뒤 중앙 제어실로 가요.",
       "next": "dram"
     },
     "simIndex": 6,
@@ -399,6 +518,7 @@
         "id": "eddy_01",
         "title": "구리관 속 느려지는 자석",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -406,6 +526,7 @@
         "id": "eddy_02",
         "title": "세 가지 순서로 설명해요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -413,6 +534,7 @@
         "id": "eddy_03",
         "title": "구리에 붙은 것이 아니에요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -420,6 +542,7 @@
         "id": "eddy_04",
         "title": "구리 안에서 전류가 돌아요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -427,20 +550,39 @@
         "id": "eddy_05",
         "title": "아래로 떨어지면서, 위로 힘을 받아요",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
         "index": 6,
         "id": "eddy_06",
-        "title": "자이로드롭 통로를 시험해요",
+        "title": "구리관 안에서는 무슨 일이?",
         "kind": "sim",
+        "simId": null,
         "steps": 0
       },
       {
         "index": 7,
         "id": "eddy_07",
+        "title": "가만히 있을 때도 제동할까요?",
+        "kind": "sim",
+        "simId": "engage-eddy-observe",
+        "steps": 0
+      },
+      {
+        "index": 8,
+        "id": "eddy_08",
+        "title": "위로 움직이면 제동력은 어디로?",
+        "kind": "sim",
+        "simId": "engage-eddy-direction",
+        "steps": 0
+      },
+      {
+        "index": 9,
+        "id": "eddy_09",
         "title": "구리관은 전자기 브레이크",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       }
     ],
@@ -479,6 +621,7 @@
         "id": "dram_01",
         "title": "나만의 RAM 한 조각 만들기",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -486,6 +629,7 @@
         "id": "dram_02",
         "title": "1비트는 얼마나 작은 기억일까요?",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -493,6 +637,7 @@
         "id": "dram_03",
         "title": "에너지를 주고, 잠시 저장해요.",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -500,6 +645,7 @@
         "id": "dram_04",
         "title": "버튼은 길을 열고, 저항은 전류를 제한해요.",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -507,6 +653,7 @@
         "id": "dram_05",
         "title": "① 쓰기: 축전기를 충전해요.",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -514,6 +661,7 @@
         "id": "dram_06",
         "title": "② 손 떼기: 잠깐 기억하고 있어요.",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -521,6 +669,7 @@
         "id": "dram_07",
         "title": "③ 읽기: 저장한 에너지로 빛나요.",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
@@ -528,6 +677,7 @@
         "id": "dram_08",
         "title": "비트에게 합격을 기억시켜요",
         "kind": "sim",
+        "simId": null,
         "steps": 0
       },
       {
@@ -535,13 +685,39 @@
         "id": "dram_09",
         "title": "컴퓨터의 DRAM은 어떻게 다를까요?",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
         "index": 10,
         "id": "dram_10",
+        "title": "이 부품은 어느 길에서 일할까요?",
+        "kind": "sim",
+        "simId": "dram-component-paths",
+        "steps": 0
+      },
+      {
+        "index": 11,
+        "id": "dram_11",
+        "title": "LED는 꺼졌는데, 기억은 남을까요?",
+        "kind": "sim",
+        "simId": "dram-water-memory",
+        "steps": 0
+      },
+      {
+        "index": 12,
+        "id": "dram_12",
+        "title": "실제 DRAM은 읽은 뒤 어떻게 할까요?",
+        "kind": "sim",
+        "simId": "dram-real-cell-array",
+        "steps": 0
+      },
+      {
+        "index": 13,
+        "id": "dram_13",
         "title": "이제 내 기억 회로를 만들어요.",
         "kind": "explain",
+        "simId": null,
         "steps": 0
       }
     ],
@@ -553,6 +729,10 @@
       {
         "title": "Micron · DRAM 기술 FAQ",
         "url": "https://www.micron.com/sales-support/sales/faqs"
+      },
+      {
+        "title": "MIT · 축전기 메모리의 쓰기·읽기·리프레시",
+        "url": "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/pages/c5/c5s1/"
       }
     ]
   }
