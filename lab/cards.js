@@ -8,7 +8,7 @@
     2: { place: '클린룸', title: '닿지 않아도 끌려와요', topic: '정전기와 전하', alt: '알루미늄 캔과 플라스틱 빨대 장비 콘셉트 이미지' },
     3: { place: '암실', title: '전기장이 깨우는 빛', topic: '전기장과 빛', alt: '세워진 플라즈마볼 옆에 수평으로 놓인 형광등 장비 콘셉트 이미지' },
     4: { place: '황금 나침반', title: '전류가 바늘을 돌려요', topic: '전류와 자기장', alt: '황금 나침반과 코일 장비 콘셉트 이미지' },
-    5: { place: '자이로드롭 통로', title: '천천히 내려오는 자석', topic: '유도 전류와 제동', alt: '구리관과 투명관, 자석 장비 콘셉트 이미지' }
+    5: { place: '자이로드롭 통로', title: '천천히 내려오는 자석', topic: '유도 전류와 제동', alt: '구리관 하나와 원통형 자석 장비 콘셉트 이미지', art: 'science-card-05-copper-only.webp' }
   };
   function esc(s) { return String(s).replace(/[&<>"']/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function code(n) { return String(n).padStart(2, '0'); }
@@ -20,7 +20,7 @@
     var d = DATA[n], back = side === 'back';
     return '<div class="face ' + side + '">' + brand(n, side, popup) +
       '<div class="research-label"><span' + (back ? '' : ident('cardFrontHd', popup)) + '>' + (back ? '과학 한 줄' : '연구 카드') + '</span><span>SC–' + code(n) + '</span></div>' +
-      (back ? '<figure class="card-art"><span class="card-art-fallback" aria-hidden="true">' + esc(d.topic) + '</span><img src="' + ROOT + 'science-card-' + code(n) + '.webp" width="960" height="640" alt="' + esc(d.alt) + '" decoding="async" draggable="false"></figure>' :
+      (back ? '<figure class="card-art"><span class="card-art-fallback" aria-hidden="true">' + esc(d.topic) + '</span><img src="' + ROOT + (d.art || 'science-card-' + code(n) + '.webp') + '" width="960" height="640" alt="' + esc(d.alt) + '" decoding="async" draggable="false"></figure>' :
         '<div class="research-seal" aria-hidden="true"><span>GATE</span><b>' + code(n) + '</b><i>HNR RESEARCH</i></div>') +
       '<h3 class="research-title">' + esc(back ? d.title : d.place) + '</h3>' +
       '<div class="tx"' + ident(back ? 'cardBackTx' : 'cardFrontTx', popup) + '>' + html + '</div>' +

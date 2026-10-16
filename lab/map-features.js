@@ -45,7 +45,7 @@ function instrument(x,z,color,kind){
       P.part(85,35,48,B.orange,x,93,z);P.part(38,15,45,B.white,x,118,z);
       [-28,28].forEach(dx=>[-21,21].forEach(dz=>P.ball(9,B.black,x+dx,77,z+dz,{seg:8})));
     }else if(kind===5){
-      [-28,28].forEach((dx,i)=>{P.cyl(15,15,95,i?B.acrylic:B.copper,x+dx,124,z,{opacity:i?.45:1});});
+      P.cyl(20,20,95,B.copper,x,124,z,{open:true});P.cyl(12,12,10,B.steel,x,180,z);
     }else{
       P.part(90,4,58,B.green,x,79,z);for(let i=0;i<3;i++)P.part(20,6,25,B.black,x-28+i*28,84,z);
     }

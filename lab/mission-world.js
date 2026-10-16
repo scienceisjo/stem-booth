@@ -11,7 +11,7 @@ const metadata={
   g2:{n:2,title:'캔과 빨대',action:'빨대를 대전시켜 가까이 대기',notice:'닿지 않는 거리에서도 캔이 빨대 쪽으로 움직여요.'},
   g4a:{n:4,title:'코일 열차',action:'열차 출발시키기',notice:'건전지와 자석으로 만든 열차가 구리 코일 안에서 움직여요.'},
   g4b:{n:4,title:'황금 나침반',action:'전류 켜기 · 반전 · 복원',notice:'전류를 켜고 반전한 뒤 처음 방향으로 되돌려 바늘을 관찰해요.'},
-  g5:{n:5,title:'자이로드롭 비교 장치',action:'두 자석 함께 놓기',notice:'같은 높이에서 놓아도 구리관 쪽 자석은 더 늦게 도착해요.'}
+  g5:{n:5,title:'구리관 전자기 브레이크',action:'구리관에서 자석 놓기',notice:'구리관과 자석의 상대적인 움직임이 낙하를 방해하는 힘을 만들어요. 자석은 멈추지 않고 내려와요.'}
 };
 function at(a,x,z){return H.flow.l2w(a.x,a.z,a.ry||0,x,z);}
 function rect(x,z,w,d){return{x1:x-w/2,x2:x+w/2,z1:z-d/2,z2:z+d/2};}
@@ -107,17 +107,28 @@ function makeCompass(rec){
 }
 function makeDrop(rec){
   P.part(430,24,230,B.white,0,14,0);P.part(430,5,230,B.blue,0,29,0);
-  [-105,105].forEach(x=>{P.part(120,12,140,B.steel,x,40,0);P.part(14,284,16,B.navy,x,176,-70);});
-  // Open tubes, with the copper cutaway explicitly labelled as a view into the model.
-  P.cyl(38,38,240,B.copper,-105,177,0,{open:true,opacity:.48,side:T.DoubleSide});
-  P.cyl(38,38,240,B.acrylic,105,177,0,{open:true,opacity:.2,side:T.DoubleSide});
-  [-105,105].forEach((x,i)=>[57,297].forEach(y=>P.torus(38,4,i?B.steel:B.copper,x,y,0,{rx:PI/2,seg:24})));
-  const slow=P.cyl(25,25,18,B.steel,-105,286,0,{dynamic:true}),fast=P.cyl(25,25,18,B.steel,105,286,0,{dynamic:true});
-  P.text('구리관 · 내부 보기',{x:-105,y:338,z:0,w:190,bg:'#ffffff',color:'#102e54'});
-  P.text('아크릴관',{x:105,y:338,z:0,w:145,bg:'#ffffff',color:'#102e54'});
-  rec.start=()=>{rec.elapsed=0;slow.position.y=fast.position.y=286;};
-  rec.tick=dt=>{rec.elapsed+=dt;slow.position.y=286-225*Math.min(1,rec.elapsed/3.2);fast.position.y=286-225*Math.min(1,Math.pow(rec.elapsed/.68,2));if(rec.elapsed>=3.2)rec.running=false;};
-  rec.slow=slow;rec.fast=fast;
+  P.part(150,12,150,B.steel,0,40,0);P.part(14,300,16,B.navy,0,190,-70);
+  // One real copper tube. Transparency is only a view into this conceptual model.
+  // The outlet is raised enough for the magnet to leave the tube completely.
+  const tube=P.cyl(38,38,240,B.copper,0,206,0,{open:true,opacity:.48,side:T.DoubleSide});
+  tube.name='g5-copper-tube';
+  [86,326].forEach(y=>P.torus(38,4,B.copper,0,y,0,{rx:PI/2,seg:24}));
+  const magnet=P.cyl(25,25,18,B.steel,0,350,0,{dynamic:true});magnet.name='g5-magnet';
+  const currents=[-20,20].map(dy=>{
+    const ring=P.torus(39,2,B.gold,0,206+dy,0,{rx:PI/2,seg:24,dynamic:true,visible:false,basic:true});
+    ring.name='g5-eddy-current-concept';return{dy,ring};
+  });
+  P.text('내부·전류 개념 모형',{x:140,y:230,z:0,w:150,bg:'#ffffff',color:'#102e54'});
+  const held=.3,fall=2.9,tau=.15,total=held+fall;
+  const travel=t=>t-tau*(1-Math.exp(-t/tau)),normalizer=travel(fall);
+  rec.start=()=>{rec.elapsed=0;magnet.position.y=350;currents.forEach(c=>{c.ring.visible=false;});};
+  rec.tick=dt=>{
+    rec.elapsed+=dt;const t=Math.max(0,Math.min(fall,rec.elapsed-held));
+    magnet.position.y=350-294*travel(t)/normalizer;
+    currents.forEach(c=>{const y=magnet.position.y+c.dy;c.ring.position.y=y;c.ring.visible=t>0&&t<fall&&y>90&&y<322;});
+    if(rec.elapsed>=total){magnet.position.y=56;currents.forEach(c=>{c.ring.visible=false;});rec.running=false;}
+  };
+  rec.slow=magnet;rec.magnet=magnet;rec.copperTube=tube;
 }
 const builders={g1:makeStick,g2:makeCan,g4a:makeTrain,g4b:makeCompass,g5:makeDrop};
 function recordDemo(rec){

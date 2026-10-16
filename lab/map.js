@@ -12,7 +12,7 @@ const rooms = [
   {n:2,x:-1150,z:-500,color:B.cyan,sub:'정전기 장치를 점검해요',entry:'S',exit:'N'},
   {n:3,x:-1150,z:-2100,color:B.violet,sub:'꺼진 형광등을 켜요',entry:'S',exit:'E'},
   {n:4,x:1150,z:-2100,color:B.orange,sub:'운송과 방향 장치를 복구해요',entry:'W',exit:'S'},
-  {n:5,x:1150,z:-500,color:B.copper,sub:'자기 브레이크를 확인해요',entry:'N',exit:'S'},
+  {n:5,x:1150,z:-500,color:B.copper,sub:'전자기 브레이크를 확인해요',entry:'N',exit:'S'},
   {n:6,x:1150,z:1100,color:B.green,sub:'준비 신호 1을 기록해요',entry:'N',exit:'S'}
 ];
 const anchors = {
@@ -65,7 +65,7 @@ function furnishing(r) {
     for(let i=0;i<8;i++)P.box(240,4,20,B.brown,r.x,4,r.z-350+i*100);
     board('터널 열차 연구실','코일 열차 · 나침반\n두 실험을 모두 만나 보아요',r.x,r.z-460,0,200);
   }
-  if(r.n===5)board('자이로드롭 통로','구리관 · 아크릴관\n낙하를 비교하는 곳',r.x-550,r.z+430,PI,170);
+  if(r.n===5)board('자이로드롭 통로','구리관 전자기 브레이크\n느려지는 자석을 관찰해요',r.x-550,r.z+430,PI,170);
   if(r.n===6){
     board('중앙 제어실','1비트 기억 회로\n준비 신호 1을 기록해요',r.x-550,r.z+400,PI,170);
     for(let i=0;i<3;i++){H.props.cabinet(r.x-710,r.z-300+i*150,{color:B.navy,h:115});W.addBlock(rect(r.x-710,r.z-300+i*150,70,45));}
@@ -147,8 +147,15 @@ function clue(n,f,side) {
       if(side===coilSide){for(let i=0;i<8;i++)P.torus(25,3,B.copper,lx+(side==='L'?-140:140),52,30+i*7);}
     }
     if(n===5){
-      P.part(170,6,270,correct?B.copper:B.acrylic,lx,7,175,{opacity:correct?1:.42});
-      if(!correct){P.part(170,95,10,B.acrylic,lx,48,-70,{opacity:.45});}
+      // Both paths describe the SAME copper apparatus: choose the observed effect.
+      P.part(170,6,270,B.blue,lx,7,175);
+      const count=correct?1:3;
+      for(let i=0;i<count;i++){
+        const z=115+i*48;
+        P.box(12,5,42,B.white,lx-12,13,z,{ry:-.65});
+        P.box(12,5,42,B.white,lx+12,13,z,{ry:.65});
+      }
+      P.text(correct?'천천히':'빠르게',{x:lx,y:44,z:265,w:130,bg:'#ffffff',color:'#102e54'});
     }
   });
   P.bake(g);
