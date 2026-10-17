@@ -35,7 +35,7 @@ function build(){
  syncSound();
  shade=get('.op-shade');title=get('h1');caption=get('.op-text');kicker=get('.op-kicker');status=get('.op-status');card=get('.op-card');help=get('.op-help');
  credits=document.createElement('div');credits.className='op-credits';credits.hidden=true;credits.setAttribute('aria-label','제작진');
- credits.innerHTML='<p class="op-team-line">함께 준비하고, 직접 안내하는 해누리 연구팀</p><dl class="op-teachers"><div><dt>대표교사</dt><dd>남국현</dd></div><div><dt>지도교사</dt><dd>조승재</dd></div></dl><dl class="op-makers"><div><dt>1비트 기억회로 설계</dt><dd>남국현</dd></div><div class="op-digital"><dt>디지털 콘텐츠 총괄 기획·개발</dt><dd>조승재<p>연구소 맵 · 과학 시뮬레이터 · 학습 공간 · 교육자료 제작</p></dd></div></dl>';
+ credits.innerHTML='<p class="op-team-line">함께 준비하고, 직접 안내하는 해누리 연구팀</p><dl class="op-teachers"><div><dt>대표교사</dt><dd>남국현</dd></div><div class="op-guide"><dt>지도교사</dt><dd>조승재</dd></div></dl><dl class="op-makers"><div class="op-circuit"><dt>1비트 기억회로 설계</dt><dd><span class="op-affiliation">해누리중학교 물리교사</span><strong class="op-designer">남국현</strong></dd></div><div class="op-digital"><dt>디지털 콘텐츠 총괄 기획·개발</dt><dd>조승재<p>연구소 맵 · 과학 시뮬레이터 · 학습 공간 · 교육자료 제작</p></dd></div></dl>';
  card.insertBefore(credits,get('.op-controls'));
  pauseBtn=get('.op-pause');nextBtn=get('.op-next');previousBtn=get('.op-prev');
  get('.op-progress').innerHTML=copy.map(()=>'<span><i></i></span>').join('');progress=Array.from(overlay.querySelectorAll('.op-progress i'));
