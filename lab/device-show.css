@@ -1,0 +1,39 @@
+/* HNR Tech Inc. · The apparatus stays unobstructed between two compact, readable panels. */
+#deviceShow[hidden]{display:none!important}
+#deviceShow{position:fixed;inset:0;z-index:46;display:flex;flex-direction:column;justify-content:space-between;padding:20px 24px calc(16px + env(safe-area-inset-bottom));color:#102846;font-family:var(--font,system-ui,sans-serif);touch-action:none;overflow:hidden;background:linear-gradient(180deg,#061c3733,transparent 18%,transparent 70%,#061c3733)}
+#deviceShow .ds-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#deviceShow .ds-brand{display:flex;align-items:center;gap:10px;padding:7px 13px 7px 8px;border:1px solid #c4dcf6;border-radius:12px;background:#fff;box-shadow:0 4px 25px #001d4224;font-size:16px;font-weight:900}
+#deviceShow .ds-brand img{width:40px;height:40px;object-fit:contain;flex:none}
+#deviceShow button{min-height:44px;padding:10px 14px;border:1px solid #bfd7ef;border-radius:10px;background:#fff;color:#102846;font:800 13px/1.4 var(--font,system-ui,sans-serif);cursor:pointer;touch-action:manipulation;box-shadow:0 4px 22px #001d4224}
+#deviceShow button:focus-visible{outline:3px solid #f5bd29;outline-offset:3px}
+#deviceShow kbd{margin-left:7px;border:1px solid #99bbdd;border-radius:4px;padding:1px 4px;font:700 11px/1.3 system-ui,sans-serif}
+#deviceShow .ds-footer{width:min(720px,100%);align-self:center;background:#fff;border:1px solid #b8d6f3;border-radius:13px;box-shadow:0 8px 35px #001d4238;overflow:hidden}
+#deviceShow .ds-copy{padding:14px 18px 12px}
+#deviceShow .ds-eyebrow{color:#005bb7;font-size:11px;font-weight:900;letter-spacing:.05em;margin:0 0 4px}
+#deviceShow h2{color:#102846;font-size:clamp(19px,2.4vw,28px);line-height:1.3;font-weight:900;letter-spacing:-.035em;margin:0 0 5px;word-break:keep-all}
+#deviceShowCaption{color:#102846;font-size:clamp(13px,1.45vw,17px);line-height:1.5;font-weight:650;word-break:keep-all;margin:0}
+#deviceShow .ds-progress{height:4px;background:#cfe3f7}
+#deviceShow .ds-progress i{display:block;height:100%;background:#006bce;transform:scaleX(0);transform-origin:left;will-change:transform}
+#deviceShow .ds-status{background:#eaf4ff;color:#15497e;font-size:12px;font-weight:750;line-height:1.4;text-align:center;padding:7px 12px;margin:0}
+body.device-showing .hud,body.device-showing #exploreTools,body.device-showing #toasts,body.device-showing #simBrand,body.device-showing #cruisePanel,body.device-showing #interviewHud,body.device-showing #mouseLookHint,body.device-showing #mouseAim{visibility:hidden!important;pointer-events:none!important}
+@media(max-width:640px){
+ #deviceShow{padding:12px 10px calc(10px + env(safe-area-inset-bottom))}
+ #deviceShow .ds-brand{font-size:12px;padding:5px 9px 5px 5px;gap:6px;border-radius:9px}
+ #deviceShow .ds-brand img{width:32px;height:32px}
+ #deviceShow button{font-size:12px;padding:9px 11px}
+ #deviceShow kbd{display:none}
+ #deviceShow .ds-copy{padding:11px 13px}
+ #deviceShow .ds-eyebrow{font-size:10px}
+ #deviceShow .ds-status{font-size:11px;padding:7px}
+}
+@media(max-height:520px) and (min-width:641px){
+ #deviceShow{padding:10px 14px}
+ #deviceShow .ds-brand{font-size:12px;padding:4px 10px 4px 5px}
+ #deviceShow .ds-brand img{width:28px;height:28px}
+ #deviceShow button{min-height:38px;padding:7px 11px;font-size:12px}
+ #deviceShow .ds-copy{padding:8px 13px}
+ #deviceShow h2{font-size:20px;margin-bottom:3px}
+ #deviceShowCaption{font-size:12px}
+ #deviceShow .ds-eyebrow{display:none}
+ #deviceShow .ds-status{font-size:10px;padding:4px}
+}

@@ -115,20 +115,22 @@ function fork(r) {
   ['L','R'].forEach((side,i)=>{
     const p=local(f,side==='L'?-190:190,0);
     const door=H.props.door(p.x,p.z,{w:190,h:130,ry:f.ry,color:r.color,label:labels[n][i],labelW:210});
-    door.userData.setOpen(true,true);doors[side]=door;
+    door.userData.setOpen(n!==1&&n!==2,true);doors[side]=door;
+    if(n===1||n===2)W.addBlock({...F.rectOf(p.x,p.z,210,38,f.ry),id:'route-lock-'+n+side},()=>!door.userData.isOpen());
     const ip=local(f,side==='L'?-190:190,80);
-    interacts[side]=W.addInteract({id:'fork'+n+side,x:ip.x,z:ip.z,r:110,mesh:door,label:'E · '+labels[n][i],onUse:()=>{
+    interacts[side]=W.addInteract({id:'fork'+n+side,x:ip.x,z:ip.z,r:110,mesh:door,label:()=> 'E · '+((n<=2&&!door.userData.isOpen())?'잠긴 문 · ':'')+labels[n][i],onUse:()=>{
       if(n===5)return H.journey?.open('g5',{prediction:side==='L'?'faster':'similar'});
       if(n===4)return H.ui.say([{who:'jjirit',t:'두 길 모두 열려 있어요. 정원 통로로 중앙 제어실에 가거나, 브레이크실에 들러 자유 체험을 해 보세요.'}]);
-      return H.journey?.open('g'+n);
+      return H.journey?.open('g'+n,{side});
     }});
     const portal=local(f,side==='L'?-190:190,-40);
     W.addWalk('portal'+n+side,F.rectOf(portal.x,portal.z,190,200,f.ry));
   });
   if(n===2){const p=local(f,-335,60);W.addNpc('daechung',p.x,p.z,{ry:f.ry+PI,look:false});}
   M.forks[n]={...f,doors,interacts,back,spot:back};F.spots.fork[n]={...back,n};
+  if(n===1||n===2){const sync=instant=>{const selected=H.routePass?.openSide(n);['L','R'].forEach(side=>doors[side].userData.setOpen(selected===side,instant));};sync(true);H.on('state',()=>sync(false));}
   const sign=local(f,0,30);
-  board(n===5?'예상하고 직접 관찰':'열린 연구실 통로',n===5?'어느 예상이든\n관찰하며 확인해요':'실험은 학생 연구원과 함께\n다음 안내는 지금 할 일에서',sign.x,sign.z,f.ry,130);
+  board(n===5?'예상하고 직접 관찰':n<=2?'답을 고르고 암호 말하기':'열린 연구실 통로',n===5?'어느 예상이든\n관찰하며 확인해요':n<=2?'장치 시연을 관찰한 뒤\n진행자의 암호로 문을 열어요':'실험은 학생 연구원과 함께\n다음 안내는 지금 할 일에서',sign.x,sign.z,f.ry,130);
   if(n===4){
     const g=P.group(f.x,0,f.z,{ry:f.ry});P.with(g,()=>{
       P.cyl(60,60,20,B.gold,0,20,230);P.cyl(53,53,3,B.white,0,31,230);

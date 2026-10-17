@@ -235,8 +235,8 @@ function buildPanel(ctx) {
   const lead = ST('sims.' + id + '.lead', def.lead || ''); if (lead) body.appendChild(mk('div', 'sp-lead', esc(lead)));
   const tasks = mk('ul', 'sp-tasks', '<li class="hd">탐구 과제</li>' + def.tasks.map(function (t) { return '<li class="sp-task' + (sim.taskDone(id, t.id) ? ' done' : '') + '" data-task="' + esc(t.id) + '">' + esc(t.text) + '</li>'; }).join(''));
   body.appendChild(tasks);
-  const pass = mk('div', 'sp-pass', '🎉 관찰 완료! 복구 결과를 기록해요'); pass.hidden = true;
-  const pb = mk('button', 'hbtn sm green wide'); pb.type = 'button'; pb.textContent = '복구 결과 기록하기'; pb.addEventListener('click', function () { sim.close(); setTimeout(function () { if (gate && HNR.flow.observedDone(gate) && !HNR.state.gatePassed(gate)) HNR.flow.pass(gate); }, 0); }); pass.appendChild(pb);
+  const pass = mk('div', 'sp-pass', '🎉 관찰 완료! 관찰 내용을 기록해요'); pass.hidden = true;
+  const pb = mk('button', 'hbtn sm green wide'); pb.type = 'button'; pb.textContent = '관찰 내용 확인하기'; pb.addEventListener('click', function () { sim.close(); setTimeout(function () { if (gate && HNR.flow.observedDone(gate) && !HNR.state.gatePassed(gate)) HNR.flow.pass(gate); }, 0); }); pass.appendChild(pb);
   body.appendChild(pass);
   const W = mk('div', 'sp-widgets'); body.appendChild(W);
   const about = mk('details', 'sp-fold sp-about', '<summary>이 모형은요</summary><div class="sp-fold-body"></div>'); about.hidden = true; body.appendChild(about);
@@ -248,7 +248,7 @@ function buildPanel(ctx) {
 }
 function showPass(ctx, quiet) {
   const d = ctx._dom; if (d && !d.detached) d.pass.hidden = false;
-  if (!quiet) { HNR.sfx('badge'); HNR.ui.toast('관찰 완료! 복구 결과를 기록해요', { icon: '🎉', cls: 'gold', ms: 3200 }); }
+  if (!quiet) { HNR.sfx('badge'); HNR.ui.toast('관찰 완료! 관찰 내용을 기록해요', { icon: '🎉', cls: 'gold', ms: 3200 }); }
 }
 function showBubble(text, ms) {
   if (!bubbleEl) { bubbleEl = mk('div', 'sp-bubble'); bubbleEl.hidden = true; document.body.appendChild(bubbleEl); }

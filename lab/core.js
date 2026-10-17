@@ -971,13 +971,26 @@ const player = HNR.player = {
   },
   /* 걷기·시점 입력 잠금(시뮬 모드·연출용) */
   lock: function (b) { player.locked = !!b; if (b) { player.stop(); input.setJoy(0, 0); } },
-  stop: function () { walkQueue = []; pendingUse = null; onArrive = null; player.walking = false; },
+  stop: function () { const prev = onArrive; walkQueue = []; pendingUse = null; onArrive = null; player.walking = false; if (prev) prev(false); },
   /* (x,z) 로 걸어간다(문을 거쳐 길을 찾는다). 도착하면 Promise<true>, 막히거나 취소되면 false */
   walkTo: function (x, z) {
     const p = world.nearest(x, z) || { x: x, z: z };
     walkQueue = world.route(player.x, player.z, p.x, p.z); stuckT = 0; losT = 0; pendingUse = null;
     const prev = onArrive; if (prev) prev(false);
     return new Promise(function (res) { onArrive = res; });
+  },
+  /* 외부에서 계산한 안전 경유점을 그대로 걷는다. 잠금·가구 충돌을 먼저 검사하며 이동 중에도 기존 충돌 검사를 유지한다. */
+  walkPath: function (points) {
+    if (!Array.isArray(points) || !points.length) return Promise.resolve(false);
+    const path = [], start = { x: player.x, z: player.z }; let previous = start;
+    for (let i = 0; i < points.length; i++) {
+      const p = points[i];
+      if (!p || !Number.isFinite(p.x) || !Number.isFinite(p.z) || !world.allowed(p.x, p.z) || !world.clear(previous.x, previous.z, p.x, p.z)) return Promise.resolve(false);
+      const copy = { x: p.x, z: p.z }; path.push(copy); previous = copy;
+    }
+    const prev = onArrive; walkQueue = path; pendingUse = null; stuckT = 0; losT = 0; onArrive = null;
+    if (prev) prev(false);
+    return new Promise(function (resolve) { onArrive = resolve; });
   },
   jump: function () { if (player.y <= 0.01 && !player.locked && !ui.isOpen()) { player.vy = 265; sfx('jump'); } },
   setView: function (v) { setView(v); },
@@ -1221,7 +1234,7 @@ function initInput() {
     if (e.repeat || player.locked) return;
     if (c === 'Space') player.jump();
     else if (c === 'KeyV') cycleView();
-    else if (c === 'KeyE' || c === 'Enter') world.use();
+    else if (c === 'KeyE' || c === 'Enter') { e.preventDefault(); world.use(); }
     else if (c === 'KeyM') sfx.toggle();
   });
   window.addEventListener('keyup', function (e) { keys[e.code] = false; });

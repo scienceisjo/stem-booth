@@ -201,7 +201,7 @@ function installControls(){
       <div class="explore-row"><button data-view="fps" type="button">1인칭</button><button data-view="tps" type="button">따라가기</button><button data-view="top" type="button">위에서</button></div>
       <div class="explore-row"><button data-action="in" aria-label="시점 확대" type="button">＋ 확대</button><button data-action="out" aria-label="시점 축소" type="button">－ 축소</button><button data-action="reset" type="button">시선 복원</button></div>
       <div class="explore-row"><button data-action="library" type="button">모든 실험 원리 설명</button></div><p id="exploreHint"></p><div class="explore-row"><button data-action="memo" type="button">관찰 메모 <span id="exploreCount">0/6</span></button></div>
-      <p>화면 드래그로 둘러보기 · 바닥을 눌러 이동<br>PC: WASD 이동 · V 시점 전환 · E 말 걸기</p>
+      <p>PC 1인칭: 화면 클릭 후 마우스로 시선 이동<br>WASD 이동 · E 말 걸기 · Esc 마우스 해제<br>터치: 화면 드래그 · 바닥을 눌러 이동</p>
     </section>`;
   document.body.appendChild(panel);
   const toggle=panel.querySelector('#exploreToggle'),body=panel.querySelector('#exploreBody');
@@ -218,7 +218,7 @@ function installControls(){
     panel.querySelectorAll('[data-view]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.view===view));b.disabled=locked;});
     panel.querySelectorAll('[data-action=in],[data-action=out]').forEach(b=>b.disabled=locked||view==='fps');
     panel.querySelector('[data-action=reset]').disabled=locked;
-    panel.querySelector('#exploreHint').textContent=view==='fps'?'내 눈높이로 관찰해요. 드래그로 위아래도 볼 수 있어요.':view==='tps'?'캐릭터를 따라가요. 드래그로 각도를, 휠·두 손가락으로 거리를 조절해요.':'주변 동선을 위에서 봐요. 휠·두 손가락으로 넓게 보거나 가까이 보아요.';
+    panel.querySelector('#exploreHint').textContent=view==='fps'?'PC에서는 화면을 클릭하고 마우스만 움직여 둘러보세요. 메뉴를 누를 때는 Esc로 마우스를 풀어요. 터치 기기에서는 드래그해요.':view==='tps'?'캐릭터를 따라가요. 드래그로 각도를, 휠·두 손가락으로 거리를 조절해요.':'주변 동선을 위에서 봐요. 휠·두 손가락으로 넓게 보거나 가까이 보아요.';
     panel.querySelector('#exploreCount').textContent=E.stations.filter(s=>H.S.seen['facility'+s.n]).length+'/6';
   }
   E.syncControls=sync;H.on('view',sync);H.on('state',sync);H.on('sim:enter',close);

@@ -9,7 +9,7 @@ function refresh(c){
   if(c.widgets){
     c.widgets.voltage.set(s.v.toFixed(2)+' V');c.widgets.bit.set(M.bit(s.v)+'');c.widgets.meter.set(s.v);
     c.widgets.read.setDisabled(s.reading>0);c.widgets.write.setDisabled(s.reading>0);
-    c.widgets.status.textContent=s.reading>0?'S2를 눌러 읽는 동안 LED가 저장된 에너지를 사용해요.':s.written?'S1에서 손을 뗐어요. LED가 꺼져 있어도 전하가 남아 있을 수 있어요.':'S1을 눌러 축전기에 전하를 저장해요.';
+    c.widgets.status.textContent=s.reading>0?(s.v<=c.cfg.ledVf?'전압이 낮아 LED가 거의 켜지지 않아요. 꺼져도 축전기에 전하가 남을 수 있어요.':'S2로 읽는 동안 LED에 전류가 흘러 전압이 빠르게 낮아져요.'):s.written?'S1에서 손을 뗐어요. 읽지 않아도 누설 때문에 전압이 천천히 줄어요.':'S1을 눌러 축전기에 전하를 저장해요.';
   }
 }
 function write(c){
@@ -45,7 +45,8 @@ H.sim.register('g6',{
     const voltage=c.ui.readout('축전기 전압','0.00 V'),bit=c.ui.readout('개념상 저장 값','0'),meter=c.ui.meter('축전기 전압',{min:0,max:3,fmt:v=>v.toFixed(2)+' V'});
     let w,r;c.ui.row(()=>{w=c.ui.button('S1 · 쓰기',()=>write(c));r=c.ui.button('S2 · 읽기',()=>read(c),{cls:'yellow'});});
     const status=c.ui.note('');status.setAttribute('aria-live','polite');c.widgets={voltage,bit,meter,read:r,write:w,status};
-    c.ui.about('실물 축전기·저항·LED를 단순화한 원리 모형이에요. 충전은 3 V, 누설은 R×C 시간상수로 계산해요. 읽을 때 LED가 저장된 에너지를 사용하며 어두워져요. 이 화면에서는 2.3 V 이상을 1로 정했어요. 실제 DRAM의 트랜지스터·감지 회로·배선은 생략했으며, 이 회로 자체가 반도체 칩은 아니에요. 실물의 최신 부품값과 배선은 제작 도안을 따라 주세요.');
+    c.ui.note('LED가 꺼짐 ≠ 축전기가 완전히 빔. 이 모형은 LED 기준을 1.9 V로 단순화했어요. 실제 LED의 밝기는 종류와 흐르는 전류에 따라 달라져요.');
+    c.ui.about('실물 축전기·저항·LED를 단순화한 원리 모형이에요. 충전은 3 V, 누설은 100 kΩ 등가 저항과 1 mF 축전기(시간상수 100초)로 계산해요. 이는 누설을 보여 주는 예시값이며 실물의 자연 방전 속도를 측정한 값이 아니에요. 실제로는 축전기 내부 누설과 연결된 회로로 전하가 빠져나가요. 읽을 때 LED가 저장된 에너지를 사용하며 어두워져요. 이 화면의 개념상 저장 값은 2.3 V 이상을 1로 정했으며 LED 발광 기준과는 달라요. 실제 DRAM의 트랜지스터·감지 회로·배선은 생략했으며, 이 회로 자체가 반도체 칩은 아니에요. 실물의 최신 부품값과 배선은 제작 도안을 따라 주세요.');
     refresh(c);
   },
   exit(c){c.widgets=null;},

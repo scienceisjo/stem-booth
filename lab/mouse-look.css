@@ -1,0 +1,6 @@
+#mouseLookHint[hidden],#mouseAim[hidden]{display:none!important}
+#mouseLookHint{position:fixed;left:50%;bottom:calc(68px + var(--safe-b));transform:translateX(-50%);z-index:23;max-width:calc(100vw - 28px);padding:8px 13px;border:1px solid #90b6df;border-radius:9px;background:#fff;color:#111;font:700 12px/1.5 var(--font,system-ui);text-align:center;pointer-events:none;word-break:keep-all}
+#mouseAim{position:fixed;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border:2px solid #fff;border-radius:50%;background:#005bc4;box-shadow:0 0 0 1px #102846;z-index:20;pointer-events:none}
+#exploreTools #mouseLookStart{background:#fff;color:#003f87;border-color:#8bb2df;white-space:normal}
+@media(max-width:640px){#mouseLookHint{font-size:11px;padding:5px 9px;width:max-content;max-width:calc(100vw - 36px)}}
+@media(max-height:520px) and (min-width:641px){#mouseLookHint{left:12px;transform:none;bottom:10px;max-width:330px;font-size:11px}}

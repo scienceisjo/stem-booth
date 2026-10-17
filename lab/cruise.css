@@ -17,5 +17,11 @@
 #cruisePanel .cruise-pause{font-size:11px;min-height:32px;padding:5px 8px;background:#fff;flex:none}
 body.cruising #joy,body.cruising #botR,body.cruising #talk,body.cruising #hint{display:none!important}
 body.pre #cruisePanel,body.sim #cruisePanel,body.dlg #cruisePanel,body.opening #cruisePanel,body.hud-off #cruisePanel{display:none!important}
+#cruisePanel.cruise-walking{padding-top:10px;padding-bottom:8px}
+#cruisePanel.cruise-walking h2{font-size:17px;margin:4px 0}
+#cruisePanel.cruise-walking .cruise-detail{font-size:12px;margin-bottom:5px}
+#cruisePanel.cruise-walking .cruise-actions{display:none}
+#cruisePanel.cruise-walking .cruise-foot{margin-top:5px;padding-top:5px}
+@media(max-width:640px){body:has(#cruisePanel.cruise-walking) #badges,body:has(#cruisePanel.cruise-walking) #cruiseToggle{display:none}}
 @media(max-width:640px){#cruisePanel{padding:11px 13px 9px;bottom:calc(10px + var(--safe-b))}#cruisePanel h2{font-size:18px}#cruisePanel .cruise-detail{font-size:12px;margin-bottom:9px}#cruisePanel .cruise-foot{font-size:10px}#exploreTools #cruiseToggle{font-size:12px;padding:6px 10px}}
 @media(max-height:520px) and (min-width:641px){#cruisePanel{left:12px;transform:none;width:340px;bottom:10px;padding:9px 12px}#cruisePanel h2{font-size:17px;margin:4px 0}#cruisePanel .cruise-detail{font-size:12px;margin-bottom:7px}#cruisePanel .cruise-foot{margin-top:6px;padding-top:5px}#cruisePanel .cruise-foot span{display:none}#cruisePanel .cruise-foot{justify-content:flex-end}#cruisePanel button{min-height:34px;padding:7px 9px;font-size:12px}}

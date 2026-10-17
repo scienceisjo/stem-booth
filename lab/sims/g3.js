@@ -1,4 +1,4 @@
-/* HNR · 암실의 빛 복구: 가까이/멀리 비교 후 형광등 켜기.
+/* HNR · 암실의 빛 관찰: 가까이/멀리 비교 후 형광등 켜기.
  * Standalone g3 device; all coordinates are local to the existing map anchor.
  */
 (function () {
@@ -8,6 +8,19 @@
   const M = H.models.g3, PI = Math.PI;
   const INK = 0x15345c, BLUE = 0x0066cc, PALE = 0xe5f1ff;
   const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function syncRoom(ctx) {
+    const lit=!!(H.S?.seen?.['g3-room-light']||H.S?.journey?.activities?.g3?.showObserved),zone=H.world.zones.find(z=>z.id==='room3');
+    ctx.device.roomLit=lit;
+    if(zone){zone.exposure=lit?1.05:.42;if(H.world.zone===zone)H.fx.zone=zone.exposure;}
+    ctx.setExposure(lit?1.05:.42);
+  }
+  function lightRoom(ctx) {
+    if(!H.S)return;
+    H.S.seen=H.S.seen||{};
+    if(!H.S.seen['g3-room-light']){H.S.seen['g3-room-light']=true;H.state.save();}
+    syncRoom(ctx);
+  }
 
   function showResult(ctx, record) {
     const d = ctx.device;
@@ -19,10 +32,11 @@
     const value = M.evaluate(d.distance);
     d.tube.position.z = M.tubeZ(d.distance);
     d.light.material.emissiveIntensity = 0.02 + value.brightness * 1.45;
-    d.light.material.color.setHex(value.lit ? 0xf5fcff : 0x7a9bb6).convertSRGBToLinear();
+    d.light.material.color.setHex(value.lit ? 0xffec83 : 0x7a9bb6).convertSRGBToLinear();
     d.glow.material.opacity = value.brightness * 0.24;
     d.statusNear.visible = value.position === 'near';
     d.statusFar.visible = value.position !== 'near';
+    if(record&&value.lit)lightRoom(ctx);
     if (d.ui) {
       d.ui.reading.set(value.label);
       d.ui.position.set(value.position === 'near' ? '플라즈마볼 가까이' : value.position === 'far' ? '플라즈마볼 멀리' : '사이를 이동 중');
@@ -114,9 +128,9 @@
           Q.box(5, 65, 5, 0x7c9dc2, x, 128, 0);
           Q.box(21, 7, 20, BLUE, x, 163, 0);
         });
-        d.light = Q.cyl(6, 6, 300, 0xb6cedf, 0, 172, 0, { rz: PI / 2, seg: 24, unique: true, emissive: 0xd9f5ff, emissiveIntensity: 0.02, shadow: false });
+        d.light = Q.cyl(6, 6, 300, 0xb6cedf, 0, 172, 0, { rz: PI / 2, seg: 24, unique: true, emissive: 0xffd943, emissiveIntensity: 0.02, shadow: false });
         d.light.name = 'g3-fluorescent-tube';
-        d.glow = Q.cyl(11, 11, 298, 0xd6f5ff, 0, 172, 0, { rz: PI / 2, seg: 24, unique: true, opacity: 0, basic: true, depthWrite: false, shadow: false });
+        d.glow = Q.cyl(11, 11, 298, 0xffe16a, 0, 172, 0, { rz: PI / 2, seg: 24, unique: true, opacity: 0, basic: true, depthWrite: false, shadow: false });
         [-154, 154].forEach(function (x) { Q.cyl(7, 7, 11, 0x7894b0, x, 172, 0, { rz: PI / 2, seg: 20 }); });
         d.statusNear = Q.text('형광등 · 불이 켜졌어요', { x: 0, y: 207, z: 0, h: 24, bg: '#ffffff', color: '#0056a6', stroke: '#0066cc' });
         d.statusFar = Q.text('형광등 · 거리를 바꿔 보아요', { x: 0, y: 207, z: 0, h: 24, bg: '#ffffff', color: '#15345c', stroke: '#0066cc' });
@@ -130,6 +144,24 @@
       });
       // Public device action supports accessibility controls and integration checks.
       d.moveTo = function (distance) { setDistance(ctx, distance); };
+      d.demoDuration=12.4;d.demoView={pos:[450,400,900],look:[0,145,0],fov:48};
+      d.demo=function(){
+        if(d.demoRunning)return d.demoPromise;
+        d.demoBefore={distance:d.distance,state:JSON.parse(JSON.stringify(d.state)),exposure:H.fx.override};
+        d.demoTime=0;d.demoRunning=true;d.demoPromise=new Promise(resolve=>{d.demoResolve=resolve;});
+        d.distance=1;d.state=M.observe(d.state,1);showResult(ctx,false);H.fx.setExposure(d.roomLit?1.05:.42);
+        return d.demoPromise;
+      };
+      d.finishDemo=function(ok){
+        if(!d.demoRunning)return;
+        d.demoRunning=false;
+        if(ok){setDistance(ctx,0,true);H.emit('device:demo',{id:'g3',completed:true});}
+        else{d.distance=d.demoBefore.distance;d.state=d.demoBefore.state;showResult(ctx,false);}
+        H.fx.setExposure(d.demoBefore.exposure);
+        const resolve=d.demoResolve;d.demoResolve=null;if(resolve)resolve(!!ok);
+      };
+      d.stopDemo=function(){d.finishDemo(false);};
+      H.on('state',()=>syncRoom(ctx));syncRoom(ctx);
       showResult(ctx, false);
     },
     enter: function (ctx) {
@@ -151,6 +183,13 @@
     },
     exit: function (ctx) { ctx.device.ui = null; },
     update: function (ctx, dt, time, active) {
+      const d=ctx.device;
+      if(d.demoRunning){
+        d.demoTime+=Math.min(dt,.1);const t=d.demoTime,ease=u=>{u=Math.max(0,Math.min(1,u));return u*u*(3-2*u);};
+        d.distance=t<1.2?1:t<4.2?1-ease((t-1.2)/3):t<6.2?0:t<8.2?ease((t-6.2)/2):t<9.2?1:t<11.2?1-ease((t-9.2)/2):0;
+        showResult(ctx,false);
+        if(t>=d.demoDuration)d.finishDemo(true);
+      }
       if (!active || reduced) return;
       // Slow shape drift only: no flashing or rapidly modulated lamp brightness.
       ctx.device.streams.forEach(function (stream) {

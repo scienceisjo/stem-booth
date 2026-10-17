@@ -8,7 +8,7 @@ const H=window.HNR,M=H.map,P=H.P,W=H.world,B=H.BRICK,T=window.THREE,PI=Math.PI;
 const X=H.missionWorld={version:'2.0.0-interview',apparatus:{},indicators:[],built:false};
 const metadata={
   g1:{n:1,title:'에너지 스틱',action:'회로 연결하기',notice:'양쪽 접점을 잇는 길이 닫히면 불이 켜져요.'},
-  g2:{n:2,title:'캔과 빨대',action:'빨대를 대전시켜 가까이 대기',notice:'캔이 움직이기 시작하는 표면 사이 거리를 비교해요. 굵기에 따른 결과는 실물로 반복 관찰해요.'},
+  g2:{n:2,title:'캔과 빨대',action:'빨대를 대전시켜 가까이 대기',notice:'화면은 문지르기와 접근을 보여 주는 모형이에요. 굵기에 따른 거리 차이는 실물로 반복 관찰해요.'},
   g4a:{n:4,title:'코일 열차',action:'열차 출발시키기',notice:'건전지와 자석으로 만든 열차가 구리 코일 안에서 움직여요.'},
   g4b:{n:4,title:'황금 나침반',action:'전류 켜기 · 반전 · 복원',notice:'전류를 켜고 반전한 뒤 처음 방향으로 되돌려 바늘을 관찰해요.'},
   g5:{n:5,title:'구리관 전자기 브레이크',action:'구리관에서 자석 놓기',notice:'구리관과 자석의 상대적인 움직임이 낙하를 방해하는 힘을 만들어요. 자석은 멈추지 않고 내려와요.'}
@@ -37,6 +37,26 @@ function table(){
   [-210,210].forEach(x=>P.part(22,68,215,B.steel,x,36,0));
   P.part(515,7,255,B.blue,0,82,0);
 }
+function stickSound(){
+  let context=null,oscillator=null,gain=null,on=false;
+  const silent=new URLSearchParams(location.search).get('nosfx')==='1';
+  const sound={active:false,connected:false,set(connected){
+    sound.connected=!!connected;
+    const wanted=connected&&!silent&&!document.hidden&&!H.sfx.isMuted();
+    if(wanted&&!context&&navigator.userActivation?.hasBeenActive){
+      try{
+        const AC=window.AudioContext||window.webkitAudioContext;context=AC?new AC():null;
+        if(context){oscillator=context.createOscillator();gain=context.createGain();oscillator.type='sine';oscillator.frequency.value=523.25;gain.gain.value=0;oscillator.connect(gain);gain.connect(context.destination);oscillator.start();}
+      }catch(e){context=null;}
+    }
+    if(wanted&&context?.state==='suspended'&&navigator.userActivation?.hasBeenActive)context.resume().catch(()=>{});
+    const audible=!!(wanted&&context?.state==='running');
+    if(gain&&audible!==on){gain.gain.cancelScheduledValues(context.currentTime);gain.gain.setTargetAtTime(audible?.035:0,context.currentTime,.025);on=audible;}
+    sound.active=audible;
+  }};
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)sound.set(false);});
+  return sound;
+}
 function makeStick(rec){
   table();
   P.cyl(17,17,210,B.acrylic,0,112,-20,{rz:PI/2,opacity:.5});
@@ -45,9 +65,12 @@ function makeStick(rec){
   line(-130,94,-20,-185,94,78,4,B.yellow);line(130,94,-20,185,94,78,4,B.yellow);
   line(-185,94,78,-48,94,78,4,B.yellow);line(48,94,78,185,94,78,4,B.yellow);
   const bridge=line(-48,94,78,48,94,78,4,B.yellow,{dynamic:true,visible:false});
-  P.text('연결 전에는 꺼짐',{x:0,y:173,z:0,w:210,bg:'#ffffff',color:'#102e54'});
-  rec.start=()=>{rec.elapsed=0;bridge.visible=true;bright(lamp,true,B.cyan);};
-  rec.tick=dt=>{rec.elapsed+=dt;const on=rec.elapsed<1.2||rec.elapsed>=2.3;bridge.visible=on;bright(lamp,on,on?B.cyan:B.blue);if(rec.elapsed>4)rec.running=false;};
+  P.text('연결하면 빛과 소리 · 끊으면 멈춤',{x:0,y:173,z:0,w:280,bg:'#ffffff',color:'#102e54'});
+  const sound=rec.sound=stickSound();rec.duration=8.5;rec.lamp=lamp;rec.bridge=bridge;
+  const set=on=>{rec.connected=on;bridge.visible=on;bright(lamp,on,on?B.cyan:B.blue);sound.set(on);};
+  rec.start=()=>{rec.elapsed=0;set(false);};
+  rec.tick=dt=>{rec.elapsed+=dt;const t=rec.elapsed;set((t>=1&&t<3)||(t>=4.5&&t<7.2));if(t>=rec.duration)rec.running=false;};
+  rec.end=()=>set(false);
 }
 function makeCan(rec){
   table();
@@ -58,16 +81,26 @@ function makeCan(rec){
     P.part(28,38,2,B.blue,0,0,40);
   });
   const straw=P.cyl(5,5,155,B.cyan,148,122,0,{rx:PI/2,dynamic:true});
-  P.part(62,6,65,B.brown,-170,88,35);
+  const fur=P.group(-170,88,35);P.with(fur,()=>{
+    P.part(74,6,78,B.brown,0,0,0);
+    for(let i=0;i<7;i++)for(let j=0;j<6;j++){const tuft=P.ball(4.8,(i+j)%2?0xa17145:0xbc8a58,-30+i*10,5,-30+j*12,{seg:6});tuft.scale.set(.7,1.25,1);}
+  });
   P.text('움직이기 시작하는 거리',{x:40,y:190,z:10,w:240,bg:'#ffffff',color:'#102e54'});
-  rec.start=()=>{rec.elapsed=0;can.position.x=-95;can.rotation.z=0;straw.position.x=148;};
+  rec.duration=14;rec.can=can;rec.straw=straw;rec.fur=fur;
+  rec.start=()=>{rec.elapsed=0;can.position.x=-95;can.rotation.z=0;straw.position.set(148,122,0);rec.phase='준비';};
   rec.tick=dt=>{
-    rec.elapsed+=dt;
-    if(rec.elapsed<1){straw.position.set(-170+Math.sin(rec.elapsed*28)*12,100,35);return;}
-    const u=Math.min(1,(rec.elapsed-1)/2.2),ease=1-Math.pow(1-u,3);
-    straw.position.set(148-30*ease,122,0);can.position.x=-95+158*ease;can.rotation.z=-158*ease/31;
-    if(u===1)rec.running=false;
+    rec.elapsed+=dt;const t=rec.elapsed,smooth=u=>{u=Math.max(0,Math.min(1,u));return u*u*(3-2*u);};
+    if(t<1){rec.phase='들어 올리기';straw.position.set(148,122+52*smooth(t),0);}
+    else if(t<2.4){rec.phase='털가죽으로 이동';const u=smooth((t-1)/1.4);straw.position.set(148-318*u,174,35*u);}
+    else if(t<2.9){rec.phase='털가죽에 대기';straw.position.set(-170,174-71*smooth((t-2.4)/.5),35);}
+    else if(t<6.5){rec.phase='털가죽에 문지르기';straw.position.set(-170+Math.sin((t-2.9)*Math.PI*2*(5/6))*18,103,35);}
+    else if(t<7.3){rec.phase='들어 올리기';straw.position.set(-170,103+71*smooth((t-6.5)/.8),35);}
+    else if(t<8.6){rec.phase='캔 옆으로 이동';const u=smooth((t-7.3)/1.3);straw.position.set(-170+318*u,174,35*(1-u));}
+    else if(t<9.2){rec.phase='캔 높이에 맞추기';straw.position.set(148,174-52*smooth((t-8.6)/.6),0);}
+    else{rec.phase=t<12.6?'캔에 천천히 접근':'캔의 움직임 관찰';const u=smooth((t-9.2)/3.4),roll=smooth((t-10.8)/1.8);straw.position.set(148-138*u,122,0);can.position.x=-95+45*roll;can.rotation.z=-45*roll/31;}
+    if(t>=rec.duration)rec.running=false;
   };
+  rec.end=ok=>{if(!ok)rec.start();};
 }
 function makeTrain(rec){
   table();
@@ -130,8 +163,18 @@ function makeDrop(rec){
 }
 const builders={g1:makeStick,g2:makeCan,g4a:makeTrain,g4b:makeCompass,g5:makeDrop};
 function recordDemo(rec){
+  if(rec.running)return rec.promise;
   H.sfx('click');
-  rec.running=true;rec.start();H.ui.toast(rec.info.notice,{icon:'🔬',ms:3900});
+  rec.promise=new Promise(resolve=>{rec.resolve=resolve;});
+  rec.running=true;rec.start();H.ui.toast(rec.info.notice,{icon:'🔬',ms:3900});return rec.promise;
+}
+function finishDemo(rec,ok){
+  rec.running=false;if(rec.end)rec.end(ok);
+  const resolve=rec.resolve;rec.resolve=null;if(resolve)resolve(!!ok);
+  if(!ok)return;
+  H.S.seen['apparatus:'+rec.id]=true;H.state.save();
+  H.emit('state',{type:'observation',id:rec.id});H.emit('device:demo',{id:rec.id,completed:true});
+  H.ui.toast(rec.info.title+' 화면 관찰 완료 · 실물 활동은 학생 연구원과 함께해요.',{icon:'✓',ms:3500});
 }
 function apparatus(id){
   // An actual simulation owns the same reservation, so never layer a second model on it.
@@ -147,11 +190,15 @@ function apparatus(id){
   rec.interact=W.addInteract({id:'apparatus:'+id,x:front.x,z:front.z,r:145,mesh:root,visible:()=>unlocked(info.n),
     label:()=> 'E · '+info.action,onUse:()=>{
       if(H.journey)return id==='g4b'?H.journey.open('compass',{device:'g4b'}):H.journey.open(id);
+      if(H.deviceShow)return H.deviceShow.play(id);
       if(rec.running)return 'running';
       recordDemo(rec);
       return 'demo';
     }});
   rec.activate=()=>recordDemo(rec);
+  rec.stop=()=>{if(rec.running||rec.resolve)finishDemo(rec,false);};
+  rec.duration=rec.duration||({g4a:2.5,g4b:4.2,g5:3.2})[id]||4;
+  rec.view={pos:id==='g5'?[420,360,760]:[360,330,650],look:id==='g5'?[0,230,0]:[0,118,0],fov:48};
 }
 function lightPanel(r){
   const group=P.group(r.x+(r.n<=3?380:-380),0,r.z+(r.n<=3?470:-470),{dynamic:true,name:'recovery:'+r.n});
@@ -208,25 +255,68 @@ function binaryDesk(){
   W.addInteract({id:'binary-8421',x:900,z:1580,r:140,mesh:g,label:'E · 8 · 4 · 2 · 1 활동',onUse:()=>H.journey?.open('8421')});
   X.binaryDesk={root:g,lamps};
 }
+// Text is painted on the physical board, not a billboard that turns into its backing.
+// Both faces use the same texture with their own outward-facing plane, so the rear is readable.
+function boardFace(parent,texture,side){
+  const material=new T.MeshBasicMaterial({map:texture,side:T.FrontSide,toneMapped:false,fog:false});
+  const mesh=new T.Mesh(new T.PlaneGeometry(630,260),material);
+  mesh.position.set(0,188,side*16);mesh.rotation.y=side<0?PI:0;
+  mesh.name='project-board-text-'+(side>0?'front':'back');mesh.userData.dynamic=true;
+  parent.add(mesh);return mesh;
+}
 function controlBoard(){
-  const g=P.group(0,0,2025,{dynamic:true,name:'project-one-board'});let heading,detail,last='';
-  const steps=[['compass','출발'],['g1','회로'],['g2','정전기'],['g3','빛'],['g6','제작'],['8421','8421']],lamps=[];
-  P.with(g,()=>{
-    P.part(630,210,28,B.navy,0,165,0);P.part(644,9,35,B.blue,0,275,0);[-240,240].forEach(x=>P.part(24,100,50,B.steel,x,50,0));
-    P.text('HNR Tech Inc. · 면접 가는 길',{x:0,y:255,z:22,w:560,bg:'#0066cc',color:'#ffffff'});
-    steps.forEach(([id,title],i)=>{const x=-250+i*100;lamps.push(P.ball(12,B.blue,x,111,25,{unique:true,dynamic:true,emissive:B.blue,emissiveIntensity:.08}));P.text(title,{x,y:78,z:25,w:85,bg:'#ffffff',color:'#102e54'});});
-  });P.bake(g);W.addBlock({id:'project-one-board',...rect(0,2025,645,40)}).cameraHeight=280;
-  const sync=()=>{const done=steps.map(([id])=>!!H.journey?.complete(id)),key=done.join(',');if(key===last)return;last=key;
-    lamps.forEach((l,i)=>bright(l,done[i],done[i]?B.green:B.blue));removeLabel(g,heading);removeLabel(g,detail);
+  const g=P.group(0,0,2025,{dynamic:true,name:'project-one-board'});
+  const steps=[['compass','출발'],['g1','사람 회로'],['g2','정전기'],['g3','플라즈마'],['g6','회로 제작'],['8421','8421']],lamps=[],backLamps=[];
+  const canvas=document.createElement('canvas');canvas.width=1260;canvas.height=520;
+  const ctx=canvas.getContext('2d'),texture=new T.CanvasTexture(canvas);
+  texture.encoding=T.sRGBEncoding;texture.generateMipmaps=false;texture.minFilter=T.LinearFilter;
+  texture.anisotropy=Math.min(8,H.renderer?.capabilities?.getMaxAnisotropy()||1);
+  const emblem=new Image();let last='',done=steps.map(()=>false);
+  function textLine(value,y,size,color,weight,maxWidth){
+    ctx.font=(weight||700)+' '+size+'px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
+    while(ctx.measureText(value).width>(maxWidth||586)&&size>13){size--;ctx.font=(weight||700)+' '+size+'px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';}
+    ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(value,315,318-y);
+  }
+  function paint(){
+    ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,630,260);
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,630,260);
+    ctx.fillStyle='#0066cc';ctx.fillRect(0,0,630,47);
+    if(emblem.complete&&emblem.naturalWidth){const h=34,w=h*emblem.naturalWidth/emblem.naturalHeight;ctx.drawImage(emblem,13,6,w,h);}
+    ctx.save();ctx.translate(23,0);textLine('HNR Tech Inc. · 면접 가는 길',295,22,'#ffffff',800,548);ctx.restore();
     const count=done.filter(Boolean).length;
-    heading=P.text(count===6?'첫 연구 프로젝트 완료':count+'/6 본 체험 확인',{x:0,y:201,z:23,w:555,bg:'#ffffff',color:'#102e54',parent:g});
-    detail=P.text('현장 이동은 학생 연구원의 안내에 따라요',{x:0,y:153,z:23,w:550,bg:'#ffffff',color:'#102e54',parent:g});trackLabels(g);
-  };sync();H.on('state',sync);mark('E · 본 체험 안내',0,2220);
+    textLine(count===6?'첫 연구 프로젝트 완료':count+' / 6 본 체험 확인',242,29,'#08274c',800);
+    textLine('현장 이동은 학생 연구원의 안내에 따라요',201,18,'#111111',700);
+    ctx.fillStyle='#c3d8ed';ctx.fillRect(18,145,594,1);
+    steps.forEach(([id,title],i)=>{
+      ctx.fillStyle='#111111';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 16px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
+      ctx.fillText(title,65+i*100,318-100);
+    });
+    textLine('본 체험과 자유 탐색 안내  ·  E',74,13,'#003d82',700);
+    texture.needsUpdate=true;
+  }
+  P.with(g,()=>{
+    P.part(644,274,28,B.navy,0,188,0);P.part(654,9,35,B.blue,0,330,0);
+    [-240,240].forEach(x=>P.part(24,54,50,B.steel,x,27,0));
+    steps.forEach(([id,title],i)=>{
+      const x=-250+i*100;
+      lamps.push(P.ball(12,B.blue,x,137,27,{unique:true,dynamic:true,emissive:B.blue,emissiveIntensity:.08}));
+      backLamps.push(P.ball(12,B.blue,-x,137,-27,{unique:true,dynamic:true,emissive:B.blue,emissiveIntensity:.08}));
+    });
+  });P.bake(g);
+  const faces=[boardFace(g,texture,1),boardFace(g,texture,-1)];
+  W.addBlock({id:'project-one-board',...rect(0,2025,655,40)}).cameraHeight=340;
+  const sync=()=>{
+    done=steps.map(([id])=>!!H.journey?.complete(id));const key=done.join(',');if(key===last)return;last=key;
+    [lamps,backLamps].forEach(row=>row.forEach((lamp,i)=>bright(lamp,done[i],done[i]?B.green:B.blue)));
+    paint();
+  };
+  sync();emblem.onload=paint;emblem.src='lab/cards/hnr-tech-mark.webp';H.on('state',sync);
+  mark('E · 본 체험 안내',0,2220);
   W.addInteract({id:'project-one-board',x:0,z:2220,r:150,mesh:g,label:'E · 본 체험과 자유 탐색 안내',onUse:()=>H.ui.say([
     {who:'bit',t:'황금나침반 → 에너지스틱 → 정전기 캔 → 플라즈마볼 → 기억 회로 만들기 → 8·4·2·1 활동 순서예요.'},
     {who:'bit',t:'터널 열차와 전자기브레이크는 자유 체험이에요. 정원 통로를 이용하면 암실에서 중앙 제어실로 바로 갈 수 있어요.'},
     {who:'bit',t:'가상 장치를 조작한 기록과 실물 체험 확인은 달라요. 실물 활동과 설명을 마친 뒤 해당 활동에서 확인해 주세요.'}
-  ])});X.board={root:g,sync,lamps};
+  ])});X.board={root:g,sync,lamps,backLamps,faces,canvas};
 }
 const originalBuild=M.build;
 M.build=function(){
@@ -236,10 +326,6 @@ M.build=function(){
 H.on('state',()=>X.indicators.forEach(r=>r.sync()));
 H.on('tick',dt=>{if(!X.built)return;Object.values(X.apparatus).forEach(rec=>{
   if(!rec.running)return;rec.tick(Math.min(dt,.1));
-  if(!rec.running){
-    H.S.seen['apparatus:'+rec.id]=true;H.state.save();
-    H.emit('state',{type:'observation',id:rec.id});
-    H.ui.toast(rec.info.title+' 화면 관찰 완료 · 실물 활동은 학생 연구원과 함께해요.',{icon:'✓',ms:3500});
-  }
+  if(!rec.running)finishDemo(rec,true);
 });});
 })();
