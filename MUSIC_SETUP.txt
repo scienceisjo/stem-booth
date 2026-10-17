@@ -1,0 +1,46 @@
+HNR Tech Inc. 오프닝 공유 음악
+2026-10-18
+
+현재 구현
+- music-admin.html: 파일 선택·미리 듣기·교체/적용·끄기·기본 볼륨.
+- lab/music-runtime.js: 오프닝 시작마다 음악 설정을 읽고 해당 오프닝 동안 같은 파일을 유지.
+- tools/music_server.py: Python 표준 라이브러리만 사용하는 공유 서버.
+- 방문객 통계, DB, 계정, 로그 집계 기능 없음.
+- 기존 운영 Supabase 사용/변경 없음.
+
+이 컴퓨터에서 시작하기 (PowerShell)
+& 'C:/Users/user/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -u 'C:/Users/user/codex-work/hnr-booth-explain/tools/music_server.py' --directory 'C:/Users/user/codex-work/hnr-booth-explain' --data-dir 'C:/Users/user/Documents/Codex/hnr-opening-music-data' --bind 0.0.0.0 --port 7121
+
+관리 주소: http://127.0.0.1:7121/music-admin.html
+미리보기: http://127.0.0.1:7121/lab.html
+참가자: http://이_컴퓨터의_학교내부_IP:7121/lab.html
+
+관리자는 서버를 실행한 컴퓨터에서 localhost 주소로 열어 음악을 선택하고 적용합니다.
+참가자 기기는 같은 네트워크에서 같은 서버의 lab.html을 열어야 같은 음악을 듣습니다.
+서버 컴퓨터를 켜 두어야 하며 Windows 방화벽·학교 무선망의 기기 간 통신 허용이 필요할 수 있습니다.
+이 서버는 학교 내부망/로컬 사용용입니다. 인터넷 포트 개방이나 포트 포워딩은 하지 않습니다.
+
+음원 파일은 웹 저장소 바깥의 --data-dir 폴더에 저장합니다.
+지정하지 않으면 시스템 임시 폴더의 hnr-opening-music에 저장하며, 장기 보존에는 위 명령처럼 별도 폴더를 지정합니다.
+MP3, WAV, OGG / 파일당 최대 32 MB. 선택만으로 공유하지 않고 교체·적용 버튼을 눌러야 반영됩니다.
+음원은 내용 해시가 포함된 변경 불가 URL로 제공하므로 이미 시작한 오프닝의 음악은 갑자기 바뀌지 않습니다.
+이전 파일을 자동 삭제하지 않습니다. 재생 중인 참가자의 로딩을 방해하지 않기 위해서입니다.
+음악 끄기도 다음 오프닝부터 적용됩니다. 참가자가 소리 끄기를 누르면 자신의 재생은 즉시 음소거됩니다.
+오프닝 종료/건너뛰기는 음악을 멈추고, 일시정지·탭 숨김은 음악도 멈춥니다.
+음원 다운로드 또는 자동재생에 실패해도 맵 진행은 계속됩니다.
+
+권한
+- 음악 조회와 음원 다운로드: 참가자 허용.
+- 업로드와 설정 변경: 접속 IP, Host, Origin이 모두 이 컴퓨터의 loopback이고 X-HNR-Admin 헤더가 있는 요청만 허용.
+- 다른 기기에서는 관리 화면이 보여도 업로드·변경은 거절됩니다.
+- 경로 입력으로 음원 파일 위치를 지정하지 않으며 파일 서명과 MIME/크기를 검사합니다.
+- 저장소의 숨김 파일, tools 경로, 디렉터리 목록은 공유하지 않습니다.
+
+GitHub Pages 공개 주소에 적용하려면
+GitHub Pages는 정적 호스팅이므로 관리자 화면만 배포해도 음악 업로드 저장소가 생기지 않습니다.
+현재 인터넷용 업로드 서버/공용 음악 저장소는 설정되어 있지 않습니다.
+모든 인터넷 참가자에게 공유하려면 인증된 관리자 업로드를 지원하는 HTTPS 서비스와 공개 음원 저장 공간을 정해야 합니다.
+그 서비스에서 GET 음악 manifest와 불변 음원 URL을 제공하고, lab/music-settings.json의 apiBase를 해당 HTTPS API로 바꿉니다.
+별도 서비스라면 방문 사이트에 대한 CORS 읽기 설정과 관리자 인증을 서비스에서 설정해야 합니다.
+local 전용 Python 서버의 쓰기 제한을 풀어 인터넷에 노출하는 방식으로 바꾸지 않습니다.
+일반 7120 정적 서버에서는 관리자 화면에 '공유 음악 서버 연결 필요'가 표시되는 것이 정상입니다.

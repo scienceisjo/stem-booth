@@ -300,24 +300,27 @@ body.showtest #test-out{display:block}
   #enter .ecard{grid-template-columns:1fr;width:min(520px,100%)}
 }
 </style>
-<link rel="stylesheet" href="lab/cards.css?v=20261016-cards1">
-<link rel="stylesheet" href="lab/mission.css?v=project-one1">
-<link rel="stylesheet" href="lab/opening.css?v=opening-credits2">
+<link rel="stylesheet" href="lab/cards.css?v=interview1">
+<link rel="stylesheet" href="lab/mission.css?v=welcome1">
+<link rel="stylesheet" href="lab/opening.css?v=interview1">
+<link rel="stylesheet" href="lab/cruise.css?v=interview1">
+<link rel="stylesheet" href="lab/journey.css?v=interview1">
+<link rel="stylesheet" href="lab/navigation-ui.css?v=interview1">
 </head>
 <body class="pre">
 <div id="game"></div>
-<div id="simBrand"><img src="lab/cards/hnr-mark.webp" alt="해누리 마크">HNR Tech Inc.</div>
+<div id="simBrand"><img src="lab/cards/hnr-tech-mark.webp" alt="해누리 마크">HNR Tech Inc.</div>
 
 <!-- ═══ HUD ═══ -->
 <div class="hud" id="topL">
   <div class="row">
-    <div class="chip" id="brand"><img class="school-mark" src="lab/cards/hnr-mark.webp" alt="해누리 마크"><span>HNR Tech Inc.</span></div>
+    <div class="chip" id="brand"><img class="school-mark" src="lab/cards/hnr-tech-mark.webp" alt="해누리 마크"><span>HNR Tech Inc.</span></div>
     <div class="chip" id="who"></div>
   </div>
   <div class="chip" id="zone"></div>
 </div>
 <div class="hud" id="topR"><div class="panel">
-  <div class="t"><span id="rateT">시연 라인 복구</span><b id="rateN">0%</b></div>
+  <div class="t"><span id="rateT">첫 프로젝트 · 본 체험</span><b id="rateN">0%</b></div>
   <div class="bar"><i id="rateI"></i></div>
   <div id="badges"></div>
 </div></div>
@@ -370,7 +373,7 @@ body.showtest #test-out{display:block}
 
 <!-- ═══ 엔딩: 사원증 ═══ -->
 <div class="overlay" id="ending"><div id="confetti"></div><div class="wrap">
-  <h2 id="endTitle">PROJECT ONE · 시연 준비 완료</h2>
+  <h2 id="endTitle">PROJECT ONE · 첫 프로젝트 완료</h2>
   <canvas id="idCanvas" width="960" height="600"></canvas>
   <div id="endLines"></div>
   <div class="btns">
@@ -381,24 +384,24 @@ body.showtest #test-out{display:block}
   </div>
 </div></div>
 
-<!-- ═══ 입장 카드: 채용 공고 ═══ -->
+<!-- ═══ 입장 카드: 해누리 연구팀의 초대 ═══ -->
 <div id="enter"><div class="ecard">
   <div class="notice">
-    <span class="pin">PROJECT ONE · 복구팀 호출</span>
-    <h1 id="noticeTitle">HNR Tech Inc. · PROJECT ONE</h1>
+    <div class="welcome-brand"><img src="lab/cards/hnr-tech-mark.webp" width="64" height="64" alt="HNR TECH 엠블럼"><span class="pin">2026 서울STEM축제 · 해누리중학교</span></div>
+    <h1 id="noticeTitle">HNR Tech Inc.</h1>
     <ul id="noticeLines">
-      <li>축제 시연을 앞두고 연구소에 정전이 났습니다.</li>
-      <li>전원은 돌아왔지만, 여섯 장치의 준비 표시는 아직 0입니다.</li>
-      <li>장치를 직접 움직여 원인을 찾고, 마지막 준비 신호 1을 써 주세요.</li>
+      <li>훌륭한 해누리 학생들과 열정적인 두 과학 선생님이 함께 설립한 회사, HNR Tech Inc.에 오신 것을 환영합니다.</li>
+      <li>운영 학생들의 설명과 안내를 따라 전기와 자기의 세계를 탐험하고, 1비트 기억회로를 만들며 반도체 메모리의 원리까지 알아보세요.</li>
+      <li>새로운 발견과 배움으로 꽉 찬 시간이 되길 바랍니다!</li>
     </ul>
-    <div class="tag">장치 6구역 복구 · 준비 신호 1 완성</div>
+    <p class="welcome-teachers">지도교사: 남국현(1비트 기억회로 설계), 조승재(콘텐츠 제작)</p>
   </div>
   <div class="form" id="enterForm">
     <label for="nameIn">연구원 이름 또는 별명을 적어 보아요</label>
     <input id="nameIn" maxlength="12" placeholder="이름 또는 별명" autocomplete="off" enterkeyhint="done" inputmode="text">
     <label>바지 색을 골라 보아요 (연구원 가운은 흰색이에요)</label>
     <div id="avs"></div>
-    <button class="hbtn green lg wide" id="goBtn" type="button" disabled>연구소 재가동 시작</button>
+    <button class="hbtn green lg wide" id="goBtn" type="button" disabled>연구소 입장하기</button>
   </div>
   <div class="form back" id="enterBack" hidden>
     <h1 id="backTitle">다시 오셨군요!</h1>
@@ -406,18 +409,18 @@ body.showtest #test-out{display:block}
     <button class="hbtn green lg wide" id="contBtn" type="button">▶ 이어서 하기</button>
     <button class="hbtn grey wide" id="newBtn" type="button" style="margin-top:12px">새 연구팀으로 시작하기</button>
   </div>
-  <div id="app-credit">HNR Tech Inc. · 2026 서울STEM축제 - 해누리중학교<br>PROJECT ONE · 2026-10-16</div>
+  <div id="app-credit">HNR Tech Inc. · 2026 서울STEM축제 - 해누리중학교<br>PROJECT ONE · 2026-10-18</div>
 </div></div>
 
 <pre id="test-out"></pre>
 
 <script src="lib/three.min.js"></script>
-<script src="lab/config.js"></script>
-<script src="lab/story.js?v=copper1"></script>
-<script src="lab/cards.js?v=copper1"></script>
-<script src="lab/core.js?v=copper1"></script>
+<script src="lab/config.js?v=interview1"></script>
+<script src="lab/story.js?v=interview1"></script>
+<script src="lab/cards.js?v=interview1"></script>
+<script src="lab/core.js?v=interview1"></script>
 <script src="lab/sim.js?v=project-one1"></script>
-<script src="lab/flow.js?v=project-one1"></script>
+<script src="lab/flow.js?v=interview1"></script>
 <script src="lab/models/g1.js"></script>
 <script src="lab/models/g2.js"></script>
 <script src="lab/models/g3.js?v=project-one1"></script>
@@ -427,18 +430,22 @@ body.showtest #test-out{display:block}
 <script src="lab/models/g6.js?v=project-one1"></script>
 <script src="lab/sims/g1.js"></script>
 <script src="lab/sims/g2.js"></script>
-<script src="lab/sims/g3.js?v=project-one1"></script>
+<script src="lab/sims/g3.js?v=interview1"></script>
 <script src="lab/sims/g4a.js"></script>
 <script src="lab/sims/g4b.js"></script>
 <script src="lab/sims/g5.js"></script>
-<script src="lab/sims/g6.js?v=project-one1"></script>
-<script src="lab/map.js?v=copper1"></script>
-<script src="lab/map-features.js?v=copper1"></script>
-<script src="lab/mission-world.js?v=copper1"></script>
-<script src="lab/mission-ui.js?v=project-one1"></script>
+<script src="lab/sims/g6.js?v=interview1"></script>
+<script src="lab/map.js?v=interview1"></script>
+<script src="lab/map-features.js?v=interview1"></script>
+<script src="lab/mission-world.js?v=interview1"></script>
+<script src="lab/journey.js?v=interview1"></script>
+<script src="lab/mission-ui.js?v=interview1"></script>
 <script src="lab/dialogue-audio.js?v=opening1"></script>
-<script src="lab/opening-cameras.js?v=opening1"></script>
-<script src="lab/opening.js?v=opening-credits2"></script>
+<script src="lab/music-runtime.js?v=interview1"></script>
+<script src="lab/opening-cameras.js?v=interview1"></script>
+<script src="lab/opening.js?v=interview1"></script>
+<script src="lab/cruise.js?v=interview1"></script>
+<script src="lab/navigation-ui.js?v=interview1"></script>
 <script>HNR.boot();</script>
 </body>
 </html>

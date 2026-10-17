@@ -47,7 +47,7 @@
 
   H.sim.register('g3', {
     gate: 3,
-    title: '빛 복구 · 플라즈마볼과 형광등',
+    title: '형광등 켜기 · 플라즈마볼과 형광등',
     lead: '형광등을 가까이, 멀리 놓아 보고 전선 없이 불이 켜지는 자리를 찾아요.',
     size: { w: 600, d: 420, h: 280 },
     camera: { pos: [450, 400, 900], look: [0, 145, 0], fov: 48 },
@@ -134,7 +134,7 @@
     },
     enter: function (ctx) {
       const ui = ctx.ui, d = ctx.device;
-      ui.note('<b>복구할 것: 암실의 빛</b><br>플라즈마볼은 켜져 있어요. 형광등을 놓을 자리를 찾아주세요.');
+      ui.note('<b>전선 없이 형광등 켜기</b><br>플라즈마볼은 켜져 있어요. 형광등을 놓을 자리를 찾아주세요.');
       ui.predict('형광등을 어디에 놓으면 불이 잘 켜질까요?', ['플라즈마볼 가까이', '플라즈마볼 멀리'], { key: 'distance-v1' });
       let near, far;
       ui.row(function () {

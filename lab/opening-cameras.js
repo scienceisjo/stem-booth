@@ -1,2 +1,12 @@
-/* HNR Tech Inc. — world-space briefing camera shots. */
-window.HNR.openingCameras = {"overview":{"posStart":[2600,5000,5900],"posEnd":[1500,4500,5200],"look":[0,30,-450],"fov":55,"portrait":{"posStart":[900,7400,8400],"posEnd":[0,7000,8000],"look":[0,30,-450],"fov":55}},"gate":{"posStart":[-800,400,750],"posEnd":[-900,360,920],"look":[-1600,120,1100],"fov":48,"portrait":{"posStart":[-400,540,980],"posEnd":[-500,500,1020],"look":[-1600,120,1100],"fov":55}},"cleanroom":{"posStart":[-800,400,-850],"posEnd":[-900,360,-680],"look":[-1600,120,-500],"fov":48,"portrait":{"posStart":[-400,540,-620],"posEnd":[-500,500,-580],"look":[-1600,120,-500],"fov":55}},"plasma":{"posStart":[-840,360,-2450],"posEnd":[-930,320,-2250],"look":[-1600,145,-2080],"fov":48,"portrait":{"posStart":[-350,540,-2250],"posEnd":[-450,500,-2200],"look":[-1600,145,-2080],"fov":55}},"tunnel":{"posStart":[1600,850,-1000],"posEnd":[1250,760,-1200],"look":[1150,115,-2440],"fov":52,"portrait":{"posStart":[1150,1400,200],"posEnd":[1150,1300,0],"look":[1150,115,-2440],"fov":58}},"drop":{"posStart":[840,480,-140],"posEnd":[920,410,-320],"look":[1600,175,-500],"fov":48,"portrait":{"posStart":[500,590,-340],"posEnd":[600,540,-380],"look":[1600,175,-500],"fov":54}},"memory":{"posStart":[880,490,1480],"posEnd":[950,430,1260],"look":[1600,110,1100],"fov":48,"portrait":{"posStart":[450,700,1220],"posEnd":[550,650,1180],"look":[1600,110,1100],"fov":55}},"return":{"posStart":[-650,660,2890],"posEnd":[-1050,340,2780],"look":[-1240,105,2090],"fov":52,"portrait":{"posStart":[-1230,680,3750],"posEnd":[-1230,560,3550],"look":[-1230,105,2120],"fov":55}}};
+/* HNR TECH — camera positions stay above walls and scenery; no player movement. */
+window.HNR.openingCameras = {
+  overview: {pos:[2200,4700,5700],look:[0,60,-250],fov:53,portrait:{pos:[800,6600,7600],look:[0,60,-250],fov:57}},
+  compass: {pos:[-200,1350,3320],look:[-650,100,2140],fov:48,portrait:{pos:[-250,1800,3550],look:[-650,100,2140],fov:57}},
+  gate: {pos:[-850,1050,1700],look:[-1580,100,1120],fov:48,portrait:{pos:[-700,1400,1880],look:[-1580,100,1120],fov:57}},
+  cleanroom: {pos:[-850,1050,120],look:[-1580,100,-500],fov:48,portrait:{pos:[-700,1400,300],look:[-1580,100,-500],fov:57}},
+  plasma: {pos:[-800,1100,-1500],look:[-1550,120,-2080],fov:48,portrait:{pos:[-650,1450,-1320],look:[-1550,120,-2080],fov:57}},
+  tunnel: {pos:[1050,1450,-1500],look:[1430,120,-2360],fov:52,portrait:{pos:[1050,1700,-1250],look:[1430,120,-2360],fov:58}},
+  drop: {pos:[1000,1150,180],look:[1580,150,-500],fov:48,portrait:{pos:[900,1450,360],look:[1580,150,-500],fov:57}},
+  memory: {pos:[850,1200,1800],look:[1250,100,1200],fov:48,portrait:{pos:[750,1550,2000],look:[1250,100,1200],fov:57}},
+  return: {pos:[-1150,1100,2850],look:[-1150,80,2300],fov:52,portrait:{pos:[-1150,1450,3100],look:[-1150,80,2300],fov:57}}
+};

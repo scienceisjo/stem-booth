@@ -2,9 +2,9 @@
 (function(){
 'use strict';
 const H=window.HNR,M=H.map,P=H.P,W=H.world,B=H.BRICK,T=window.THREE;
-const E=H.explore={version:'1.1.0',objects:0,stations:[],labels:[],cameraObstructed:false};
+const E=H.explore={version:'1.2.0-interview',objects:0,stations:[],labels:[],cameraObstructed:false};
 const labels=['','출입 기록대','클린룸 작업대','광학 관찰대','열차 제어반','낙하 점검대','기억 보관대'];
-const simIds=['','g1','g2','g3','g4b','g5','g6'];
+const simIds=['','g1','g2','g3','g4a','g5','g6'];
 function area(x,z,w,d){return{x1:x-w/2,x2:x+w/2,z1:z-d/2,z2:z+d/2};}
 function block(x,z,w,d,h){const b=W.addBlock(area(x,z,w,d));b.cameraHeight=h||120;return b;}
 function prop(fn){E.objects++;return fn();}
@@ -52,7 +52,7 @@ function instrument(x,z,color,kind){
   });block(x,z,145,100,kind===3||kind===5?178:125);
 }
 function station(r){
-  const sign=r.n<=4?1:-1,x=r.x+sign*590,z=r.z+(r.n<=4?350:0);
+  const sign=r.n<=4?1:-1,x=r.x+sign*590,z=r.z+(r.n<=4?350:-240);
   const g=P.group(x,0,z,{ry:sign>0?-Math.PI/2:Math.PI/2,dynamic:true});
   let lamp;
   P.with(g,()=>{
@@ -62,7 +62,7 @@ function station(r){
     P.text(labels[r.n],{x:0,y:133,z:0,w:155,bg:'#162333',color:'#ffffff'});
   });E.objects++;block(x,z,80,80,118);
   const rec={n:r.n,x:x-sign*140,z,mesh:g,lamp,label:labels[r.n]};E.stations.push(rec);
-  W.addInteract({id:'facility'+r.n,x:rec.x,z,r:155,mesh:g,visible:()=>r.n===1||H.state.forkSolved(r.n-1),
+  W.addInteract({id:'facility'+r.n,x:rec.x,z,r:155,mesh:g,visible:()=>true,
     label:()=> '🔎 '+rec.label+(H.S.seen['facility'+r.n]?' · 다시 보기':''),
     onUse:async()=>{
       H.S.seen['facility'+r.n]=true;H.state.save();lamp.material.emissiveIntensity=1;
@@ -101,6 +101,7 @@ function dressRoom(r){
     // Wall-mounted ventilation, cable ducts, warning strips and room number tiles.
     [-1,1].forEach(side=>{
       const x=r.x+side*786;
+      if((r.n===5||r.n===6)&&side===-1)return;
       prop(()=>{P.part(10,46,120,B.steel,x,112,r.z);for(let j=0;j<5;j++)P.box(12,3,95,B.dgrey,x,97+j*7,r.z);});
       prop(()=>P.box(10,8,950,r.color,x,155,r.z));
     });
@@ -115,7 +116,7 @@ function dressAtrium(){
       prop(()=>H.props.plant(x,2480));block(x,2480,65,65,110);
       prop(()=>H.props.cone(x,2520));
     });
-    [-650,0,1250].forEach(x=>{prop(()=>H.props.bench(x,2420));block(x,2420,170,65,80);});
+    [-900,0,1250].forEach(x=>{prop(()=>H.props.bench(x,2420));block(x,2420,170,65,80);});
     [-1810,1810].forEach(x=>{
       prop(()=>H.props.cabinet(x,2320,{color:B.blue,h:105}));block(x,2320,70,45,105);
       prop(()=>H.props.bin(x,2250,{color:B.green}));block(x,2250,45,45,65);
@@ -124,13 +125,38 @@ function dressAtrium(){
       const z=-2500+i*620;
       prop(()=>H.props.tree(i%2?180:-180,z,{s:1.3}));
       prop(()=>H.props.lampPost(i%2?-210:210,z));
-      prop(()=>P.part(48,20,48,B.white,0,10,z+170));
+      prop(()=>P.part(48,20,48,B.white,260,10,z+170));
     }
     [-2120,2120].forEach(x=>{for(let i=0;i<9;i++)prop(()=>H.props.tree(x,-2600+i*560,{s:1.5}));});
   });P.bake(stat);
 }
+const resources=[
+  ['에너지스틱','explain/energy.html'],['정전기 캔','explain/static.html'],['플라즈마볼','explain/plasma.html'],
+  ['코일기차','explain/train.html'],['황금나침반','explain/compass.html'],['전자기브레이크','explain/eddy.html'],
+  ['1비트 기억회로','explain/dram.html'],['운영 학생 학습 공간','academy/']
+];
+E.resources=resources;
+E.openLibrary=function(){
+  if(E.library?.open)return;
+  const before=document.activeElement,wasLocked=H.player.locked;H.player.stop();H.player.locked=true;
+  const d=document.createElement('dialog');d.className='hnr-research-library';E.library=d;
+  d.innerHTML='<header><img src="lab/cards/hnr-tech-mark.webp" alt="HNR TECH" width="44" height="44"><strong>HNR Tech Inc.</strong><button type="button" aria-label="자료대 닫기">닫기 ×</button></header><h2>연구소 자료대</h2><p>본 체험과 자유 체험의 원리 설명을 모두 볼 수 있어요. 자료는 새 탭으로 열립니다.</p><nav aria-label="실험 원리 설명">'+resources.map(([name,url])=>'<a href="'+url+'" target="_blank" rel="noopener">'+name+' <span>원리 설명 ↗</span></a>').join('')+'</nav><button class="library-memo" type="button">이 기기의 관찰 메모 보기</button><p>현장 이동 순서는 학생 연구원의 안내를 따라 주세요!</p>';
+  const close=()=>{d.close();};
+  d.querySelector('header button').onclick=close;
+  d.querySelector('.library-memo').onclick=()=>{close();memo();};
+  d.addEventListener('close',()=>{H.player.locked=wasLocked;d.remove();E.library=null;if(before?.isConnected)before.focus();},{once:true});
+  document.body.appendChild(d);d.showModal();d.querySelector('header button').focus();
+};
+function libraryDesk(){
+  const x=350,z=2175,g=P.group(x,0,z);P.with(g,()=>{
+    P.part(230,12,95,B.white,0,70,0);[-95,95].forEach(dx=>P.part(14,64,75,B.blue,dx,33,0));
+    [-55,0,55].forEach((dx,i)=>P.part(38,9,48,[B.blue,B.cyan,B.violet][i],dx,81,0));
+    P.text('원리 설명 자료대',{x:0,y:155,z:0,w:245,bg:'#ffffff',color:'#102e54'});
+  });P.bake(g);block(x,z,240,105,120);
+  W.addInteract({id:'research-library',x,z:2315,r:135,mesh:g,label:'E · 모든 실험 원리 설명 보기',onUse:E.openLibrary});
+}
 const originalBuild=M.build;
-M.build=function(){originalBuild();if(E.built)return;E.built=true;M.rooms.forEach(dressRoom);dressAtrium();
+M.build=function(){originalBuild();if(E.built)return;E.built=true;M.rooms.forEach(dressRoom);dressAtrium();libraryDesk();
   H.scene.traverse(o=>{if(!o.isSprite||!o.visible)return;let p=o.parent;while(p){if(p.userData.isChar)return;p=p.parent;}E.labels.push(o);});
 };
 function busy(){return H.player.locked||H.ui.isOpen()||!!(H.sim&&H.sim.active)||H.cam.isOverride();}
@@ -152,6 +178,7 @@ function memo(){
 }
 function installControls(){
   const style=document.createElement('style');style.textContent=`
+  .hnr-research-library{width:min(660px,calc(100vw - 28px));max-height:calc(100dvh - 32px);box-sizing:border-box;border:2px solid #0066cc;border-radius:20px;padding:20px;background:#fff;color:#111;font-family:var(--font);overflow-y:auto}.hnr-research-library::backdrop{background:#041b3cb8}.hnr-research-library header{display:flex;align-items:center;gap:10px}.hnr-research-library header img{object-fit:contain}.hnr-research-library header button{margin-left:auto}.hnr-research-library p{color:#111;line-height:1.7;font-size:14px}.hnr-research-library nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.hnr-research-library a{display:block;border:1px solid #85b6ef;border-radius:10px;background:#eff6ff;padding:12px;color:#08274c;text-decoration:none;font-weight:800}.hnr-research-library a span{display:block;font-size:12px;margin-top:6px}.hnr-research-library button{min-height:40px;border:0;border-radius:9px;background:#0066cc;color:white;padding:8px 12px;font-weight:800}.hnr-research-library .library-memo{margin-top:14px}@media(max-width:430px){.hnr-research-library{padding:14px}.hnr-research-library nav{grid-template-columns:1fr}}
   #exploreTools{position:fixed;right:12px;top:142px;z-index:21;color:white;font-family:var(--font);pointer-events:auto}
   #exploreTools button{min-height:40px;border:1px solid #ffffff50;background:#182531ed;color:white;border-radius:10px;padding:8px 11px;font-weight:800;font-size:13px}
   #exploreTools button[aria-pressed=true]{background:#0d69ac;border-color:#fff}
@@ -173,7 +200,7 @@ function installControls(){
       <strong>어떤 시점으로 볼까요?</strong>
       <div class="explore-row"><button data-view="fps" type="button">1인칭</button><button data-view="tps" type="button">따라가기</button><button data-view="top" type="button">위에서</button></div>
       <div class="explore-row"><button data-action="in" aria-label="시점 확대" type="button">＋ 확대</button><button data-action="out" aria-label="시점 축소" type="button">－ 축소</button><button data-action="reset" type="button">시선 복원</button></div>
-      <p id="exploreHint"></p><div class="explore-row"><button data-action="memo" type="button">관찰 메모 <span id="exploreCount">0/6</span></button></div>
+      <div class="explore-row"><button data-action="library" type="button">모든 실험 원리 설명</button></div><p id="exploreHint"></p><div class="explore-row"><button data-action="memo" type="button">관찰 메모 <span id="exploreCount">0/6</span></button></div>
       <p>화면 드래그로 둘러보기 · 바닥을 눌러 이동<br>PC: WASD 이동 · V 시점 전환 · E 말 걸기</p>
     </section>`;
   document.body.appendChild(panel);
@@ -185,6 +212,7 @@ function installControls(){
   panel.querySelector('[data-action=out]').onclick=()=>{E.zoom(1);sync();};
   panel.querySelector('[data-action=reset]').onclick=()=>{E.resetCamera();sync();};
   panel.querySelector('[data-action=memo]').onclick=()=>{close();memo();};
+  panel.querySelector('[data-action=library]').onclick=()=>{close();E.openLibrary();};
   function sync(){
     const view=H.player.view,locked=busy();
     panel.querySelectorAll('[data-view]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.view===view));b.disabled=locked;});
@@ -210,7 +238,8 @@ function readableLabels(){
     const distance=labelPosition.distanceTo(H.camera.position),nearPlayer=Math.hypot(labelPosition.x-H.player.x,labelPosition.z-H.player.z)<1900;
     // Large billboard signs between avatar and camera must not cover the whole scene.
     const foreground=(H.player.view!=='fps'||H.cam.isOverride())&&distance<camDistance*.85;
-    const tooClose=distance<100&&label.scale.x>180;
+    const roomTitleClose=label.name?.startsWith('room-title-')&&H.player.view!=='top'&&Math.hypot(labelPosition.x-H.player.x,labelPosition.z-H.player.z)<900;
+    const tooClose=(distance<100&&label.scale.x>180)||roomTitleClose;
     label.visible=nearPlayer&&!foreground&&!tooClose;
   }
 }

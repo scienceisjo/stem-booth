@@ -28,7 +28,7 @@
     },
 
     /* 플레이어 */
-    player: { speed: 330, radius: 14, eye: 76 },
+    player: { speed: 330, radius: 14, eye: 126 },
     view: 'fps',          // 처음 시점: 'fps' | 'tps' | 'top'
 
     /* 화면 */

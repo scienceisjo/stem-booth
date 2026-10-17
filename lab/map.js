@@ -1,6 +1,6 @@
 /* HNR Tech 연구소 지도 · 2026-10-06
  * 소유 범위: map.js. core/sim/flow의 공개 API만 사용한다.
- * 6개 연구실의 U자 동선, 5개 이중문, 단서, 휴식실, 아트리움.
+ * 기존 6개 연구실 + 정원 연결 통로 + 선택 체험 + 기록실.
  * 앵커는 바닥 중심, 로컬 +Z가 관람자 방향. 자세한 계약은 MAP_HANDOFF.md.
  */
 (function () {
@@ -9,11 +9,11 @@ const H = window.HNR, P = H.P, W = H.world, F = H.flow, B = H.BRICK;
 const PI = Math.PI;
 const rooms = [
   {n:1,x:-1150,z:1100,color:B.blue,sub:'출입 회로를 연결해요',entry:'S',exit:'N'},
-  {n:2,x:-1150,z:-500,color:B.cyan,sub:'정전기 장치를 점검해요',entry:'S',exit:'N'},
+  {n:2,x:-1150,z:-500,color:B.cyan,sub:'캔이 움직이기 시작하는 거리를 비교해요',entry:'S',exit:'N'},
   {n:3,x:-1150,z:-2100,color:B.violet,sub:'꺼진 형광등을 켜요',entry:'S',exit:'E'},
-  {n:4,x:1150,z:-2100,color:B.orange,sub:'운송과 방향 장치를 복구해요',entry:'W',exit:'S'},
+  {n:4,x:1150,z:-2100,color:B.orange,sub:'코일 열차를 자유롭게 체험해요',entry:'W',exit:'S'},
   {n:5,x:1150,z:-500,color:B.copper,sub:'전자기 브레이크를 확인해요',entry:'N',exit:'S'},
-  {n:6,x:1150,z:1100,color:B.green,sub:'준비 신호 1을 기록해요',entry:'N',exit:'S'}
+  {n:6,x:1150,z:1100,color:B.green,sub:'기억 회로를 만들고 숫자를 읽어요',entry:'N',exit:'S'}
 ];
 const anchors = {
   g1:{x:-1600,z:1100,ry:PI/2}, g2:{x:-1600,z:-500,ry:PI/2},
@@ -21,8 +21,10 @@ const anchors = {
   g4b:{x:1550,z:-2440,ry:0}, g5:{x:1600,z:-500,ry:-PI/2},
   g6:{x:1600,z:1100,ry:-PI/2}
 };
-const M = H.map = {version:'2.0.0-project-one', rooms, anchors,
-  spawn:{x:-1150,z:2350,yaw:0}, forks:{}, reservations:{}, checkpoints:{}};
+const M = H.map = {version:'3.0.0-interview', rooms, anchors,
+  spawn:{x:-1150,z:2350,yaw:0}, forks:{}, reservations:{}, checkpoints:{},
+  journeySpots:{compass:{x:-650,z:2420},'8421':{x:900,z:1580},library:{x:350,z:2315}},
+  connections:[]};
 function rect(x,z,w,d) { return {x1:x-w/2,x2:x+w/2,z1:z-d/2,z2:z+d/2}; }
 function local(o,x,z) { return F.l2w(o.x,o.z,o.ry||0,x,z); }
 function board(title,sub,x,z,ry,w) {
@@ -63,35 +65,20 @@ function furnishing(r) {
   if(r.n===4){
     [-100,100].forEach(dx=>P.box(9,4,760,B.steel,r.x+dx,5,r.z));
     for(let i=0;i<8;i++)P.box(240,4,20,B.brown,r.x,4,r.z-350+i*100);
-    board('터널 열차 연구실','코일 열차 · 나침반\n두 실험을 모두 만나 보아요',r.x,r.z-460,0,200);
+    board('터널 열차 연구실','코일 열차 · 나침반\n자유 탐색과 원리 설명',r.x,r.z-460,0,200);
   }
   if(r.n===5)board('자이로드롭 통로','구리관 전자기 브레이크\n느려지는 자석을 관찰해요',r.x-550,r.z+430,PI,170);
   if(r.n===6){
-    board('중앙 제어실','1비트 기억 회로\n준비 신호 1을 기록해요',r.x-550,r.z+400,PI,170);
-    for(let i=0;i<3;i++){H.props.cabinet(r.x-710,r.z-300+i*150,{color:B.navy,h:115});W.addBlock(rect(r.x-710,r.z-300+i*150,70,45));}
+    board('중앙 제어실','1비트 기억 회로 만들기\n8 · 4 · 2 · 1 숫자 읽기',r.x-550,r.z+400,PI,170);
+    for(let i=0;i<3;i++){H.props.cabinet(r.x-710,r.z-450+i*150,{color:B.navy,h:115});W.addBlock(rect(r.x-710,r.z-450+i*150,70,45));}
   }
 }
 async function useGate(n) {
-  const story=H.story('gates.'+n,{}), ids=story.sims||[];
-  if(F.observedDone&&F.observedDone(n))return F.gate(n);
-  if(ids.length&&ids.every(id=>H.sim&&H.sim.defOf&&H.sim.defOf(id)))return F.gate(n);
-  // The handed-off snapshot still has empty sims. Do not offer an action that rejects
-  // inside core's openSim() and leaves its sim:exit listener waiting indefinitely.
-  if(H.state.gatePassed(n)){
-    await H.ui.say(story.done||[{who:story.npc,t:'이미 통과한 관문이에요.'}]);return 'done';
-  }
-  const choice=await H.ui.say(story.intro,{who:story.npc,buttons:[
-    {t:'✅ 실물로 해 봤어요',v:'real',cls:'green'},{t:'나중에',v:'later',cls:'ghost'}]});
-  if(choice!=='real')return 'later';
-  const lines=[{steps:story.real||[],title:'실물 실험 순서',t:'부스에서 이렇게 해 보았나요?'}];
-  if(story.safety)lines.push({sign:'⚠ '+story.safety});
-  lines.push({who:'bit',t:'실물 실험을 다 해 보았나요?'});
-  const answer=await H.ui.say(lines,{buttons:[{t:'아직이에요',v:'no',cls:'ghost'},{t:'✅ 다 해 봤어요!',v:'yes',cls:'green'}]});
-  if(answer!=='yes')return 'later';
-  await F.pass(n);return 'passed';
+  if(H.journey)return H.journey.open(({1:'g1',2:'g2',3:'g3',4:'g4a',5:'g5',6:'g6'})[n]);
+  return H.ui.say(H.story('gates.'+n+'.intro',[{who:'bit',t:'학생 연구원과 함께 장치를 살펴보세요.'}]));
 }
 function room(r) {
-  const unlocked=()=>r.n===1||H.state.forkSolved(r.n-1);
+  const unlocked=()=>true;
   const area=rect(r.x,r.z,1600,1200);
   W.addWalk('room'+r.n,area,unlocked);
   W.addZone({id:'room'+r.n,rect:area,name:r.n+' · '+H.info.gateName(r.n),exposure:r.n===3?.42:1.05});
@@ -102,7 +89,8 @@ function room(r) {
     P.box(24,5,1130,r.color,r.x-775,5,r.z);
     P.box(24,5,1130,r.color,r.x+775,5,r.z);
     ['N','S','E','W'].forEach(side=>{
-      const holes=side===r.entry?[[-350,350]]:side===r.exit?(r.n===6?[[-140,140]]:[[-295,-85],[85,295]]):[];
+      const gardenEntry=(r.n===5||r.n===6)&&side==='W';
+      const holes=gardenEntry?[[-150,150]]:side===r.entry?[[-350,350]]:side===r.exit?(r.n===6?[[-140,140]]:[[-295,-85],[85,295]]):[];
       wallSide(r,side,holes);
     });
     const title=P.text(('0'+r.n).slice(-2)+'  '+H.info.gateName(r.n),{x:r.x,y:220,z:r.z-100,w:520,bg:'#162333',color:'#ffffff'});
@@ -115,86 +103,46 @@ function room(r) {
   np.spot.x=r.x;
   np.interact.visible=unlocked;
   np.interact.onUse=()=>useGate(r.n);
+  np.interact.label=()=> 'E · '+H.char.nameOf(H.story('gates.'+r.n+'.npc','bit'))+'에게 말 걸기';
   M.checkpoints[r.n]=np.spot;
   H.props.checkpoint(np.spot.x,np.spot.z,{size:95,color:r.color,label:r.sub,labelH:20,labelY:155});
 }
-function clue(n,f,side) {
-  const correct=side===H.state.forkCorrect(n), lx=side==='L'?-190:190;
-  const g=P.group(f.x,0,f.z,{ry:f.ry});
-  P.with(g,()=>{
-    if(n===1){
-      // A visibly closed rectangular loop versus the same loop with a gap.
-      [-62,62].forEach(dx=>P.box(8,4,170,B.yellow,lx+dx,6,155));
-      P.box(132,4,8,B.yellow,lx,6,70);
-      if(correct)P.box(132,4,8,B.yellow,lx,6,240);
-      else [-46,46].forEach(dx=>P.box(40,4,8,B.yellow,lx+dx,6,240));
-      P.part(36,14,22,B.dgrey,lx+62,12,155);
-    }
-    if(n===2){
-      P.part(12,115,12,B.yellow,lx,70,24,{rz:.42});
-      if(correct){P.part(65,42,10,B.brown,lx-56,55,28);
-        for(let i=0;i<5;i++)P.box(3,42,4,B.cream,lx-81+i*12,55,35);}
-    }
-    if(n===3){
-      P.ball(28,B.violet,lx,65,25,{opacity:.75});
-      P.part(36,15,36,B.black,lx,23,25);
-      // Both tubes lie sideways. The cue is only the gap from the globe's surface.
-      P.cyl(5,5,105,B.white,lx,65,correct?65:155,{rz:PI/2,emissive:B.white,emissiveIntensity:correct?.7:.03});
-      P.text(correct?'가까이':'멀리',{x:lx,y:23,z:185,w:125,bg:'#ffffff',color:'#102e54'});
-    }
-    if(n===4){
-      const coilSide=H.CONFIG.compassPointsAway?(H.state.forkCorrect(4)==='L'?'R':'L'):H.state.forkCorrect(4);
-      if(side===coilSide){for(let i=0;i<8;i++)P.torus(25,3,B.copper,lx+(side==='L'?-140:140),52,30+i*7);}
-    }
-    if(n===5){
-      // Both paths describe the SAME copper apparatus: choose the observed effect.
-      P.part(170,6,270,B.blue,lx,7,175);
-      const count=correct?1:3;
-      for(let i=0;i<count;i++){
-        const z=115+i*48;
-        P.box(12,5,42,B.white,lx-12,13,z,{ry:-.65});
-        P.box(12,5,42,B.white,lx+12,13,z,{ry:.65});
-      }
-      P.text(correct?'천천히':'빠르게',{x:lx,y:44,z:265,w:130,bg:'#ffffff',color:'#102e54'});
-    }
-  });
-  P.bake(g);
-}
 function fork(r) {
-  const n=r.n, f={x:r.x+(r.exit==='E'?800:0),z:r.z+(r.exit==='N'?-600:600)*(r.exit==='E'?0:1),ry:r.exit==='E'?-PI/2:r.exit==='S'?PI:0};
-  const back=local(f,0,n===4?430:330); back.yaw=f.ry;
-  const built=F.forkDoors(n,{...f,gap:380,w:190,h:130,clue:false,back,color:r.color,rival:n===2});
-  M.forks[n]={...f,...built,back};
-  ['L','R'].forEach(s=>clue(n,f,s));
-  const sign=local(f,0,30);
-  board('복구 경로 선택',H.story('gates.'+n+'.fork.clue','관찰한 결과로 경로를 선택해요'),sign.x,sign.z,f.ry,125);
-  if(n===4){
-    const g=P.group(f.x,0,f.z,{ry:f.ry});
-    P.with(g,()=>{
-      P.cyl(60,60,20,B.gold,0,20,230);
-      P.cyl(53,53,3,B.white,0,31,230);
-      const needle=P.group(0,35,230,{dynamic:true});
-      P.with(needle,()=>{P.part(12,4,42,B.red,0,0,-21);P.part(12,4,42,B.blue,0,0,21);});
-      P.text('N',{x:0,y:46,z:166,h:18,bg:'#ffffff',color:'#b23a30'});
-      function sync(){needle.rotation.y=H.state.forkSolved(4)?(H.state.forkCorrect(4)==='L'?PI/2:-PI/2):0;}
-      sync();H.on('state',sync);
-    });
-    W.addBlock(F.rectOf(local(f,0,230).x,local(f,0,230).z,125,125,f.ry));
-    // The guide/back point must be in front of the compass, never inside its pedestal.
-    F.spots.fork[4]={...back,n:4};
-  }
-  // Separate narrow door strips keep the engine's rectangle route graph out of the divider.
-  ['L','R'].forEach(s=>{
-    const p=local(f,s==='L'?-190:190,-40);
-    W.addWalk('portal'+n+s,F.rectOf(p.x,p.z,190,200,f.ry),()=>H.state.forkSolved(n)&&H.state.forkCorrect(n)===s);
+  const n=r.n,f={x:r.x+(r.exit==='E'?800:0),z:r.z+(r.exit==='N'?-600:600)*(r.exit==='E'?0:1),ry:r.exit==='E'?-PI/2:r.exit==='S'?PI:0};
+  const back=local(f,0,n===4?430:330);back.yaw=f.ry;
+  const labels={1:['연결한 회로','끊어진 회로'],2:['가는 빨대','굵은 빨대'],3:['가까이에서 관찰','멀리에서 관찰'],4:['본 체험으로 돌아가기','자유 탐색 이어가기'],5:['닫힌 관보다 빠를까?','비슷하게 느릴까?']};
+  const doors={},interacts={};
+  ['L','R'].forEach((side,i)=>{
+    const p=local(f,side==='L'?-190:190,0);
+    const door=H.props.door(p.x,p.z,{w:190,h:130,ry:f.ry,color:r.color,label:labels[n][i],labelW:210});
+    door.userData.setOpen(true,true);doors[side]=door;
+    const ip=local(f,side==='L'?-190:190,80);
+    interacts[side]=W.addInteract({id:'fork'+n+side,x:ip.x,z:ip.z,r:110,mesh:door,label:'E · '+labels[n][i],onUse:()=>{
+      if(n===5)return H.journey?.open('g5',{prediction:side==='L'?'faster':'similar'});
+      if(n===4)return H.ui.say([{who:'jjirit',t:'두 길 모두 열려 있어요. 정원 통로로 중앙 제어실에 가거나, 브레이크실에 들러 자유 체험을 해 보세요.'}]);
+      return H.journey?.open('g'+n);
+    }});
+    const portal=local(f,side==='L'?-190:190,-40);
+    W.addWalk('portal'+n+side,F.rectOf(portal.x,portal.z,190,200,f.ry));
   });
+  if(n===2){const p=local(f,-335,60);W.addNpc('daechung',p.x,p.z,{ry:f.ry+PI,look:false});}
+  M.forks[n]={...f,doors,interacts,back,spot:back};F.spots.fork[n]={...back,n};
+  const sign=local(f,0,30);
+  board(n===5?'예상하고 직접 관찰':'열린 연구실 통로',n===5?'어느 예상이든\n관찰하며 확인해요':'실험은 학생 연구원과 함께\n다음 안내는 지금 할 일에서',sign.x,sign.z,f.ry,130);
+  if(n===4){
+    const g=P.group(f.x,0,f.z,{ry:f.ry});P.with(g,()=>{
+      P.cyl(60,60,20,B.gold,0,20,230);P.cyl(53,53,3,B.white,0,31,230);
+      P.part(12,4,42,B.red,0,35,209);P.part(12,4,42,B.blue,0,35,251);
+      P.text('나침반 원리 다시 보기',{x:0,y:85,z:230,w:170,bg:'#ffffff',color:'#102e54'});
+    });P.bake(g);const p=local(f,0,230);W.addBlock(rect(p.x,p.z,125,125));
+  }
 }
 function corridors() {
   // Leave a 40-unit separation between room and shared corridor: only door strips bridge it.
   rooms.slice(0,5).forEach(r=>{
     const f=M.forks[r.n], len=r.n===3?700:400;
     const p=local(f,0,-(len/2+20)), area=F.rectOf(p.x,p.z,700,len-40,f.ry);
-    W.addWalk('link'+r.n,area,()=>H.state.forkSolved(r.n));
+    W.addWalk('link'+r.n,area);
     const stat=P.group(f.x,0,f.z,{ry:f.ry});
     P.with(stat,()=>{
       P.stud(700,len,B.floor,0,-len/2,2);
@@ -218,9 +166,9 @@ function reserve(id,a) {
 }
 function atrium() {
   W.addWalk('atrium',rect(0,2250,3900,600));
-  W.addZone({id:'atrium',rect:rect(0,2250,3900,600),name:'HNR Tech · PROJECT ONE',exposure:1.05});
+  W.addZone({id:'atrium',rect:rect(0,2250,3900,600),name:'HNR Tech · 신입 연구원 안내',exposure:1.05});
   W.addWalk('entry',rect(-1150,1825,700,350));
-  W.addWalk('graduation',rect(1150,1825,280,350),()=>H.state.gatePassed(6));
+  W.addWalk('graduation',rect(1150,1825,280,350));
   const stat=P.group(0,0,0);
   P.with(stat,()=>{
     P.stud(3900,600,B.floor,0,2250,2);
@@ -228,35 +176,65 @@ function atrium() {
     P.part(500,30,40,B.blue,-1150,230,1950);
     [-1420,-880].forEach(x=>{P.part(40,230,40,B.blue,x,115,1950);W.addBlock(rect(x,1950,40,40));});
     P.text('HNR TECH  /  PROJECT ONE',{x:-1150,y:280,z:1950,w:540,bg:'#0d69ac'});
-    board('시연 라인을 복구해요','6개 구역을 재가동하고\n준비 신호 1을 기록해요',-1780,2200,PI/4,200);
+    board('면접 보러 오셨나요?','황금나침반으로 출발해요\n현장 이동은 학생 연구원 안내에 따라요',-1780,2200,PI/4,200);
     H.props.bench(-300,2470);H.props.bench(300,2470);
     [-300,300].forEach(x=>W.addBlock(rect(x,2470,170,65)));
     [-1810,1810].forEach(x=>{H.props.plant(x,2470);H.props.lampPost(x,2040);W.addBlock(rect(x,2470,60,60));});
-    solid(-1950,1950,-1950,2550,B.blue,70);solid(1950,1950,1950,2550,B.blue,70);solid(-1950,2550,1950,2550,B.white,70);
+    solid(-1950,1950,-1950,2100,B.blue,70);solid(-1950,2300,-1950,2550,B.blue,70);solid(1950,1950,1950,2550,B.blue,70);solid(-1950,2550,1950,2550,B.white,70);
     P.part(500,170,25,B.navy,700,85,2480);
-    P.text('HNR TECH · PROJECT ONE COMPLETE',{x:700,y:135,z:2458,w:440,bg:'#162333',color:'#ffe46b'});
-    // Central garden is scenery, with no walk polygon that could bypass the gates.
+    P.text('HNR TECH · 첫 연구 프로젝트',{x:700,y:135,z:2458,w:440,bg:'#162333',color:'#ffe46b'});
+    // Garden trees stay; the central clear strip connects the optional and main routes.
     P.stud(560,4300,B.grass,0,-450,0);
-    for(let i=0;i<5;i++)H.props.tree(0,-2450+i*800,{s:1.5});
+    for(let i=0;i<5;i++)H.props.tree(-205,-2450+i*800,{s:1.5});
     [-2400,2400].forEach(x=>{H.props.building(x,-1900,500,650,600,{color:B.steel});H.props.building(x,0,400,430,600,{color:B.white});});
   });P.bake(stat);
-  const door=H.props.door(1150,1700,{w:250,h:140,color:B.gold,label:'복구 완료 · 아트리움으로'});
-  W.addBlock(rect(1150,1700,270,28),()=>!H.state.gatePassed(6));
-  const sync=()=>door.userData.setOpen(H.state.gatePassed(6),true);sync();H.on('state',sync);
+  const door=H.props.door(1150,1700,{w:250,h:140,color:B.gold,label:'아트리움 · 안내 데스크'});
+  door.userData.setOpen(true,true);
   F.endingSpot(700,2280,{label:'PROJECT ONE · 완료 기념',ry:PI});
   const bit=W.addNpc('bit',-1450,2220,{block:false});
   W.addInteract({id:'welcome-bit',x:-1450,z:2220,r:150,mesh:bit,label:'💬 비트 · 연구소 이용 안내',onUse:()=>H.ui.say([
-    {who:'bit',t:'축제 시연 라인의 준비 신호가 꺼졌어요. 각 구역의 장치를 직접 움직여 원인을 찾고, 마지막 제어실에서 준비 신호 1을 기록해 주세요.'},
-    {who:'bit',t:'장비 앞의 파란 표시로 가면 직접 조작할 수 있어요. 복구 보드에서 지금 할 일을 확인하고, 과학 카드로 다음 경로를 골라 보아요.'}
+    {who:'bit',t:'면접 보러 오셨죠? 중앙 제어실로 가는 길에 연구원들을 만나 보세요. 먼저 황금나침반의 표시된 바늘 끝과 같은 파란 별을 찾아 정문으로 출발해요.'},
+    {who:'bit',t:'지금 할 일에서 다음 활동을 확인하세요. 터널 열차와 전자기브레이크는 선택 체험이에요. 현실의 책상 이동과 안전 수칙은 학생 연구원의 안내를 따라 주세요!'}
   ])});
 }
-M.spawnFor=function(){return H.S&&H.S.passed.length?F.suggestSpawn():M.spawn;};
+function gardenConnections(){
+  const path=(id,x,z,w,d)=>{const a=rect(x,z,w,d);W.addWalk(id,a);P.stud(w,d,B.floor,x,z,3);M.connections.push({id,...a});};
+  path('garden-spine',0,-500,220,3420);
+  path('garden-control-link',210,1100,640,280);
+  path('garden-brake-link',210,-500,640,280);
+  // Collision rails delimit the promenade. The west/right branches remain clear.
+  solid(-130,-1960,-130,1240,B.white,44);
+  [[-1960,-650],[-350,950]].forEach(([a,b])=>solid(130,a,130,b,B.white,44));
+  [-500,1100].forEach(z=>{solid(130,z-150,350,z-150,B.blue,44);solid(130,z+150,350,z+150,B.blue,44);});
+  for(let z=-1850;z<=1000;z+=250)H.props.tapeLine(0,z,120,'z',{color:B.blue,w:12});
+  board('중앙 제어실 ↓','기억 회로 제작 · 8 · 4 · 2 · 1',0,-1920,0,210);
+  board('← 본 체험 · 자유 탐색 →','터널 열차는 오른쪽\n기억 회로 제작은 정원 통로',0,-2160,0,230);
+  board('전자기브레이크 →','선택 체험 · 언제든 돌아올 수 있어요',0,-650,0,190);
+  board('중앙 제어실 →','면접 · 기억 회로 만들기',0,920,0,190);
+  W.addZone({id:'garden',rect:rect(0,-500,260,3420),name:'중앙 정원 · 중앙 제어실 연결 통로',exposure:1.05});
+}
+function recordRoom(){
+  const x=-2500,z=2200;W.addWalk('think',rect(x,z,360,360));
+  W.addWalk('record-room-link',rect(-2130,2200,500,200));
+  const g=P.group(0,0,0);P.with(g,()=>{
+    P.stud(360,360,B.cream,x,z,2);P.stud(500,200,B.floor,-2130,2200,2);
+    solid(x-180,z-180,x+180,z-180,B.sand,120);solid(x-180,z+180,x+180,z+180,B.sand,120);
+    solid(x-180,z-180,x-180,z+180,B.sand,120);
+    solid(x+180,z-180,x+180,z-100,B.sand,120);solid(x+180,z+100,x+180,z+180,B.sand,120);
+    H.props.chair(x-90,z+65,{ry:PI,color:B.violet});H.props.plant(x-120,z-120);
+    board('관찰 기록실','설명 다시 보기 · 관찰 메모\n어떤 예상도 기록할 수 있어요',x,z-115,0,220);
+    P.text('관찰 기록실',{x,y:190,z,w:280,bg:'#102e54',color:'#ffffff'});
+  });P.bake(g);F.spots.think={x,z,yaw:0};
+  W.addZone({id:'think',rect:rect(x,z,360,360),name:'관찰 기록실 · 설명 다시 보기',exposure:1.05});
+  W.addInteract({id:'record-library',x,z,r:160,label:'E · 원리 설명과 관찰 기록 보기',onUse:()=>H.explore?.openLibrary()});
+}
+M.spawnFor=function(){return H.journey?(F.suggestSpawn()||M.spawn):H.S&&H.S.passed.length?F.suggestSpawn():M.spawn;};
 M.useGate=useGate;
 M.build=function(){
   if(M.built)return;M.built=true;
   if(!F.gateNpc)throw new Error('map.js 앞에 lab/flow.js를 로드해 주세요.');
-  F.thinkRoom(-2500,2200,{size:360});
+  recordRoom();
   rooms.forEach(room);rooms.slice(0,5).forEach(fork);corridors();
-  Object.keys(anchors).forEach(id=>reserve(id,anchors[id]));atrium();F.guideAuto();
+  Object.keys(anchors).forEach(id=>reserve(id,anchors[id]));atrium();gardenConnections();F.guideAuto();
 };
 })();

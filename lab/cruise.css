@@ -1,0 +1,21 @@
+/* HNR Tech Inc. · Cruise controls */
+#exploreTools #cruiseToggle{background:#fff;color:#102846;border-color:#9dc3ec;margin-right:6px}
+#exploreTools #cruiseToggle[aria-pressed=true]{background:#0066cc;color:#fff;border-color:#0066cc}
+#cruisePanel[hidden],#cruisePanel [hidden]{display:none!important}
+#cruisePanel{position:fixed;z-index:25;bottom:calc(16px + var(--safe-b));left:50%;transform:translateX(-50%);width:min(580px,calc(100vw - 24px));padding:15px 18px 12px;border:1px solid #9dc3ec;border-radius:16px;background:#fff;color:#102846;font-family:var(--font);touch-action:pan-y}
+#cruisePanel button{font:inherit;font-size:13px;font-weight:750;border:1px solid #9dc3ec;border-radius:9px;padding:9px 12px;min-height:40px;background:#edf5ff;color:#102846;cursor:pointer;touch-action:manipulation}
+#cruisePanel button:focus-visible,#cruiseToggle:focus-visible{outline:3px solid #ffbf35;outline-offset:3px}
+#cruisePanel .cruise-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;font-weight:750;color:#0059b3}
+#cruisePanel .cruise-off{min-height:32px;padding:5px 10px;background:#fff;font-size:12px}
+#cruisePanel h2{font-size:21px;line-height:1.4;margin:6px 0;word-break:keep-all}
+#cruisePanel .cruise-detail{font-size:14px;line-height:1.55;margin:0 0 12px;word-break:keep-all}
+#cruisePanel .cruise-actions,#cruisePanel .cruise-choices{display:flex;gap:8px}
+#cruisePanel .cruise-actions:has(.cruise-primary[hidden]){display:none}
+#cruisePanel .cruise-actions button,#cruisePanel .cruise-choices button{flex:1;white-space:normal;word-break:keep-all}
+#cruisePanel .cruise-primary{background:#0066cc;color:#fff;border-color:#0066cc}
+#cruisePanel .cruise-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:8px;border-top:1px solid #d6e6f7;font-size:11px;line-height:1.5}
+#cruisePanel .cruise-pause{font-size:11px;min-height:32px;padding:5px 8px;background:#fff;flex:none}
+body.cruising #joy,body.cruising #botR,body.cruising #talk,body.cruising #hint{display:none!important}
+body.pre #cruisePanel,body.sim #cruisePanel,body.dlg #cruisePanel,body.opening #cruisePanel,body.hud-off #cruisePanel{display:none!important}
+@media(max-width:640px){#cruisePanel{padding:11px 13px 9px;bottom:calc(10px + var(--safe-b))}#cruisePanel h2{font-size:18px}#cruisePanel .cruise-detail{font-size:12px;margin-bottom:9px}#cruisePanel .cruise-foot{font-size:10px}#exploreTools #cruiseToggle{font-size:12px;padding:6px 10px}}
+@media(max-height:520px) and (min-width:641px){#cruisePanel{left:12px;transform:none;width:340px;bottom:10px;padding:9px 12px}#cruisePanel h2{font-size:17px;margin:4px 0}#cruisePanel .cruise-detail{font-size:12px;margin-bottom:7px}#cruisePanel .cruise-foot{margin-top:6px;padding-top:5px}#cruisePanel .cruise-foot span{display:none}#cruisePanel .cruise-foot{justify-content:flex-end}#cruisePanel button{min-height:34px;padding:7px 9px;font-size:12px}}

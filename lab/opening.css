@@ -1,137 +1,94 @@
-/* HNR Tech Inc. — participant briefing, white/blue with navy text. */
-#opening[hidden]{display:none}
-#opening{position:fixed;inset:0;z-index:45;color:#102846;isolation:isolate;touch-action:pan-y;display:flex;flex-direction:column;justify-content:space-between;padding:18px;pointer-events:auto}
-#opening .op-shade{position:absolute;inset:0;background:#102846;opacity:0;z-index:-1;pointer-events:none}
-#opening .op-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+/* HNR TECH — white / blue cinema overlay. All body text has high contrast. */
+#opening[hidden],#opening [hidden]{display:none!important}
+#opening{position:fixed;inset:0;z-index:45;color:#102846;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;pointer-events:auto;touch-action:manipulation;padding:20px 28px 18px;overflow:hidden}
+#opening .op-vignette{position:absolute;inset:0;z-index:-2;pointer-events:none;background:linear-gradient(180deg,#0b1d35a8,transparent 24%,transparent 60%,#0b1d3570)}
+#opening .op-letterbox{position:absolute;left:0;right:0;height:11px;background:#0b1d35;z-index:-1;pointer-events:none}
+#opening .op-letterbox-top{top:0}#opening .op-letterbox-bottom{bottom:0}
+#opening .op-top{display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:2}
+#opening .op-brand{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:900;color:#fff;text-shadow:0 2px 6px #00162c}
+#opening .op-brand img{width:39px;height:39px;object-fit:contain;filter:drop-shadow(0 2px 4px #00162c66)}
 #opening .op-actions{display:flex;align-items:center;gap:6px}
-#opening .op-sound{width:44px;padding:10px;display:grid;place-items:center}
-#opening .op-sound svg{display:block;width:20px;height:20px}
-#opening .op-sound .op-slash{display:none}
-#opening .op-sound[aria-pressed="true"] .op-slash{display:block}
-#opening .op-sound[aria-pressed="true"] .op-waves{display:none}
-#opening .op-brand{display:flex;align-items:center;gap:10px;background:#fff;padding:9px 14px;border:1px solid #b8d3ef;border-radius:13px;font-weight:900;font-size:16px;line-height:1.25}
-#opening .op-brand img{width:34px;height:34px;object-fit:contain}
-#opening .op-brand small{display:block;color:#164d80;font-size:11px;font-weight:750;margin-top:3px}
-#opening button{font:inherit;cursor:pointer;min-height:44px;border-radius:10px;border:1px solid #b8d3ef;background:#fff;color:#102846;font-size:14px;font-weight:800;padding:9px 15px;touch-action:manipulation}
-#opening button:focus-visible{outline:3px solid #ffbf35;outline-offset:3px}
-#opening button:disabled{background:#edf5ff;color:#375677;cursor:default}
-#opening .op-skip{background:#102846;color:#fff;border-color:#c5dcf4}
-#opening .op-card{width:min(860px,100%);align-self:center;background:#fff;border:1px solid #b8d3ef;border-radius:20px;padding:18px 22px 14px;box-shadow:0 12px 36px #071b3d33}
-#opening .op-progress{display:flex;gap:5px;margin-bottom:13px;height:4px}
-#opening .op-progress span{flex:1;background:#d6e6f7;border-radius:3px;overflow:hidden}
-#opening .op-progress i{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:#0066cc}
-#opening .op-row{display:flex;gap:16px;align-items:flex-start}
-#opening .op-speaker{flex:none;width:64px;text-align:center}
-#opening canvas{width:64px;height:64px;display:block;background:#edf5ff;border:1px solid #b8d3ef;border-radius:16px}
-#opening .op-speaker b{display:block;font-size:12px;margin-top:4px;color:#164d80}
-#opening .op-copy{min-width:0;flex:1}
-#opening .op-kicker{font-size:12px;font-weight:850;color:#0066cc;letter-spacing:.06em;margin:0 0 5px}
-#opening h1{font-size:clamp(24px,3vw,32px);line-height:1.2;letter-spacing:-.03em;margin:0 0 8px;color:#102846;word-break:keep-all}
-#opening .op-text{font-size:18px;font-weight:650;line-height:1.6;word-break:keep-all;margin:0;color:#102846}
-#opening .op-controls{display:flex;gap:8px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid #d6e6f7}
-#opening .op-status{font-size:12px;color:#164d80;font-weight:750;margin-right:auto}
-#opening .op-next{background:#0066cc;color:#fff;border-color:#0066cc;min-width:100px}
-#opening .op-help{display:none;background:#edf5ff;border-radius:8px;padding:8px 10px;margin-top:9px;color:#102846;font-size:13px;font-weight:700;line-height:1.5}
-#opening .op-credits[hidden]{display:none}
-#opening[data-credits="true"] .op-card{margin-block:auto;width:min(880px,100%);padding:25px 32px 18px;max-height:calc(100dvh - 112px);overflow-y:auto;overscroll-behavior:contain}
-#opening[data-credits="true"] .op-row{display:block;text-align:center}
-#opening[data-credits="true"] .op-speaker{display:none}
-#opening[data-credits="true"] h1{font-size:clamp(32px,4vw,52px);letter-spacing:-.04em;margin:10px 0 12px}
-#opening[data-credits="true"] .op-text{font-size:clamp(20px,2.4vw,27px);color:#0066cc;font-weight:850}
-#opening .op-team-line{text-align:center;font-size:14px;font-weight:650;margin:8px 0 16px;color:#102846;word-break:keep-all}
-#opening .op-credits dl{margin:0}
-#opening .op-credits dt{font-size:14px;font-weight:750;line-height:1.5;color:#164d80;word-break:keep-all}
-#opening .op-credits dd{margin:0;font-size:22px;font-weight:850;line-height:1.4;color:#102846}
-#opening .op-teachers{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:11px 0;border-top:1px solid #b8d3ef;border-bottom:1px solid #b8d3ef}
-#opening .op-teachers>div{display:flex;align-items:center;justify-content:center;gap:12px}
-#opening .op-teachers>div+div{border-left:1px solid #b8d3ef}
-#opening .op-teachers dt{font-size:12px}
-#opening .op-teachers dd{font-size:18px}
-#opening .op-guide dd{font-size:14px;font-weight:650}
-#opening .op-makers{display:grid;grid-template-columns:1fr;gap:12px;padding:16px 0 0}
-#opening .op-circuit{border:1px solid #b8d3ef;border-radius:14px;padding:18px 22px;background:#edf5ff;text-align:center}
-#opening .op-circuit dt{font-size:24px;font-weight:850;color:#0059b3}
-#opening .op-circuit dd{margin-top:8px}
-#opening .op-affiliation{display:block;font-size:20px;font-weight:750;line-height:1.5}
-#opening .op-designer{display:block;font-size:52px;font-weight:900;line-height:1.12;letter-spacing:-.035em;margin-top:3px}
-#opening .op-digital{padding:0 4px}
-#opening .op-digital dt{font-size:12px}
-#opening .op-digital dd{margin-top:3px;font-size:14px;font-weight:650}
-#opening .op-digital p{font-size:12px;font-weight:600;line-height:1.5;margin:4px 0 0;color:#102846;word-break:keep-all}
-#opening[data-credits="true"] .op-controls{position:sticky;bottom:-18px;background:#fff;padding-bottom:4px}
-#opening[data-last="true"] .op-help{display:block}
-body.opening .hud,body.opening #exploreTools,body.opening #toasts,body.opening #simBrand{visibility:hidden!important;pointer-events:none!important}
+#opening button{min-height:44px;padding:8px 13px;border:1px solid #a8c7e8;border-radius:9px;background:#fff;color:#102846;font:inherit;font-size:12px;font-weight:850;cursor:pointer;touch-action:manipulation}
+#opening button:focus-visible{outline:3px solid #ffbe32;outline-offset:3px}
+#opening button:disabled{color:#36516e;background:#e9f1fb;cursor:default}
+#opening button[aria-pressed="true"]{background:#d8eaff;border-color:#0066cc}
+#opening .op-skip{background:#102846;color:#fff;border-color:#9ab4d1}
+#opening kbd{margin-left:5px;font:10px inherit;border:1px solid #93acc8;border-radius:3px;padding:2px 3px}
+#opening .op-hero{position:absolute;left:50%;top:41%;transform:translate(-50%,-50%);width:max-content;max-width:90%;text-align:center;padding:18px 34px 22px;background:#fffffff2;border:1px solid #d4e4f6;border-radius:18px;box-shadow:0 20px 80px #001e3b2b;animation:op-title-in 1s both}
+#opening .op-hero img{width:76px;height:76px;object-fit:contain}
+#opening .op-hero p{margin:9px 0;color:#15559c;font-size:13px;font-weight:800;letter-spacing:.05em}
+#opening .op-hero strong{display:block;font-size:clamp(36px,5.6vw,76px);font-weight:900;line-height:1.1;letter-spacing:-.05em;white-space:nowrap}
+#opening .op-hero span{display:block;margin-top:10px;font-size:clamp(17px,2.3vw,28px);font-weight:800;color:#0066cc}
+#opening .op-bottom{width:min(1020px,100%);align-self:center;position:relative}
+#opening .op-caption{display:inline-block;max-width:100%;padding:13px 19px 16px;background:#fffffffa;border-left:5px solid #0066cc;border-radius:4px 12px 12px 4px;box-shadow:0 8px 34px #00162c30;margin-bottom:12px}
+#opening[data-scene="overview"] .op-caption{visibility:hidden}
+#opening .op-kicker{font-size:12px;font-weight:900;color:#0055b3;letter-spacing:.03em;margin:0 0 6px}
+#opening h1{font-size:clamp(22px,2.4vw,32px);font-weight:900;line-height:1.25;margin:0 0 6px;letter-spacing:-.04em;word-break:keep-all}
+#opening .op-text{font-size:clamp(14px,1.5vw,18px);line-height:1.55;color:#102846;font-weight:650;margin:0;word-break:keep-all}
+#opening .op-progress{height:3px;background:#c2d5eb;border-radius:3px;overflow:hidden}
+#opening .op-progress i{display:block;height:100%;background:#0066cc;transform-origin:left;transform:scaleX(0)}
+#opening .op-controls{display:flex;align-items:center;gap:7px;background:#fffffff5;padding:9px 12px;border-radius:0 0 11px 11px;box-shadow:0 7px 32px #00162c24}
+#opening .op-status{margin-right:auto;font-size:12px;font-weight:850;white-space:nowrap}
+#opening .op-next{background:#0066cc;color:#fff;border-color:#0066cc;min-width:74px}
+#opening .op-credits{position:absolute;inset:0;z-index:5;padding:24px;display:grid;place-items:center;background:#061629c9;overflow-y:auto;touch-action:pan-y}
+#opening .op-credits-card{width:min(680px,100%);max-height:100%;overflow-y:auto;background:#fff;padding:25px 32px;border:1px solid #a8c7e8;border-radius:20px;text-align:center;box-shadow:0 18px 90px #00162c4d}
+#opening .op-credits-card>img{width:72px;height:72px;object-fit:contain}
+#opening .op-credits-card h2{font-size:34px;letter-spacing:-.04em;margin:10px 0 18px;color:#102846}
+#opening .op-welcome{text-align:left;font-size:16px;font-weight:550;line-height:1.8;color:#102846;word-break:keep-all}
+#opening .op-welcome p{margin:0 0 13px}
+#opening .op-teachers{padding:12px;background:#eaf3ff;border-radius:9px;color:#102846;font-size:12px;line-height:1.8;font-weight:700;word-break:keep-all}
+#opening .op-credits-close{background:#0066cc;color:#fff;border-color:#0066cc;margin-top:6px}
+body.opening .hud,body.opening #exploreTools,body.opening #toasts,body.opening #simBrand,body.opening #cruisePanel,body.opening #cruiseToggle,body.opening #interviewHud{visibility:hidden!important;pointer-events:none!important}
 #openingReplay{display:block;width:100%;margin-top:8px;padding:9px 12px;min-height:42px;border:1px solid #bad6f2;border-radius:9px;background:#fff;color:#102846;font:inherit;font-size:12px;font-weight:850;cursor:pointer}
+@keyframes op-title-in{from{opacity:0;transform:translate(-50%,-45%)}to{opacity:1;transform:translate(-50%,-50%)}}
+#opening[data-reduced="true"] *{animation:none!important;transition:none!important}
 @media(max-width:640px){
- #opening{padding:10px;gap:12px}
- #opening .op-brand{padding:7px 9px;font-size:13px;gap:7px;border-radius:10px}
- #opening .op-brand img{width:28px;height:28px}
- #opening .op-brand small{font-size:9px}
- #opening button{font-size:12px;padding:8px 10px}
- #opening .op-card{border-radius:16px;padding:13px 14px 12px}
- #opening .op-progress{margin-bottom:10px}
- #opening .op-row{gap:10px}
- #opening .op-speaker{width:42px}
- #opening canvas{width:42px;height:42px;border-radius:11px}
- #opening .op-speaker b{font-size:11px}
- #opening h1{font-size:23px;margin-bottom:7px}
+ #opening{padding:13px 10px 12px}
+ #opening .op-top{align-items:flex-start;gap:7px}
+ #opening .op-brand{font-size:11px;gap:5px;padding-top:4px}
+ #opening .op-brand img{width:30px;height:30px}
+ #opening .op-brand span{max-width:62px;line-height:1.2}
+ #opening .op-actions{gap:4px}
+ #opening button{font-size:11px;padding:7px 8px}
+ #opening .op-actions button{min-height:40px}
+ #opening kbd{display:none}
+ #opening .op-hero{top:38%;padding:17px 17px 20px;border-radius:15px}
+ #opening .op-hero img{width:65px;height:65px}
+ #opening .op-hero p{font-size:10px;letter-spacing:0}
+ #opening .op-hero strong{font-size:39px}
+ #opening .op-hero span{font-size:19px}
+ #opening .op-caption{width:100%;padding:12px 13px;margin-bottom:9px}
  #opening .op-kicker{font-size:10px}
- #opening .op-text{font-size:15px;line-height:1.65}
- #opening .op-controls{gap:6px;margin-top:11px;padding-top:10px;flex-wrap:wrap}
- #opening .op-status{font-size:11px;flex:1}
- #opening .op-next{min-width:72px}
- #opening .op-help{font-size:11px;padding:6px 8px}
- #opening[data-credits="true"] .op-card{padding:17px 17px 12px;max-height:calc(100dvh - 96px)}
- #opening[data-credits="true"] h1{font-size:32px;margin:6px 0}
- #opening[data-credits="true"] .op-text{font-size:21px}
- #opening .op-team-line{font-size:11px;margin:4px 0 10px}
- #opening .op-teachers{gap:8px;padding:8px 0}
- #opening .op-teachers>div{gap:8px}
- #opening .op-teachers dt{font-size:11px}
- #opening .op-teachers dd{font-size:16px}
- #opening .op-guide dd{font-size:13px}
- #opening .op-makers{gap:10px;padding:11px 0 0}
- #opening .op-circuit{padding:12px}
- #opening .op-circuit dt{font-size:19px}
- #opening .op-circuit dd{margin-top:5px}
- #opening .op-affiliation{font-size:16px}
- #opening .op-designer{font-size:40px}
- #opening .op-digital dt{font-size:11px}
- #opening .op-digital dd{font-size:13px}
- #opening .op-digital p{font-size:11px;margin-top:3px}
- #opening[data-credits="true"] .op-controls{bottom:-12px}
+ #opening h1{font-size:24px}
+ #opening .op-text{font-size:14px;line-height:1.65}
+ #opening .op-controls{gap:4px;padding:7px}
+ #opening .op-status{font-size:10px}
+ #opening .op-next{min-width:57px}
+ #opening .op-credits{padding:12px}
+ #opening .op-credits-card{padding:18px}
+ #opening .op-credits-card h2{font-size:28px}
+ #opening .op-welcome{font-size:14px}
+ #opening .op-teachers{font-size:11px}
 }
 @media(max-height:520px) and (min-width:641px){
- #opening{padding:10px}
- #opening .op-brand{padding:6px 10px;font-size:13px}
- #opening .op-brand img{width:27px;height:27px}
- #opening .op-card{width:min(740px,100%);padding:10px 15px}
- #opening .op-progress{margin-bottom:7px}
- #opening .op-speaker,#opening canvas{width:44px;height:44px}
- #opening .op-speaker b{display:none}
- #opening h1{font-size:22px;margin-bottom:5px}
- #opening .op-kicker{font-size:10px;margin-bottom:3px}
- #opening .op-text{font-size:14px;line-height:1.5}
- #opening .op-controls{margin-top:8px;padding-top:7px}
- #opening button{min-height:36px;padding:6px 12px;font-size:12px}
- #opening .op-help{font-size:11px;margin-top:6px;padding:5px 8px}
- #opening[data-credits="true"] .op-card{padding:10px 18px;max-height:calc(100dvh - 78px)}
- #opening[data-credits="true"] h1{font-size:24px;margin:1px 0}
- #opening[data-credits="true"] .op-text{font-size:18px}
- #opening .op-team-line{display:none}
- #opening .op-teachers{padding:4px 0;gap:10px;margin-top:5px}
- #opening .op-teachers dt{font-size:11px}
- #opening .op-teachers dd{font-size:15px}
- #opening .op-guide dd{font-size:12px}
- #opening .op-makers{grid-template-columns:1.35fr 1fr;align-items:center;padding:8px 0 0;gap:16px}
- #opening .op-circuit{padding:6px 12px}
- #opening .op-circuit dt{font-size:16px;line-height:1.3}
- #opening .op-circuit dd{margin-top:3px}
- #opening .op-affiliation{font-size:13px;line-height:1.3}
- #opening .op-designer{font-size:34px}
- #opening .op-digital dt{font-size:11px}
- #opening .op-digital dd{font-size:12px}
- #opening .op-digital p{font-size:11px;margin-top:4px}
- #opening[data-credits="true"] .op-controls{bottom:-10px;margin-top:5px;padding-top:6px}
+ #opening{padding:12px 16px 10px}
+ #opening .op-brand{font-size:12px}#opening .op-brand img{width:29px;height:29px}
+ #opening button{min-height:36px;font-size:11px;padding:6px 10px}
+ #opening .op-hero{top:43%;padding:10px 26px 13px}
+ #opening .op-hero img{width:43px;height:43px}
+ #opening .op-hero p{margin:4px 0;font-size:10px}
+ #opening .op-hero strong{font-size:38px}
+ #opening .op-hero span{font-size:17px;margin-top:5px}
+ #opening .op-caption{padding:8px 12px 9px;margin-bottom:6px}
+ #opening .op-kicker{font-size:10px;margin-bottom:4px}
+ #opening h1{font-size:22px;margin-bottom:3px}
+ #opening .op-text{font-size:12px;line-height:1.45}
+ #opening .op-controls{padding:5px 9px}
+ #opening .op-credits{padding:13px}
+ #opening .op-credits-card{padding:15px 25px}
+ #opening .op-credits-card>img{width:45px;height:45px}
+ #opening .op-credits-card h2{font-size:25px;margin:4px 0 10px}
+ #opening .op-welcome{font-size:13px;line-height:1.55}
+ #opening .op-welcome p{margin-bottom:8px}
 }
-@media(prefers-reduced-motion:reduce){#opening *{scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){#opening *{animation:none!important;transition:none!important}}

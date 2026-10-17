@@ -1372,11 +1372,12 @@ const hud = HNR.hud = {
   hideHint: function () { if (hud.hintGone) return; hud.hintGone = true; const h = $('#hint'); if (h) { h.classList.add('gone'); setTimeout(function () { h.hidden = true; }, 500); } },
   refresh: function () {
     const S = HNR.S; if (!S) return;
-    const n = S.passed.length, p = Math.round(n / 6 * 100);
+    const jp = HNR.journey && HNR.journey.mainProgress();
+    const n = jp ? jp.done : S.passed.length, p = Math.round(n / 6 * 100);
     $('#rateT').textContent = ST('common.progress', '입사 진행률');
     $('#rateN').textContent = p + '%'; $('#rateI').style.width = p + '%';
     let h = '';
-    for (let i = 1; i <= 6; i++) { const got = S.passed.indexOf(i) >= 0; h += '<span class="bd' + (got ? ' got' : '') + '" data-n="' + i + '"><i>' + (got ? BADGE_ICON[i] : i) + '</i><em>' + esc(badgeName(i)) + '</em></span>'; }
+    for (let i = 1; i <= 6; i++) { const got = HNR.journey ? HNR.journey.complete(HNR.journey.order[i - 1]) : S.passed.indexOf(i) >= 0; h += '<span class="bd' + (got ? ' got' : '') + '" data-n="' + i + '"><i>' + (got ? BADGE_ICON[i] : i) + '</i><em>' + esc(HNR.journey ? HNR.journey.shortLabels[i - 1] : badgeName(i)) + '</em></span>'; }
     $('#badges').innerHTML = h;
     $('#who').innerHTML = '<span class="no">No.' + ('00' + S.no).slice(-3) + '</span><b>' + esc(S.name) + '</b><span class="st">' + (n >= 6 ? '연구원' : '연구원') + '</span>';
     const wn = $('#walletN'); wn.textContent = S.cards.length; wn.setAttribute('data-n', S.cards.length);
@@ -1388,7 +1389,7 @@ HNR.on('state', function () { hud.refresh(); });
 const ui = HNR.ui = { instant: AUTO };
 let dlgState = null, sayChain = Promise.resolve(), cardState = null, walletOpen = false, endingRes = null, entryOpen = true, fading = false;
 /* 화면을 가리는 창(대화·카드·지갑·엔딩·입장·페이드)이 떠 있나 → 떠 있으면 걷기·말 걸기가 멈춘다 */
-ui.isOpen = function () { return !!(dlgState || cardState || walletOpen || endingRes || entryOpen || fading || (HNR.opening && HNR.opening.active)); };
+ui.isOpen = function () { return !!((HNR.journey && HNR.journey.busy) || dlgState || cardState || walletOpen || endingRes || entryOpen || fading || (HNR.opening && HNR.opening.active)); };
 function fill(t) { return String(t == null ? '' : t).replace(/\{name\}/g, (HNR.S && HNR.S.name) || '연구원'); }
 function fmt(t) { return esc(fill(t)).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>'); }
 function plain(t) { return fill(t).replace(/\*\*/g, ''); }
@@ -1568,7 +1569,7 @@ function drawIdCard(cv) {
   g.fillStyle = '#0d69ac'; roundRect(g, tx, 164, 132, 46, 14); g.fill();
   g.fillStyle = '#fff'; g.font = '900 28px ' + FONT; g.textAlign = 'center'; g.fillText(ST('ending.idCard.title', '연구원'), tx + 66, 188);
   g.textAlign = 'left'; g.fillStyle = '#1b1d21'; fitFont(g, S.name, '900', 78, W - tx - 50, 30); g.fillText(S.name, tx, 262);
-  g.font = '700 26px ' + FONT; g.fillStyle = '#5b6068';
+  g.font = '700 26px ' + FONT; g.fillStyle = '#111111';
   const d = new Date(), ds = d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate() + '.';
   g.fillText('사번', tx, 330); g.fillText('참여일', tx, 372); g.fillText('소속', tx, 414);
   g.fillStyle = '#1b1d21'; g.font = '800 26px ' + FONT;
@@ -1577,12 +1578,12 @@ function drawIdCard(cv) {
   g.fillStyle = '#1b1d21'; const br = mulberry(S.no * 7 + 3); let bx = W - 250; while (bx < W - 50) { const w = 2 + Math.floor(br() * 5); g.fillRect(bx, 314, w, 52); bx += w + 2 + Math.floor(br() * 4); }
   // 배지
   g.fillStyle = '#eef2f7'; g.fillRect(0, 470, W, 130);
-  g.fillStyle = '#5b6068'; g.font = '800 18px ' + FONT; g.textAlign = 'left'; g.fillText(ST('common.badge', '역량 배지'), 46, 492);
+  g.fillStyle = '#111111'; g.font = '800 18px ' + FONT; g.textAlign = 'left'; g.fillText(ST('common.badge', '역량 배지'), 46, 492);
   for (let n = 1; n <= 6; n++) {
-    const cx = 100 + (n - 1) * 152, cy = 536, got = S.passed.indexOf(n) >= 0;
+    const cx = 100 + (n - 1) * 152, cy = 536, got = HNR.journey ? HNR.journey.complete(HNR.journey.order[n-1]) : S.passed.indexOf(n) >= 0;
     g.beginPath(); g.arc(cx, cy, 30, 0, TAU); g.fillStyle = got ? '#ffd84a' : '#d5d9e0'; g.fill(); g.lineWidth = 4; g.strokeStyle = got ? '#1b1d21' : '#a9aeb8'; g.stroke();
     g.textAlign = 'center'; g.fillStyle = got ? '#1b1d21' : '#8a8d93'; g.font = (got ? '32px ' : '800 24px ') + (got ? '"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",' : '') + FONT; g.fillText(got ? BADGE_ICON[n] : String(n), cx, cy + 2);
-    g.font = '800 17px ' + FONT; g.fillStyle = got ? '#1b1d21' : '#8a8d93'; g.textAlign = 'left'; g.fillText(badgeName(n), cx + 36, cy + 1);
+    g.font = '800 17px ' + FONT; g.fillStyle = '#111111'; g.textAlign = 'left'; g.fillText(HNR.journey ? HNR.journey.shortLabels[n-1] : badgeName(n), cx + 36, cy + 1);
   }
   g.restore();
   g.lineWidth = 8; g.strokeStyle = '#1b1d21'; roundRect(g, 4, 4, W - 8, H - 8, 38); g.stroke();
@@ -1591,7 +1592,9 @@ ui.drawIdCard = drawIdCard;
 /* 엔딩: 사원증 발급 오버레이. 닫으면 풀리는 Promise */
 ui.ending = function () {
   if (endingRes) return Promise.resolve();
+  if (HNR.journey && HNR.journey.mainProgress().done < 6) { HNR.ui.toast('회로 제작과 8421 활동까지 확인하면 첫 프로젝트가 완료됩니다.'); return Promise.resolve(false); }
   const cv = $('#idCanvas'); drawIdCard(cv);
+  if (HNR.journey && HNR.journey.brand.complete) cv.getContext('2d').drawImage(HNR.journey.brand, 43, 30, 67, 67 * HNR.journey.brand.naturalHeight / HNR.journey.brand.naturalWidth);
   const lines = ST('ending.lines', ['{name} 연구원님, 합격을 축하해요!']).map(function (l) { return fmt(typeof l === 'string' ? l : l.t); });
   const rf = ST('ending.refresh', ''); $('#endLines').innerHTML = lines.join(' ') + (rf ? '<br><b>🤖 ' + fmt(rf) + '</b>' : '');
   const cf = $('#confetti'); if (cf && !cf.children.length) { const r = mulberry(5), cols = ['#f5cd30', '#c4281c', '#0d69ac', '#4b974b', '#da8541', '#e8adc8', '#4ac7e3']; let h = ''; for (let i = 0; i < 26; i++) h += '<i style="left:' + (r() * 100).toFixed(1) + '%;background:' + cols[i % cols.length] + ';animation-duration:' + (3.2 + r() * 3.5).toFixed(2) + 's;animation-delay:-' + (r() * 6).toFixed(2) + 's"></i>'; cf.innerHTML = h; }
@@ -1637,7 +1640,7 @@ function initEntry(start) {
   if (prev) {
     $('#enterForm').hidden = true; $('#enterBack').hidden = false;
     $('#backTitle').textContent = prev.name + ' 연구원님, 다시 오셨군요!';
-    $('#backSub').textContent = '확인한 장치 ' + prev.passed.length + '개 · 연구 카드 ' + prev.cards.length + '장. 이어서 해 볼까요?';
+    $('#backSub').textContent = prev.journey ? '본 체험 '+Object.values(prev.journey.activities || {}).filter(a=>a.completed && !a.optional).length+'/6 · 이 기기의 기록을 이어갑니다.' : '이전 연구 기록을 보존합니다. 새 본 체험과 8421은 별도로 확인합니다.';
     $('#contBtn').onclick = function () { sfxUnlock(); HNR.S = prev; start(false); };
     $('#newBtn').onclick = function () { sfxUnlock(); state.reset({ reload: false }); $('#enterBack').hidden = true; $('#enterForm').hidden = false; $('#nameIn').focus(); };
   }
@@ -1774,6 +1777,7 @@ HNR.boot = function () {
 function start(first) {
   if (started) return; started = true;
   const S = HNR.S;
+  if (HNR.journey) HNR.journey.ensure();
   if (Q.pass != null && Q.pass !== '') state.setPassed(parseInt(Q.pass, 10) || 0);
   try { initRenderer(); } catch (e) { console.error('[HNR] 렌더러를 만들지 못했어요', e); return; }
   buildBeacon();

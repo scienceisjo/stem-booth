@@ -40,3 +40,14 @@ body.sim #simBrand{display:flex}
   #missionLine{max-width:290px}#missionGoal{font-size:11px}
   #exploreTools{top:173px!important}
 }
+
+/* Welcome from the Haenuri team. */
+#enter .welcome-brand{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+#enter .welcome-brand img{width:64px;height:64px;object-fit:contain;flex:none}
+#enter .welcome-brand .pin{font-size:11px;line-height:1.5}
+#enter .notice h1{margin-top:0}
+#enter .notice ul{gap:12px;margin-top:16px}
+#enter .notice li{padding-left:0;font-size:16px;font-weight:550;line-height:1.75}
+#enter .notice li::before{display:none}
+#enter .welcome-teachers{margin-top:20px;padding-top:14px;border-top:1px solid #b8d3ef;font-size:12px;font-weight:650;line-height:1.8;word-break:keep-all}
+@media(max-width:640px){#enter .welcome-brand img{width:50px;height:50px}#enter .notice li{font-size:15px}#enter .notice ul{gap:10px}}
