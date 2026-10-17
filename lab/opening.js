@@ -29,7 +29,7 @@ function build(){
  document.body.appendChild(overlay);const q=s=>overlay.querySelector(s);
  title=q('h1');caption=q('.op-text');kicker=q('.op-kicker');progress=q('.op-progress i');status=q('.op-status');pauseBtn=q('.op-pause');motionBtn=q('.op-motion');soundBtn=q('.op-sound');creditsPanel=q('.op-credits');hero=q('.op-hero');
  const welcome=H.story('notice.lines',[]);welcome.forEach(line=>{const p=document.createElement('p');p.textContent=line;q('.op-welcome').appendChild(p);});
- q('.op-teachers').textContent=H.story('notice.credit','지도교사: 남국현(1비트 기억회로 설계), 조승재(콘텐츠 제작)');
+ q('.op-teachers').textContent=H.story('notice.credit','지도교사: 남국현(1비트 기억회로 설계), 조승재(프로그램 총괄 기획·제작)');
  q('.op-about').onclick=showCredits;q('.op-credits-close').onclick=hideCredits;q('.op-skip').onclick=()=>finish('skip');
  q('.op-next').onclick=next;q('.op-prev').onclick=previous;pauseBtn.onclick=()=>pause(!O.paused);
  soundBtn.onclick=()=>{H.sfx.mute(!H.sfx.isMuted());music('setMuted',H.sfx.isMuted());syncControls();};
