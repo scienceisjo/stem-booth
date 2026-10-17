@@ -32,6 +32,24 @@
 #opening .op-status{font-size:12px;color:#164d80;font-weight:750;margin-right:auto}
 #opening .op-next{background:#0066cc;color:#fff;border-color:#0066cc;min-width:100px}
 #opening .op-help{display:none;background:#edf5ff;border-radius:8px;padding:8px 10px;margin-top:9px;color:#102846;font-size:13px;font-weight:700;line-height:1.5}
+#opening .op-credits[hidden]{display:none}
+#opening[data-credits="true"] .op-card{margin-block:auto;width:min(880px,100%);padding:25px 32px 18px;max-height:calc(100dvh - 112px);overflow-y:auto;overscroll-behavior:contain}
+#opening[data-credits="true"] .op-row{display:block;text-align:center}
+#opening[data-credits="true"] .op-speaker{display:none}
+#opening[data-credits="true"] h1{font-size:clamp(32px,4vw,52px);letter-spacing:-.04em;margin:10px 0 12px}
+#opening[data-credits="true"] .op-text{font-size:clamp(20px,2.4vw,27px);color:#0066cc;font-weight:850}
+#opening .op-team-line{text-align:center;font-size:14px;font-weight:650;margin:8px 0 22px;color:#102846;word-break:keep-all}
+#opening .op-credits dl{margin:0}
+#opening .op-credits dt{font-size:14px;font-weight:750;line-height:1.5;color:#164d80;word-break:keep-all}
+#opening .op-credits dd{margin:0;font-size:22px;font-weight:850;line-height:1.4;color:#102846}
+#opening .op-teachers{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px 0;border-top:1px solid #b8d3ef;border-bottom:1px solid #b8d3ef}
+#opening .op-teachers>div{display:flex;align-items:center;justify-content:center;gap:18px}
+#opening .op-teachers>div+div{border-left:1px solid #b8d3ef}
+#opening .op-makers{display:grid;grid-template-columns:1fr 1.7fr;gap:15px;padding:20px 0 4px}
+#opening .op-makers>div{border-radius:12px;padding:16px 18px;background:#edf5ff}
+#opening .op-makers dd{margin-top:6px}
+#opening .op-digital p{font-size:13px;font-weight:650;line-height:1.65;margin:10px 0 0;color:#102846;word-break:keep-all}
+#opening[data-credits="true"] .op-controls{position:sticky;bottom:-18px;background:#fff;padding-bottom:4px}
 #opening[data-last="true"] .op-help{display:block}
 body.opening .hud,body.opening #exploreTools,body.opening #toasts,body.opening #simBrand{visibility:hidden!important;pointer-events:none!important}
 #openingReplay{display:block;width:100%;margin-top:8px;padding:9px 12px;min-height:42px;border:1px solid #bad6f2;border-radius:9px;background:#fff;color:#102846;font:inherit;font-size:12px;font-weight:850;cursor:pointer}
@@ -54,6 +72,19 @@ body.opening .hud,body.opening #exploreTools,body.opening #toasts,body.opening #
  #opening .op-status{font-size:11px;flex:1}
  #opening .op-next{min-width:72px}
  #opening .op-help{font-size:11px;padding:6px 8px}
+ #opening[data-credits="true"] .op-card{padding:17px 17px 12px;max-height:calc(100dvh - 96px)}
+ #opening[data-credits="true"] h1{font-size:35px;margin:8px 0}
+ #opening[data-credits="true"] .op-text{font-size:21px}
+ #opening .op-team-line{font-size:12px;margin:6px 0 15px}
+ #opening .op-teachers{gap:8px;padding:12px 0}
+ #opening .op-teachers>div{gap:10px}
+ #opening .op-credits dt{font-size:12px}
+ #opening .op-credits dd{font-size:19px}
+ #opening .op-makers{grid-template-columns:1fr;gap:9px;padding:13px 0 2px}
+ #opening .op-makers>div{padding:11px 13px}
+ #opening .op-makers dd{margin-top:2px}
+ #opening .op-digital p{font-size:12px;margin-top:7px}
+ #opening[data-credits="true"] .op-controls{bottom:-12px}
 }
 @media(max-height:520px) and (min-width:641px){
  #opening{padding:10px}
@@ -69,5 +100,17 @@ body.opening .hud,body.opening #exploreTools,body.opening #toasts,body.opening #
  #opening .op-controls{margin-top:8px;padding-top:7px}
  #opening button{min-height:36px;padding:6px 12px;font-size:12px}
  #opening .op-help{font-size:11px;margin-top:6px;padding:5px 8px}
+ #opening[data-credits="true"] .op-card{padding:12px 18px;max-height:calc(100dvh - 78px)}
+ #opening[data-credits="true"] h1{font-size:28px;margin:3px 0}
+ #opening[data-credits="true"] .op-text{font-size:18px}
+ #opening .op-team-line{font-size:11px;margin:3px 0 8px}
+ #opening .op-teachers{padding:8px 0;gap:10px}
+ #opening .op-credits dt{font-size:11px}
+ #opening .op-credits dd{font-size:17px}
+ #opening .op-makers{padding:8px 0 0;gap:10px}
+ #opening .op-makers>div{padding:8px 12px}
+ #opening .op-makers dd{margin-top:2px}
+ #opening .op-digital p{font-size:11px;margin-top:4px}
+ #opening[data-credits="true"] .op-controls{bottom:-12px}
 }
 @media(prefers-reduced-motion:reduce){#opening *{scroll-behavior:auto!important}}

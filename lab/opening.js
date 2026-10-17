@@ -4,18 +4,20 @@
 const H=window.HNR;
 if(!H||H.opening)return;
 const copy=[
+ ['overview','PROJECT ONE · 함께 만든 사람들','HNR Tech Inc.','해누리의 멋진 학생들',14,'credits'],
+ ['overview','해누리 연구팀의 초대','몇 달의 준비, 여러분의 발견으로','해누리의 학생들과 선생님이 몇 달 동안 준비한 전기와 자기의 세계에 오신 걸 환영해요. 신기한 실험을 직접 경험하고, 마지막에는 나만의 1비트 기억회로를 만들어 보세요.',13],
  ['overview','PROJECT ONE','연구소를 깨워라','HNR Tech Inc.에 온 걸 환영해요! 축제 직전 정전이 났어요. 전원은 돌아왔지만 시연 라인은 아직 멈춰 있어요.',7],
  ['gate','01 · 정문 보안 게이트','손을 이으면 무슨 일이?','첫 번째는 정문이에요. 에너지스틱이 켜지려면 사람들의 손이 어떻게 이어져야 할까요?',6.5],
  ['cleanroom','02 · 클린룸','손대지 않고 움직여라','클린룸에서는 손대지 않고 캔을 움직여야 해요. 빨대를 바꾸며 캔의 반응을 관찰해 보세요.',6.5],
  ['plasma','03 · 암실','전선 없이 불을 켜라','여기에는 켜진 플라즈마볼과 어두운 형광등이 있어요. 전선을 잇지 않고 형광등에 불을 켤 수 있을까요?',7],
  ['tunnel','04 · 터널 열차 · 황금 나침반','전류가 만드는 움직임','터널에서는 건전지 열차와 황금 나침반을 만나요. 전류를 흘렸을 때 움직임이 어떻게 달라질까요?',7],
  ['drop','05 · 자이로드롭 통로','구리관의 보이지 않는 브레이크','마지막 통로에는 구리관과 자석이 있어요. 자석이 구리관에서 천천히 내려오는 까닭을 찾아 감속 장치를 복구해 주세요.',7],
- ['memory','06 · 중앙 제어실','마지막 한 조각, 준비 신호 1','모든 장치를 점검했다면, 이 회로에 준비 신호 1을 기록해 주세요. 여러분이 완성할 연구소의 마지막 한 조각이에요.',7.5],
+ ['memory','06 · 중앙 제어실','실험의 발견을, 기억 한 조각으로','마지막에는 1비트 기억회로를 직접 만들어요. 이 작은 모형으로 반도체 메모리가 정보를 저장하는 원리를 만나보세요. 연구소의 마지막 준비 신호도 1로 바꿔 주세요.',12],
  ['return','탐사 준비 완료','이제, 여러분 차례예요','장치를 눌러 관찰하고, 연구 카드의 단서로 다음 길을 열어요. 먼저 정문의 에너지스틱으로 가 볼까요?',8]
 ];
-const O=H.opening={version:'1.0.0',active:false,paused:false,index:0,elapsed:0,phase:'idle',shots:[],start,finish,next,previous,pause};
+const O=H.opening={version:'1.1.0',active:false,paused:false,index:0,elapsed:0,phase:'idle',shots:[],start,finish,next,previous,pause};
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
-let overlay,shade,title,caption,kicker,status,progress,pauseBtn,nextBtn,previousBtn,soundBtn,card,help;
+let overlay,shade,title,caption,kicker,status,progress,pauseBtn,nextBtn,previousBtn,soundBtn,card,help,credits;
 let initial=false,previousFocus=null,savedLock=false,savedExposure=null,savedFog=null,clouds=null,savedClouds=true,transitionTime=0,pendingIndex=0;
 const inputBlock={key:()=>true,wheel:()=>{},down:()=>{},move:()=>{},up:()=>{},cancel:()=>{}};
 function clearInput(){Object.keys(H.input.keys).forEach(k=>H.input.keys[k]=false);H.input.setJoy(0,0);H.player.stop();}
@@ -32,6 +34,9 @@ function build(){
  soundBtn.onclick=ev=>{H.sfx.toggle();syncSound();if(H.voice){if(H.sfx.isMuted())H.voice.stop();else{if(H.voice.unlock)H.voice.unlock(ev);H.voice.speak('bit',copy[O.index][3]);}}};
  syncSound();
  shade=get('.op-shade');title=get('h1');caption=get('.op-text');kicker=get('.op-kicker');status=get('.op-status');card=get('.op-card');help=get('.op-help');
+ credits=document.createElement('div');credits.className='op-credits';credits.hidden=true;credits.setAttribute('aria-label','제작진');
+ credits.innerHTML='<p class="op-team-line">함께 준비하고, 직접 안내하는 해누리 연구팀</p><dl class="op-teachers"><div><dt>대표교사</dt><dd>남국현</dd></div><div><dt>지도교사</dt><dd>조승재</dd></div></dl><dl class="op-makers"><div><dt>1비트 기억회로 설계</dt><dd>남국현</dd></div><div class="op-digital"><dt>디지털 콘텐츠 총괄 기획·개발</dt><dd>조승재<p>연구소 맵 · 과학 시뮬레이터 · 학습 공간 · 교육자료 제작</p></dd></div></dl>';
+ card.insertBefore(credits,get('.op-controls'));
  pauseBtn=get('.op-pause');nextBtn=get('.op-next');previousBtn=get('.op-prev');
  get('.op-progress').innerHTML=copy.map(()=>'<span><i></i></span>').join('');progress=Array.from(overlay.querySelectorAll('.op-progress i'));
  get('.op-skip').onclick=()=>finish('skip');pauseBtn.onclick=()=>pause(!O.paused);nextBtn.onclick=next;previousBtn.onclick=previous;
@@ -47,7 +52,7 @@ function installReplay(){
 function updateInset(){
  if(!O.active)return;
  help.textContent=innerWidth<=640?'바닥 터치로 이동 · 장치 터치로 관찰 · 시점 버튼으로 둘러보기':'WASD / 방향키로 이동 · E 또는 장치 클릭으로 관찰 · V로 시점 바꾸기';
- H.cam.inset({bottom:Math.max(0,card.getBoundingClientRect().height+28-60)});
+ H.cam.inset(overlay.dataset.credits==='true'?null:{bottom:Math.max(0,card.getBoundingClientRect().height+28-60)});
 }
 function pose(){
  const shot=O.shots[O.index];if(!shot)return;
@@ -60,7 +65,9 @@ function pose(){
 function show(index){
  O.index=index;O.elapsed=0;O.phase='switch';
  const c=copy[index];kicker.textContent=c[1];title.textContent=c[2];caption.textContent=c[3];
+ const isCredits=c[5]==='credits';overlay.dataset.credits=String(isCredits);credits.hidden=!isCredits;card.scrollTop=0;
  overlay.dataset.last=String(index===copy.length-1);previousBtn.disabled=index===0;nextBtn.textContent=index===copy.length-1?'탐사 시작':'다음 장면';
+ if(isCredits)nextBtn.textContent='초대 이야기';
  status.textContent=(index+1)+' / '+copy.length+(O.paused?' · 일시정지':' · 자동 안내');
  updateInset();pose();O.phase='hold';updateProgress();
  if(H.voice)H.voice.speak('bit',c[3]);
