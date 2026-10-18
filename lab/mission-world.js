@@ -67,10 +67,10 @@ function makeStick(rec){
   const bridge=line(-48,94,78,48,94,78,4,B.yellow,{dynamic:true,visible:false});
   P.text('연결하면 빛과 소리 · 끊으면 멈춤',{x:0,y:173,z:0,w:280,bg:'#ffffff',color:'#102e54'});
   const sound=rec.sound=stickSound();rec.duration=8.5;rec.lamp=lamp;rec.bridge=bridge;
-  const set=on=>{rec.connected=on;bridge.visible=on;bright(lamp,on,on?B.cyan:B.blue);sound.set(on);};
-  rec.start=()=>{rec.elapsed=0;set(false);};
+  const set=(on,announce=true)=>{const changed=rec.connected!==on;rec.connected=on;bridge.visible=on;bright(lamp,on,on?B.cyan:B.blue);lamp.material.emissiveIntensity=on?1.8:.03;sound.set(on);if(changed&&announce&&rec.running)H.emit('device:moment',{id:'g1',phase:on?'connected':'broken'});};
+  rec.start=()=>{rec.elapsed=0;set(false,false);};
   rec.tick=dt=>{rec.elapsed+=dt;const t=rec.elapsed;set((t>=1&&t<3)||(t>=4.5&&t<7.2));if(t>=rec.duration)rec.running=false;};
-  rec.end=()=>set(false);
+  rec.end=()=>set(false,false);
 }
 function makeCan(rec){
   table();
@@ -87,7 +87,7 @@ function makeCan(rec){
   });
   P.text('움직이기 시작하는 거리',{x:40,y:190,z:10,w:240,bg:'#ffffff',color:'#102e54'});
   rec.duration=14;rec.can=can;rec.straw=straw;rec.fur=fur;
-  rec.start=()=>{rec.elapsed=0;can.position.x=-95;can.rotation.z=0;straw.position.set(148,122,0);rec.phase='준비';};
+  rec.start=()=>{rec.elapsed=0;rec.moment='';can.position.x=-95;can.rotation.z=0;straw.position.set(148,122,0);rec.phase='준비';};
   rec.tick=dt=>{
     rec.elapsed+=dt;const t=rec.elapsed,smooth=u=>{u=Math.max(0,Math.min(1,u));return u*u*(3-2*u);};
     if(t<1){rec.phase='들어 올리기';straw.position.set(148,122+52*smooth(t),0);}
@@ -98,6 +98,8 @@ function makeCan(rec){
     else if(t<8.6){rec.phase='캔 옆으로 이동';const u=smooth((t-7.3)/1.3);straw.position.set(-170+318*u,174,35*(1-u));}
     else if(t<9.2){rec.phase='캔 높이에 맞추기';straw.position.set(148,174-52*smooth((t-8.6)/.6),0);}
     else{rec.phase=t<12.6?'캔에 천천히 접근':'캔의 움직임 관찰';const u=smooth((t-9.2)/3.4),roll=smooth((t-10.8)/1.8);straw.position.set(148-138*u,122,0);can.position.x=-95+45*roll;can.rotation.z=-45*roll/31;}
+    const moment=can.position.x>-94.8?'moving':t>=9.2?'approaching':'';
+    if(moment&&moment!==rec.moment){rec.moment=moment;H.emit('device:moment',{id:'g2',phase:moment});}
     if(t>=rec.duration)rec.running=false;
   };
   rec.end=ok=>{if(!ok)rec.start();};

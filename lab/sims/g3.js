@@ -8,6 +8,22 @@
   const M = H.models.g3, PI = Math.PI;
   const INK = 0x15345c, BLUE = 0x0066cc, PALE = 0xe5f1ff;
   const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const TUBE_OFF = new T.Color(0x6382a3).convertSRGBToLinear();
+  const TUBE_ON = new T.Color(0xffe25a).convertSRGBToLinear();
+
+  function warmSpill() {
+    // A soft pool of reflected light on the bench, not an electric-field drawing.
+    const canvas = document.createElement('canvas'); canvas.width = canvas.height = 128;
+    const paint = canvas.getContext('2d'), gradient = paint.createRadialGradient(64, 64, 4, 64, 64, 64);
+    gradient.addColorStop(0, 'rgba(255,211,64,.9)');
+    gradient.addColorStop(.38, 'rgba(255,192,38,.58)');
+    gradient.addColorStop(1, 'rgba(255,177,22,0)');
+    paint.fillStyle = gradient; paint.fillRect(0, 0, 128, 128);
+    const material = new T.MeshBasicMaterial({map:new T.CanvasTexture(canvas),transparent:true,opacity:0,depthWrite:false,toneMapped:false});
+    const mesh = new T.Mesh(new T.PlaneGeometry(354, 96), material);
+    mesh.name = 'g3-warm-bench-spill'; mesh.rotation.x = -PI / 2; mesh.position.y = 88.15;
+    mesh.raycast = function () {}; return mesh;
+  }
 
   function syncRoom(ctx) {
     const lit=!!(H.S?.seen?.['g3-room-light']||H.S?.journey?.activities?.g3?.showObserved),zone=H.world.zones.find(z=>z.id==='room3');
@@ -31,9 +47,17 @@
     }
     const value = M.evaluate(d.distance);
     d.tube.position.z = M.tubeZ(d.distance);
-    d.light.material.emissiveIntensity = 0.02 + value.brightness * 1.45;
-    d.light.material.color.setHex(value.lit ? 0xffec83 : 0x7a9bb6).convertSRGBToLinear();
-    d.glow.material.opacity = value.brightness * 0.24;
+    d.brightness = value.brightness; d.lit = value.lit;
+    const reveal = d.reveal || 0;
+    d.light.material.emissiveIntensity = 0.02 + value.brightness * 1.8 + reveal * .5;
+    d.light.material.color.copy(TUBE_OFF).lerp(TUBE_ON, Math.min(1, value.brightness * .4 + reveal * .6));
+    d.glow.material.opacity = value.brightness * .3 + reveal * .1;
+    d.outerGlow.material.opacity = value.brightness * .1 + reveal * .055;
+    d.spill.material.opacity = value.brightness * .34 + reveal * .16;
+    if (d.demoRunning && d.demoMomentLit !== value.lit) {
+      d.demoMomentLit = value.lit;
+      H.emit('device:moment', {id:'g3', phase:value.lit ? 'lit' : 'dim'});
+    }
     d.statusNear.visible = value.position === 'near';
     d.statusFar.visible = value.position !== 'near';
     if(record&&value.lit)lightRoom(ctx);
@@ -71,7 +95,7 @@
     ],
     build: function (ctx) {
       const P = ctx.P;
-      const d = ctx.device = { distance: 1, state: M.create(1), ui: null, streams: [] };
+      const d = ctx.device = { distance: 1, state: M.create(1), ui: null, streams: [], reveal: 0, brightness: 0, lit: false };
       ctx.root.userData.g3Equipment = 'upright globe / horizontal tube long side';
 
       // White laboratory bench. Device and rail remain inside the 640×440 reservation.
@@ -130,7 +154,11 @@
         });
         d.light = Q.cyl(6, 6, 300, 0xb6cedf, 0, 172, 0, { rz: PI / 2, seg: 24, unique: true, emissive: 0xffd943, emissiveIntensity: 0.02, shadow: false });
         d.light.name = 'g3-fluorescent-tube';
-        d.glow = Q.cyl(11, 11, 298, 0xffe16a, 0, 172, 0, { rz: PI / 2, seg: 24, unique: true, opacity: 0, basic: true, depthWrite: false, shadow: false });
+        d.glow = Q.cyl(12, 12, 298, 0xffdf4b, 0, 172, 0, { rz: PI / 2, seg: 24, unique: true, opacity: 0, basic: true, depthWrite: false, shadow: false });
+        d.glow.name = 'g3-tube-inner-halo'; d.glow.material.toneMapped = false; d.glow.raycast = function () {};
+        d.outerGlow = Q.cyl(23, 23, 296, 0xffc938, 0, 172, 0, { rz: PI / 2, seg: 24, unique: true, opacity: 0, basic: true, depthWrite: false, shadow: false });
+        d.outerGlow.name = 'g3-tube-outer-halo'; d.outerGlow.material.toneMapped = false; d.outerGlow.raycast = function () {};
+        d.spill = warmSpill(); d.tube.add(d.spill);
         [-154, 154].forEach(function (x) { Q.cyl(7, 7, 11, 0x7894b0, x, 172, 0, { rz: PI / 2, seg: 20 }); });
         d.statusNear = Q.text('형광등 · 불이 켜졌어요', { x: 0, y: 207, z: 0, h: 24, bg: '#ffffff', color: '#0056a6', stroke: '#0066cc' });
         d.statusFar = Q.text('형광등 · 거리를 바꿔 보아요', { x: 0, y: 207, z: 0, h: 24, bg: '#ffffff', color: '#15345c', stroke: '#0066cc' });
@@ -148,15 +176,16 @@
       d.demo=function(){
         if(d.demoRunning)return d.demoPromise;
         d.demoBefore={distance:d.distance,state:JSON.parse(JSON.stringify(d.state)),exposure:H.fx.override};
-        d.demoTime=0;d.demoRunning=true;d.demoPromise=new Promise(resolve=>{d.demoResolve=resolve;});
-        d.distance=1;d.state=M.observe(d.state,1);showResult(ctx,false);H.fx.setExposure(d.roomLit?1.05:.42);
+        d.demoTime=0;d.demoMomentLit=false;d.reveal=0;d.demoRunning=true;d.demoPromise=new Promise(resolve=>{d.demoResolve=resolve;});
+        d.distance=1;d.state=M.observe(d.state,1);showResult(ctx,false);H.fx.setExposure(.28);
         return d.demoPromise;
       };
       d.finishDemo=function(ok){
         if(!d.demoRunning)return;
         d.demoRunning=false;
-        if(ok){setDistance(ctx,0,true);H.emit('device:demo',{id:'g3',completed:true});}
-        else{d.distance=d.demoBefore.distance;d.state=d.demoBefore.state;showResult(ctx,false);}
+        if(ok){d.reveal=1;setDistance(ctx,0,true);H.emit('device:demo',{id:'g3',completed:true});}
+        else{d.distance=d.demoBefore.distance;d.state=d.demoBefore.state;d.reveal=M.evaluate(d.distance).lit?1:0;showResult(ctx,false);}
+        d.demoMomentLit=null;
         H.fx.setExposure(d.demoBefore.exposure);
         const resolve=d.demoResolve;d.demoResolve=null;if(resolve)resolve(!!ok);
       };
@@ -187,8 +216,15 @@
       if(d.demoRunning){
         d.demoTime+=Math.min(dt,.1);const t=d.demoTime,ease=u=>{u=Math.max(0,Math.min(1,u));return u*u*(3-2*u);};
         d.distance=t<1.2?1:t<4.2?1-ease((t-1.2)/3):t<6.2?0:t<8.2?ease((t-6.2)/2):t<9.2?1:t<11.2?1-ease((t-9.2)/2):0;
+        const value=M.evaluate(d.distance),target=value.lit?1:0;
+        d.reveal=reduced?target:d.reveal+(target-d.reveal)*(1-Math.exp(-Math.max(0,dt)*5));
         showResult(ctx,false);
+        // The camera remains still; only the tube and room lighting reveal the result.
+        H.fx.setExposure(.28+d.reveal*.84);
         if(t>=d.demoDuration)d.finishDemo(true);
+      } else {
+        const target=M.evaluate(d.distance).lit?1:0;
+        if(Math.abs(d.reveal-target)>.001){d.reveal=reduced?target:d.reveal+(target-d.reveal)*(1-Math.exp(-Math.max(0,dt)*5));showResult(ctx,false);}
       }
       if (!active || reduced) return;
       // Slow shape drift only: no flashing or rapidly modulated lamp brightness.

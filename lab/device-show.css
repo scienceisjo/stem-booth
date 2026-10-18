@@ -37,3 +37,38 @@ body.device-showing .hud,body.device-showing #exploreTools,body.device-showing #
  #deviceShow .ds-eyebrow{display:none}
  #deviceShow .ds-status{font-size:10px;padding:4px}
 }
+
+/* A single soft reveal follows the apparatus; the camera never shakes or zooms. */
+#deviceShow [hidden]{display:none!important}
+#deviceShow .ds-controls{display:flex;gap:8px;align-items:center}
+#deviceShow .ds-header,#deviceShow .ds-footer{position:relative;z-index:2}
+#deviceShow .ds-copy{min-height:167px;box-sizing:border-box}
+#deviceShow h2{min-height:2.6em}
+#deviceShowCaption{min-height:3em}
+#deviceShow .ds-aura{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:0;background:radial-gradient(ellipse at 50% 44%,transparent 32%,rgba(40,206,255,.08) 60%,rgba(0,148,230,.45) 100%)}
+#deviceShow[data-tone=gold] .ds-aura{background:radial-gradient(ellipse at 50% 44%,transparent 28%,rgba(255,218,78,.10) 60%,rgba(255,184,25,.48) 100%)}
+#deviceShow .ds-moment{position:absolute;z-index:2;top:88px;left:50%;transform:translateX(-50%);max-width:calc(100% - 32px);width:max-content;margin:0;padding:11px 22px;border:2px solid #006ea6;border-radius:999px;background:#e6faff;color:#004265;font-size:clamp(17px,2vw,24px);line-height:1.35;font-weight:900;text-align:center;box-shadow:0 5px 28px #001d4233;pointer-events:none}
+#deviceShow[data-tone=gold] .ds-moment{background:#fff4bc;border-color:#d18a00;color:#573800;box-shadow:0 4px 32px #ffc72c66}
+#deviceShow[data-tone=gold] .ds-footer{border:2px solid #d99a16;box-shadow:0 0 36px #ffcd3a33}
+#deviceShow[data-tone=gold] h2{color:#674200}
+#deviceShow[data-tone=gold] .ds-progress i{background:#e1a000}
+#deviceShow[data-tone=night] .ds-moment{background:#102846;border-color:#8bb8e4;color:#fff}
+#deviceShow .ds-footer{transition:border-color .4s,box-shadow .4s}
+#deviceShow.ds-celebrate .ds-aura{animation:ds-reveal-aura 1.5s ease-out both}
+#deviceShow.ds-celebrate .ds-moment{animation:ds-reveal-label .55s cubic-bezier(.2,.9,.3,1) both}
+@keyframes ds-reveal-aura{0%{opacity:0}22%{opacity:.95}100%{opacity:0}}
+@keyframes ds-reveal-label{0%{opacity:0;transform:translateX(-50%) translateY(10px) scale(.94)}100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+@media(max-width:640px){
+ #deviceShow .ds-controls{gap:5px}#deviceShow .ds-controls button{padding:8px;font-size:11px}
+ #deviceShow .ds-brand{gap:5px;font-size:11px}#deviceShow .ds-moment{top:77px;padding:8px 13px;font-size:17px}
+ #deviceShow .ds-copy{min-height:154px}#deviceShowCaption{min-height:4.5em}
+}
+@media(max-height:520px) and (min-width:641px){
+ #deviceShow .ds-moment{top:59px;padding:5px 12px;font-size:15px}
+ #deviceShow .ds-copy{min-height:83px}#deviceShow h2{min-height:1.3em}#deviceShowCaption{min-height:3em}
+}
+@media(prefers-reduced-motion:reduce){
+ #deviceShow .ds-footer{transition:none}
+ #deviceShow.ds-celebrate .ds-aura{animation:none;opacity:.16}
+ #deviceShow.ds-celebrate .ds-moment{animation:none}
+}
