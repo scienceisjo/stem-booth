@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="assets/mark.webp"><meta name="theme-color" content="#0066cc"><title>HNR TECH 학생 운영교육</title><meta name="description" content="해누리중학교 HNR Tech Inc. 운영팀의 공통 학습 자료. 본 체험과 자유 체험, 책상 3개 배치, 기억 회로와 8421 활동, 원리 설명과 짝 연습."><style>/*STYLE*/</style><style id="ram-circuit-module-css">
+.ramc-module{--ramc-blue:#0066cc;--ramc-ink:#173e66;--ramc-line:#a9bfd6;--ramc-orange:#a54700;min-width:0;color:var(--ramc-ink)}
+.ramc-module *{box-sizing:border-box;min-width:0}
+.ramc-module .section-head p{max-width:800px;line-height:1.8}
+.ramc-stages{display:flex;gap:10px;margin:20px 0 18px}
+.ramc-stages button,.ramc-parts button{min-height:46px;border:1px solid #8bb7e3;background:#fff;color:var(--ramc-ink);border-radius:10px;font:inherit;font-weight:700;padding:10px 16px;cursor:pointer;line-height:1.5}
+.ramc-stages button{flex:1;max-width:210px}
+.ramc-stages button[aria-pressed=true]{color:#fff;background:var(--ramc-blue);border-color:var(--ramc-blue)}
+.ramc-module button:focus-visible,.ramc-module summary:focus-visible{outline:3px solid #0071e3;outline-offset:4px}
+.ramc-layout{display:grid;grid-template-columns:minmax(0,760px) minmax(240px,1fr);gap:24px;align-items:start}
+.ramc-figure{margin:0;border:1px solid #cadbed;border-radius:18px;background:#fff;overflow:hidden}
+.ramc-svg{display:block;width:100%;height:auto;color:var(--ramc-ink);background:#f8fbff}
+.ramc-svg-wide{aspect-ratio:760/470}
+.ramc-svg-mobile{display:none;aspect-ratio:360/570}
+.ramc-svg text{fill:var(--ramc-ink);stroke:none;font:700 22px system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif}
+.ramc-svg .ramc-unit,.ramc-svg .ramc-state{font-size:20px;font-weight:600}
+.ramc-svg .ramc-state{fill:#476582}
+.ramc-svg .ramc-charge{font-size:20px;fill:#0066cc}
+.ramc-wire{fill:none;stroke:var(--ramc-line);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.ramc-component{stroke:var(--ramc-ink);stroke-width:4;fill:#fff;stroke-linejoin:round;stroke-linecap:round}
+.ramc-component path{fill:none}
+.ramc-component .ramc-led-symbol{fill:#fff}
+.ramc-junction{fill:var(--ramc-ink)}
+.ramc-label-guide{fill:none;stroke:#6e89a4;stroke-width:1.5}
+.ramc-light-rays{stroke:#6e89a4;stroke-width:2.5}
+.ramc-component .ramc-led-glow{fill:transparent;stroke:none}
+[data-ramc-scene=write] .ramc-path-write,[data-ramc-scene=read] .ramc-path-read,[data-ramc-scene=write] .ramc-path-shared,[data-ramc-scene=read] .ramc-path-shared{stroke:var(--ramc-blue);stroke-width:5}
+[data-ramc-scene=write] .ramc-switch-write,[data-ramc-scene=read] .ramc-switch-read{stroke:var(--ramc-blue)}
+[data-ramc-scene=read] .ramc-led-glow{fill:#ffe3a1}
+[data-ramc-scene=read] .ramc-led-symbol{fill:#ffca55;stroke:#945100}
+[data-ramc-scene=read] .ramc-light-rays{stroke:#945100}
+.ramc-svg .ramc-selected{stroke:var(--ramc-orange)}
+.ramc-svg .ramc-selected path,.ramc-svg .ramc-selected circle{stroke:var(--ramc-orange);stroke-width:5}
+.ramc-svg .ramc-selected text{fill:var(--ramc-orange)}
+.ramc-svg .ramc-selected .ramc-junction{fill:var(--ramc-orange)}
+.ramc-figure figcaption{padding:15px 18px;font-size:.82rem;line-height:1.75;border-top:1px solid #d6e4f1;background:#fff}
+.ramc-key{display:inline-block;width:24px;height:4px;border-radius:2px;background:var(--ramc-blue);vertical-align:middle;margin-right:6px}
+.ramc-explain{display:grid;gap:18px}
+.ramc-scene-copy,.ramc-resistor-note{padding:21px;border-radius:16px;background:#edf5ff}
+.ramc-scene-copy h3,.ramc-resistor-note h3{font-size:1.1rem;line-height:1.5}
+.ramc-scene-copy p,.ramc-resistor-note p{font-size:.91rem;line-height:1.85;margin-top:12px}
+.ramc-scene-copy .ramc-path-copy{padding:12px 14px;background:#fff;color:#0054a8;border-radius:9px;font-weight:750;font-size:.88rem}
+.ramc-scene-copy .ramc-detail{font-size:.84rem}
+.ramc-resistor-note{background:#fff;border:1px solid #cadbed}
+.ramc-model-note{font-size:.84rem;line-height:1.85;margin:18px 0 0;padding:16px 19px;background:#f4f7fb;border-radius:12px}
+.ramc-part-picker{margin-top:30px}
+.ramc-part-picker>p{margin-top:8px;font-size:.9rem}
+.ramc-parts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:16px}
+.ramc-parts button{font-size:.87rem;padding:10px 9px}
+.ramc-parts button[aria-pressed=true]{border-color:var(--ramc-orange);color:#863900;background:#fff5e9;box-shadow:inset 0 0 0 1px var(--ramc-orange)}
+.ramc-part-copy{padding:20px 22px;margin-top:14px;border:1px solid #cadbed;border-radius:13px;min-height:115px}
+.ramc-part-copy p{font-size:.9rem;line-height:1.85;margin-top:8px}
+.ramc-question{margin-top:20px;border-top:1px solid #cadbed;border-bottom:1px solid #cadbed;padding:18px 0}
+.ramc-question summary{min-height:44px;cursor:pointer;line-height:1.8;padding:6px 0;font-size:.96rem}
+.ramc-question p{margin:15px 0 0;padding:18px;background:#edf5ff;border-radius:12px;font-size:.93rem;line-height:1.85}
+@media(max-width:1100px){.ramc-layout{grid-template-columns:1fr}.ramc-figure{max-width:760px;width:100%;margin:0 auto}.ramc-explain{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.ramc-explain{grid-template-columns:1fr}.ramc-stages{gap:7px}.ramc-stages button{padding:10px 8px;font-size:.95rem}.ramc-svg-wide{display:none}.ramc-svg-mobile{display:block}.ramc-parts{grid-template-columns:repeat(2,minmax(0,1fr))}.ramc-scene-copy,.ramc-resistor-note{padding:19px}.ramc-part-copy{min-height:0;padding:18px}.ramc-figure figcaption{padding:14px}.ramc-model-note{padding:15px}.ramc-module .section-head{margin-bottom:18px}}
+@media print{.ramc-stages,.ramc-parts{display:none}.ramc-layout{display:block}.ramc-figure{max-width:600px}.ramc-svg-wide{display:block}.ramc-svg-mobile{display:none}.ramc-explain{display:grid;grid-template-columns:1fr 1fr;margin-top:14px}.ramc-model-note{font-size:9pt}.ramc-module{break-inside:auto}.ramc-figure,.ramc-explain,.ramc-part-copy{break-inside:avoid}}
+
+</style></head><body>
+<a class="skip" href="#main">본문으로 바로가기</a>
+<header class="brandbar"><a class="brand" href="#home"><img src="assets/mark.webp" width="52" height="52" alt="해누리 HNR Tech Inc. 마크"><span>HNR Tech Inc.<small>2026 서울STEM축제 - 해누리중학교</small></span></a><span class="crew-label">PROJECT ONE <b>운영팀 공부방</b></span></header>
+<nav class="nav" aria-label="공부방 메뉴"><div id="navLinks"></div><a class="live-link" href="../explain/index.html" target="_blank" rel="noopener">현장 설명 화면 ↗</a></nav>
+<aside id="voiceBanner" aria-live="polite" hidden></aside>
+<main id="main" tabindex="-1"></main>
+<footer id="app-credit"><strong>HNR Tech Inc. · 학생 연구원 운영교육</strong><p>2026 서울STEM축제 - 해누리중학교 · © 2026 조승재 · 업데이트 2026.10.18</p><a href="#home">공부할 자료로 돌아가기 ↑</a></footer>
+<script id="course-data" type="application/json">/*CONTENT*/</script><script>/*AUDIO*/</script><script>/*VOICE*/</script><script id="ram-circuit-module">/*RAM_CIRCUIT*/</script><script>/*APP*/</script></body></html>
