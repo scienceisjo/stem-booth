@@ -5,3 +5,5 @@
 #missionLine .j-optional-count{grid-column:1/-1;margin:0 0 3px}
 #missionLine .j-shortcut{width:100%;margin:0;min-height:36px}
 @media(max-width:640px),(max-height:520px){#missionGoal{font-size:13px!important;line-height:1.4!important}#missionLine{padding:7px;gap:4px 6px}#missionLine .j-shortcut{min-height:32px;padding:5px 7px!important}}
+
+.j-complete{padding:12px 0}.j-complete h2{margin:8px 0;font-size:25px}.j-next{margin:24px 0;padding:22px;border:2px solid #0066cc;border-radius:14px;background:#edf5ff}.j-next>b{display:block;color:#004690}.j-next strong{display:block;font-size:28px;line-height:1.4;margin-top:8px;color:#002d63}.j-complete>button{display:block;width:100%;margin:12px 0}.j-complete>.j-primary{min-height:60px;font-size:19px}.j-library button:disabled{background:#eef1f5;color:#24384d;border-color:#b6c5d7}.j-library button:disabled span{color:#24384d}@media(max-width:600px){.j-next{padding:16px}.j-next strong{font-size:23px}.j-complete h2{font-size:21px}}

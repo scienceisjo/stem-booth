@@ -1386,14 +1386,14 @@ const hud = HNR.hud = {
   refresh: function () {
     const S = HNR.S; if (!S) return;
     const jp = HNR.journey && HNR.journey.mainProgress();
-    const n = jp ? jp.done : S.passed.length, p = Math.round(n / 6 * 100);
+    const n = jp ? jp.done : S.passed.length, total = jp ? jp.total : 6, p = Math.round(n / total * 100);
     $('#rateT').textContent = ST('common.progress', '입사 진행률');
     $('#rateN').textContent = p + '%'; $('#rateI').style.width = p + '%';
     let h = '';
-    for (let i = 1; i <= 6; i++) { const got = HNR.journey ? HNR.journey.complete(HNR.journey.order[i - 1]) : S.passed.indexOf(i) >= 0; h += '<span class="bd' + (got ? ' got' : '') + '" data-n="' + i + '"><i>' + (got ? BADGE_ICON[i] : i) + '</i><em>' + esc(HNR.journey ? HNR.journey.shortLabels[i - 1] : badgeName(i)) + '</em></span>'; }
+    for (let i = 1; i <= total; i++) { const got = HNR.journey ? HNR.journey.complete(HNR.journey.order[i - 1]) : S.passed.indexOf(i) >= 0; h += '<span class="bd' + (got ? ' got' : '') + '" data-n="' + i + '"><i>' + (got ? (HNR.journey ? ({g1:'⚡',g2:'✨',g3:'💡',g6:'🧠','8421':'🔢'}[HNR.journey.order[i-1]]) : BADGE_ICON[i]) : i) + '</i><em>' + esc(HNR.journey ? HNR.journey.shortLabels[i - 1] : badgeName(i)) + '</em></span>'; }
     $('#badges').innerHTML = h;
     $('#who').innerHTML = '<span class="no">No.' + ('00' + S.no).slice(-3) + '</span><b>' + esc(S.name) + '</b><span class="st">' + (n >= 6 ? '연구원' : '연구원') + '</span>';
-    const wn = $('#walletN'); wn.textContent = S.cards.length; wn.setAttribute('data-n', S.cards.length);
+    const wn = $('#walletN'), cardCount = HNR.map?.cardIds ? HNR.map.cardIds.filter(n=>S.cards.includes(n)).length : S.cards.length; wn.textContent = cardCount; wn.setAttribute('data-n', cardCount);
   }
 };
 HNR.on('state', function () { hud.refresh(); });
@@ -1531,10 +1531,11 @@ ui.card = function (n, side) {
 ui.wallet = function (album) {
   const S = HNR.S; if (!S) return;
   let h = '';
-  for (let n = 1; n <= 5; n++) h += state.hasCard(n) ? cardHtml(n, state.forkSolved(n) ? 'back' : 'front', 'mini') : HNR.cards ? HNR.cards.locked(n) : '<div class="pcard mini locked" data-n="' + n + '"><div class="inner"><div class="face front"><div class="hd"><span>관문 ' + n + '</span><span class="num">?</span></div><div class="tx">' + esc(gateName(n)) + '<br>통과하면 받아요</div></div></div></div>';
+  const cardIds = HNR.map?.cardIds || [1,2,3,4,5];
+  for (const n of cardIds) h += state.hasCard(n) ? cardHtml(n, state.forkSolved(n) ? 'back' : 'front', 'mini') : HNR.cards ? HNR.cards.locked(n) : '<div class="pcard mini locked" data-n="' + n + '"><div class="inner"><div class="face front"><div class="hd"><span>관문 ' + n + '</span><span class="num">?</span></div><div class="tx">' + esc(gateName(n)) + '<br>통과하면 받아요</div></div></div></div>';
   $('#walletGrid').innerHTML = h;
   $('#walletGrid').querySelectorAll('.pcard:not(.locked)').forEach(function (c) { c.setAttribute('role', 'button'); c.tabIndex = 0; });
-  $('#walletTitle').textContent = album ? '📚 ' + ST('common.album', '연구 기록') : '🃏 카드 지갑 (' + S.cards.length + '/5)';
+  $('#walletTitle').textContent = album ? '📚 ' + ST('common.album', '연구 기록') : '🃏 카드 지갑 (' + cardIds.filter(n=>state.hasCard(n)).length + '/' + cardIds.length + ')' ;
   $('#wallet').classList.add('show'); walletOpen = true; player.stop(); sfx('click');
 };
 ui.closeWallet = function () { $('#wallet').classList.remove('show'); walletOpen = false; };
@@ -1592,10 +1593,11 @@ function drawIdCard(cv) {
   // 배지
   g.fillStyle = '#eef2f7'; g.fillRect(0, 470, W, 130);
   g.fillStyle = '#111111'; g.font = '800 18px ' + FONT; g.textAlign = 'left'; g.fillText(ST('common.badge', '역량 배지'), 46, 492);
-  for (let n = 1; n <= 6; n++) {
-    const cx = 100 + (n - 1) * 152, cy = 536, got = HNR.journey ? HNR.journey.complete(HNR.journey.order[n-1]) : S.passed.indexOf(n) >= 0;
+  const badgeTotal = HNR.journey ? HNR.journey.order.length : 6;
+  for (let n = 1; n <= badgeTotal; n++) {
+    const cx = 80 + (n - 1) * (W - 140) / badgeTotal, cy = 536, got = HNR.journey ? HNR.journey.complete(HNR.journey.order[n-1]) : S.passed.indexOf(n) >= 0;
     g.beginPath(); g.arc(cx, cy, 30, 0, TAU); g.fillStyle = got ? '#ffd84a' : '#d5d9e0'; g.fill(); g.lineWidth = 4; g.strokeStyle = got ? '#1b1d21' : '#a9aeb8'; g.stroke();
-    g.textAlign = 'center'; g.fillStyle = got ? '#1b1d21' : '#8a8d93'; g.font = (got ? '32px ' : '800 24px ') + (got ? '"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",' : '') + FONT; g.fillText(got ? BADGE_ICON[n] : String(n), cx, cy + 2);
+    g.textAlign = 'center'; g.fillStyle = got ? '#1b1d21' : '#8a8d93'; g.font = (got ? '32px ' : '800 24px ') + (got ? '"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",' : '') + FONT; g.fillText(got ? (HNR.journey ? ({g1:'⚡',g2:'✨',g3:'💡',g6:'🧠','8421':'🔢'}[HNR.journey.order[n-1]]) : BADGE_ICON[n]) : String(n), cx, cy + 2);
     g.font = '800 17px ' + FONT; g.fillStyle = '#111111'; g.textAlign = 'left'; g.fillText(HNR.journey ? HNR.journey.shortLabels[n-1] : badgeName(n), cx + 36, cy + 1);
   }
   g.restore();
@@ -1605,7 +1607,7 @@ ui.drawIdCard = drawIdCard;
 /* 엔딩: 사원증 발급 오버레이. 닫으면 풀리는 Promise */
 ui.ending = function () {
   if (endingRes) return Promise.resolve();
-  if (HNR.journey && HNR.journey.mainProgress().done < 6) { HNR.ui.toast('회로 제작과 8421 활동까지 확인하면 첫 프로젝트가 완료됩니다.'); return Promise.resolve(false); }
+  if (HNR.journey && HNR.journey.mainProgress().done < HNR.journey.mainProgress().total) { HNR.ui.toast('회로 제작과 8421 활동까지 확인하면 첫 프로젝트가 완료됩니다.'); return Promise.resolve(false); }
   const cv = $('#idCanvas'); drawIdCard(cv);
   if (HNR.journey && HNR.journey.brand.complete) cv.getContext('2d').drawImage(HNR.journey.brand, 43, 30, 67, 67 * HNR.journey.brand.naturalHeight / HNR.journey.brand.naturalWidth);
   const lines = ST('ending.lines', ['{name} 연구원님, 합격을 축하해요!']).map(function (l) { return fmt(typeof l === 'string' ? l : l.t); });
@@ -1653,7 +1655,7 @@ function initEntry(start) {
   if (prev) {
     $('#enterForm').hidden = true; $('#enterBack').hidden = false;
     $('#backTitle').textContent = prev.name + ' 연구원님, 다시 오셨군요!';
-    $('#backSub').textContent = prev.journey ? '본 체험 '+Object.values(prev.journey.activities || {}).filter(a=>a.completed && !a.optional).length+'/6 · 이 기기의 기록을 이어갑니다.' : '이전 연구 기록을 보존합니다. 새 본 체험과 8421은 별도로 확인합니다.';
+    $('#backSub').textContent = prev.journey ? '본 체험 '+(HNR.journey?.order||[]).filter(id=>{const a=prev.journey.activities?.[id];return a?.completed&&(!HNR.routePass?.required(id)||a.routePass);}).length+'/'+(HNR.journey?.order.length||5)+' · 이 기기의 기록을 이어갑니다.' : '이전 연구 기록을 보존합니다. 새 본 체험과 8421은 별도로 확인합니다.';
     $('#contBtn').onclick = function () { sfxUnlock(); HNR.S = prev; start(false); };
     $('#newBtn').onclick = function () { sfxUnlock(); state.reset({ reload: false }); $('#enterBack').hidden = true; $('#enterForm').hidden = false; $('#nameIn').focus(); };
   }

@@ -2,8 +2,8 @@
 (function(){
 'use strict';
 const H=window.HNR,T=window.THREE,reduced=matchMedia('(prefers-reduced-motion: reduce)');
-const N=H.navigationUI={version:'1.0.0',hand:null,refresh:refresh};
-let installed=false,hand=null,step=0,bob=0,cueTime=0,lastCue='';
+const N=H.navigationUI={version:'1.1.0',hand:null,refresh:refresh};
+let installed=false,hand=null,step=0,bob=0,cueTime=0,lastCue='',nextButton=null,lastNextLabel='';
 function blocked(){return H.ui.isOpen()||H.player.locked||!!H.sim.active||!!H.opening?.active||H.cam.isOverride()||H.cam.k>.01||document.body.classList.contains('hud-off')||document.body.classList.contains('pre');}
 function setTalk(label){
  const button=document.getElementById('talkBtn');if(!button||!label)return;
@@ -29,8 +29,26 @@ function buildHand(){
  if(!H.camera.parent)H.scene.add(H.camera);
  N.hand=hand;
 }
+function nextAction(){
+ const t=H.journey?.nextTarget();if(!t||blocked()||H.cruise?.traveling)return false;
+ if(Math.hypot(H.player.x-t.x,H.player.z-t.z)<=180)return typeof t.action==='function'?t.action():H.journey.open(t.id);
+ return H.cruise?.continueNext();
+}
+function refreshNext(){
+ const host=document.getElementById('missionLine');if(!host)return;
+ if(!nextButton){nextButton=document.createElement('button');nextButton.type='button';nextButton.id='navNextAction';nextButton.onclick=nextAction;host.insertBefore(nextButton,host.querySelector('.j-shortcut'));}
+ const t=H.journey?.nextTarget(),busy=blocked(),walking=!!H.cruise?.traveling;
+ nextButton.hidden=!t||!!H.cruise?.enabled||walking;nextButton.disabled=busy;
+ if(!t)return;
+ const near=Math.hypot(H.player.x-t.x,H.player.z-t.z)<=180;
+ const order=H.journey.order||[],index=order.indexOf(t.id),names={g1:'사람 회로',g2:'정전기',g3:'플라즈마',g6:'회로 제작','8421':'8421 활동'};
+ const stage=(index>=0?(index+1)+'. ':'')+(names[t.id]||'다음 활동');
+ const label=near?(t.kind==='route'?'답 고르고 암호 입력하기':stage+' 안내 열기'):stage+'로 걸어가기 →';
+ if(label!==lastNextLabel){lastNextLabel=label;nextButton.textContent=label;}
+ nextButton.setAttribute('aria-label',label+(near?'':' · 캐릭터가 길을 따라 이동합니다'));
+}
 function refresh(){
- if(!installed)return;
+ if(!installed)return;refreshNext();
  const goal=document.getElementById('missionGoal');if(goal){goal.setAttribute('aria-live','polite');goal.setAttribute('aria-atomic','true');}
  const near=H.world.near,hidden=blocked(),show=!!near&&!hidden;
  document.body.classList.toggle('nav-can-interact',show);
@@ -45,7 +63,7 @@ function install(){
  const help=document.createElement('span');help.id='navInteractHelp';help.className='nav-sr-only';help.textContent='가까운 대상에게 E키로 말을 걸거나 이 버튼을 눌러 조작할 수 있습니다.';document.body.appendChild(help);
  buildHand();refresh();
 }
-H.on('start',install);H.on('state',refresh);H.on('view',refresh);H.on('opening:start',refresh);H.on('opening:end',refresh);
+H.on('start',install);H.on('state',refresh);H.on('view',refresh);H.on('opening:start',refresh);H.on('opening:end',refresh);H.on('journey:close',refresh);H.on('journey:complete',refresh);H.on('cruise:arrive',refresh);
 H.on('tick',dt=>{
  if(!installed)return;cueTime+=dt;if(cueTime>.15){cueTime=0;refresh();}
  if(!hand)return;

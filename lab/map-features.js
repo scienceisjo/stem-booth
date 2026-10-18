@@ -76,7 +76,7 @@ function dressRoom(r){
   P.with(stat,()=>{
     const sign=r.n<=3?1:-1;
     if(r.n!==4){
-      rack(r.x+sign*690,r.z-60,r.color,r.n===3?'optics':'supplies');
+      rack(r.x+sign*690,r.z+(r.n===6?-430:-60),r.color,r.n===3?'optics':'supplies');
       // Main experiment apparatus now lives at each reserved anchor.
       cart(r.x+sign*410,r.z-430,r.color);
       // Small contents on the existing workbench, counted as objects rather than individual parts.
@@ -112,27 +112,17 @@ function dressRoom(r){
 function dressAtrium(){
   const stat=P.group(0,0,0);stat.name='atrium-props';
   P.with(stat,()=>{
-    [-1550,-650,0,1250,1700].forEach(x=>{
-      prop(()=>H.props.plant(x,2480));block(x,2480,65,65,110);
-      prop(()=>H.props.cone(x,2520));
-    });
-    [-900,0,1250].forEach(x=>{prop(()=>H.props.bench(x,2420));block(x,2420,170,65,80);});
     [-1810,1810].forEach(x=>{
-      prop(()=>H.props.cabinet(x,2320,{color:B.blue,h:105}));block(x,2320,70,45,105);
-      prop(()=>H.props.bin(x,2250,{color:B.green}));block(x,2250,45,45,65);
+      prop(()=>H.props.cabinet(x,2790,{color:B.blue,h:105}));block(x,2790,70,45,105);
+      prop(()=>H.props.bin(x,2690,{color:B.green}));block(x,2690,45,45,65);
     });
-    for(let i=0;i<7;i++){
-      const z=-2500+i*620;
-      prop(()=>H.props.tree(i%2?180:-180,z,{s:1.3}));
-      prop(()=>H.props.lampPost(i%2?-210:210,z));
-      prop(()=>P.part(48,20,48,B.white,260,10,z+170));
-    }
+
     [-2120,2120].forEach(x=>{for(let i=0;i<9;i++)prop(()=>H.props.tree(x,-2600+i*560,{s:1.5}));});
   });P.bake(stat);
 }
 const resources=[
   ['에너지스틱','explain/energy.html'],['정전기 캔','explain/static.html'],['플라즈마볼','explain/plasma.html'],
-  ['코일기차','explain/train.html'],['황금나침반','explain/compass.html'],['전자기브레이크','explain/eddy.html'],
+  ['입구 전시 · 코일기차','explain/train.html'],['입구 전시 · 전자기브레이크','explain/eddy.html'],
   ['1비트 기억회로','explain/dram.html'],['운영 학생 학습 공간','academy/']
 ];
 E.resources=resources;
@@ -140,7 +130,7 @@ E.openLibrary=function(){
   if(E.library?.open)return;
   const before=document.activeElement,wasLocked=H.player.locked;H.player.stop();H.player.locked=true;
   const d=document.createElement('dialog');d.className='hnr-research-library';E.library=d;
-  d.innerHTML='<header><img src="lab/cards/hnr-tech-mark.webp" alt="HNR TECH" width="44" height="44"><strong>HNR Tech Inc.</strong><button type="button" aria-label="자료대 닫기">닫기 ×</button></header><h2>연구소 자료대</h2><p>본 체험과 자유 체험의 원리 설명을 모두 볼 수 있어요. 자료는 새 탭으로 열립니다.</p><nav aria-label="실험 원리 설명">'+resources.map(([name,url])=>'<a href="'+url+'" target="_blank" rel="noopener">'+name+' <span>원리 설명 ↗</span></a>').join('')+'</nav><button class="library-memo" type="button">이 기기의 관찰 메모 보기</button><p>현장 이동 순서는 학생 연구원의 안내를 따라 주세요!</p>';
+  d.innerHTML='<header><img src="lab/cards/hnr-tech-mark.webp" alt="HNR TECH" width="44" height="44"><strong>HNR Tech Inc.</strong><button type="button" aria-label="자료대 닫기">닫기 ×</button></header><h2>연구소 자료대</h2><p>세 실험과 기억회로, 입구 전시의 원리 설명을 볼 수 있어요. 자료는 새 탭으로 열립니다.</p><nav aria-label="실험 원리 설명">'+resources.map(([name,url])=>'<a href="'+url+'" target="_blank" rel="noopener">'+name+' <span>원리 설명 ↗</span></a>').join('')+'</nav><button class="library-memo" type="button">이 기기의 관찰 메모 보기</button><p>현장 이동 순서는 학생 연구원의 안내를 따라 주세요!</p>';
   const close=()=>{d.close();};
   d.querySelector('header button').onclick=close;
   d.querySelector('.library-memo').onclick=()=>{close();memo();};
@@ -148,12 +138,12 @@ E.openLibrary=function(){
   document.body.appendChild(d);d.showModal();d.querySelector('header button').focus();
 };
 function libraryDesk(){
-  const x=350,z=2175,g=P.group(x,0,z);P.with(g,()=>{
+  const x=-550,z=2780,g=P.group(x,0,z);P.with(g,()=>{
     P.part(230,12,95,B.white,0,70,0);[-95,95].forEach(dx=>P.part(14,64,75,B.blue,dx,33,0));
     [-55,0,55].forEach((dx,i)=>P.part(38,9,48,[B.blue,B.cyan,B.violet][i],dx,81,0));
     P.text('원리 설명 자료대',{x:0,y:155,z:0,w:245,bg:'#ffffff',color:'#102e54'});
   });P.bake(g);block(x,z,240,105,120);
-  W.addInteract({id:'research-library',x,z:2315,r:135,mesh:g,label:'E · 모든 실험 원리 설명 보기',onUse:E.openLibrary});
+  W.addInteract({id:'research-library',x,z:2920,r:135,mesh:g,label:'E · 모든 실험 원리 설명 보기',onUse:E.openLibrary});
 }
 const originalBuild=M.build;
 M.build=function(){originalBuild();if(E.built)return;E.built=true;M.rooms.forEach(dressRoom);dressAtrium();libraryDesk();
@@ -200,7 +190,7 @@ function installControls(){
       <strong>어떤 시점으로 볼까요?</strong>
       <div class="explore-row"><button data-view="fps" type="button">1인칭</button><button data-view="tps" type="button">따라가기</button><button data-view="top" type="button">위에서</button></div>
       <div class="explore-row"><button data-action="in" aria-label="시점 확대" type="button">＋ 확대</button><button data-action="out" aria-label="시점 축소" type="button">－ 축소</button><button data-action="reset" type="button">시선 복원</button></div>
-      <div class="explore-row"><button data-action="library" type="button">모든 실험 원리 설명</button></div><p id="exploreHint"></p><div class="explore-row"><button data-action="memo" type="button">관찰 메모 <span id="exploreCount">0/6</span></button></div>
+      <div class="explore-row"><button data-action="library" type="button">모든 실험 원리 설명</button></div><p id="exploreHint"></p><div class="explore-row"><button data-action="memo" type="button">관찰 메모 <span id="exploreCount">0/4</span></button></div>
       <p>PC 1인칭: 화면 클릭 후 마우스로 시선 이동<br>WASD 이동 · E 말 걸기 · Esc 마우스 해제<br>터치: 화면 드래그 · 바닥을 눌러 이동</p>
     </section>`;
   document.body.appendChild(panel);
@@ -219,7 +209,7 @@ function installControls(){
     panel.querySelectorAll('[data-action=in],[data-action=out]').forEach(b=>b.disabled=locked||view==='fps');
     panel.querySelector('[data-action=reset]').disabled=locked;
     panel.querySelector('#exploreHint').textContent=view==='fps'?'PC에서는 화면을 클릭하고 마우스만 움직여 둘러보세요. 메뉴를 누를 때는 Esc로 마우스를 풀어요. 터치 기기에서는 드래그해요.':view==='tps'?'캐릭터를 따라가요. 드래그로 각도를, 휠·두 손가락으로 거리를 조절해요.':'주변 동선을 위에서 봐요. 휠·두 손가락으로 넓게 보거나 가까이 보아요.';
-    panel.querySelector('#exploreCount').textContent=E.stations.filter(s=>H.S.seen['facility'+s.n]).length+'/6';
+    panel.querySelector('#exploreCount').textContent=E.stations.filter(s=>H.S.seen['facility'+s.n]).length+'/'+E.stations.length;
   }
   E.syncControls=sync;H.on('view',sync);H.on('state',sync);H.on('sim:enter',close);
   document.addEventListener('keydown',ev=>{if(ev.code==='Escape'&&!body.hidden){close();toggle.focus();}});

@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const H=window.HNR,KEY='hnr.lab.cruise';
-const C=H.cruise={version:'3.0.0',enabled:false,paused:false,traveling:false,working:false,arrived:null,target:nextStage,setEnabled,pause,go:goNow,act,choose:()=>false};
+const C=H.cruise={version:'3.1.0',enabled:false,paused:false,traveling:false,working:false,arrived:null,target:nextStage,setEnabled,pause,go:goNow,continueNext,act,choose:()=>false};
 let panel,toggle,title,detail,primary,pauseBtn,clock=0,stable=0,lastKey='',paintKey='',failed='',endingSeen=false,trip=null,tripNo=0,changingView=false;
 function busy(){return H.ui.isOpen()||H.player.locked||!!H.sim.active||!!H.opening?.active||H.cam.isOverride()||!!H.input.captured||!!H.journey?.busy;}
 function observing(){return Object.values(H.missionWorld?.apparatus||{}).some(r=>r.running);}
@@ -25,19 +25,19 @@ function setEnabled(value){
 }
 function pause(){C.paused=!C.paused;if(C.paused&&trip)finishTrip(false,'pause');resetClock();render();}
 function finishTrip(ok,reason){
- const t=trip;if(!t)return;trip=null;C.traveling=false;H.player.stop();
+ const t=trip;if(!t)return;trip=null;C.traveling=false;document.body.classList.remove('guided-walking');H.player.stop();
  H.cam.dist=t.camera.dist;H.cam.height=t.camera.height;
  if(H.player.view==='tps'){changingView=true;H.player.setView(t.camera.view);changingView=false;}
- if(ok){C.arrived=t.stage.key;failed='';H.emit('cruise:arrive',{kind:t.stage.kind,n:t.stage.n,id:t.stage.id});}
- else if(reason==='blocked'){failed=t.stage.key;}
+ if(ok){C.arrived=t.stage.key;H.player.yaw=t.stage.point.yaw;failed='';H.emit('cruise:arrive',{kind:t.stage.kind,n:t.stage.n,id:t.stage.id});}
+ else if(reason==='blocked'){failed=t.stage.key;if(!C.enabled)H.ui.toast('길을 확인하지 못했어요. 다음 장소로 걸어가기를 다시 눌러 주세요.',{ms:3500});}
  resetClock();render();t.resolve(ok);
 }
-function travel(s){
- if(!C.enabled||C.traveling||C.working||busy()||observing()||!s||nextStage()?.key!==s.key)return false;
+function travel(s,once=false){
+ if((!C.enabled&&!once)||C.traveling||C.working||busy()||observing()||!s||nextStage()?.key!==s.key)return false;
  const p=H.world.nearest(s.point.x,s.point.z);
  if(!p||!H.world.allowed(p.x,p.z)||Math.hypot(p.x-s.point.x,p.z-s.point.z)>180){failed=s.key;render();return false;}
  const camera={view:H.player.view,dist:H.cam.dist,height:H.cam.height},id=++tripNo;
- C.traveling=true;C.arrived=null;stopInput();
+ C.traveling=true;C.arrived=null;document.body.classList.add('guided-walking');stopInput();
  const result=new Promise(resolve=>{trip={id,stage:s,resolve,camera,planning:true,elapsed:0};});
  changingView=true;H.cam.dist=280;H.cam.height=225;H.player.setView('tps');changingView=false;render();
  (async()=>{
@@ -85,6 +85,12 @@ async function planPath(start,end,valid){
  return smooth;
 }
 function goNow(){const s=nextStage();failed='';return travel(s);}
+// A single escorted walk is also available in manual mode. It never changes progress or the cruise preference.
+function continueNext(){
+ const s=nextStage();failed='';if(!s||C.traveling||C.working||busy()||observing())return false;
+ if(Math.hypot(H.player.x-s.point.x,H.player.z-s.point.z)<140){C.arrived=s.key;render();return true;}
+ return travel(s,true);
+}
 async function run(action){
  if(!C.enabled||C.working||C.traveling||busy()||observing())return false;
  C.working=true;render();
@@ -103,13 +109,15 @@ function render(){
  if(!panel)return;
  toggle.textContent=C.enabled?'크루즈 켜짐':'크루즈 모드';toggle.setAttribute('aria-pressed',String(C.enabled));
  const s=nextStage(),blocked=busy()||C.working;
- panel.hidden=!C.enabled||blocked||!s;toggle.disabled=C.working;panel.classList.toggle('cruise-walking',C.traveling);
+ panel.hidden=(!C.enabled&&!C.traveling)||blocked||!s;toggle.disabled=C.working;panel.classList.toggle('cruise-walking',C.traveling);
  if(!s)return;
- const running=observing(),arrived=at(s),p=H.journey.mainProgress?.()||{done:0,total:6};
- const key=[s.key,s.title,s.action,arrived,C.paused,failed,blocked,running,p.done,C.traveling,trip?.planning].join('|');if(key===paintKey)return;paintKey=key;
+ const running=observing(),arrived=at(s),p=H.journey.mainProgress?.()||{done:0,total:5};
+ const key=[s.key,s.title,s.action,arrived,C.enabled,C.paused,failed,blocked,running,p.done,C.traveling,trip?.planning].join('|');if(key===paintKey)return;paintKey=key;
  title.textContent=s.title;
+ panel.querySelector('.cruise-heading span').textContent=C.enabled?'HNR Tech Inc. · 순서대로 크루즈':'HNR Tech Inc. · 다음 장소까지 함께 걷기';
+ pauseBtn.hidden=!C.enabled;
  panel.querySelector('.cruise-progress').textContent='본 체험 '+p.done+' / '+p.total;
- detail.textContent=C.traveling?(trip?.planning?'걸어갈 수 있는 길을 확인하고 있어요.':'캐릭터가 다음 장소로 걷고 있어요. 멈춤이나 직접 이동으로 바꿀 수 있어요.'):failed===s.key?'현재 지나갈 수 있는 길이 없어요. 잠긴 문이나 앞 활동을 확인한 뒤 다시 이동해 주세요.':!arrived?(C.paused?'자동 이동을 멈췄어요. 다음 장소로 이동 버튼은 사용할 수 있어요.':'비트와 함께 다음 본 체험 장소로 걸어가요.'):
+ detail.textContent=C.traveling?(trip?.planning?'걸어갈 수 있는 길을 확인하고 있어요.':'캐릭터가 다음 장소로 걷고 있어요. ‘직접 이동’을 누르면 멈출 수 있어요.'):failed===s.key?'현재 지나갈 수 있는 길이 없어요. 잠긴 문이나 앞 활동을 확인한 뒤 다시 이동해 주세요.':!arrived?(C.paused?'자동 이동을 멈췄어요. 다음 장소로 이동 버튼은 사용할 수 있어요.':'사람 회로 → 정전기 → 플라즈마 → 회로 제작 순서로 걸어가요.'):
  running?'장치가 움직이고 있어요. 관찰이 끝나면 활동 안내를 열어 보세요.':s.kind==='ending'?'기억회로 제작과 숫자 저장·읽기 기록을 확인해요.':'활동 안내를 열고 학생 연구원의 설명에 따라 체험해 주세요.';
  primary.disabled=running||C.traveling;primary.textContent=C.traveling?'걷는 중…':running?'관찰 중…':!arrived?'다음 장소로 걸어가기':s.actionLabel||typeof s.action==='string'&&s.action||(s.kind==='ending'?'완료 기록 보기':s.kind==='route'?'경로 안내 열기':'활동 안내 열기');
  pauseBtn.textContent=C.paused?'자동 이동 계속':'자동 이동 멈춤';pauseBtn.setAttribute('aria-pressed',String(C.paused));
@@ -119,7 +127,7 @@ function install(){
  const host=document.getElementById('exploreTools');if(!host)return;
  toggle=document.createElement('button');toggle.type='button';toggle.id='cruiseToggle';toggle.setAttribute('aria-controls','cruisePanel');toggle.onclick=()=>setEnabled(!C.enabled);host.prepend(toggle);
  panel=document.createElement('section');panel.id='cruisePanel';panel.hidden=true;panel.setAttribute('aria-label','비트의 크루즈 안내');
- panel.innerHTML='<div class="cruise-heading"><span>HNR Tech Inc. · 비트의 크루즈</span><button class="cruise-off" type="button">직접 이동</button></div><h2></h2><p class="cruise-detail" aria-live="polite"></p><div class="cruise-actions"><button class="cruise-primary" type="button">다음 장소로 이동</button></div><div class="cruise-foot"><span class="cruise-progress">본 체험 0 / 6</span><button class="cruise-pause" type="button">자동 이동 멈춤</button></div>';
+ panel.innerHTML='<div class="cruise-heading"><span>HNR Tech Inc. · 비트의 크루즈</span><button class="cruise-off" type="button">직접 이동</button></div><h2></h2><p class="cruise-detail" aria-live="polite"></p><div class="cruise-actions"><button class="cruise-primary" type="button">다음 장소로 이동</button></div><div class="cruise-foot"><span class="cruise-progress">본 체험 0 / 5</span><button class="cruise-pause" type="button">자동 이동 멈춤</button></div>';
  document.body.appendChild(panel);title=panel.querySelector('h2');detail=panel.querySelector('.cruise-detail');primary=panel.querySelector('.cruise-primary');pauseBtn=panel.querySelector('.cruise-pause');
  primary.onclick=act;pauseBtn.onclick=pause;panel.querySelector('.cruise-off').onclick=()=>setEnabled(false);
  let saved=false;try{saved=localStorage.getItem(KEY)==='1';}catch(e){}
@@ -129,11 +137,11 @@ H.on('start',install);
 H.on('state',()=>{failed='';resetClock();render();});
 H.on('opening:start',resetClock);H.on('opening:end',resetClock);H.on('sim:enter',render);H.on('sim:exit',()=>{resetClock();render();});
 H.on('tick',dt=>{
- if(!C.enabled||!panel)return;
+ if((!C.enabled&&!trip)||!panel)return;
  if(trip){if(document.hidden||busy()||observing()||nextStage()?.key!==trip.stage.key){finishTrip(false,'interrupted');return;}trip.elapsed+=dt;if(trip.elapsed>180){finishTrip(false,'blocked');return;}stable=0;render();return;}
  if(document.hidden)return;
  if(busy()||observing()||C.working){stable=0;render();return;}
- const s=nextStage();if(!s){const p=H.journey?.mainProgress?.();if(p&&p.done>=p.total&&p.total>0){setEnabled(false);H.ui.toast('본 체험을 마쳤어요. 이제 연구소를 자유롭게 둘러보세요.',{ms:3500});}return;}
+ const s=nextStage();if(!s){const p=H.journey?.mainProgress?.();if(p&&p.done>=p.total&&p.total>0){setEnabled(false);H.ui.toast('모든 활동을 마쳤어요. 학생 연구원과 완성한 기억회로를 확인해 주세요.',{ms:3500});}return;}
  if(s.key!==lastKey){lastKey=s.key;stable=0;}else stable+=dt;
  clock+=dt;if(clock>.15){clock=0;render();}
  if(!C.paused&&C.arrived!==s.key&&failed!==s.key&&stable>.75)Promise.resolve(travel(s)).catch(e=>{failed=s.key;console.error('[HNR.cruise]',e);render();});
@@ -141,6 +149,6 @@ H.on('tick',dt=>{
 H.on('view',v=>{if(trip&&!changingView&&v!=='tps'){finishTrip(false,'view');C.paused=true;render();}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&trip)finishTrip(false,'interrupted');});
 document.addEventListener('keydown',e=>{
- if(C.enabled&&!busy()&&!C.working&&['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))setEnabled(false);
+ if((C.enabled||C.traveling)&&!busy()&&!C.working&&['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))setEnabled(false);
 },true);
 })();

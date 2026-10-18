@@ -10,12 +10,12 @@ const metadata={
   g1:{n:1,title:'에너지 스틱',action:'회로 연결하기',notice:'양쪽 접점을 잇는 길이 닫히면 불이 켜져요.'},
   g2:{n:2,title:'캔과 빨대',action:'빨대를 대전시켜 가까이 대기',notice:'화면은 문지르기와 접근을 보여 주는 모형이에요. 굵기에 따른 거리 차이는 실물로 반복 관찰해요.'},
   g4a:{n:4,title:'코일 열차',action:'열차 출발시키기',notice:'건전지와 자석으로 만든 열차가 구리 코일 안에서 움직여요.'},
-  g4b:{n:4,title:'황금 나침반',action:'전류 켜기 · 반전 · 복원',notice:'전류를 켜고 반전한 뒤 처음 방향으로 되돌려 바늘을 관찰해요.'},
+
   g5:{n:5,title:'구리관 전자기 브레이크',action:'구리관에서 자석 놓기',notice:'구리관과 자석의 상대적인 움직임이 낙하를 방해하는 힘을 만들어요. 자석은 멈추지 않고 내려와요.'}
 };
 function at(a,x,z){return H.flow.l2w(a.x,a.z,a.ry||0,x,z);}
 function rect(x,z,w,d){return{x1:x-w/2,x2:x+w/2,z1:z-d/2,z2:z+d/2};}
-function unlocked(n){return true;}
+function unlocked(n){return n===4||n===5||!H.journey||H.journey.available('g'+n);}
 function bright(mesh,on,color){
   const m=mesh.material;m.color.set(color|| (on?B.green:B.navy)).convertSRGBToLinear();
   if(m.emissive){m.emissive.set(color|| (on?B.green:B.navy)).convertSRGBToLinear();m.emissiveIntensity=on?.75:.08;}
@@ -116,28 +116,7 @@ function makeTrain(rec){
   rec.start=()=>{rec.elapsed=0;train.position.x=-165;};
   rec.tick=dt=>{rec.elapsed+=dt;train.position.x=-165+Math.min(1,rec.elapsed/2.5)*330;if(rec.elapsed>=2.5)rec.running=false;};
 }
-function makeCompass(rec){
-  table();
-  for(let i=0;i<11;i++)P.torus(38,3,B.copper,-90-i*7,130,0,{ry:PI/2,seg:20});
-  P.part(120,14,125,B.white,-125,90,0);
-  P.cyl(68,68,16,B.gold,105,94,0);P.cyl(60,60,3,B.white,105,104,0);
-  const needle=P.group(105,110,0,{dynamic:true});
-  P.with(needle,()=>{P.part(10,4,46,B.red,0,0,-23);P.part(10,4,46,B.blue,0,0,23);P.ball(6,B.gold,0,4,0);});
-  P.text('N',{x:105,y:127,z:-60,h:17,bg:'#ffffff',color:'#ae122b'});
-  P.part(65,26,40,B.navy,-150,100,85);
-  line(-125,112,31,-150,113,65,3,B.red);line(-195,115,0,-190,110,85,3,B.blue);
-  const sign=P.text('전류 방향을 바꾸어 보아요',{x:0,y:208,z:0,w:300,bg:'#ffffff',color:'#102e54'});
-  rec.polarity=H.CONFIG.compassPointsAway?-1:1;
-  rec.start=()=>{rec.elapsed=0;needle.rotation.y=0;};
-  rec.tick=dt=>{
-    rec.elapsed+=dt;const base=rec.polarity*PI/2,t=rec.elapsed;
-    if(t<1.2)needle.rotation.y=base*Math.min(1,t/.8);
-    else if(t<2.7)needle.rotation.y=base-2*base*Math.min(1,(t-1.2)/.8);
-    else needle.rotation.y=-base+2*base*Math.min(1,(t-2.7)/.8);
-    if(t>=4.2)rec.running=false;
-  };
-  rec.needle=needle;rec.sign=sign;
-}
+
 function makeDrop(rec){
   P.part(540,24,260,B.white,0,14,0);P.part(540,5,260,B.blue,0,29,0);
   const closedX=-130,slitX=125;
@@ -161,7 +140,7 @@ function makeDrop(rec){
     if(rec.elapsed>=total){magnet.position.y=56;currents.forEach(c=>{c.ring.visible=false;});rec.running=false;}
   };rec.slow=magnet;rec.magnet=magnet;rec.copperTube=tube;rec.slitTube=slit;
 }
-const builders={g1:makeStick,g2:makeCan,g4a:makeTrain,g4b:makeCompass,g5:makeDrop};
+const builders={g1:makeStick,g2:makeCan,g4a:makeTrain,g5:makeDrop};
 function recordDemo(rec){
   if(rec.running)return rec.promise;
   H.sfx('click');
@@ -178,7 +157,7 @@ function finishDemo(rec,ok){
 }
 function apparatus(id){
   // An actual simulation owns the same reservation, so never layer a second model on it.
-  if(H.sim&&H.sim.defOf(id))return;
+  if(!M.anchors[id]||H.sim&&H.sim.defOf(id))return;
   const info=metadata[id],a=M.anchors[id],root=P.group(a.x,0,a.z,{ry:a.ry||0,dynamic:true,name:'apparatus:'+id});
   const rec=X.apparatus[id]={id,info,root,running:false,elapsed:0};
   P.with(root,()=>{
@@ -189,7 +168,7 @@ function apparatus(id){
   const front=at(a,0,310);mark('E · '+info.title,front.x,front.z);
   rec.interact=W.addInteract({id:'apparatus:'+id,x:front.x,z:front.z,r:145,mesh:root,visible:()=>unlocked(info.n),
     label:()=> 'E · '+info.action,onUse:()=>{
-      if(H.journey)return id==='g4b'?H.journey.open('compass',{device:'g4b'}):H.journey.open(id);
+      if(H.journey)return H.journey.open(id);
       if(H.deviceShow)return H.deviceShow.play(id);
       if(rec.running)return 'running';
       recordDemo(rec);
@@ -212,34 +191,13 @@ function lightPanel(r){
     const done=!!H.journey?.complete(id),optional=r.n===4||r.n===5,text=done?'체험 확인':optional?'자유 체험':'본 체험';if(text===last)return;last=text;
     bright(lamp,done,done?B.green:B.blue);
     removeLabel(group,label);
-    label=P.text(('0'+r.n).slice(-2)+' · '+text,{x:0,y:142,z:0,w:190,bg:done?'#126346':'#102e54',color:'#ffffff',parent:group});
+    label=P.text(('0'+r.step).slice(-2)+' · '+text,{x:0,y:142,z:0,w:190,bg:done?'#126346':'#102e54',color:'#ffffff',parent:group});
     trackLabels(group);
   }};X.indicators.push(rec);rec.sync();
 }
-function departureCompass(){
-  const x=-650,z=2140,g=P.group(x,0,z,{dynamic:true,name:'departure-compass'});let needle;
-  P.with(g,()=>{
-    P.part(290,12,160,B.white,0,75,0);[-110,110].forEach(dx=>P.part(18,68,120,B.blue,dx,36,0));
-    for(let i=0;i<8;i++)P.torus(29,3,B.copper,-85-i*5,119,0,{ry:PI/2,seg:20});
-    P.cyl(55,55,14,B.gold,50,89,0);P.cyl(49,49,3,B.white,50,98,0);
-    needle=P.group(50,103,0,{dynamic:true});P.with(needle,()=>{
-      P.part(10,4,35,B.blue,0,0,-18);P.part(10,4,35,B.red,0,0,18);P.text('★',{x:0,y:8,z:-42,w:30,bg:'#0066cc',color:'#ffffff'});
-    });
-    P.text('황금나침반 · 체험 출발',{x:0,y:230,z:0,w:205,bg:'#102e54',color:'#ffffff'});
-    P.text('파란 ★ → 정문 에너지스틱',{x:0,y:183,z:0,w:190,bg:'#ffffff',color:'#102e54'});
-  });P.bake(g);trackLabels(g);W.addBlock({id:'departure-compass',...rect(x,z,300,170)}).cameraHeight=170;
-  const towardFirst=Math.atan2(-500,-1040)+PI;let chosenHeading=towardFirst;
-  try{const raw=localStorage.getItem('hnr.compass.heading'),deg=Number(raw);if(raw!==null&&Number.isFinite(deg))chosenHeading=deg*PI/180;}catch(e){}
-  needle.rotation.y=chosenHeading;
-  // This model points to the virtual gate; the real coil orientation is set at the booth.
-  X.departure={root:g,needle,setDirection(angle){if(Number.isFinite(angle)){chosenHeading=angle;needle.rotation.y=angle;}},demo(){
-    return H.tween(.9,k=>{needle.rotation.y=chosenHeading+Math.sin(k*PI)*.4;});
-  }};
-  mark('E · 황금나침반으로 출발',x,2420);P.text('★ 정문',{x:-1150,y:43,z:1830,w:145,bg:'#0066cc',color:'#ffffff'});
-  W.addInteract({id:'departure-compass',x,z:2420,r:140,mesh:g,label:'E · 황금나침반 출발 안내',onUse:()=>H.journey?.open('compass')});
-}
+
 function binaryDesk(){
-  const x=900,z=1420,g=P.group(x,0,z,{dynamic:true,name:'binary-8421-desk'}),lamps=[];
+  const x=900,z=-1780,g=P.group(x,0,z,{dynamic:true,name:'binary-8421-desk'}),lamps=[];
   P.with(g,()=>{
     P.part(500,12,170,B.white,0,70,0);[-215,215].forEach(dx=>P.part(18,64,135,B.blue,dx,35,0));
     [8,4,2,1].forEach((weight,i)=>{
@@ -251,8 +209,8 @@ function binaryDesk(){
     P.text('8 · 4 · 2 · 1',{x:0,y:240,z:0,w:330,bg:'#102e54',color:'#ffffff'});
     P.text('독립된 네 회로 · 서로 배선하지 않아요',{x:0,y:193,z:0,w:440,bg:'#ffffff',color:'#102e54'});
   });P.bake(g);trackLabels(g);W.addBlock({id:'binary-8421-desk',...rect(x,z,510,180)}).cameraHeight=155;
-  mark('E · 숫자 저장하고 읽기',900,1580);
-  W.addInteract({id:'binary-8421',x:900,z:1580,r:140,mesh:g,label:'E · 8 · 4 · 2 · 1 활동',onUse:()=>H.journey?.open('8421')});
+  mark('E · 숫자 저장하고 읽기',900,-1620);
+  W.addInteract({id:'binary-8421',x:900,z:-1620,r:140,mesh:g,label:'E · 8 · 4 · 2 · 1 활동',onUse:()=>H.journey?.open('8421')});
   X.binaryDesk={root:g,lamps};
 }
 // Text is painted on the physical board, not a billboard that turns into its backing.
@@ -265,8 +223,8 @@ function boardFace(parent,texture,side){
   parent.add(mesh);return mesh;
 }
 function controlBoard(){
-  const g=P.group(0,0,2025,{dynamic:true,name:'project-one-board'});
-  const steps=[['compass','출발'],['g1','사람 회로'],['g2','정전기'],['g3','플라즈마'],['g6','회로 제작'],['8421','8421']],lamps=[],backLamps=[];
+  const g=P.group(-550,0,2100,{dynamic:true,name:'project-one-board'});
+  const steps=[['g1','사람 회로'],['g2','정전기'],['g3','플라즈마'],['g6','회로 제작'],['8421','8421']],lamps=[],backLamps=[];
   const canvas=document.createElement('canvas');canvas.width=1260;canvas.height=520;
   const ctx=canvas.getContext('2d'),texture=new T.CanvasTexture(canvas);
   texture.encoding=T.sRGBEncoding;texture.generateMipmaps=false;texture.minFilter=T.LinearFilter;
@@ -284,44 +242,44 @@ function controlBoard(){
     if(emblem.complete&&emblem.naturalWidth){const h=34,w=h*emblem.naturalWidth/emblem.naturalHeight;ctx.drawImage(emblem,13,6,w,h);}
     ctx.save();ctx.translate(23,0);textLine('HNR Tech Inc. · 면접 가는 길',295,22,'#ffffff',800,548);ctx.restore();
     const count=done.filter(Boolean).length;
-    textLine(count===6?'첫 연구 프로젝트 완료':count+' / 6 본 체험 확인',242,29,'#08274c',800);
+    textLine(count===steps.length?'첫 연구 프로젝트 완료':count+' / '+steps.length+' 활동 확인',242,29,'#08274c',800);
     textLine('현장 이동은 학생 연구원의 안내에 따라요',201,18,'#111111',700);
     ctx.fillStyle='#c3d8ed';ctx.fillRect(18,145,594,1);
     steps.forEach(([id,title],i)=>{
       ctx.fillStyle='#111111';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 16px "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
-      ctx.fillText(title,65+i*100,318-100);
+      ctx.fillText(title,75+i*120,318-100);
     });
-    textLine('본 체험과 자유 탐색 안내  ·  E',74,13,'#003d82',700);
+    textLine('순서대로 체험하고 회로를 만들어요  ·  E',74,13,'#003d82',700);
     texture.needsUpdate=true;
   }
   P.with(g,()=>{
     P.part(644,274,28,B.navy,0,188,0);P.part(654,9,35,B.blue,0,330,0);
     [-240,240].forEach(x=>P.part(24,54,50,B.steel,x,27,0));
     steps.forEach(([id,title],i)=>{
-      const x=-250+i*100;
+      const x=-240+i*120;
       lamps.push(P.ball(12,B.blue,x,137,27,{unique:true,dynamic:true,emissive:B.blue,emissiveIntensity:.08}));
       backLamps.push(P.ball(12,B.blue,-x,137,-27,{unique:true,dynamic:true,emissive:B.blue,emissiveIntensity:.08}));
     });
   });P.bake(g);
   const faces=[boardFace(g,texture,1),boardFace(g,texture,-1)];
-  W.addBlock({id:'project-one-board',...rect(0,2025,655,40)}).cameraHeight=340;
+  W.addBlock({id:'project-one-board',...rect(-550,2100,655,40)}).cameraHeight=340;
   const sync=()=>{
     done=steps.map(([id])=>!!H.journey?.complete(id));const key=done.join(',');if(key===last)return;last=key;
     [lamps,backLamps].forEach(row=>row.forEach((lamp,i)=>bright(lamp,done[i],done[i]?B.green:B.blue)));
     paint();
   };
   sync();emblem.onload=paint;emblem.src='lab/cards/hnr-tech-mark.webp';H.on('state',sync);
-  mark('E · 본 체험 안내',0,2220);
-  W.addInteract({id:'project-one-board',x:0,z:2220,r:150,mesh:g,label:'E · 본 체험과 자유 탐색 안내',onUse:()=>H.ui.say([
-    {who:'bit',t:'황금나침반 → 에너지스틱 → 정전기 캔 → 플라즈마볼 → 기억 회로 만들기 → 8·4·2·1 활동 순서예요.'},
-    {who:'bit',t:'터널 열차와 전자기브레이크는 자유 체험이에요. 정원 통로를 이용하면 암실에서 중앙 제어실로 바로 갈 수 있어요.'},
+  mark('E · 체험 순서 안내',-550,2310);
+  W.addInteract({id:'project-one-board',x:-550,z:2310,r:150,mesh:g,label:'E · 순서대로 체험하는 방법',onUse:()=>H.ui.say([
+    {who:'bit',t:'사람 회로 → 정전기 → 플라즈마볼 → 기억회로 제작 → 8·4·2·1 순서예요. 파란 길을 따라 한 공간씩 이동해요.'},
+    {who:'bit',t:'코일 열차와 전자기 브레이크는 입구에서 앞서 경험한 실험을 돌아보는 전시예요. 플라즈마볼 실험을 마치면 바로 옆 기억회로 제작실 문이 열려요.'},
     {who:'bit',t:'가상 장치를 조작한 기록과 실물 체험 확인은 달라요. 실물 활동과 설명을 마친 뒤 해당 활동에서 확인해 주세요.'}
   ])});X.board={root:g,sync,lamps,backLamps,faces,canvas};
 }
 const originalBuild=M.build;
 M.build=function(){
   originalBuild();if(X.built)return;X.built=true;
-  Object.keys(metadata).forEach(apparatus);M.rooms.forEach(lightPanel);controlBoard();departureCompass();binaryDesk();
+  Object.keys(metadata).forEach(apparatus);M.rooms.forEach(lightPanel);controlBoard();binaryDesk();
 };
 H.on('state',()=>X.indicators.forEach(r=>r.sync()));
 H.on('tick',dt=>{if(!X.built)return;Object.values(X.apparatus).forEach(rec=>{

@@ -1,20 +1,18 @@
-/* HNR TECH — 32-second interview arrival film. Camera only; activity progress is untouched. */
+/* HNR TECH — Sequential interview arrival film. Camera only; activity progress is untouched. */
 (function(){
 'use strict';
 const H=window.HNR;if(!H||H.opening)return;
 const scenes=[
  ['overview','2026 서울STEM축제 · 해누리중학교','HNR Tech Inc.','면접 보러 왔는데요?',4],
- ['compass','출발 · 아트리움','면접실은 어느 쪽일까요?','황금나침반에서 출발 안내를 받아 보세요.',3.5],
+ ['review','입구 · 앞서 경험한 실험','코일기차와 전자기브레이크','입구 전시에서 앞서 경험한 두 실험을 떠올려 보세요.',4],
  ['gate','본 체험 1 · 정문','출입 장치 앞에서','학생 연구원과 에너지스틱을 작동시켜 보세요.',3],
  ['cleanroom','본 체험 2 · 클린룸','잠깐, 손대지 말아 주세요!','빨대를 바꾸며 캔이 움직이기 시작하는 거리를 비교해요.',3],
  ['plasma','본 체험 3 · 암실','형광등에 불을 켜 주세요','전선을 잇지 않고 빛을 켜는 방법을 찾아보세요.',3.5],
- ['tunnel','선택 체험 · 터널','연구소의 작은 열차','코일기차 시연에도 들를 수 있어요.',3],
- ['drop','선택 체험 · 브레이크실','구리관 속 자석','예상하고 관찰하는 전자기브레이크 체험이 기다려요.',3],
- ['memory','면접 · 중앙 제어실','여러분의 첫 작품은 기억회로','1비트 기억회로를 만들고, 8·4·2·1로 숫자를 저장하고 읽어요.',5],
- ['return','면접 보러 가는 길','이제 출발해 볼까요?','현장 이동 순서는 학생 연구원의 안내를 따라 주세요!',3.5]
+ ['memory','플라즈마 다음 · 회로 제작대','빛을 켰다면, 이제 기억을 만들어요','암실 바로 다음 회로 제작대에서 1비트 기억회로를 만들어요. 이어서 8·4·2·1로 숫자를 저장하고 읽어요.',5],
+ ['return','면접 보러 가는 길','이제 출발해 볼까요?','사람 회로 → 정전기 → 플라즈마 → 회로 제작. 활동을 마치면 ‘다음 장소로 걸어가기’를 누르세요.',3.5]
 ];
 const duration=scenes.reduce((n,s)=>n+s[4],0),starts=[];let acc=0;scenes.forEach(s=>{starts.push(acc);acc+=s[4];});
-const O=H.opening={version:'2.0.0',active:false,paused:false,index:0,elapsed:0,time:0,duration,phase:'idle',shots:scenes,start,finish,next,previous,pause,seek,credits:showCredits};
+const O=H.opening={version:'2.1.0',active:false,paused:false,index:0,elapsed:0,time:0,duration,phase:'idle',shots:scenes,start,finish,next,previous,pause,seek,credits:showCredits};
 const preference=matchMedia('(prefers-reduced-motion: reduce)');
 let reduced=preference.matches,overlay,title,caption,kicker,progress,status,pauseBtn,motionBtn,soundBtn,creditsPanel,hero;
 let initial=false,previousFocus=null,savedLock=false,savedExposure=null,savedFog=null,savedClouds=true,clouds=null,savedCamera=null,curvePos=null,curveLook=null,knots=[],lastIndex=-1,creditPaused=false;
@@ -65,7 +63,7 @@ function pose(){
  if(!O.active||!curvePos)return;const time=reduced?starts[O.index]:O.time,p=cameraAt(time);H.cam.override(p,{instant:true});
  // tick listeners run after the engine camera, so render this pose in the same frame.
  H.camera.position.set(...p.pos);H.camera.lookAt(...p.look);H.camera.fov=p.fov;H.camera.updateProjectionMatrix();H.camera.updateMatrixWorld();
- const target=O.index===4?.76:1.04;H.fx.setExposure(target);
+ const target=scenes[O.index][0]==='plasma'?.76:1.04;H.fx.setExposure(target);
 }
 function render(){
  let index=scenes.length-1;for(let i=0;i<scenes.length;i++)if(O.time<starts[i]+scenes[i][4]){index=i;break;}

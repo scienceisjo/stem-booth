@@ -11,3 +11,11 @@ body.pre #talk,body.opening #talk,body.sim #talk,body.hud-off #talk{display:none
 @media(max-width:640px){#talkBtn.nav-interact{font-size:14px;min-height:48px;padding:9px 13px;max-width:calc(100vw - 32px)}#talkBtn.nav-interact kbd{width:28px;height:28px;font-size:18px}#talk{bottom:calc(166px + var(--safe-b))}}
 @media(max-height:520px) and (min-width:641px){#talk{bottom:calc(12px + var(--safe-b))}#talkBtn.nav-interact{max-width:calc(100vw - 280px);min-width:0;min-height:44px;font-size:13px;padding:7px 11px}}
 @media(prefers-reduced-motion:reduce){#talkBtn.nav-interact{animation:none;transition:none}}
+
+/* The next action lives with the existing mission HUD, so there is one clear destination. */
+#missionLine #navNextAction{grid-column:1/-1;min-height:42px;padding:10px 12px!important;background:#005bc4!important;color:#fff!important;border:2px solid #004692;border-radius:9px;font-size:14px;font-weight:800;line-height:1.4;white-space:normal;word-break:keep-all;cursor:pointer}
+#missionLine #navNextAction[hidden]{display:none!important}
+#missionLine #navNextAction:disabled{background:#e7f0fb!important;color:#173d68!important;cursor:default}
+#missionLine #navNextAction:focus-visible{outline:3px solid #ffbf35;outline-offset:3px}
+body.journey-open #missionLine #navNextAction{display:none!important}
+@media(max-width:640px),(max-height:520px){#missionLine #navNextAction{min-height:36px;padding:7px 9px!important;font-size:12px}}
