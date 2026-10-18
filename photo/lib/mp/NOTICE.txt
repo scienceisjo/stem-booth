@@ -1,0 +1,6 @@
+MediaPipe Tasks Vision 0.10.35 (@mediapipe/tasks-vision, npm) — Apache License 2.0
+  https://github.com/google-ai-edge/mediapipe  ·  https://www.apache.org/licenses/LICENSE-2.0
+Models (Apache License 2.0, Google):
+  face_landmarker.task        storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/
+  pose_landmarker_lite.task   storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/
+Files are unmodified except the sourceMappingURL line removed from vision_bundle.mjs.
