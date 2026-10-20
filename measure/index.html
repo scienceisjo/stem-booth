@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>얼마나 가까워지면 움직일까? | HNR TECH</title>
+<style>
+:root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#101c30;background:#edf3fa;color-scheme:light}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;border:1px solid #b9c9dd;border-radius:10px;background:#fff;color:#102a43;padding:12px 15px;font-weight:700;min-height:45px}button:disabled{opacity:.45;cursor:default}.primary{background:#145eeb;color:#fff;border-color:#145eeb}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e99b00;outline-offset:2px}input,select{border:1px solid #8da5c5;border-radius:7px;padding:9px;max-width:100%;background:white;color:black}header{background:#102a43;color:white;padding:22px max(20px,4vw);display:flex;gap:16px;align-items:center}header img{width:58px;height:58px;object-fit:contain}header p{margin:0 0 4px;color:#a8d5ff;font-size:13px;font-weight:700;letter-spacing:.1em}h1{font-size:clamp(23px,2.8vw,36px);margin:0}h2{font-size:19px;margin:0 0 14px}main{max-width:1480px;margin:auto;padding:22px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px}.panel{background:white;border:1px solid #d5e0ed;border-radius:16px;padding:20px;margin-bottom:18px}.stage{position:relative;background:#102033;border-radius:12px;overflow:hidden;width:100%;min-height:220px}canvas{display:block;width:100%;height:450px;touch-action:none}#empty{position:absolute;inset:0;display:grid;place-items:center;color:#fff;text-align:center;padding:30px;pointer-events:none}#empty[hidden]{display:none}#video{display:none}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.toolbar span{align-self:center;font-size:14px}.status{padding:16px;background:#e8f2ff;border-left:4px solid #145eeb;font-size:17px;line-height:1.55;margin:16px 0}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.readout{background:#f0f5fb;padding:17px;border-radius:12px}.readout strong{display:block;font-size:clamp(28px,4vw,45px);letter-spacing:-.04em;margin-top:8px}.readout small{display:block;line-height:1.5;margin-top:8px;font-size:13px}.readout.final{background:#102a43;color:white}.hint{font-size:14px;line-height:1.7;color:#14253c}.step{border-top:1px solid #dbe4f0;padding-top:14px;margin-top:14px}.step label{display:block;margin:10px 0}.step input{width:90px}.select-grid{display:grid;gap:9px}.select-grid button{text-align:left}table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:11px 6px;border-bottom:1px solid #dbe4f0;text-align:left}.tablewrap{overflow:auto}.muted{font-size:13px;line-height:1.6}#app-credit{padding:22px;text-align:center;font-size:13px;color:#263c57}details summary{cursor:pointer;font-weight:700}.measure-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+@media(max-width:900px){main{grid-template-columns:1fr;padding:12px}.setup{grid-row:2}canvas{height:250px}header{padding:18px}header img{width:45px;height:45px}.panel{padding:14px}.result-grid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+@media print{header{color:black;background:white}main{display:block}.setup,.toolbar,.stage,.measure-actions,button{display:none}.panel{break-inside:avoid}}
+</style></head><body>
+<header><img src="hnr-tech-mark.webp" alt="HNR TECH"><div><p>HNR TECH / STATIC LAB</p><h1>얼마나 가까워지면 움직일까?</h1></div></header>
+<main><section>
+<div class="panel"><div class="toolbar"><button id="cameraOn" class="primary">카메라 켜기</button><button id="stop" disabled>카메라 끄기</button><span id="live">카메라 꺼짐</span></div>
+<div class="stage"><video id="video" autoplay playsinline muted></video><canvas id="camera" width="800" height="450" aria-label="카메라 영상 위에서 기준 눈금과 물체 영역을 지정하세요."></canvas><div id="empty"><p>캔과 빨대가 함께 보이도록 카메라를 고정하자!<br>실제 자도 같은 측정 면에 놓아 주세요.</p></div></div>
+<p id="status" class="status" role="status" aria-live="polite">카메라를 켜고 준비하자!</p>
+<div class="result-grid"><div class="readout"><span>지금 표면 사이</span><strong id="current">—</strong><small>화면의 가로 간격</small></div><div class="readout final"><span>움직임을 감지한 순간</span><strong id="result">—</strong><small id="detail">캔이 움직이는 순간을 기다려요.</small></div></div>
+<div class="measure-actions"><button id="start" class="primary" disabled>자동 측정 시작</button><button id="save" disabled>이 결과 기록하기</button></div>
+</div>
+<div class="panel"><h2>같은 조건으로 여러 번 비교하자!</h2><p class="hint">재질·길이·문지르는 범위와 횟수·기다리는 시간·캔과 바닥을 맞추자. 굵기만으로 전하량이나 축전용량을 판단하지 말자!</p><p id="count">0회 기록</p><div class="tablewrap"><table><thead><tr><th>회차</th><th>빨대</th><th>거리(cm)</th><th>감지 기준(cm)</th></tr></thead><tbody id="rows"></tbody></table></div><div class="measure-actions"><button id="csv">CSV 내려받기</button><button id="reset">기록 비우기</button></div><p class="muted">영상은 서버로 보내지 않아요. 기록은 이 화면에만 남으며 새로고침하면 지워져요. 필요한 결과는 CSV로 저장하자!</p></div>
+</section><aside class="setup"><div class="panel"><h2>처음 한 번, 기준 맞추기</h2>
+<p class="hint">캔과 빨대가 <b>화면에서 가로 방향</b>으로 다가오게 놓자. 카메라와 자를 움직이지 말고, 밝고 무늬가 적은 배경을 준비하자.</p>
+<div class="step"><b>1 · 실제 길이 맞추기</b><label>자의 두 눈금 사이 <input id="length" type="number" value="5" min=".1" max="100" step=".1"> cm</label><button data-select="calibration">자의 두 눈금 찍기</button><p class="muted" id="scale">아직 보정하지 않았어요.</p></div>
+<div class="step"><b>2 · 화면에서 영역 그리기</b><p class="hint">버튼을 누르고 화면에서 사각형을 그리자. 캔과 빨대의 <b>가까운 표면 경계</b>를 정확히 맞춰야 해!</p><div class="select-grid"><button data-select="can">① 캔 영역 잡기</button><button data-select="straw">② 빨대 영역 잡기</button><button data-select="anchor">③ 움직이지 않는 배경 표시 잡기</button></div></div>
+<div class="step"><b>3 · 측정 조건</b><label>이번 빨대 <select id="condition"><option>가는 빨대</option><option>굵은 빨대</option><option>빨대 A</option><option>빨대 B</option></select></label><label>움직임 감지 기준 <select id="threshold"><option value=".05">0.05 cm</option><option value=".1" selected>0.10 cm</option><option value=".2">0.20 cm</option></select></label><p class="muted">최소 2픽셀 이상의 움직임을 연속 3회 확인해. 화면 해상도에 따라 실제 감지 기준은 더 커질 수 있어.</p></div>
+<details class="step"><summary>정확하게 재려면</summary><p class="hint">측정할 표면과 자를 같은 깊이·높이의 면에 놓아 주세요. 카메라는 그 면을 정면으로 봐야 해요. 원근·반사·가림·회전 때문에 추적이 틀릴 수 있어요. 시작 전에 실제 자로 알려진 간격을 대조하세요.</p><p class="hint">이 도구는 영상에서 움직임을 감지해 거리의 추정값을 기록해요. 물리적으로 처음 움직인 순간보다 늦게 감지될 수 있어요. 감지 기준과 촬영 조건을 같게 두고 비교하자!</p></details>
+</div></aside></main><footer id="app-credit">© 2026 조승재(과학이조선생) · 해누리중학교 · HNR TECH<br>최종 업데이트: 2026-10-20</footer>
+<script>/* Browser-local tracking. No uploads, telemetry or external dependencies. */
+'use strict';
+const $=s=>document.querySelector(s),cv=$('#camera'),cx=cv.getContext('2d'),video=$('#video');
+const raw=document.createElement('canvas'),rx=raw.getContext('2d',{willReadFrequently:true});
+let W=800,H=450,stream=null,lastFrame=null,raf=0,lastTick=0,mode='idle',selection='',drag=null;
+let boxes={},calibration=[],pixelsPerCm=0,tracks={},baseline=[],origin=null,candidates=[],result=null,records=[];
+const colors={can:'#00d7b8',straw:'#ffc94c',anchor:'#f87cde'};
+function status(s){$('#status').textContent=s;}
+function rectNorm(a,b){return {x:Math.round(Math.min(a.x,b.x)),y:Math.round(Math.min(a.y,b.y)),w:Math.round(Math.abs(a.x-b.x)),h:Math.round(Math.abs(a.y-b.y))};}
+function gray(image){
+ const out=new Float32Array(image.width*image.height),d=image.data;
+ for(let i=0;i<out.length;i++)out[i]=.299*d[4*i]+.587*d[4*i+1]+.114*d[4*i+2];
+ return out;
+}
+function template(frame,box,width,height){
+ const b={x:Math.max(1,box.x-5),y:Math.max(1,box.y-5),w:box.w+10,h:box.h+10};
+ b.w=Math.min(b.w,width-b.x-1);b.h=Math.min(b.h,height-b.y-1);
+ const step=Math.max(1,Math.ceil(b.h/8)),samples=[];
+ let sum=0,sum2=0;
+ for(let y=0;y<b.h;y+=step)for(let x=0;x<b.w;x+=(b.w<=80||x<12||x>b.w-12?1:2)){
+  const v=frame[(b.y+y)*width+b.x+x];samples.push([x,y,v]);sum+=v;sum2+=v*v;
+ }
+ const mean=sum/samples.length,den=Math.sqrt(sum2-sum*sum/samples.length);
+ if(den/Math.sqrt(samples.length)<8)throw Error('표시가 뚜렷한 영역을 잡아 주세요. 물체의 양쪽 경계와 배경을 조금 포함하면 추적하기 쉬워요.');
+ for(const p of samples)p[2]-=mean;
+ return {samples,den,box:{...box},b,dx:0,dy:0,score:1};
+}
+function locate(frame,t,width,height,radius=24){
+ const samples=t.samples,N=samples.length;
+ function score(dx,dy){
+  const bx=t.b.x+dx,by=t.b.y+dy;
+  if(bx<0||by<0||bx+t.b.w>=width||by+t.b.h>=height)return -1;
+  let sum=0,sum2=0,cross=0;
+  for(const [x,y,v] of samples){const p=frame[(by+y)*width+bx+x];sum+=p;sum2+=p*p;cross+=p*v;}
+  const variance=sum2-sum*sum/N;
+  return variance>1?cross/(t.den*Math.sqrt(variance)):-1;
+ }
+ let best={score:-1,dx:t.dx,dy:t.dy},options=[];
+ const better=(s,x,y)=>s>best.score+1e-6||(Math.abs(s-best.score)<=1e-6&&Math.hypot(x-t.dx,y-t.dy)<Math.hypot(best.dx-t.dx,best.dy-t.dy));
+ for(let y=t.dy-radius;y<=t.dy+radius;y+=3)for(let x=t.dx-radius;x<=t.dx+radius;x+=3){
+  const s=score(x,y);options.push({score:s,dx:x,dy:y});if(better(s,x,y))best={score:s,dx:x,dy:y};
+ }
+ const coarse={...best};
+ for(let y=coarse.dy-2;y<=coarse.dy+2;y++)for(let x=coarse.dx-2;x<=coarse.dx+2;x++){
+  const s=score(x,y);if(better(s,x,y))best={score:s,dx:x,dy:y};
+ }
+ // Reject competing peaks far from the selected match.
+ const second=Math.max(-1,...options.filter(p=>Math.abs(p.dx-best.dx)>7).map(p=>p.score));
+ best.margin=best.score-second;best.ok=best.score>=.74 && best.margin>=.018;
+ if(best.ok){t.dx=best.dx;t.dy=best.dy;t.score=best.score;}
+ return best;
+}
+function moved(t){return {...t.box,x:t.box.x+t.dx,y:t.box.y+t.dy};}
+function gap(a,b){return a.x<b.x?b.x-(a.x+a.w):a.x-(b.x+b.w);}
+function detector(state,point,threshold,now){
+ const displacement=Math.abs(point.x-state.x);
+ if(displacement>=threshold){
+  if(!state.candidate)state.candidate={...point,time:now};
+  state.hits=(state.hits||0)+1;
+  if(state.hits>=3 && now-state.candidate.time>=120)return state.candidate;
+ }else{state.candidate=null;state.hits=0;}
+ return null;
+}
+function ready(){return !!(stream&&pixelsPerCm&&boxes.can&&boxes.straw&&boxes.anchor);}
+function updateButtons(){
+ $('#start').disabled=!ready()||['arming','tracking','result'].includes(mode);
+ $('#save').disabled=!result;$('#stop').disabled=!stream;
+}
+function resized(){
+ if(!stream)return;
+ const r=cv.parentElement.getBoundingClientRect();
+ cv.style.height=(r.width*H/W)+'px';
+}
+function resetMeasure(message='측정 위치를 맞춰 주세요.'){
+ mode='setup';tracks={};baseline=[];origin=null;candidates=[];result=null;
+ $('#result').textContent='—';$('#current').textContent='—';$('#detail').textContent='캔이 움직이는 순간을 기다려요.';
+ if(message)status(message);updateButtons();
+}
+function clearSetup(){
+ boxes={};calibration=[];pixelsPerCm=0;selection='';resetMeasure('자의 기준 길이부터 맞춰 주세요.');$('#scale').textContent='아직 보정하지 않았어요.';
+}
+async function openCamera(){
+ if(!navigator.mediaDevices?.getUserMedia){status('카메라는 HTTPS 또는 이 컴퓨터의 localhost 주소에서 열어 주세요.');return;}
+ stopCamera();
+ try{
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
+  video.srcObject=stream;await video.play();
+  W=800;H=Math.round(800*video.videoHeight/video.videoWidth);
+  cv.width=raw.width=W;cv.height=raw.height=H;resized();clearSetup();
+  stream.getVideoTracks()[0].addEventListener('ended',()=>stopCamera());
+  $('#empty').hidden=true;$('#live').textContent='카메라 연결됨';lastTick=0;raf=requestAnimationFrame(loop);
+ }catch(e){stream=null;status(e.name==='NotAllowedError'?'카메라 사용이 허용되지 않았어요. 주소창의 카메라 권한을 확인해 주세요.':'카메라를 열지 못했어요. 다른 앱이 사용 중인지 확인해 주세요.');updateButtons();}
+}
+function stopCamera(){
+ cancelAnimationFrame(raf);if(stream){const old=stream;stream=null;old.getTracks().forEach(t=>t.stop());}
+ video.srcObject=null;lastFrame=null;mode='idle';selection='';result=null;
+ $('#live').textContent='카메라 꺼짐';$('#result').textContent='—';$('#current').textContent='—';$('#empty').hidden=false;
+ status('카메라를 켜고 준비하자!');updateButtons();
+}
+function draw(frame){
+ if(frame)cx.putImageData(frame,0,0);
+ cx.lineWidth=3;cx.font='bold 18px sans-serif';
+ for(const [name,box] of Object.entries(boxes)){
+  const b=tracks[name]?moved(tracks[name]):box;cx.strokeStyle=colors[name];cx.fillStyle=colors[name];
+  cx.strokeRect(b.x,b.y,b.w,b.h);cx.fillText({can:'캔',straw:'빨대',anchor:'고정 표시'}[name],b.x,Math.max(22,b.y-8));
+ }
+ if(calibration.length){
+  cx.strokeStyle='#fff';cx.fillStyle='#145eeb';
+  for(const p of calibration){cx.beginPath();cx.arc(p.x,p.y,6,0,Math.PI*2);cx.fill();cx.stroke();}
+  if(calibration.length===2){cx.beginPath();cx.moveTo(calibration[0].x,calibration[0].y);cx.lineTo(calibration[1].x,calibration[1].y);cx.stroke();}
+ }
+ if(drag){const b=rectNorm(drag.start,drag.end);cx.strokeStyle=colors[selection]||'#fff';cx.strokeRect(b.x,b.y,b.w,b.h);}
+ if(tracks.can&&tracks.straw&&mode!=='lost'){
+  const a=moved(tracks.can),b=moved(tracks.straw),left=a.x<b.x?a:b,right=a.x<b.x?b:a;
+  const y=Math.min(H-30,Math.max(a.y+a.h,b.y+b.h)+22);
+  cx.strokeStyle='#fff';cx.beginPath();cx.moveTo(left.x+left.w,y);cx.lineTo(right.x,y);cx.stroke();
+ }
+}
+function lost(message){mode='lost';result=null;status(message+' 다시 영역을 맞추고 시작해 주세요.');$('#result').textContent='—';$('#current').textContent='—';updateButtons();}
+function sample(frame,now){
+ const g=gray(frame),found={};
+ for(const name of ['can','straw','anchor'])found[name]=locate(g,tracks[name],W,H,name==='anchor'?12:24);
+ if(Object.values(found).some(v=>!v.ok)){lost('추적이 불확실해 측정을 멈췄어요.');return;}
+ const anc=tracks.anchor;
+ if(Math.hypot(anc.dx,anc.dy)>2){lost('카메라 또는 고정 표시가 움직였어요.');return;}
+ const can=moved(tracks.can),straw=moved(tracks.straw);
+ if(Math.min(can.y+can.h,straw.y+straw.h)-Math.max(can.y,straw.y)<8){lost('캔과 빨대의 측정 높이가 어긋났어요.');return;}
+ const distance=gap(can,straw)/pixelsPerCm;
+ if(distance<=0){lost('표면이 닿았거나 영역이 겹쳤어요.');return;}
+ $('#current').textContent=distance.toFixed(2)+' cm';
+ const point={x:tracks.can.dx-anc.dx,y:tracks.can.dy-anc.dy,distance,frame,offsets:Object.fromEntries(Object.entries(tracks).map(([k,t])=>[k,{dx:t.dx,dy:t.dy}]))};
+ if(mode==='arming'){
+  baseline.push(point);if(baseline.length>15)baseline.shift();
+  const range=baseline.length?Math.max(...baseline.map(p=>p.x))-Math.min(...baseline.map(p=>p.x)):0;
+  if(range>1.5){baseline=[];status('아직 움직이고 있어요. 캔과 빨대를 잠깐 멈춰 주세요.');return;}
+  if(baseline.length===15){
+   origin={x:baseline.reduce((s,p)=>s+p.x,0)/15,y:point.y,hits:0};
+   baseline=[];mode='tracking';status('준비 완료! 빨대를 천천히 가까이 가져가자.');
+  }
+ }else if(mode==='tracking'){
+  if(Math.abs(point.y-origin.y)>Math.max(4,pixelsPerCm*.3)){lost('캔이 측정 방향에서 벗어났어요.');return;}
+  const threshold=Math.max(2,pixelsPerCm*Number($('#threshold').value));
+  const detected=detector(origin,point,threshold,now);
+  if(detected){
+   mode='result';result={cm:detected.distance,time:detected.time,frame:detected.frame,threshold:threshold/pixelsPerCm,label:$('#condition').value};
+   $('#result').textContent=result.cm.toFixed(2)+' cm';
+   $('#detail').textContent='움직임이 연속 확인된 첫 감지 화면의 표면 간격';
+   status('감지했어! 화면과 실제 간격을 확인하고 결과를 기록하자.');
+   for(const k of Object.keys(tracks))Object.assign(tracks[k],detected.offsets[k]);
+   $('#current').textContent=result.cm.toFixed(2)+' cm';
+   draw(result.frame);updateButtons();
+  }
+ }
+}
+function loop(now){
+ if(!stream)return;
+ if(now-lastTick>=85&&video.readyState>=2){
+  lastTick=now;
+  rx.drawImage(video,0,0,W,H);lastFrame=rx.getImageData(0,0,W,H);
+  if(['arming','tracking'].includes(mode))sample(lastFrame,now);
+  if(mode!=='result')draw(lastFrame);
+ }
+ raf=requestAnimationFrame(loop);
+}
+function choose(kind){
+ if(!stream){status('먼저 카메라를 켜 주세요.');return;}
+ resetMeasure('');selection=kind;
+ if(kind==='calibration'){calibration=[];pixelsPerCm=0;status('실제 자의 두 눈금을 차례로 찍어 주세요. 두 눈금은 화면에서 가로로 놓아요.');}
+ else status({can:'캔의 왼쪽·오른쪽 표면에 맞춰 영역을 그려 주세요. 위아래는 움직임을 볼 띠만 잡아요.',straw:'캔과 같은 높이에서 빨대의 양쪽 표면에 맞춰 영역을 그려 주세요.',anchor:'움직이지 않는 자의 눈금이나 배경 무늬를 작은 사각형으로 잡아 주세요.'}[kind]);
+ updateButtons();
+}
+function point(e){const r=cv.getBoundingClientRect();return {x:Math.max(0,Math.min(W-1,(e.clientX-r.left)*W/r.width)),y:Math.max(0,Math.min(H-1,(e.clientY-r.top)*H/r.height))};}
+cv.addEventListener('pointerdown',e=>{
+ if(!selection||!stream)return;e.preventDefault();const p=point(e);
+ if(selection==='calibration'){
+  calibration.push(p);
+  if(calibration.length===2){
+   const [a,b]=calibration,px=Math.abs(a.x-b.x),cm=Number($('#length').value);
+   if(!Number.isFinite(cm)||cm<=0||px<40||Math.abs(a.y-b.y)>px*.09){calibration=[];status('길이는 양수로 입력하고, 가로로 40픽셀 이상 떨어진 두 눈금을 선택해 주세요.');return;}
+   pixelsPerCm=px/cm;selection='';$('#scale').textContent=`${cm} cm 기준 · 1 cm = ${pixelsPerCm.toFixed(1)} px`;status('기준 길이를 맞췄어요. 캔·빨대·고정 표시 영역을 지정해 주세요.');updateButtons();
+  }
+ }else{drag={start:p,end:p};cv.setPointerCapture(e.pointerId);}
+});
+cv.addEventListener('pointermove',e=>{if(drag){e.preventDefault();drag.end=point(e);}});
+cv.addEventListener('pointerup',e=>{
+ if(!drag)return;e.preventDefault();drag.end=point(e);const box=rectNorm(drag.start,drag.end);drag=null;
+ if(box.w<7||box.h<12){status('너무 작은 영역이에요. 물체의 표면이 보이도록 조금 크게 잡아 주세요.');return;}
+ boxes[selection]=box;selection='';status(ready()?'준비 끝! 자동 측정 시작을 누르자.':'남은 영역을 지정해 주세요.');updateButtons();
+});
+cv.addEventListener('pointercancel',()=>{drag=null;});
+$('#length').addEventListener('change',()=>{pixelsPerCm=0;calibration=[];resetMeasure('기준 길이를 바꿨으니 자의 두 눈금을 다시 찍어 주세요.');});
+$('#cameraOn').onclick=openCamera;$('#stop').onclick=stopCamera;
+document.querySelectorAll('[data-select]').forEach(b=>b.onclick=()=>choose(b.dataset.select));
+$('#start').onclick=()=>{
+ if(!ready()||!lastFrame)return;
+ resetMeasure('캔과 빨대를 잠깐 멈춰 주세요. 안정된 위치를 확인하고 있어요.');
+ try{const g=gray(lastFrame);for(const k of ['can','straw','anchor'])tracks[k]=template(g,boxes[k],W,H);
+  const c=boxes.can,s=boxes.straw;if(gap(c,s)<=0)throw Error('캔과 빨대 영역이 겹치지 않게 지정해 주세요.');
+  mode='arming';selection='';updateButtons();
+ }catch(e){tracks={};status(e.message);updateButtons();}
+};
+function renderRecords(){
+ $('#rows').replaceChildren();
+ for(const [i,r] of records.entries()){
+  const tr=document.createElement('tr');for(const s of [String(i+1),r.label,r.cm.toFixed(2),r.threshold.toFixed(2)]){const td=document.createElement('td');td.textContent=s;tr.appendChild(td);}$('#rows').appendChild(tr);
+ }
+ $('#count').textContent=records.length+'회 기록';
+}
+$('#save').onclick=()=>{
+ if(!result)return;records.push({cm:result.cm,label:result.label,threshold:result.threshold});result=null;boxes={};tracks={};mode='setup';updateButtons();renderRecords();status('기록했어! 캔을 제자리로 놓고 캔·빨대·고정 표시 영역을 다시 맞추자. 길이 보정은 유지돼.');
+};
+$('#csv').onclick=()=>{
+ if(!records.length){status('먼저 측정 결과를 기록해 주세요.');return;}
+ const escape=s=>'"'+String(s).replace(/"/g,'""')+'"';
+ const rows=[['회차','빨대 조건','표면 가로 간격(cm)','움직임 감지 기준(cm)'],...records.map((r,i)=>[i+1,r.label,r.cm.toFixed(2),r.threshold.toFixed(2)])];
+ const blob=new Blob(['\ufeff'+rows.map(r=>r.map(escape).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HNR_정전기_거리측정.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+$('#reset').onclick=()=>{if(confirm('화면에 기록한 측정값을 모두 지울까요?')){records=[];renderRecords();}};
+window.addEventListener('resize',resized);window.addEventListener('pagehide',stopCamera);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&['arming','tracking'].includes(mode))lost('화면을 벗어나 측정을 멈췄어요.');});
+window.HNRMeasure={gray,template,locate,gap,detector,rectNorm};
+updateButtons();
+</script></body></html>
