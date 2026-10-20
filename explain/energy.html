@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffffff"><title>손을 잡으면 켜지는 불빛 · HNR Tech Inc.</title><style>/* ═══════════════════════════════════════════════════════════════
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#ffffff"><title>상 · 손을 잡으면 켜지는 불빛 · HNR Tech Inc.</title><style>/* ═══════════════════════════════════════════════════════════════
    core.css — 소비 전력 강의 덱 공통 (Apple DESIGN.md 언어)
    무대 1920×1080 · 면 색이 구획 · 액션 블루 하나 · UI 그림자 없음
    ═══════════════════════════════════════════════════════════════ */
@@ -3170,4 +3170,15 @@ window.SFX = (function () {
   // The engine boots in its DOMContentLoaded timer, so queue ours immediately after it.
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(mount,0); });
   else setTimeout(mount,0);
-})();</script></body></html>
+})();</script><!-- HNR explanation levels 20261020 --><script>
+(function(){
+ const nav=document.querySelector('.booth-tools');if(!nav)return;
+ const tabs=document.createElement('div');tabs.className='explain-tabs';tabs.setAttribute('aria-label','설명 난이도');
+ const url=new URL(location.href);['p','k','id','extra','still'].forEach(k=>url.searchParams.delete(k));url.hash='';
+ const high=url.pathname+url.search;url.pathname=url.pathname.replace(/\.html$/,'-easy.html');
+ tabs.innerHTML='<a href="'+url.pathname+url.search+'">하 · 핵심</a><a href="'+high+'" aria-current="page">상 · 자세히</a>';
+ nav.prepend(tabs);
+})();
+</script><style>.booth-tools{max-width:calc(100vw - 24px);flex-wrap:wrap}.booth-tools .explain-tabs{white-space:nowrap}
+@media(min-width:701px){.booth-tools{justify-content:flex-end}}
+</style></body></html>

@@ -1,0 +1,294 @@
+[
+  {
+    "slug": "energy",
+    "level": "easy",
+    "title": "에너지스틱",
+    "file": "energy-easy.html",
+    "scenes": [
+      {
+        "index": 1,
+        "id": "energy_01",
+        "title": "손을 잡으니 켜졌어요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      },
+      {
+        "index": 2,
+        "id": "energy_02",
+        "title": "길이 이어지면 알아채요",
+        "kind": "sim",
+        "simId": "easy-energy-connect",
+        "steps": 0
+      },
+      {
+        "index": 3,
+        "id": "energy_03",
+        "title": "이 한 문장이면 돼요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      }
+    ],
+    "sources": [
+      {
+        "title": "Steve Spangler · Energy Stick",
+        "url": "https://stevespangler.com/experiments/human-circuit/"
+      }
+    ]
+  },
+  {
+    "slug": "static",
+    "level": "easy",
+    "title": "정전기 유도",
+    "file": "static-easy.html",
+    "scenes": [
+      {
+        "index": 1,
+        "id": "static_01",
+        "title": "빨대를 따라 캔이 굴러와요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      },
+      {
+        "index": 2,
+        "id": "static_02",
+        "title": "문지르면 전자가 옮겨 가요",
+        "kind": "sim",
+        "simId": "easy-static-rub",
+        "steps": 0
+      },
+      {
+        "index": 3,
+        "id": "static_03",
+        "title": "가까운 쪽이 끌려와요",
+        "kind": "sim",
+        "simId": "easy-static-near",
+        "steps": 0
+      }
+    ],
+    "sources": [
+      {
+        "title": "Institute of Physics · Attracting can",
+        "url": "https://spark.iop.org/attracting-can"
+      },
+      {
+        "title": "OpenStax: charge separation in neutral conductors",
+        "url": "https://openstax.org/books/university-physics-volume-2/pages/5-2-conductors-insulators-and-charging-by-induction"
+      }
+    ]
+  },
+  {
+    "slug": "plasma",
+    "level": "easy",
+    "title": "플라즈마볼",
+    "file": "plasma-easy.html",
+    "scenes": [
+      {
+        "index": 1,
+        "id": "plasma_01",
+        "title": "에너지스틱이 힌트를 줬어요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      },
+      {
+        "index": 2,
+        "id": "plasma_02",
+        "title": "가까이 대면 형광등도 빛나요",
+        "kind": "sim",
+        "simId": "easy-plasma-near",
+        "steps": 0
+      },
+      {
+        "index": 3,
+        "id": "plasma_03",
+        "title": "이 한 문장이면 돼요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      }
+    ],
+    "sources": [
+      {
+        "title": "NASA · Advanced Experiments with Plasma (HS3)",
+        "url": "https://assets.science.nasa.gov/content/dam/science/hpd/heat/sten-guides/sten-guides-pdfs/NASAPlasma-Advanced_FINAL.pdf"
+      },
+      {
+        "title": "Exploratorium · Fluorescent Tube",
+        "url": "https://annex.exploratorium.edu/xref/exhibits/fluorescent_tube.html"
+      },
+      {
+        "title": "Arbor Scientific · 플라즈마볼의 전기장에 반응하는 에너지스틱 실험",
+        "url": "https://www.arborsci.com/blogs/cool/fun-and-engaging-activities-using-the-energy-stick"
+      },
+      {
+        "title": "Steve Spangler · 에너지스틱의 내부 전지와 감지 회로",
+        "url": "https://stevespangler.com/experiments/human-circuit/"
+      },
+      {
+        "title": "Science in School · 플라즈마볼과 형광등의 거리·발광",
+        "url": "https://scienceinschool.org/article/2016/plasma-fourth-state/"
+      },
+      {
+        "title": "Simon Fraser University · 세워 둔 플라즈마볼과 형광등 실험",
+        "url": "https://www.sfu.ca/physics/demos/demos-experiments/plasma-globe-surrey.html"
+      }
+    ]
+  },
+  {
+    "slug": "train",
+    "level": "easy",
+    "title": "건전지 코일 열차",
+    "file": "train-easy.html",
+    "scenes": [
+      {
+        "index": 1,
+        "id": "train_01",
+        "title": "바퀴도 없는데 달려요!",
+        "kind": "sim",
+        "simId": "easy-train-observe",
+        "steps": 0
+      },
+      {
+        "index": 2,
+        "id": "train_02",
+        "title": "전류가 자석을 움직여요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      },
+      {
+        "index": 3,
+        "id": "train_03",
+        "title": "이 한 문장이면 돼요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      }
+    ],
+    "sources": [
+      {
+        "title": "University of Illinois · Electromagnetic Train",
+        "url": "https://gmd.mste.illinois.edu/sites/default/files/inline-files/Electromagnetic%20Train.pdf"
+      },
+      {
+        "title": "OpenStax · Magnetic Fields, Field Lines, and Force",
+        "url": "https://openstax.org/books/physics/pages/20-1-magnetic-fields-field-lines-and-force"
+      }
+    ]
+  },
+  {
+    "slug": "eddy",
+    "level": "easy",
+    "title": "구리관 전자기 브레이크",
+    "file": "eddy-easy.html",
+    "scenes": [
+      {
+        "index": 1,
+        "id": "eddy_01",
+        "title": "자석이 천천히 내려와요",
+        "kind": "sim",
+        "simId": "easy-eddy-observe",
+        "steps": 0
+      },
+      {
+        "index": 2,
+        "id": "eddy_02",
+        "title": "움직이니 브레이크가 생겨요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      },
+      {
+        "index": 3,
+        "id": "eddy_03",
+        "title": "이 한 문장이면 돼요",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      }
+    ],
+    "sources": [
+      {
+        "title": "Simon Fraser University · Eddy Current Tubes",
+        "url": "https://www.sfu.ca/physics/demos/demos-experiments/eddy-current-tubes-burnaby.html"
+      },
+      {
+        "title": "UW–Madison · Eddy Currents",
+        "url": "https://www.physics.wisc.edu/outreach/wonders-of-physics-outreach-fellows/activities/eddy-currents/"
+      },
+      {
+        "title": "Institute of Physics · Electromagnetic braking in a copper pipe",
+        "url": "https://spark.iop.org/electromagnetic-braking-copper-pipe"
+      }
+    ]
+  },
+  {
+    "slug": "dram",
+    "level": "easy",
+    "title": "0과 1을 기억하는 한 칸",
+    "file": "dram-easy.html",
+    "scenes": [
+      {
+        "index": 1,
+        "id": "dram_01",
+        "title": "0과 1을 기억하는 한 칸",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      },
+      {
+        "index": 2,
+        "id": "dram_02",
+        "title": "쓰고, 손을 떼고, 읽어요.",
+        "kind": "sim",
+        "simId": "easy-dram-write-read",
+        "steps": 0
+      },
+      {
+        "index": 3,
+        "id": "dram_03",
+        "title": "충분히 방전한 뒤 읽으면 0",
+        "kind": "sim",
+        "simId": "easy-dram-read-zero",
+        "steps": 0
+      },
+      {
+        "index": 4,
+        "id": "dram_04",
+        "title": "여러 칸을 모으면 숫자가 돼요.",
+        "kind": "explain",
+        "simId": null,
+        "steps": 0
+      },
+      {
+        "index": 5,
+        "id": "dram_05",
+        "title": "최종 면접! 비밀 숫자 11",
+        "kind": "sim",
+        "simId": "easy-dram-8421",
+        "steps": 0
+      }
+    ],
+    "sources": [
+      {
+        "title": "NIST · GB와 GiB, byte와 bit 단위",
+        "url": "https://physics.nist.gov/cuu/Units/binary.html"
+      },
+      {
+        "title": "삼성반도체 · DRAM의 구조와 리프레시",
+        "url": "https://semiconductor.samsung.com/kr/dram/"
+      },
+      {
+        "title": "Micron · DRAM 기술 FAQ",
+        "url": "https://www.micron.com/sales-support/sales/faqs"
+      },
+      {
+        "title": "MIT · 축전기 메모리의 쓰기·읽기·리프레시",
+        "url": "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/pages/c5/c5s1/"
+      }
+    ]
+  }
+]
