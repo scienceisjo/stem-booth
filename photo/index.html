@@ -140,6 +140,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .st-h{right:-24px;bottom:-24px;background:var(--focus);cursor:nwse-resize}
 .st-x svg,.st-h svg{width:16px;height:16px;pointer-events:none}
 .deco-hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:13px;color:var(--mute);letter-spacing:-.224px;white-space:nowrap;pointer-events:none}
+.deco-hint.pick{top:10px;bottom:auto;color:var(--focus);font-weight:600}
+.spots{position:absolute;inset:0;pointer-events:none;z-index:5}
+.fspot{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:2px dashed #fff;box-shadow:0 0 0 1px rgba(0,0,0,.3),inset 0 0 0 1px rgba(0,0,0,.3);background:rgba(0,0,0,.08);pointer-events:auto}
+.fspot:active{transform:translate(-50%,-50%) scale(.95)}
+.fspot.on{border:2px solid var(--focus);background:rgba(0,113,227,.18)}
+.fspot span{position:absolute;left:50%;top:100%;transform:translate(-50%,4px);font-size:11px;font-weight:600;background:rgba(29,29,31,.85);color:#fff;border-radius:9999px;padding:2px 8px;white-space:nowrap;pointer-events:none}
+.fx-note{font-size:13px;color:var(--mute);margin-top:8px;letter-spacing:-.224px}
 .panel{width:420px;flex:none;background:#fff;box-shadow:inset 1px 0 0 var(--hair);display:flex;flex-direction:column;min-height:0}
 .panel-head{padding:18px 18px 4px}
 .panel-head h2{font-size:21px;font-weight:600;letter-spacing:.231px}
@@ -317,6 +324,7 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
       <div class="layer" id="layer"></div>
     </div>
     <p class="deco-hint" id="decoHint">스티커를 끌어서 옮기고, 파란 단추로 크기·방향을 바꿔요</p>
+    <p class="deco-hint pick" id="pickHint" hidden>가릴 얼굴을 누르세요 · 한 번 더 누르면 풀려요</p>
   </div>
   <aside class="panel">
     <div class="panel-head"><h2>꾸미기</h2></div>
@@ -435,7 +443,7 @@ function toBlob(c, type, q){ return new Promise((res, rej) => { try { c.toBlob(b
 const CFG = Object.assign({countdown: 5, mirror: true, sound: true, idleMin: 3, demo: false, deviceId: ''}, lsGet(SETK) || {});
 if (new URLSearchParams(location.search).get('demo') === '1') CFG.demo = true;
 const S = {layout: 'strip', theme: 'white', photos: [null, null, null, null], stickers: [], gray: false,
-  info: [null, null, null, null], proc: [null, null, null, null], fx: {skin: 0, cheek: 0, trap: 0, square: 0}, cat: {on: false, color: 'cheese'},
+  info: [null, null, null, null], proc: [null, null, null, null], fx: {skin: 0, cheek: 0, trap: 0, square: 0}, cat: {on: false, color: 'cheese'}, mosaic: new Set(),
   finalBlob: null, finalURL: null, uploadId: null, uploading: null};
 let cur = 'start', busy = false;
 
@@ -739,7 +747,7 @@ async function runShots(){
       if (abortShoot) throw new Error('abort');
       const fl = $('#flash'); fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
       shutter();
-      S.photos[i] = grab(); S.info[i] = S.proc[i] = null;
+      S.photos[i] = grab(); S.info[i] = S.proc[i] = null; [...S.mosaic].forEach(k => { if (k.startsWith(i + ':')) S.mosaic.delete(k); });
       buildSlots(); markSlot(i);
       await wait(900);
     }
@@ -789,7 +797,7 @@ function loadMP(){
 }
 const shown = i => S.proc[i] || S.photos[i];
 const shownPhotos = () => S.photos.map((p, i) => p ? shown(i) : null);
-const needsFx = () => S.cat.on || S.fx.skin > 0 || S.fx.cheek > 0 || S.fx.trap > 0 || S.fx.square > 0;
+const needsFx = () => S.cat.on || S.mosaic.size > 0 || S.fx.skin > 0 || S.fx.cheek > 0 || S.fx.trap > 0 || S.fx.square > 0;
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 
 function analyze(i){
@@ -980,7 +988,20 @@ function drawCat(ctx, lm, color){
   ctx.restore();
 }
 
-/* 사진 한 장 처리: 원본 → 당기기 → 피부 → 고양이 */
+/* 얼굴 모자이크: 이마·머리 일부까지 덮는 타원 안을 큰 네모 칸으로(얼굴 폭을 8칸 정도로 나눔) */
+function mosaicFace(ctx, lm){
+  const A = faceAxes(lm), W = ctx.canvas.width, H = ctx.canvas.height;
+  let x0 = W, y0 = H, x1 = 0, y1 = 0; OVAL.forEach(i => { const p = lm[i]; x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x); y1 = Math.max(y1, p.y); });
+  x0 -= A.fw * 0.14; x1 += A.fw * 0.14; y0 -= A.fh * 0.3; y1 += A.fh * 0.08;
+  x0 = Math.max(0, Math.floor(x0)); y0 = Math.max(0, Math.floor(y0)); x1 = Math.min(W, Math.ceil(x1)); y1 = Math.min(H, Math.ceil(y1));
+  const bw = x1 - x0, bh = y1 - y0; if (bw < 4 || bh < 4) return;
+  const b = Math.max(6, Math.round(A.fw / 8)), t = document.createElement('canvas'); t.width = Math.max(1, Math.ceil(bw / b)); t.height = Math.max(1, Math.ceil(bh / b));
+  const tx = t.getContext('2d'); tx.imageSmoothingQuality = 'high'; tx.drawImage(ctx.canvas, x0, y0, t.width * b, t.height * b, 0, 0, t.width, t.height);
+  ctx.save(); ctx.beginPath(); ctx.ellipse(x0 + bw / 2, y0 + bh / 2, bw / 2, bh / 2, 0, 0, Math.PI * 2); ctx.clip();
+  ctx.imageSmoothingEnabled = false; ctx.drawImage(t, 0, 0, t.width, t.height, x0, y0, t.width * b, t.height * b);
+  ctx.restore();
+}
+/* 사진 한 장 처리: 원본 → 당기기 → 피부 → 고양이·모자이크 */
 function processPhoto(i){
   const src = S.photos[i], info = S.info[i]; if (!src || !info || !needsFx()) return null;
   const f = S.fx, c = document.createElement('canvas'); c.width = src.width; c.height = src.height;
@@ -988,7 +1009,7 @@ function processPhoto(i){
   if (f.cheek) info.faces.forEach(lm => warp(x, cheekCtrls(lm, f.cheek / 100)));
   if (f.trap || f.square) info.poses.forEach(ps => { const cs = shoulderCtrls(ps, f.trap / 100, f.square / 100, c.width, c.height, info.faces); if (cs.length) warp(x, cs); });
   if (f.skin) info.faces.forEach(lm => smoothSkin(x, lm, f.skin / 100));
-  if (S.cat.on) info.faces.forEach(lm => drawCat(x, lm, S.cat.color));
+  info.faces.forEach((lm, k) => { if (S.mosaic.has(i + ':' + k)) mosaicFace(x, lm); else if (S.cat.on) drawCat(x, lm, S.cat.color); });
   return c;
 }
 let procTok = 0, procTimer = null;
@@ -1025,6 +1046,9 @@ function renderFxTab(b){
   b.innerHTML = `<p class="sect">재미 필터</p>
     <div class="tgl"><button class="sw ${S.cat.on ? 'on' : ''}" id="catSw" aria-label="고양이 필터"></button>🐱 고양이 귀·수염</div>
     <div class="chips" id="catColors" style="margin-top:10px">${Object.entries(CAT).map(([k, v]) => `<button class="chip ${k === S.cat.color ? 'sel' : ''}" data-c="${k}"><span class="dot" style="background:${v[0]}"></span>${v[2]}</button>`).join('')}</div>
+    <p class="sect">얼굴 모자이크</p>
+    <div class="chips"><button class="chip ${pickFaces ? 'sel' : ''}" id="mzPick">얼굴 골라 가리기</button><button class="chip" id="mzAll">모두 가리기</button><button class="chip" id="mzNone">모두 풀기</button></div>
+    <p class="fx-note">함께 찍힌 사람이 원하지 않으면 얼굴을 가려 주세요.</p>
     <p class="sect">보정 한 번에</p>
     <div class="chips" id="fxPresets">${FX_PRESETS.map(([n, v], k) => `<button class="chip ${FX_ITEMS.every(([q]) => S.fx[q] === v[q]) ? 'sel' : ''}" data-k="${k}">${n}</button>`).join('')}</div>
     <p class="sect">하나씩 고르기</p>
@@ -1034,8 +1058,53 @@ function renderFxTab(b){
   $$('#catColors .chip').forEach(c => c.onclick = () => { S.cat.color = c.dataset.c; $$('#catColors .chip').forEach(z => z.classList.toggle('sel', z === c)); if (!S.cat.on){ S.cat.on = true; $('#catSw').classList.add('on'); catBtnState(); } scheduleProcess(0); });
   $$('#fxPresets .chip').forEach(c => c.onclick = () => { S.fx = Object.assign({}, FX_PRESETS[+c.dataset.k][1]); $$('#fxPresets .chip').forEach(z => z.classList.toggle('sel', z === c)); $$('#tabbody .fx-row input').forEach(inp => { const v = S.fx[inp.dataset.k]; inp.value = v; inp.style.setProperty('--v', v + '%'); inp.nextElementSibling.textContent = v; }); scheduleProcess(0); });
   $$('#tabbody .fx-row input').forEach(inp => inp.oninput = () => { const v = +inp.value; S.fx[inp.dataset.k] = v; $$('#fxPresets .chip').forEach((z, k) => z.classList.toggle('sel', FX_ITEMS.every(([q]) => S.fx[q] === FX_PRESETS[k][1][q]))); inp.style.setProperty('--v', v + '%'); inp.nextElementSibling.textContent = v; scheduleProcess(); });
+  $('#mzPick').onclick = async e => {
+    pickFaces = !pickFaces; e.currentTarget.classList.toggle('sel', pickFaces);
+    if (pickFaces && await ensureAnalyzed() && !S.info.some(v => v && v.faces.length)) toast('사진에서 얼굴을 찾지 못했어요');
+    renderSpots();
+  };
+  $('#mzAll').onclick = async () => {
+    if (!await ensureAnalyzed()) return;
+    S.info.forEach((v, i) => { if (v) v.faces.forEach((_, k) => S.mosaic.add(i + ':' + k)); });
+    if (!S.mosaic.size) toast('사진에서 얼굴을 찾지 못했어요');
+    renderSpots(); scheduleProcess(0);
+  };
+  $('#mzNone').onclick = () => { S.mosaic.clear(); renderSpots(); scheduleProcess(0); };
   fxStatus(S.info.some(Boolean) ? 'done' : undefined);
   if (MP.state === 'idle') loadMP().catch(() => {});
+}
+async function ensureAnalyzed(){
+  try { await loadMP(); } catch(e){ toast('얼굴 찾기 도구를 불러오지 못했어요(인터넷 확인)'); return false; }
+  for (let i = 0; i < 4; i++) if (S.photos[i]){ analyze(i); await wait(0); }
+  return true;
+}
+/* 모자이크 고르기: 프레임 위 얼굴마다 동그라미 단추 */
+let pickFaces = false;
+function photoToFrame(i, p){   // 사진 좌표 → 프레임 좌표(drawCover 와 같은 가운데 자르기)
+  const src = S.photos[i], g = geo(S.layout), r = g.cells[i], ar = r.w / r.h;
+  let cw = src.width, ch = src.width / ar; if (ch > src.height){ ch = src.height; cw = src.height * ar; }
+  const sx = (src.width - cw) / 2, sy = (src.height - ch) / 2, k = r.w / cw;
+  return {x: r.x + (p.x - sx) * k, y: r.y + (p.y - sy) * k, k, W: g.W, H: g.H, inside: p.x >= sx && p.x <= sx + cw && p.y >= sy && p.y <= sy + ch};
+}
+function renderSpots(){
+  const stage = $('#stage'); if (!stage) return;
+  let box = $('#spots');
+  if (!box){ box = document.createElement('div'); box.id = 'spots'; box.className = 'spots'; stage.appendChild(box); }
+  box.innerHTML = '';
+  const on = pickFaces && cur === 'deco' && tab === 'fx';
+  $('#pickHint').hidden = !on; if (!on) return;
+  S.info.forEach((v, i) => {
+    if (!v || v.src !== S.photos[i]) return;
+    v.faces.forEach((lm, k) => {
+      const A = faceAxes(lm), f = photoToFrame(i, {x: (A.T.x + A.B.x) / 2, y: (A.T.y + A.B.y) / 2}); if (!f.inside) return;
+      const key = i + ':' + k, has = S.mosaic.has(key), d = Math.max(A.fw, A.fh) * 1.1 * f.k;
+      const b = document.createElement('button'); b.className = 'fspot' + (has ? ' on' : '');
+      b.style.left = (f.x / f.W * 100) + '%'; b.style.top = (f.y / f.H * 100) + '%'; b.style.width = (d / f.W * 100) + '%'; b.style.aspectRatio = '1';
+      b.setAttribute('aria-label', has ? '모자이크 풀기' : '얼굴 가리기'); b.innerHTML = '<span>' + (has ? '풀기' : '가리기') + '</span>';
+      b.onclick = e => { e.stopPropagation(); if (S.mosaic.has(key)) S.mosaic.delete(key); else S.mosaic.add(key); renderSpots(); scheduleProcess(0); };
+      box.appendChild(b);
+    });
+  });
 }
 function catBtnState(){ const b = $('#catBtn'); if (!b) return; b.classList.toggle('on', S.cat.on); b.setAttribute('aria-pressed', String(S.cat.on)); b.textContent = S.cat.on ? '🐱 고양이 켜짐' : '🐱 고양이 필터'; }
 
@@ -1240,7 +1309,7 @@ function renderDeco(){
   const g = geo(S.layout), cv = $('#decoCv');
   if (cv.width !== g.W || cv.height !== g.H){ cv.width = g.W; cv.height = g.H; }
   drawFrame(cv.getContext('2d'), {layout: S.layout, theme: S.theme, photos: shownPhotos(), gray: S.gray});
-  renderStickers();
+  renderStickers(); renderSpots();
 }
 function layoutDeco(){
   if (cur !== 'deco') return;
@@ -1249,7 +1318,7 @@ function layoutDeco(){
 }
 function renderTab(){
   $$('#tabs .tab').forEach(t => t.classList.toggle('sel', t.dataset.tab === tab));
-  const b = $('#tabbody'); b.innerHTML = '';
+  const b = $('#tabbody'); b.innerHTML = ''; renderSpots();
   if (tab === 'fx'){ renderFxTab(b); return; }
   if (tab === 'lab'){
     const gd = document.createElement('div'); gd.className = 'gst';
@@ -1494,7 +1563,7 @@ function show(id){
 function resetAll(){
   abortShoot = true; stopCamera(); busy = false;
   S.photos = [null, null, null, null]; S.stickers = []; S.gray = false; selId = null; layer.innerHTML = '';
-  S.info = [null, null, null, null]; S.proc = [null, null, null, null]; S.fx = {skin: 0, cheek: 0, trap: 0, square: 0}; S.cat.on = false; catBtnState();
+  S.info = [null, null, null, null]; S.proc = [null, null, null, null]; S.fx = {skin: 0, cheek: 0, trap: 0, square: 0}; S.cat.on = false; catBtnState(); S.mosaic = new Set(); pickFaces = false;
   if (S.finalURL) URL.revokeObjectURL(S.finalURL);
   S.finalBlob = S.finalURL = S.uploadId = null; $('#finalImg').removeAttribute('src'); $('#qrBox').innerHTML = ''; $('#printArea').innerHTML = '';
   tab = 'fx'; show('start'); buildStart(); drawStart();
@@ -1541,7 +1610,7 @@ $('#shootBtn').onclick = () => { ac(); runShots(); };
 $('#shootBack').onclick = () => { abortShoot = true; if (S.photos.some(Boolean) && shotQueue.length === 1) (afterShoot === 'deco' ? goDeco() : goReview()); else resetAll(); };
 $('#camRetry').onclick = () => { stopCamera(); startCamera(); };
 $('#camDemo').onclick = () => { CFG.demo = true; saveCfg(); stopCamera(); startCamera(); };
-$('#reviewRestart').onclick = () => { S.photos = [null, null, null, null]; S.info = [null, null, null, null]; S.proc = [null, null, null, null]; goShoot([0, 1, 2, 3], 'review'); };
+$('#reviewRestart').onclick = () => { S.photos = [null, null, null, null]; S.info = [null, null, null, null]; S.proc = [null, null, null, null]; S.mosaic = new Set(); goShoot([0, 1, 2, 3], 'review'); };
 $('#catBtn').onclick = () => { S.cat.on = !S.cat.on; catBtnState(); liveCat(); if (S.cat.on && MP.state !== 'ready') toast('고양이 필터를 준비하는 중이에요…'); };
 $('#toDeco').onclick = goDeco;
 $$('#tabs .tab').forEach(t => t.onclick = () => { tab = t.dataset.tab; renderTab(); });
