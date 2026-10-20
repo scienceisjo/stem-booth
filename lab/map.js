@@ -128,7 +128,7 @@ function fork(r) {
   };sync(true);H.on('state',()=>sync(false));
   // Sign sits beside the doorway, never in its walking lane.
   const sign=local(f,n===3?330:0,40);
-  board(n===3?'다음은 기억회로 제작':'답을 고르고 암호 입력',n===3?'실험 완료 후 문이 열려요\n파란 길을 따라 바로 옆 제작실로':'암호를 타이핑하거나 말해요\n완료 후 다음 장소로 걸어가요',sign.x,sign.z,f.ry,n===3?225:150);
+  board(n===3?'다음은 기억회로 제작':'답을 고르고 암호 입력',n===3?'빛나는 자리를 고르고 암호 확인\n문이 열리면 바로 옆 제작실로':'암호를 타이핑하거나 말해요\n완료 후 다음 장소로 걸어가요',sign.x,sign.z,f.ry,n===3?225:150);
 }
 function corridors() {
   // Leave a 40-unit separation between room and shared corridor: only door strips bridge it.

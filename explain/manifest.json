@@ -73,20 +73,13 @@
       {
         "index": 8,
         "id": "energy_08",
-        "title": "불이 꺼졌어요. 무엇부터 확인할까요?",
-        "kind": "sim",
-        "simId": "energy-repair-bench",
-        "steps": 0
-      },
-      {
-        "index": 9,
-        "id": "energy_09",
         "title": "전류가 흐르려면 길이 이어져야 해요",
         "kind": "explain",
         "simId": null,
         "steps": 0
       }
     ],
+    "extras": [],
     "sources": [
       {
         "title": "Steve Spangler · Energy Stick",
@@ -107,7 +100,7 @@
       "clue": "캔이 따라온, 문지른 빨대가 걸린 문으로.",
       "next": "plasma"
     },
-    "simIndex": 6,
+    "simIndex": 2,
     "scenes": [
       {
         "index": 1,
@@ -120,23 +113,23 @@
       {
         "index": 2,
         "id": "static_02",
-        "title": "문지르기 → 자리 바꾸기 → 끌려오기",
-        "kind": "explain",
-        "simId": null,
+        "title": "문지르면 전자가 옮겨 가요",
+        "kind": "sim",
+        "simId": "static-friction-transfer",
         "steps": 0
       },
       {
         "index": 3,
         "id": "static_03",
-        "title": "문지르면 전자가 옮겨 가요",
-        "kind": "explain",
-        "simId": null,
+        "title": "빨대를 움직여, 캔 속 전자를 보세요",
+        "kind": "sim",
+        "simId": "static-drag-induction",
         "steps": 0
       },
       {
         "index": 4,
         "id": "static_04",
-        "title": "캔 전체는 계속 중성이에요",
+        "title": "가까운 쪽의 끌림이 더 강해요",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -144,44 +137,37 @@
       {
         "index": 5,
         "id": "static_05",
-        "title": "가까운 쪽의 끌림이 더 강해요",
-        "kind": "explain",
-        "simId": null,
-        "steps": 0
-      },
-      {
-        "index": 6,
-        "id": "static_06",
         "title": "빨대가 양전하라면 어떨까요?",
         "kind": "sim",
         "simId": "static-live",
         "steps": 0
       },
       {
-        "index": 7,
-        "id": "static_07",
+        "index": 6,
+        "id": "static_06",
         "title": "문지르면 전자가 새로 생길까요?",
         "kind": "sim",
         "simId": "static-electron-ledger",
         "steps": 0
       },
       {
-        "index": 8,
-        "id": "static_08",
+        "index": 7,
+        "id": "static_07",
         "title": "빨대를 치우면, 캔의 전하는 어떻게 될까요?",
         "kind": "sim",
         "simId": "static-return-and-pair",
         "steps": 0
       },
       {
-        "index": 9,
-        "id": "static_09",
+        "index": 8,
+        "id": "static_08",
         "title": "전하가 자리를 바꾸면, 캔도 움직여요",
         "kind": "explain",
         "simId": null,
         "steps": 0
       }
     ],
+    "extras": [],
     "sources": [
       {
         "title": "Institute of Physics · Attracting can",
@@ -201,17 +187,17 @@
       "place": "암실",
       "npc": "깜빡이",
       "skill": "관찰력",
-      "mission": "잡는 손의 위치와 빛나는 구간의 관계를 찾으세요.",
-      "line": "쉿… 끝을 잡았을 때와 가운데를 잡았을 때, 빛이 어디까지 남나요?",
-      "clue": "가운데를 잡았을 때, 볼과 손 사이에 빛이 남는 그림을 기억하세요.",
-      "next": "train"
+      "mission": "에너지스틱의 점등을 단서로 형광등을 켜는 자리를 찾으세요.",
+      "line": "에너지스틱을 가까이 가져가니 켜졌어. 형광등도 켜려면 어떻게 하면 좋을까?",
+      "clue": "형광등은 가까이에서 더 잘 켜져요. 암호를 확인하고 기억회로 제작실로 가요.",
+      "next": "dram"
     },
-    "simIndex": 6,
+    "simIndex": 5,
     "scenes": [
       {
         "index": 1,
         "id": "plasma_01",
-        "title": "끝을 잡으니 형광등이 켜졌어요",
+        "title": "에너지스틱이 먼저 알려 줬어요",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -219,7 +205,7 @@
       {
         "index": 2,
         "id": "plasma_02",
-        "title": "가운데를 잡으면 어디까지 켜질까요?",
+        "title": "형광등을 켜려면 어떻게 해야 할까요?",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -235,7 +221,7 @@
       {
         "index": 4,
         "id": "plasma_04",
-        "title": "손도 전기적 조건을 바꿔요",
+        "title": "형광등 안에서는 어떤 일이?",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -243,44 +229,37 @@
       {
         "index": 5,
         "id": "plasma_05",
-        "title": "형광등 안에서는 어떤 일이?",
-        "kind": "explain",
-        "simId": null,
+        "title": "형광등을 직접 가까이 가져가요",
+        "kind": "sim",
+        "simId": "plasma-distance",
         "steps": 0
       },
       {
         "index": 6,
         "id": "plasma_06",
-        "title": "깜빡이의 암실 장비를 조작해요",
-        "kind": "sim",
-        "simId": null,
-        "steps": 0
-      },
-      {
-        "index": 7,
-        "id": "plasma_07",
         "title": "유리 너머로, 무엇이 전달될까요?",
         "kind": "sim",
         "simId": "plasma-field-lens",
         "steps": 0
       },
       {
-        "index": 8,
-        "id": "plasma_08",
+        "index": 7,
+        "id": "plasma_07",
         "title": "전기가 어떻게 빛이 될까요?",
         "kind": "sim",
         "simId": "plasma-light-chain",
         "steps": 0
       },
       {
-        "index": 9,
-        "id": "plasma_09",
-        "title": "암실의 단서는 손의 위치예요",
+        "index": 8,
+        "id": "plasma_08",
+        "title": "암실의 단서는 “가까이”예요",
         "kind": "explain",
         "simId": null,
         "steps": 0
       }
     ],
+    "extras": [],
     "sources": [
       {
         "title": "NASA · Advanced Experiments with Plasma (HS3)",
@@ -291,11 +270,19 @@
         "url": "https://annex.exploratorium.edu/xref/exhibits/fluorescent_tube.html"
       },
       {
-        "title": "Science in School · Plasma: The fourth state (손 위치에 따른 형광등 발광)",
+        "title": "Arbor Scientific · 플라즈마볼의 전기장에 반응하는 에너지스틱 실험",
+        "url": "https://www.arborsci.com/blogs/cool/fun-and-engaging-activities-using-the-energy-stick"
+      },
+      {
+        "title": "Steve Spangler · 에너지스틱의 내부 전지와 감지 회로",
+        "url": "https://stevespangler.com/experiments/human-circuit/"
+      },
+      {
+        "title": "Science in School · 플라즈마볼과 형광등의 거리·발광",
         "url": "https://scienceinschool.org/article/2016/plasma-fourth-state/"
       },
       {
-        "title": "Simon Fraser University · Plasma Globe (관을 구 위에 놓는 배치)",
+        "title": "Simon Fraser University · 세워 둔 플라즈마볼과 형광등 실험",
         "url": "https://www.sfu.ca/physics/demos/demos-experiments/plasma-globe-surrey.html"
       }
     ]
@@ -309,9 +296,9 @@
       "npc": "찌릿 기관사",
       "skill": "방향 감각",
       "mission": "열차를 움직이고 전류 방향을 바꿔 보세요.",
-      "line": "열차 출발 시험! 다음에는 황금 나침반도 깨워 봅시다.",
-      "clue": "열차와 나침반, 전류 방향에 따른 변화를 관찰하세요.",
-      "next": "compass"
+      "line": "입구에서 경험한 코일 열차의 움직임을 다시 살펴봅시다.",
+      "clue": "입구의 자유 체험이에요. 본 체험은 사람 회로부터 차례로 진행해요.",
+      "next": "energy"
     },
     "simIndex": 6,
     "scenes": [
@@ -388,6 +375,7 @@
         "steps": 0
       }
     ],
+    "extras": [],
     "sources": [
       {
         "title": "University of Illinois · Electromagnetic Train",
@@ -396,105 +384,6 @@
       {
         "title": "OpenStax · Magnetic Fields, Field Lines, and Force",
         "url": "https://openstax.org/books/physics/pages/20-1-magnetic-fields-field-lines-and-force"
-      }
-    ]
-  },
-  {
-    "slug": "compass",
-    "title": "전류로 나침반 움직이기",
-    "world": {
-      "gate": 4,
-      "place": "황금 나침반",
-      "npc": "찌릿 기관사",
-      "skill": "방향 감각",
-      "mission": "전류를 켰을 때 N극이 가리키는 방향을 찾으세요.",
-      "line": "실험대의 N극을 잘 봐 두세요. 황금 나침반도 같은 원리로 깨어납니다.",
-      "clue": "현장 실험대에서 관찰한 N극 방향을 기준으로 문을 고르세요.",
-      "next": "eddy"
-    },
-    "simIndex": 6,
-    "scenes": [
-      {
-        "index": 1,
-        "id": "compass_01",
-        "title": "전류로 나침반 움직이기",
-        "kind": "explain",
-        "simId": null,
-        "steps": 0
-      },
-      {
-        "index": 2,
-        "id": "compass_02",
-        "title": "세 가지 연결을 찾아요",
-        "kind": "explain",
-        "simId": null,
-        "steps": 0
-      },
-      {
-        "index": 3,
-        "id": "compass_03",
-        "title": "켜고, 끄고, 뒤집어 봐요",
-        "kind": "explain",
-        "simId": null,
-        "steps": 0
-      },
-      {
-        "index": 4,
-        "id": "compass_04",
-        "title": "두 자기장을 함께 느껴요",
-        "kind": "explain",
-        "simId": null,
-        "steps": 0
-      },
-      {
-        "index": 5,
-        "id": "compass_05",
-        "title": "전류를 반대로 흘리면",
-        "kind": "explain",
-        "simId": null,
-        "steps": 0
-      },
-      {
-        "index": 6,
-        "id": "compass_06",
-        "title": "황금나침반의 방향을 바꿔요",
-        "kind": "sim",
-        "simId": null,
-        "steps": 0
-      },
-      {
-        "index": 7,
-        "id": "compass_07",
-        "title": "전류가 커지면 더 기울까요?",
-        "kind": "sim",
-        "simId": "engage-compass-vector",
-        "steps": 0
-      },
-      {
-        "index": 8,
-        "id": "compass_08",
-        "title": "전류가 같아도 방향은 달라질까요?",
-        "kind": "sim",
-        "simId": "engage-compass-layout",
-        "steps": 0
-      },
-      {
-        "index": 9,
-        "id": "compass_09",
-        "title": "전류가 자석처럼 작용해요",
-        "kind": "explain",
-        "simId": null,
-        "steps": 0
-      }
-    ],
-    "sources": [
-      {
-        "title": "UW–Madison · Helmholtz Coils",
-        "url": "https://www.physics.wisc.edu/ingersollmuseum/exhibits/em/helmholtz/"
-      },
-      {
-        "title": "OpenStax · Magnetic Fields and Magnetic Field Lines",
-        "url": "https://openstax.org/books/college-physics-2e/pages/22-3-magnetic-fields-and-magnetic-field-lines"
       }
     ]
   },
@@ -508,8 +397,8 @@
       "skill": "자기 제동",
       "mission": "구리관에서 자석을 놓고 출구에 나오는 때를 관찰하세요.",
       "line": "가만히 대면 붙지 않는데, 관 안으로 놓으면 어떨까? 출구를 함께 살펴보세.",
-      "clue": "제동 설정은 ‘움직임을 늦춘다’. 확인 뒤 중앙 제어실로 가요.",
-      "next": "dram"
+      "clue": "움직이는 자석을 늦추는 자기력을 확인해요. 입구의 자유 체험입니다.",
+      "next": "energy"
     },
     "simIndex": 6,
     "scenes": [
@@ -586,6 +475,7 @@
         "steps": 0
       }
     ],
+    "extras": [],
     "sources": [
       {
         "title": "Simon Fraser University · Eddy Current Tubes",
@@ -603,23 +493,23 @@
   },
   {
     "slug": "dram",
-    "title": "나만의 RAM 한 조각 만들기",
+    "title": "기가바이트(GB)의 시작! 내 손으로 만드는 반도체의 첫 번째 방(1bit)",
     "world": {
       "gate": 6,
       "place": "최종 면접실",
       "npc": "소장 · 비트",
       "skill": "기억력",
-      "mission": "1비트 기억 회로로 비트에게 합격을 기억시키세요.",
-      "line": "마지막 시험일세. 안내 로봇 비트에게 합격을 기억시켜 보게.",
-      "clue": "저장 상태 하나에 합격이라는 뜻을 붙여요. 기억을 유지하려면 다시 써야 해요.",
+      "mission": "네 개의 1비트 회로로 감독관의 비밀 숫자를 완성하세요.",
+      "line": "최종 면접일세. 8·4·2·1 회로 신호로 비밀 숫자를 나타내 보게.",
+      "clue": "불이 켜진 자리의 값을 더해요. 비밀 숫자 11의 코드는 1011이에요.",
       "next": "index"
     },
-    "simIndex": 8,
+    "simIndex": 9,
     "scenes": [
       {
         "index": 1,
         "id": "dram_01",
-        "title": "나만의 RAM 한 조각 만들기",
+        "title": "기가바이트(GB)의 시작!<br>내 손으로 만드는 반도체의 첫 번째 방(1bit)",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -635,7 +525,7 @@
       {
         "index": 3,
         "id": "dram_03",
-        "title": "에너지를 주고, 잠시 저장해요.",
+        "title": "숫자 5는 기억 방 몇 칸이 필요할까요?",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -643,7 +533,7 @@
       {
         "index": 4,
         "id": "dram_04",
-        "title": "버튼은 길을 열고, 저항은 전류를 제한해요.",
+        "title": "전지의 에너지를 기억 방에 저장해요.",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -651,7 +541,7 @@
       {
         "index": 5,
         "id": "dram_05",
-        "title": "① 쓰기: 축전기를 충전해요.",
+        "title": "1을 기억해요: 쓰기 버튼을 눌러요.",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -659,7 +549,7 @@
       {
         "index": 6,
         "id": "dram_06",
-        "title": "② 손 떼기: 잠깐 기억하고 있어요.",
+        "title": "손을 떼어도 기억은 잠시 남아요.",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -667,7 +557,7 @@
       {
         "index": 7,
         "id": "dram_07",
-        "title": "③ 읽기: 저장한 에너지로 빛나요.",
+        "title": "1을 읽어요: LED에 불이 들어와요.",
         "kind": "explain",
         "simId": null,
         "steps": 0
@@ -675,53 +565,69 @@
       {
         "index": 8,
         "id": "dram_08",
-        "title": "비트에게 합격을 기억시켜요",
-        "kind": "sim",
+        "title": "0을 읽어요: LED는 꺼져 있어요.",
+        "kind": "explain",
         "simId": null,
         "steps": 0
       },
       {
         "index": 9,
         "id": "dram_09",
-        "title": "컴퓨터의 DRAM은 어떻게 다를까요?",
-        "kind": "explain",
-        "simId": null,
+        "title": "1과 0을 직접 쓰고 읽어 보세요.",
+        "kind": "sim",
+        "simId": "dram-write-read",
         "steps": 0
       },
       {
         "index": 10,
         "id": "dram_10",
-        "title": "이 부품은 어느 길에서 일할까요?",
-        "kind": "sim",
-        "simId": "dram-component-paths",
+        "title": "우리가 만든 것은 반도체의 어느 부분일까요?",
+        "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
         "index": 11,
         "id": "dram_11",
-        "title": "LED는 꺼졌는데, 기억은 남을까요?",
-        "kind": "sim",
-        "simId": "dram-water-memory",
+        "title": "이제 내 기억 회로를 만들어요.",
+        "kind": "explain",
+        "simId": null,
         "steps": 0
       },
       {
         "index": 12,
         "id": "dram_12",
-        "title": "실제 DRAM은 읽은 뒤 어떻게 할까요?",
+        "title": "[최종 면접] 4비트 이진수 연산 테스트",
         "kind": "sim",
-        "simId": "dram-real-cell-array",
-        "steps": 0
-      },
-      {
-        "index": 13,
-        "id": "dram_13",
-        "title": "이제 내 기억 회로를 만들어요.",
-        "kind": "explain",
-        "simId": null,
+        "simId": "dram-final-8421",
         "steps": 0
       }
     ],
+    "extras": [
+      {
+        "index": 1,
+        "title": "실제 DRAM은 읽은 뒤 어떻게 할까요?",
+        "kind": "sim",
+        "simId": "dram-real-cell-array"
+      },
+      {
+        "index": 2,
+        "title": "이 부품은 어느 길에서 일할까요?",
+        "kind": "sim",
+        "simId": "dram-component-paths"
+      },
+      {
+        "index": 3,
+        "title": "LED는 꺼졌는데, 기억은 남을까요?",
+        "kind": "sim",
+        "simId": "dram-water-memory"
+      }
+    ],
     "sources": [
+      {
+        "title": "NIST · GB와 GiB, byte와 bit 단위",
+        "url": "https://physics.nist.gov/cuu/Units/binary.html"
+      },
       {
         "title": "삼성반도체 · DRAM의 구조와 리프레시",
         "url": "https://semiconductor.samsung.com/kr/dram/"

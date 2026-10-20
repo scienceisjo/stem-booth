@@ -1,29 +1,45 @@
 /* HNR Tech Inc. · Observe, choose a route, then speak or type the facilitator's passphrase. */
 (function(){
 'use strict';
-const H=window.HNR,KEY='hnr.booth.routeCodes.v1',defaults={g1:'연결',g2:'정전기'};
+const H=window.HNR,KEY='hnr.booth.routeCodes.v1',defaults={g1:'연결',g2:'정전기',g3:'가까이'};
 let codes={...defaults},cleanup=null;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'{}');for(const id of Object.keys(defaults))if(typeof saved[id]==='string'&&saved[id].trim()&&saved[id].length<=24)codes[id]=saved[id].trim();}catch(e){}
 const normalize=s=>String(s||'').normalize('NFKC').replace(/[\s.,!?。！？·]/g,'').toLowerCase();
-const R=H.routePass={required:id=>id==='g1'||id==='g2',mount,settings,stop,openSide(n){const r=H.journey?.records()?.activities['g'+n];return r?.routePass?.side||null;}};
+// Match the whole spoken answer, allowing only a small set of polite endings.
+const endings=['','요','이요','예요','이에요','입니다'];
+const spokenMatch=(heard,code)=>endings.some(ending=>normalize(heard)===normalize(code)+ending);
+function speechAccepted(result,code,wrongLabel){
+ const first=String(result?.[0]?.transcript||''),word=normalize(first),target=normalize(code);
+ if(spokenMatch(first,code))return true;
+ // Never rescue a clear negative answer or the opposite choice with a lower-ranked alternative.
+ if(!word||spokenMatch(first,wrongLabel)||/아니|아닌|아닙|아님|아냐|않|안[돼되해하]|못|말고|싫|틀[려렸]|지마/.test(word)||/(^|\s)안(\s|$)/.test(first))return false;
+ const short=endings.some(ending=>(!ending||word.endsWith(ending))&&(word.length-ending.length)<=target.length+2);
+ return short&&Array.from(result).slice(1,3).some(a=>spokenMatch(a.transcript,code));
+}
+const R=H.routePass={required:id=>Object.hasOwn(defaults,id),mount,settings,stop,openSide(n){const r=H.journey?.records()?.activities['g'+n];return r?.routePass?.side||null;}};
 function stop(){if(cleanup){const fn=cleanup;cleanup=null;fn();}}
-function acceptable(id,r,side){if(id==='g1')return side==='L';const result=r.observations.result;return result==='thin'?side==='L':result==='thick'?side==='R':['similar','unclear'].includes(result);}
+function acceptable(id,r,side){if(id==='g1'||id==='g3')return side==='L';const result=r.observations.result;return result==='thin'?side==='L':result==='thick'?side==='R':['similar','unclear'].includes(result);}
 function mount(host,id,r,pass){
  stop();let alive=true,recognizer=null,timer=0,run=0,selected='',failure=false;
- const labels=id==='g1'?['연결한 회로','끊어진 회로']:['가는 빨대','굵은 빨대'];
- const q=id==='g1'?'에너지스틱의 불과 소리가 이어지려면 어떤 회로여야 할까요?':'오늘 실물 비교에서, 어느 빨대가 더 먼 거리에서 캔을 움직이기 시작했나요?';
- host.innerHTML='<section class="j-route"><p class="j-type">시연 관찰 완료 · 경로 선택과 통과 암호</p><h2></h2><div class="j-predictions"><button type="button" data-route="L" aria-pressed="false"></button><button type="button" data-route="R" aria-pressed="false"></button></div><p class="j-route-feedback" role="status"></p><div class="j-voice"><b>진행자에게 암호를 받아요</b><p>답을 고른 뒤 진행자가 알려 준 짧은 암호를 직접 입력하거나 말하세요. 확인되면 고른 문만 열려요.</p><form id="routeTypedForm" class="j-route-typed"><label class="j-field" for="routeTypedWord">암호 직접 입력<input id="routeTypedWord" type="text" maxlength="24" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-describedby="routeVoiceStatus" disabled></label><button type="submit" class="j-primary" id="routeTypedPass" disabled>입력한 암호로 통과</button><p class="j-note">주변이 시끄러우면 여기에 입력하세요. 마이크를 켜지 않아도 돼요.</p></form><p class="j-route-or">또는 목소리로 말하기</p><button type="button" class="j-primary" id="routeMic" disabled>마이크 켜고 암호 말하기</button><button type="button" id="routeStop" hidden>듣기 중지</button><p id="routeVoiceStatus" role="status">먼저 질문의 답을 골라 주세요.</p><p class="j-note">버튼을 누를 때만 듣습니다. 음성은 브라우저의 인식 서비스로 전송될 수 있어요. 이 앱은 음성 파일이나 말한 내용을 저장하지 않습니다.</p><details id="routeAssist" hidden><summary>진행자용 · 음성 인식이 어려울 때</summary><p>주변 소음이나 브라우저 문제로 인식이 안 되면, 진행자가 참가자의 말을 직접 듣고 확인해 주세요.</p><label class="j-check"><input type="checkbox" id="routeHeard"><span>진행자가 참가자가 외친 암호를 직접 들었습니다.</span></label><label class="j-field">진행자가 확인한 암호<input id="routeStaffWord" type="password" maxlength="24" autocomplete="off"></label><button type="button" id="routeStaffPass">직접 들은 암호 확인</button></details></div></section>';
+ const labels=id==='g1'?['연결한 회로','끊어진 회로']:id==='g3'?['가까이','멀리']:['가는 빨대','굵은 빨대'];
+ const q=id==='g1'?'에너지스틱의 불과 소리가 이어지려면 어떤 회로여야 할까요?':id==='g3'?'형광등이 더 잘 켜지는 자리는?':'오늘 실물 비교에서, 어느 빨대가 더 먼 거리에서 캔을 움직이기 시작했나요?';
+ host.innerHTML='<section class="j-route"><p class="j-type">시연 관찰 완료 · 답 선택과 통과 암호</p><h2></h2><div class="j-predictions"><button type="button" data-route="L" aria-pressed="false"></button><button type="button" data-route="R" aria-pressed="false"></button></div><p class="j-route-feedback" role="status"></p><div class="j-voice" data-voice-state="idle"><b>진행자에게 암호를 받아요</b><p>답을 고른 뒤 진행자가 알려 준 짧은 암호를 직접 입력하거나 말하세요. '+(id==='g3'?'확인되면 기억회로 제작대로 가는 문이 열려요.':'확인되면 고른 문만 열려요.')+'</p><form id="routeTypedForm" class="j-route-typed"><label class="j-field" for="routeTypedWord">암호 직접 입력<input id="routeTypedWord" type="text" maxlength="24" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" aria-describedby="routeVoiceStatus" disabled></label><button type="submit" class="j-primary" id="routeTypedPass" disabled>입력한 암호로 통과</button><p class="j-note">주변이 시끄러우면 여기에 입력하세요. 마이크를 켜지 않아도 돼요.</p></form><p class="j-route-or">또는 목소리로 말하기</p><button type="button" class="j-primary" id="routeMic" disabled>마이크 켜고 암호 말하기</button><button type="button" id="routeStop" hidden>듣기 중지</button><p id="routeVoiceStatus" role="status">먼저 질문의 답을 골라 주세요.</p><p id="routeHeardText" class="j-heard" aria-live="off" hidden></p><p class="j-note">버튼을 누를 때만 듣습니다. 음성은 브라우저의 인식 서비스로 전송될 수 있어요. 이 앱은 음성 파일이나 말한 내용을 저장하지 않습니다.</p><details class="j-mic-help"><summary>마이크가 잘 안 들릴 때</summary><ul><li>마이크를 켠 뒤 ‘지금 암호를 말해 주세요’ 안내가 나오면 짧게 말하세요. 크게 외치기보다 마이크 가까이에서 또렷하게 말해 주세요.</li><li>주소창의 마이크 허용 상태와 기기의 입력 마이크·입력 음량을 확인하고, 마이크 가까이에서 평소 말소리로 말해 주세요. 짧은 암호 뒤에 ‘입니다’를 붙여 말해도 돼요.</li><li>앱 안의 브라우저에서 안 되면 Chrome 등 일반 브라우저에서 같은 주소를 열어 보세요. 인식 서비스에는 인터넷 연결이 필요할 수 있어요.</li></ul><p id="routeMicDiagnostic" class="j-note" hidden></p></details><details id="routeAssist" hidden><summary>진행자용 · 음성 인식이 어려울 때</summary><p>주변 소음이나 브라우저 문제로 인식이 안 되면, 진행자가 참가자의 말을 직접 듣고 확인해 주세요.</p><label class="j-check"><input type="checkbox" id="routeHeard"><span>진행자가 참가자가 외친 암호를 직접 들었습니다.</span></label><label class="j-field">진행자가 확인한 암호<input id="routeStaffWord" type="password" maxlength="24" autocomplete="off"></label><button type="button" id="routeStaffPass">직접 들은 암호 확인</button></details></div></section>';
  host.querySelector('h2').textContent=q;
- const choices=[...host.querySelectorAll('[data-route]')],feedback=host.querySelector('.j-route-feedback'),mic=host.querySelector('#routeMic'),cancel=host.querySelector('#routeStop'),status=host.querySelector('#routeVoiceStatus'),assist=host.querySelector('#routeAssist'),typedForm=host.querySelector('#routeTypedForm'),typedWord=host.querySelector('#routeTypedWord'),typedPass=host.querySelector('#routeTypedPass');
+ const choices=[...host.querySelectorAll('[data-route]')],feedback=host.querySelector('.j-route-feedback'),mic=host.querySelector('#routeMic'),cancel=host.querySelector('#routeStop'),status=host.querySelector('#routeVoiceStatus'),assist=host.querySelector('#routeAssist'),typedForm=host.querySelector('#routeTypedForm'),typedWord=host.querySelector('#routeTypedWord'),typedPass=host.querySelector('#routeTypedPass'),voice=host.querySelector('.j-voice'),heardText=host.querySelector('#routeHeardText'),diagnostic=host.querySelector('#routeMicDiagnostic');
  choices.forEach((b,i)=>{b.textContent=labels[i];b.onclick=()=>{
   end();selected=b.dataset.route;choices.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
   const ok=acceptable(id,r,selected);mic.disabled=typedWord.disabled=typedPass.disabled=!ok;typedWord.setAttribute('aria-invalid','false');assist.hidden=!failure||!ok;
-  feedback.textContent=ok?(id==='g2'&&['similar','unclear'].includes(r.observations.result)?'기록한 결과는 비슷함 또는 구분 어려움이에요. 어느 길이든 고를 수 있어요. 굵기만으로 결과가 항상 정해지는 것은 아니에요.':'관찰한 내용과 맞아요. 이제 진행자에게 받은 암호를 입력하거나 말해 보세요.'):(id==='g1'?'손을 놓으면 회로가 끊어져 불과 소리가 멈췄어요. 이어지는 길을 다시 골라 보세요.':'앞에서 기록한 실물 관찰 결과와 비교해 다시 골라 주세요. 기록을 잘못했다면 아래에서 수정할 수 있어요.');
+  feedback.textContent=ok?(id==='g2'&&['similar','unclear'].includes(r.observations.result)?'기록한 결과는 비슷함 또는 구분 어려움이에요. 어느 길이든 고를 수 있어요. 굵기만으로 결과가 항상 정해지는 것은 아니에요.':'관찰한 내용과 맞아요. 이제 진행자에게 받은 암호를 입력하거나 말해 보세요.'):(id==='g1'?'손을 놓으면 회로가 끊어져 불과 소리가 멈췄어요. 이어지는 길을 다시 골라 보세요.':id==='g3'?'방금 시연에서 형광등을 플라즈마볼에 가까이 가져갔을 때 더 밝아졌어요. 다시 골라 보세요.':'앞에서 기록한 실물 관찰 결과와 비교해 다시 골라 주세요. 기록을 잘못했다면 아래에서 수정할 수 있어요.');
   status.textContent=ok?'암호를 입력하고 통과 버튼 또는 Enter를 누르세요. 마이크로 말해도 돼요.':'문은 아직 잠겨 있어요.';
  } });
- function end(restoreFocus=true){const hadFocus=host.contains(document.activeElement);run++;clearTimeout(timer);timer=0;if(recognizer){recognizer.onresult=recognizer.onerror=recognizer.onend=null;try{recognizer.abort();}catch(e){}recognizer=null;}cancel.hidden=true;mic.textContent='마이크 켜고 암호 말하기';mic.disabled=!selected||!acceptable(id,r,selected);if(restoreFocus&&alive&&hadFocus&&!mic.disabled)mic.focus({preventScroll:true});}
- function problem(message){failure=true;end(false);status.textContent=message+' 암호를 직접 입력해도 통과할 수 있어요.';assist.hidden=!selected||!acceptable(id,r,selected);if(alive&&!typedWord.disabled)typedWord.focus({preventScroll:true});}
- function succeed(method){if(!alive||!selected||!acceptable(id,r,selected))return;end(false);if(pass(selected,method)===false){status.textContent='실물 활동 확인과 앞 활동을 먼저 마친 뒤 암호를 다시 확인해 주세요.';return;}alive=false;typedWord.value='';mic.disabled=typedWord.disabled=typedPass.disabled=true;status.textContent='암호 확인! 선택한 문이 열립니다.';}
+ function end(restoreFocus=true){
+  const hadFocus=host.contains(document.activeElement);run++;clearTimeout(timer);timer=0;
+  if(recognizer){for(const key of ['onstart','onaudiostart','onspeechstart','onspeechend','onaudioend','onresult','onnomatch','onerror','onend'])recognizer[key]=null;try{recognizer.abort();}catch(e){}recognizer=null;}
+  voice.dataset.voiceState='idle';heardText.hidden=true;heardText.textContent='';cancel.hidden=true;mic.textContent='마이크 켜고 암호 말하기';mic.disabled=!selected||!acceptable(id,r,selected);
+  if(restoreFocus&&alive&&hadFocus&&!mic.disabled)mic.focus({preventScroll:true});
+ }
+ function problem(message,code=''){failure=true;end(false);diagnostic.hidden=!code;diagnostic.textContent=code?'진단 코드: '+String(code).replace(/[^a-z-]/g,'').slice(0,40):'';voice.dataset.voiceState='error';status.textContent=message+' 암호를 직접 입력해도 통과할 수 있어요.';assist.hidden=!selected||!acceptable(id,r,selected);if(alive&&!typedWord.disabled)typedWord.focus({preventScroll:true});}
+ function succeed(method){if(!alive||!selected||!acceptable(id,r,selected))return;end(false);if(pass(selected,method)===false){status.textContent='실물 활동 확인과 앞 활동을 먼저 마친 뒤 암호를 다시 확인해 주세요.';return;}alive=false;typedWord.value='';mic.disabled=typedWord.disabled=typedPass.disabled=true;status.textContent=id==='g3'?'암호 확인! 기억회로 제작대로 가는 문이 열립니다.':'암호 확인! 선택한 문이 열립니다.';}
  function submitTyped(){
   if(!alive||!selected||!acceptable(id,r,selected)){status.textContent='먼저 질문의 답을 올바르게 골라 주세요.';return;}
   end(false);const word=normalize(typedWord.value);
@@ -34,17 +50,52 @@ function mount(host,id,r,pass){
  typedWord.onkeydown=e=>{if(e.key!=='Enter')return;e.stopPropagation();if(e.isComposing||e.keyCode===229)return;e.preventDefault();submitTyped();};
  typedWord.oninput=()=>typedWord.setAttribute('aria-invalid','false');
  mic.onclick=()=>{
-  if(!selected||!acceptable(id,r,selected))return;end();const API=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!API){problem('이 브라우저는 음성 인식을 지원하지 않아요.');return;}
-  const token=run;let resultSeen=false;
+  if(!alive||!selected||!acceptable(id,r,selected))return;end(false);diagnostic.hidden=true;diagnostic.textContent='';const API=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(window.isSecureContext===false){problem('마이크는 HTTPS 주소 또는 이 기기의 로컬 서버에서 사용할 수 있어요. 공개 연구소 주소로 접속해 주세요.');return;}
+  if(!API){problem('이 브라우저는 음성 인식을 지원하지 않아요. Chrome 등 음성 인식을 지원하는 일반 브라우저에서 다시 열어 보세요.');return;}
+  const token=run;let ready=false,resultSeen=false;
+  const current=()=>alive&&token===run;
+  function listening(){
+   if(!current()||ready)return;ready=true;clearTimeout(timer);voice.dataset.voiceState='listening';mic.textContent='듣는 중…';status.textContent='지금 암호를 말해 주세요. 암호 뒤에 ‘입니다’를 붙여 말해도 돼요. 평소 말소리로 말한 뒤 잠깐 기다려 주세요.';
+   timer=setTimeout(()=>{if(current())problem('듣는 시간이 끝났어요. 안내가 나온 뒤 암호를 짧게 말하고 잠깐 기다려 주세요.');},15000);
+  }
   try{
-   recognizer=new API();recognizer.lang='ko-KR';recognizer.continuous=false;recognizer.interimResults=false;recognizer.maxAlternatives=3;
-   recognizer.onresult=e=>{if(!alive||token!==run)return;const result=e.results[e.resultIndex];if(!result?.isFinal)return;resultSeen=true;const heard=Array.from(result).map(a=>a.transcript);if(heard.some(s=>normalize(s)===normalize(codes[id]))){succeed('speech');}else{end();status.textContent='“'+String(heard[0]||'').slice(0,60)+'”로 들었어요. 진행자에게 받은 암호를 다시 말해 주세요.';}};
-   recognizer.onerror=e=>{if(!alive||token!==run)return;const messages={'not-allowed':'마이크 권한이 허용되지 않았어요. 주소창의 마이크 권한을 확인해 주세요.','service-not-allowed':'이 브라우저에서 음성 인식 서비스를 사용할 수 없어요.','audio-capture':'마이크를 찾지 못했어요. 연결 상태를 확인해 주세요.','network':'음성 인식 서비스에 연결되지 않았어요. 인터넷 연결을 확인해 주세요.','no-speech':'목소리가 들리지 않았어요. 마이크 가까이에서 다시 말해 주세요.','aborted':'듣기를 중지했어요.'};problem(messages[e.error]||'음성 인식을 완료하지 못했어요. 다시 시도해 주세요.');};
-   recognizer.onend=()=>{if(!alive||token!==run)return;if(!resultSeen)problem('암호를 듣지 못했어요. 다시 말하거나 진행자에게 확인받아 주세요.');};
-   recognizer.start();mic.disabled=true;mic.textContent='듣는 중…';cancel.hidden=false;cancel.focus({preventScroll:true});status.textContent='지금 암호를 말해 주세요. 조용하고 또렷하게 말해도 돼요.';
-   timer=setTimeout(()=>{if(alive&&token===run)problem('듣는 시간이 끝났어요. 다시 시도해 주세요.');},12000);
-  }catch(e){problem('마이크를 시작하지 못했어요. 권한을 확인하고 다시 시도해 주세요.');}
+   recognizer=new API();recognizer.lang='ko-KR';recognizer.continuous=false;recognizer.interimResults=true;recognizer.maxAlternatives=3;
+   recognizer.onstart=listening;recognizer.onaudiostart=listening;
+   recognizer.onspeechstart=()=>{if(current()){voice.dataset.voiceState='listening';status.textContent='목소리를 듣고 있어요. 암호를 말한 뒤 잠깐 기다려 주세요.';}};
+   recognizer.onspeechend=()=>{if(current()){voice.dataset.voiceState='recognizing';status.textContent='말한 암호를 확인하고 있어요. 잠깐 기다려 주세요.';}};
+   recognizer.onaudioend=()=>{if(current()){voice.dataset.voiceState='recognizing';mic.textContent='인식 결과 확인 중…';status.textContent='마이크 듣기를 마쳤어요. 인식 결과를 확인하고 있어요.';}};
+   recognizer.onresult=e=>{
+    if(!current())return;
+    for(let i=e.resultIndex;i<e.results.length;i++){
+     const result=e.results[i],heard=String(result?.[0]?.transcript||'');
+     if(!result?.isFinal){heardText.hidden=false;heardText.textContent='인식 중: “'+heard.slice(0,60)+'”';continue;}
+     resultSeen=true;
+     // Alternatives help recover short-word recognition mistakes; negatives never pass.
+     if(speechAccepted(result,codes[id],labels[selected==='L'?1:0])){succeed('speech');}
+     else{failure=true;end();assist.hidden=false;status.textContent='“'+heard.slice(0,60)+'”로 들었어요. 문장 대신 진행자에게 받은 암호만 짧게 말하거나 직접 입력해 주세요.';}
+     return;
+    }
+   };
+   recognizer.onnomatch=()=>{if(current())problem('목소리는 들었지만 단어를 구분하지 못했어요. 암호만 짧게 말해 주세요.');};
+   recognizer.onerror=e=>{
+    if(!current())return;
+    const messages={
+     'not-allowed':'마이크 권한이 허용되지 않았어요. 주소창의 마이크 허용 상태와 기기의 마이크 권한을 확인해 주세요.',
+     'service-not-allowed':'이 브라우저에서 음성 인식 서비스를 사용할 수 없어요. 앱 안의 창이라면 Chrome 등 일반 브라우저에서 같은 주소를 열어 보세요.',
+     'audio-capture':'마이크 입력을 시작하지 못했어요. 연결 상태와 기기에서 선택된 입력 마이크를 확인해 주세요.',
+     'network':'음성 인식 서비스에 연결되지 않았어요. 인터넷·학교망 제한을 확인하고, 앱 안의 창이라면 일반 브라우저에서도 시도해 보세요.',
+     'no-speech':'목소리가 감지되지 않았어요. 듣기 안내가 나온 뒤 마이크 가까이에서 또렷하게 말해 주세요.',
+     'language-not-supported':'이 브라우저의 인식 서비스에서 한국어를 사용할 수 없어요. 한국어 음성 인식을 지원하는 다른 브라우저에서 열어 보세요.',
+     'aborted':'음성 인식이 중단됐어요. 다시 시도해 주세요.'
+    };
+    problem(messages[e.error]||'음성 인식을 완료하지 못했어요. 다시 시도하거나 다른 일반 브라우저에서 열어 보세요.',e.error||'unknown');
+   };
+   recognizer.onend=()=>{if(current()&&!resultSeen)problem(ready?'인식 결과가 도착하지 않았어요. 듣기 안내 뒤에 암호만 짧게 말해 주세요.':'음성 인식 서비스가 준비되기 전에 종료됐어요. 브라우저 권한과 인터넷 연결을 확인해 주세요.');};
+   voice.dataset.voiceState='preparing';mic.disabled=true;mic.textContent='마이크 준비 중…';cancel.hidden=false;cancel.focus({preventScroll:true});status.textContent='마이크를 준비하고 있어요. 권한 안내가 뜨면 허용하고, 말하기 안내가 나올 때까지 기다려 주세요.';
+   timer=setTimeout(()=>{if(current())problem('마이크 준비가 오래 걸리고 있어요. 권한 요청을 확인하거나 일반 브라우저에서 다시 열어 보세요.');},20000);
+   recognizer.start();
+  }catch(e){problem(e?.name==='NotAllowedError'?'마이크 사용이 허용되지 않았어요. 브라우저와 기기의 마이크 권한을 확인해 주세요.':'마이크를 시작하지 못했어요. 다른 앱의 마이크 사용 여부와 브라우저 권한을 확인해 주세요.');}
  };
  cancel.onclick=()=>{end();status.textContent='듣기를 중지했어요.';};
  host.querySelector('#routeStaffPass').onclick=()=>{if(!failure)return;const heard=host.querySelector('#routeHeard'),word=host.querySelector('#routeStaffWord');if(!heard.checked){status.textContent='진행자가 참가자의 말을 직접 들은 뒤 확인해 주세요.';return;}if(normalize(word.value)!==normalize(codes[id])){status.textContent='설정된 암호와 달라요. 진행자가 확인해 주세요.';return;}word.value='';succeed('facilitator-heard');};
@@ -52,7 +103,7 @@ function mount(host,id,r,pass){
  cleanup=()=>{alive=false;end();document.removeEventListener('visibilitychange',hidden);};
 }
 function settings(host){
- const box=document.createElement('details');box.className='j-route-settings';box.innerHTML='<summary>진행자용 · 관문별 통과 암호</summary><p>행사에서 사용할 짧은 한국어 암호를 정하고, 실험 후 참가자에게 알려 주세요. 말하기와 직접 입력에 같은 암호가 적용되며, 이 기기에만 저장됩니다.</p><label class="j-field">사람 회로 암호<input data-code="g1" maxlength="24" autocomplete="off"></label><label class="j-field">정전기 암호<input data-code="g2" maxlength="24" autocomplete="off"></label><button type="button">암호 저장</button><p role="status"></p>';
+ const box=document.createElement('details');box.className='j-route-settings';box.innerHTML='<summary>진행자용 · 관문별 통과 암호</summary><p>행사에서 사용할 짧은 한국어 암호를 정하고, 실험 후 참가자에게 알려 주세요. 말하기와 직접 입력에 같은 암호가 적용되며, 이 기기에만 저장됩니다.</p><label class="j-field">사람 회로 암호<input data-code="g1" maxlength="24" autocomplete="off"></label><label class="j-field">정전기 암호<input data-code="g2" maxlength="24" autocomplete="off"></label><label class="j-field">플라즈마볼 암호<input data-code="g3" maxlength="24" autocomplete="off"></label><button type="button">암호 저장</button><p role="status"></p>';
  host.appendChild(box);box.querySelectorAll('input').forEach(el=>el.value=codes[el.dataset.code]);box.querySelector('button').onclick=()=>{const values={};for(const el of box.querySelectorAll('input')){const value=el.value.trim();if(!normalize(value)||value.length>24){box.querySelector('[role=status]').textContent='각 암호를 1~24자로 입력해 주세요.';return;}values[el.dataset.code]=value;}try{localStorage.setItem(KEY,JSON.stringify(values));codes=values;box.querySelector('[role=status]').textContent='이 기기에 암호를 저장했습니다.';}catch(e){box.querySelector('[role=status]').textContent='암호를 저장하지 못했습니다. 브라우저 저장 권한을 확인해 주세요.';}};
 }
 H.on('journey:close',stop);window.addEventListener('pagehide',stop);

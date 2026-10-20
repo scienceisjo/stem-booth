@@ -207,7 +207,7 @@
       const observed = ui.note('');
       d.ui = { near: near, far: far, position: position, reading: reading, observed: observed };
       ui.note('화면 속 형광등을 끌어도 움직여요. 관을 눕힌 채 긴 옆면과 볼 사이의 거리를 바꾸세요.');
-      ui.about('이 장치는 <b>거리의 차이</b>를 알아보는 개념 모형이에요. 화면의 거리와 밝기는 실제 측정값이 아니에요. 실제로는 플라즈마볼과 형광등의 종류, 손으로 잡은 위치, 주변 물체에 따라서 빛의 밝기와 켜지는 구간이 달라져요. 여기서는 관의 방향과 손 위치를 같게 둔 것으로 생각해요.');
+      ui.about('이 장치는 <b>거리의 차이</b>를 알아보는 개념 모형이에요. 화면의 거리와 밝기는 실제 측정값이 아니에요. 실제로는 플라즈마볼과 형광등의 종류, 주변 환경에 따라 밝기가 달라져요. 에너지스틱이 가까이에서 빛났던 단서를 떠올리며 형광등의 거리를 바꿔 보세요.');
       showResult(ctx, false);
     },
     exit: function (ctx) { ctx.device.ui = null; },
