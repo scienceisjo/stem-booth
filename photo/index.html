@@ -355,14 +355,14 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
     <div class="qr-card" id="qrCard">
       <div data-st="idle">
         <p class="t">휴대폰으로 받기</p>
-        <p class="d">QR을 만들면 사진이 학교 서버에 올라가요.<br>올린 사진은 <b class="delOn">10월 31일</b>에 모두 지워요.</p>
+        <p class="d">QR을 만들면 사진이 학교 서버에 올라가요.<br>올린 사진은 <b><span class="keepH">2시간</span> 뒤 저절로</b> 지워져요.</p>
         <button class="pill" id="qrBtn">QR 만들기</button>
       </div>
       <div data-st="busy" hidden><div class="spin"></div><p class="d">사진을 올리는 중…</p></div>
       <div data-st="done" hidden>
         <div id="qrBox"></div>
         <p class="t">휴대폰 카메라로 찍으세요</p>
-        <p class="d" style="margin-bottom:0">함께 찍은 친구도 같은 QR로 받을 수 있어요.<br><b class="delOn">10월 31일</b>까지 받을 수 있어요.</p>
+        <p class="d" style="margin-bottom:0">함께 찍은 친구도 같은 QR로 받을 수 있어요.<br><b><span class="keepH">2시간</span> 안에</b> 저장해 주세요.</p>
       </div>
       <div data-st="err" hidden>
         <p class="t">올리지 못했어요</p>
@@ -402,7 +402,7 @@ dialog::backdrop{background:rgba(0,0,0,.45)}
       </div>
       <p class="stat" id="srvStat" hidden></p>
     </div>
-    <p class="small">사진은 이 기기 메모리에만 있다가 「다음 사람」을 누르면 지워져요. QR을 만들 때만 서버(Supabase)에 올라가고, 목록은 아무도 볼 수 없어요(주소를 아는 사람만 받기).</p>
+    <p class="small">사진은 이 기기 메모리에만 있다가 「다음 사람」을 누르면 지워져요. QR을 만들 때만 서버(Supabase)에 올라가고, 목록은 아무도 볼 수 없어요(주소를 아는 사람만 받기). 올린 사진은 <span class="keepH">2시간</span> 뒤 서버가 저절로 지워요.</p>
     <div class="row" style="justify-content:flex-end"><button class="pill" id="dlgClose">닫기</button></div>
   </div>
 </dialog>
@@ -421,7 +421,7 @@ const SUPA = {
   folder: 'stem2026'
 };
 const PUBLIC_BASE = 'https://scienceisjo.github.io/stem-booth/photo/';
-const DELETE_ON = '10월 31일';
+const KEEP_HOURS = 2;   // 서버가 올린 지 이만큼 지난 사진을 지움(네컷_자동삭제.sql 의 interval 과 같게)
 const SETK = 'hnr.4cut.settings.v1';
 
 /* ───────────── 작은 도구 ───────────── */
@@ -1632,7 +1632,7 @@ $('#optSound').onclick = e => { CFG.sound = !CFG.sound; e.currentTarget.classLis
 $('#optDemo').onclick = e => { CFG.demo = !CFG.demo; e.currentTarget.classList.toggle('on', CFG.demo); saveCfg(); stopCamera(); if (cur === 'shoot') startCamera(); };
 $('#chkSrv').onclick = checkServer; $('#tstSrv').onclick = testUpload;
 $('#fsBtn').onclick = () => { const d = document; if (d.fullscreenElement) d.exitFullscreen(); else if (d.documentElement.requestFullscreen) d.documentElement.requestFullscreen().catch(() => {}); };
-$$('.delOn').forEach(b => b.textContent = DELETE_ON);
+$$('.keepH').forEach(b => b.textContent = KEEP_HOURS + '시간');
 let rsT; addEventListener('resize', () => { clearTimeout(rsT); rsT = setTimeout(() => { layoutStart(); layoutShoot(); layoutDeco(); layoutFinal(); }, 80); });
 document.addEventListener('contextmenu', e => { if (e.target.closest('.stage,.live,.gst')) e.preventDefault(); });
 

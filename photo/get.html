@@ -50,19 +50,19 @@ h1{font-size:40px;font-weight:600;line-height:1.1;letter-spacing:-.28px;margin:6
       <button class="pill ghost" id="share" hidden>공유하기</button>
     </div>
     <p class="hint" id="hint">저장이 안 되면 사진을 길게 눌러 「이미지 저장」을 고르세요.<br>카카오톡·네이버 앱에서 열었다면 사진을 길게 누르는 방법이 가장 쉬워요.</p>
-    <p class="note">이 사진은 <b id="del">10월 31일</b>에 서버에서 지워져요. 그 전에 저장해 주세요.</p>
+    <p class="note" id="note">이 사진은 올린 지 <b><span class="keepH">2시간</span></b>이 지나면 서버에서 저절로 지워져요. 그 전에 저장해 주세요.</p>
   </div>
   <div id="no" hidden>
     <p class="miss">사진을 찾지 못했어요</p>
-    <p class="hint">QR을 다시 찍어 보세요. 받을 수 있는 기간(<span class="delTxt">10월 31일</span>)이 지났다면 사진이 지워졌어요.</p>
+    <p class="hint">QR을 다시 찍어 보세요. 올린 지 <span class="keepH">2시간</span>이 지났다면 사진이 저절로 지워졌어요.</p>
   </div>
 </main>
 <footer id="app-credit" style="width:100%;box-sizing:border-box;margin:2.5rem 0 0;padding:14px 12px;text-align:center;font-size:12.5px;line-height:1.6;color:#8a8f98;font-family:system-ui,-apple-system,'Segoe UI','Malgun Gothic',sans-serif;border-top:1px solid rgba(128,128,128,.25);">© 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br><span style="font-size:11px;opacity:.85;">최종 업데이트: 2026-10-18</span></footer>
 <script>
 'use strict';
-const SUPA_URL = 'https://vbvtnmnodeoocbbjauap.supabase.co', BUCKET = 'hnr-4cut', FOLDER = 'stem2026', DELETE_ON = '10월 31일';
+const SUPA_URL = 'https://vbvtnmnodeoocbbjauap.supabase.co', BUCKET = 'hnr-4cut', FOLDER = 'stem2026', KEEP_HOURS = 2;   // 네컷_자동삭제.sql 과 같게
 const $ = s => document.querySelector(s);
-document.querySelectorAll('#del,.delTxt').forEach(e => e.textContent = DELETE_ON);
+document.querySelectorAll('.keepH').forEach(e => e.textContent = KEEP_HOURS + '시간');
 const id = (new URLSearchParams(location.search).get('id') || '').toLowerCase();
 const fail = () => { $('#ph').innerHTML = ''; $('#no').hidden = false; };
 if (!/^(test-)?[a-z0-9]{8,20}$/.test(id)) fail();
@@ -76,7 +76,16 @@ else {
     $('#ph').innerHTML = ''; $('#ph').appendChild(img); $('#ok').hidden = false;
     $('#dl').href = url + '?download=' + encodeURIComponent(name);
     // 공유 시트(아이폰은 여기서 「이미지 저장」 → 사진 앱)를 위해 파일을 미리 받아 둔다
-    fetch(url).then(r => r.ok ? r.blob() : Promise.reject(r.status)).then(b => {
+    fetch(url).then(r => {
+      if (!r.ok) return Promise.reject(r.status);
+      // 올린 시각(Last-Modified) + 2시간 = 지워지는 시각. 서버가 10분마다 지우므로 「쯤」
+      const lm = Date.parse(r.headers.get('last-modified') || '');
+      if (lm){
+        const t = new Date(lm + KEEP_HOURS * 3600e3).toLocaleString('ko-KR', {timeZone: 'Asia/Seoul', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'});
+        $('#note').innerHTML = `이 사진은 <b>${t}</b>쯤 서버에서 저절로 지워져요. 그 전에 저장해 주세요.`;
+      }
+      return r.blob();
+    }).then(b => {
       const f = new File([b], name, {type: 'image/jpeg'});
       if (navigator.canShare && navigator.canShare({files: [f]})){ file = f; $('#share').hidden = false; }
     }).catch(() => {});
