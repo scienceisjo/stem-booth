@@ -344,18 +344,107 @@ dialog::backdrop { background: #132d4b88; }
   #printArea .ticket-preview { background: #fff; border-color: #000; }
   #printArea .big-ticket, #printArea .time { color: #000; }
 }
+
+.cloud-banner {
+  margin: 14px auto 0;
+  width: min(1360px, calc(100% - 48px));
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #e7f2ff;
+  color: #0d347d;
+  border: 1px solid #aac8f3;
+  border-radius: 16px;
+  font-weight: 750;
+  font-size: .9rem;
+  line-height: 1.65;
+}
+.cloud-banner[hidden] { display: none; }
+.cloud-banner.cloud-warning { background: #fff0cd; border-color: #d6ac49; color: #563708; }
+.cloud-banner > div { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
+.cloud-banner small { font-size: .76rem; color: inherit; font-weight: 650; }
+.cloud-access {
+  max-width: 680px;
+  margin: 32px auto 48px;
+  padding: 38px;
+  background: #fff;
+  border: 1px solid #bacbf2;
+  border-radius: 28px;
+  box-shadow: 0 16px 40px #17377c0d;
+  color: #142b55;
+}
+.cloud-access > img { display: block; object-fit: contain; margin-bottom: 22px; }
+.cloud-access h1 { font-size: clamp(1.7rem, 4vw, 2.35rem); color: #102957; letter-spacing: -.045em; margin: 14px 0 18px; line-height: 1.25; }
+.cloud-access h2 { font-size: 1.05rem; margin: 0 0 10px; }
+.cloud-access p { color: #20375c; font-size: .98rem; line-height: 1.85; margin: 12px 0 20px; }
+.cloud-access a { display: inline-block; color: #1747dc; font-weight: 800; margin-top: 22px; text-decoration: underline; text-underline-offset: 4px; }
+.cloud-access > .button { display: block; width: 100%; margin-top: 14px; }
+.cloud-access .cloud-footnote { border: 1px solid #c5d5f2; background: #f1f6ff; padding: 14px 16px; font-size: .85rem; border-radius: 14px; margin-top: 24px; }
+.cloud-local-summary { background: #eef4ff; border: 1px solid #afc5eb; border-radius: 17px; padding: 20px; margin-top: 25px; }
+.cloud-local-summary p { margin: 5px 0; font-size: .9rem; }
+#cloudLoginForm { display: grid; gap: 12px; margin: 28px 0 5px; }
+#cloudLoginForm label { font-weight: 800; }
+#cloudLoginForm input { border: 1px solid #7897cb; border-radius: 12px; width: 100%; min-width: 0; padding: 13px 15px; color: #142b55; background: #fff; font: inherit; }
+#cloudLoginError { padding: 12px 15px; border: 1px solid #d49d9d; background: #fff0ef; color: #841f22; border-radius: 12px; }
+.team-time-link { border: 0; border-radius: 10px; padding: 5px 7px; margin: -5px -7px; background: transparent; color: #10357c; text-align: left; cursor: pointer; font: inherit; }
+.team-time-link span { display: block; margin-top: 5px; font-size: .75rem; font-weight: 800; color: #1747dc; }
+.team-time-link:hover, .team-time-link:focus-visible { background: #dce9ff; outline: 2px solid #1747dc; outline-offset: 3px; }
+[data-team-card] { cursor: pointer; }
+.person-name, .ticket-person-name { color: #102957; font-weight: 850; font-size: 1.1rem; overflow-wrap: anywhere; }
+.team-people-list { margin-top: 22px; }
+.team-people-list .person { grid-template-columns: auto 1fr auto; }
+.guest-rules { margin: 20px 0 28px; padding: 30px; border-radius: 26px; background: #1747dc; color: #fff; }
+.guest-rules .eyebrow { color: #fff; }
+.guest-rules h2 { color: #fff; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.04em; line-height: 1.4; margin: 10px 0 22px; }
+.guest-rules-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.guest-rules-grid p { margin: 0; padding: 18px 20px; background: #fff; border-radius: 16px; color: #12346d; text-align: left; }
+.guest-rules-grid strong { display: block; color: #0c2d68; font-size: 1.08rem; line-height: 1.5; margin-bottom: 7px; }
+.guest-rules-grid span { display: block; color: #203d6f; font-size: .9rem; line-height: 1.75; }
+.guest .cloud-banner { font-size: .96rem; }
+.guest .cloud-access { text-align: left; max-width: 820px; }
+@media (max-width: 760px) {
+  .cloud-banner { width: calc(100% - 28px); align-items: flex-start; flex-direction: column; gap: 7px; padding: 13px 15px; font-size: .82rem; }
+  .cloud-banner > div { justify-content: flex-start; flex-shrink: 1; }
+  .cloud-access { padding: 25px 22px; margin-top: 20px; border-radius: 22px; }
+  .cloud-access p { font-size: .92rem; }
+  .guest-rules { padding: 22px 18px; border-radius: 22px; }
+  .guest-rules-grid { grid-template-columns: 1fr; }
+  .guest-rules-grid p { padding: 15px 17px; }
+  .team-people-list .person { grid-template-columns: 1fr; }
+}
+@media print { .cloud-banner { display: none !important; } }
+@media print {
+  #printArea .ticket-preview { width: 90mm; max-width: 100%; margin: 0 auto; padding: 12px; break-inside: avoid; font-size: 11pt; line-height: 1.5; }
+  #printArea .ticket-preview > img { width: 42px; height: 42px; }
+  #printArea .big-ticket { font-size: 30pt; }
+  #printArea .time { font-size: 18pt; }
+  #printArea .receipt-qr { margin-top: 10px !important; padding: 10px !important; }
+  #printArea .receipt-qr a { width: 140px !important; margin: 8px auto !important; }
+  #printArea .receipt-qr p, #printArea .receipt-paper-note { font-size: 9pt !important; }
+  #printArea .receipt-paper-note { margin-top: 9px !important; padding: 9px !important; }
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">본문 바로가기</a>
 <header class="mast"><a class="brand" href="./" aria-label="HNR Tech Inc. 예약 사이트 처음으로"><img src="hnr-tech-mark.webp" alt="HNR Tech Inc. 해누리 엠블럼"><span>HNR Tech Inc.<small>2026 서울STEM축제 · 해누리중학교</small></span></a><div class="header-actions"><span id="saveState" class="state-label" role="status">기록 확인 중</span><a class="button secondary" href="../hub/">운영 허브</a><button id="displayButton" class="button secondary">손님용 화면 ↗</button></div></header>
 <div id="systemBanner" role="status" hidden></div>
+<div id="cloudBanner" class="cloud-banner" role="status" hidden></div>
 <div class="workbar"><div class="date-switch" role="group" aria-label="운영일 선택"><button data-date="2026-10-23">10월 23일 <span>금</span></button><button data-date="2026-10-24">10월 24일 <span>토</span></button></div><div class="workbar-actions"><button id="practiceButton" class="button quiet">연습 모드</button><span id="clock" class="clock"></span></div></div>
 <div id="practiceBanner" class="practice-strip" hidden><strong>연습 모드 · 실제 접수와 별도 저장</strong><label>연습 시각 <input id="practiceTime" type="time" value="10:05"></label><button id="exitPractice" class="button secondary small">실제 운영으로</button></div>
 <nav class="tabs" aria-label="업무 메뉴"><button data-tab="desk" aria-current="page">접수</button><button data-tab="people">입장·명단</button><button data-tab="schedule">시간표 조정</button><button data-tab="settings">운영·백업</button></nav>
 <main id="main" tabindex="-1"></main>
 <footer id="app-credit"><strong>HNR Tech Inc.</strong><span>2026 서울STEM축제 · 해누리중학교</span><span>© 2026 조승재 · 최종 업데이트 2026-10-21</span></footer>
 <dialog id="modal"><div id="modalBody"></div></dialog><div id="toast" role="status" hidden></div><div id="printArea"></div>
+<script>window.DeskCloudConfig = {
+  "enabled": true,
+  "url": "https://vbvtnmnodeoocbbjauap.supabase.co",
+  "publishableKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc",
+  "boothId": "hnr-stem-2026"
+};
+</script>
 <script>(function (root, factory) {
   'use strict';
   const api = factory();
@@ -404,11 +493,16 @@ dialog::backdrop { background: #132d4b88; }
     const entries = day.entries.filter(e => e.teamId === teamId && e.id !== exceptId && OCCUPIED.includes(e.status));
     const total = entries.length, reserved = entries.filter(e => e.kind === 'reservation').length;
     const available = Math.max(0, team.capacity - total);
-    return { total, reserved, active: entries.filter(e => e.status === 'active').length, done: entries.filter(e => e.status === 'done').length, available, reserveAvailable: Math.max(0, Math.min(available, team.reserveLimit - reserved)) };
+    return { total, reserved, active: entries.filter(e => e.status === 'active').length, done: entries.filter(e => e.status === 'done').length, available, reserveAvailable: Math.max(0, Math.min(available, team.reserveLimit - reserved, reservationQuota(day,team.roundId,exceptId).available)) };
+  }
+  function reservationQuota(day, roundId, exceptId) {
+    const teams=day.teams.filter(t=>t.roundId===roundId), ids=new Set(teams.map(t=>t.id));
+    const capacity=teams.reduce((n,t)=>n+t.capacity,0), limit=Math.floor(capacity/2);
+    const reserved=day.entries.filter(e=>e.id!==exceptId&&ids.has(e.teamId)&&e.kind==='reservation'&&OCCUPIED.includes(e.status)).length;
+    return {capacity,limit,reserved,available:Math.max(0,limit-reserved)};
   }
   function reservableRound(day, roundId) {
-    if (day.bookingMode === 'all') return true;
-    if (day.bookingMode === 'manual') return day.openRoundIds.includes(roundId);
+    // Legacy bookingMode values remain readable, but the festival only permits the next round.
     const ordered = day.rounds.slice().sort((a,b) => toMinutes(a.start) - toMinutes(b.start) || a.id.localeCompare(b.id));
     const current = ordered.findIndex(r => r.id === day.currentRoundId);
     return current >= 0 && ordered[current + 1] && ordered[current + 1].id === roundId;
@@ -433,7 +527,7 @@ dialog::backdrop { background: #132d4b88; }
       if (requireWindow && !reservableRound(day, round.id)) fail('현재 예약을 받는 회차가 아닙니다. 예약 가능 회차 설정을 확인해 주세요.');
       if (n.reserveAvailable < 1) fail('예약 정원이 찼습니다. 현장 자리와 예약 자리는 따로 관리합니다.');
     } else if (Date.parse(now) < Date.parse(scheduledAt(day.date, team.start))) {
-      const unclaimedReserved = Math.max(0, team.reserveLimit - n.reserved);
+      const unclaimedReserved = n.reserveAvailable;
       if (n.available <= unclaimedReserved) fail('남은 자리는 예약용입니다. 예약 정원을 조정하거나 팀 시작 시각 이후 다시 배정해 주세요.');
     }
     return team;
@@ -461,6 +555,7 @@ dialog::backdrop { background: #132d4b88; }
     if (state.schema !== 1) fail('지원하지 않는 저장 자료 버전입니다.');
     integer(state.revision, '수정 번호', Number.MAX_SAFE_INTEGER);
     shape(state.days, DATES, '운영일');
+    const receiptTokens=new Set();
     DATES.forEach(date => {
       const day = state.days[date];
       shape(day, ['date','paused','currentRoundId','bookingMode','openRoundIds','counter','rounds','teams','breaks','entries','log'], '운영일 자료');
@@ -480,13 +575,18 @@ dialog::backdrop { background: #132d4b88; }
       day.breaks.forEach(b => { shape(b,['id','label','start','end'],'휴식'); unique(b.id,'휴식 번호'); text(b.label,'휴식 이름'); interval(b,'휴식'); });
       const teams = new Set(day.teams.map(t => t.id)), tickets = new Set(), requests = new Set();
       day.entries.forEach(e => {
-        shape(e,['id','ticket','kind','teamId','age','status','promisedStart','registeredAt','arrivedAt','actualStart','actualEnd'],'접수 기록',['requestId']);
+        shape(e,['id','ticket','kind','teamId','age','status','promisedStart','registeredAt','arrivedAt','actualStart','actualEnd'],'접수 기록',['requestId','name','receiptToken']);
         unique(e.id,'접수 번호');
         if (typeof e.ticket !== 'string' || !new RegExp('^' + date.slice(8) + '-[0-9]{3,6}$').test(e.ticket)) fail('번호표 형식을 확인해 주세요.');
         const serial = Number(e.ticket.slice(3));
         if (serial < 1 || serial > day.counter || tickets.has(serial)) fail('접수 누적 번호 또는 중복 번호표를 확인해 주세요.'); tickets.add(serial);
         if (!KINDS.includes(e.kind) || !STATUS.includes(e.status)) fail('접수 유형 또는 상태를 확인해 주세요.');
         text(e.age,'연령대',40);
+        if(e.name!=null) text(e.name,'참가자 이름',40);
+        if(e.receiptToken!=null) {
+          if(typeof e.receiptToken!=='string'||!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(e.receiptToken)||receiptTokens.has(e.receiptToken.toLowerCase())) fail('예약 확인증 식별자를 확인해 주세요.');
+          receiptTokens.add(e.receiptToken.toLowerCase());
+        }
         if (e.teamId !== null && !teams.has(e.teamId)) fail('접수에 연결된 팀이 없습니다.');
         if (e.teamId === null && (e.kind !== 'wait' || ['booked','active','done'].includes(e.status))) fail('이 접수 상태에는 팀 배정이 필요합니다.');
         stamp(e.registeredAt,'접수 시각');
@@ -540,6 +640,8 @@ dialog::backdrop { background: #132d4b88; }
         else if (action.teamId != null) fail('대기는 먼저 등록한 뒤 빈 팀에 배정해 주세요.');
         day.counter++;
         const entry = { id: day.date + '-e' + day.counter, ticket: day.date.slice(8) + '-' + String(day.counter).padStart(3,'0'), kind: action.kind, teamId: team ? team.id : null, age, status: action.kind === 'reservation' ? 'booked' : 'arrived', promisedStart: team ? scheduledAt(day.date,team.start) : null, registeredAt: now, arrivedAt: action.kind === 'reservation' ? null : now, actualStart: null, actualEnd: null, requestId: action.requestId || null };
+        if(action.name!=null) entry.name=String(action.name).trim();
+        if(action.receiptToken!=null) entry.receiptToken=action.receiptToken;
         day.entries.push(entry); message = entry.ticket + ' ' + ({ reservation:'예약',walkin:'현장 접수',wait:'대기 등록' }[action.kind]); break;
       }
       case 'STATUS': {
@@ -606,7 +708,384 @@ dialog::backdrop { background: #132d4b88; }
     validate(next);
     return next;
   }
-  return Object.freeze({ initialState, apply, counts, canReserve, conflicts, validate, toMinutes });
+  return Object.freeze({ initialState, apply, counts, reservationQuota, canReserve, conflicts, validate, toMinutes });
+});
+</script>
+<script>(function (root, factory) {
+  'use strict';
+  const api = factory(root);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  if (root) root.DeskCloud = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (root) {
+  'use strict';
+  const MESSAGES = {
+    network: '공유 서버에 연결하지 못했습니다. 연결을 확인해 주세요.',
+    timeout: '서버 응답을 기다리는 시간이 길어지고 있습니다.',
+    unauthorized: '운영자 로그인이 필요합니다. 다시 로그인해 주세요.',
+    invalid_code: '운영자 코드를 확인해 주세요.',
+    locked: '로그인 시도가 많습니다. 잠시 후 다시 시도해 주세요.',
+    not_configured: '공유 접수 설정이 아직 준비되지 않았습니다.',
+    setup_required: '공유 접수 데이터베이스 설정이 필요합니다.',
+    invalid_state: '저장할 명단 형식을 확인해 주세요.',
+    invalid_response: '공유 서버의 응답을 확인하지 못했습니다.',
+    conflict: '다른 기기에서 먼저 변경했습니다. 최신 명단을 확인한 뒤 다시 진행해 주세요.',
+    pending: '앞선 저장 결과를 확인하고 있습니다. 같은 접수를 다시 입력하지 마세요.',
+    pending_invalid: '이 탭에 확인이 필요한 저장 기록이 있습니다. 창을 유지하고 담당 교사에게 알려 주세요.',
+    storage_unavailable: '이 브라우저에 안전한 저장 기록을 남길 수 없습니다. 저장소 사용 설정을 확인해 주세요.',
+    busy: '다른 동기화가 진행 중입니다. 잠시 후 다시 시도해 주세요.',
+    stopped: '공유 연결이 중지되었습니다.',
+    readonly: '손님 화면에서는 접수 정보를 수정할 수 없습니다.',
+    invalid_config: '공유 접수 연결 설정을 확인해 주세요.'
+  };
+  const normalized = code => Object.assign(new Error(MESSAGES[code] || MESSAGES.network), { code });
+  const clone = value => JSON.parse(JSON.stringify(value));
+  const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  const revisionOK = n => Number.isSafeInteger(n) && n >= 0;
+  const uuidOK = s => typeof s === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+  function create(config, options) {
+    options = options || {};
+    const env = options.env || {}, guest = !!options.guest;
+    const fetcher = env.fetch || (root.fetch && root.fetch.bind(root));
+    const clock = env.now || (() => Date.now());
+    const later = env.setTimeout || root.setTimeout.bind(root), cancel = env.clearTimeout || root.clearTimeout.bind(root);
+    const doc = env.document === undefined ? root.document : env.document;
+    const events = env.events === undefined ? root : env.events;
+    const crypto = env.crypto || root.crypto;
+    const Abort = env.AbortController || root.AbortController;
+    const onState = typeof options.onState === 'function' ? options.onState : () => {};
+    const onStatus = typeof options.onStatus === 'function' ? options.onStatus : () => {};
+    const timeoutMs = Number.isFinite(env.timeoutMs) ? Math.max(10, env.timeoutMs) : 12000;
+    if (!config || typeof config.url !== 'string' || !/^https:\/\/[^/]+\/?$/.test(config.url) ||
+        typeof config.publishableKey !== 'string' || !config.publishableKey ||
+        typeof config.boothId !== 'string' || !/^[A-Za-z0-9_-]{1,100}$/.test(config.boothId) || !fetcher || !Abort) throw normalized('invalid_config');
+    const base = config.url.replace(/\/$/, '') + '/rest/v1/rpc/';
+    const prefix = 'hnr-desk-cloud-v1:' + config.url.replace(/\/$/, '') + ':' + config.boothId + ':';
+    const authKey = prefix + 'auth', pendingKey = prefix + 'pending';
+    let storage;
+    try { storage = env.storage === undefined ? root.sessionStorage : env.storage; } catch (_) { storage = null; }
+    let running = false, epoch = 0, token = null, expires = 0, phase = 'connecting';
+    let revision = null, lastSync = null, haveSnapshot = false, snapshot = null;
+    let pending = null, badPending = false, syncBusy = false, saveBusy = false, loginBusy = false;
+    let pollTimer = null, expiryTimer = null, lastStatus = '', refreshPromise = null;
+    const controllers = new Set();
+    const authenticated = () => !guest && !!token && expires > clock();
+    function status() {
+      return { phase, revision, lastSync, authenticated: authenticated(),
+        canWrite: running && authenticated() && !pending && !badPending && !syncBusy && !saveBusy && !loginBusy && (phase === 'ready' || phase === 'uninitialized'),
+        pending: !!pending || badPending };
+    }
+    function emit(next) {
+      if (next) phase = next;
+      const s = status(), text = JSON.stringify(s);
+      if (text !== lastStatus) { lastStatus = text; onStatus(s); }
+    }
+    function storeGet(key) {
+      if (!storage) throw normalized('storage_unavailable');
+      try { return storage.getItem(key); } catch (_) { throw normalized('storage_unavailable'); }
+    }
+    function storeSet(key, value) {
+      if (!storage) throw normalized('storage_unavailable');
+      try { storage.setItem(key, value); if (storage.getItem(key) !== value) throw new Error(); }
+      catch (_) { throw normalized('storage_unavailable'); }
+    }
+    function storeRemove(key) {
+      if (!storage) throw normalized('storage_unavailable');
+      try { storage.removeItem(key); if (storage.getItem(key) !== null) throw new Error(); }
+      catch (_) { throw normalized('storage_unavailable'); }
+    }
+    function abortRequests() { for (const c of controllers) c.abort(); }
+    function validRun(id) { if (!running || epoch !== id) throw normalized('stopped'); }
+    function armExpiry() {
+      if (expiryTimer !== null) cancel(expiryTimer);
+      expiryTimer = null;
+      if (running && token) expiryTimer = later(expireIfNeeded, Math.max(1, expires - clock()));
+    }
+    function loseAuth() {
+      token = null; expires = 0; epoch++; abortRequests();
+      if (expiryTimer !== null) cancel(expiryTimer);
+      expiryTimer = null;
+      try { storeRemove(authKey); } catch (_) { /* Expired credentials are never reused in memory. */ }
+      emit('login_required');
+    }
+    function expireIfNeeded() {
+      if (token && expires <= clock()) { loseAuth(); return true; }
+      if (token) armExpiry();
+      return false;
+    }
+    function requireAuth() {
+      if (!authenticated()) { if (token) loseAuth(); else emit('login_required'); throw normalized('unauthorized'); }
+    }
+    function newUUID() {
+      if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+      if (!crypto || !crypto.getRandomValues) throw normalized('invalid_config');
+      const b = crypto.getRandomValues(new Uint8Array(16)); b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+      const h = Array.from(b, n => n.toString(16).padStart(2, '0')).join('');
+      return h.slice(0, 8)+'-'+h.slice(8, 12)+'-'+h.slice(12, 16)+'-'+h.slice(16, 20)+'-'+h.slice(20);
+    }
+    function loadSession() {
+      const saved = storeGet(authKey), queued = storeGet(pendingKey);
+      if (saved) {
+        let a; try { a = JSON.parse(saved); } catch (_) { a = null; }
+        if (a && typeof a.token === 'string' && a.token && Number.isFinite(Date.parse(a.expires_at)) && Date.parse(a.expires_at) > clock()) {
+          token = a.token; expires = Date.parse(a.expires_at); armExpiry();
+        } else storeRemove(authKey);
+      }
+      if (queued) {
+        let p; try { p = JSON.parse(queued); } catch (_) { p = null; }
+        if (!p || p.version !== 1 || !uuidOK(p.operationId) || !revisionOK(p.expectedRevision) || !object(p.state)) {
+          badPending = true; throw normalized('pending_invalid');
+        }
+        pending = p;
+      }
+    }
+    async function rpc(name, data, id) {
+      validRun(id);
+      const controller = new Abort(); controllers.add(controller);
+      let timedOut = false, abortListener;
+      const timer = later(() => { timedOut = true; controller.abort(); }, timeoutMs);
+      try {
+        const aborted = new Promise((_, reject) => {
+          abortListener = () => { cancel(timer); reject(normalized('network')); };
+          controller.signal.addEventListener('abort', abortListener, { once: true });
+        });
+        // Bound both the network request and response decoding, even if a fetch
+        // implementation does not settle promptly after AbortController.abort().
+        const request = (async () => {
+          const response = await fetcher(base + name, {
+            method: 'POST', credentials: 'omit', cache: 'no-store', signal: controller.signal,
+            headers: { 'Content-Type': 'application/json', apikey: config.publishableKey, Authorization: 'Bearer ' + config.publishableKey },
+            body: JSON.stringify({ p_booth_id: config.boothId, ...data })
+          });
+          let body; try { body = await response.json(); } catch (_) { throw normalized('invalid_response'); }
+          return { response, body };
+        })();
+        const { response, body } = await Promise.race([request, aborted]);
+        validRun(id);
+        if (!response.ok) {
+          if (response.status === 404 || body && ['PGRST202', '42883'].includes(body.code)) throw normalized('setup_required');
+          if ([401, 403].includes(response.status)) throw normalized('unauthorized');
+          throw normalized('network');
+        }
+        if (!object(body) || typeof body.ok !== 'boolean') throw normalized('invalid_response');
+        return body;
+      } catch (e) {
+        if (!running || epoch !== id) throw normalized('stopped');
+        if (timedOut) throw normalized('timeout');
+        if (e && MESSAGES[e.code]) throw e;
+        throw normalized('network');
+      } finally { cancel(timer); controller.signal.removeEventListener('abort', abortListener); controllers.delete(controller); }
+    }
+    function accept(envelope) {
+      if (!revisionOK(envelope.revision) || !('state' in envelope) || (envelope.state !== null && !object(envelope.state))) throw normalized('invalid_response');
+      // An old read must never roll back a newer acknowledged write.
+      if (revision !== null && envelope.revision < revision) return false;
+      const changed = !haveSnapshot || envelope.revision !== revision;
+      revision = envelope.revision; lastSync = new Date(clock()).toISOString(); haveSnapshot = true;
+      snapshot = { ok: true, revision, state: envelope.state, updated_at: envelope.updated_at || null };
+      if (changed) onState(clone(snapshot));
+      return true;
+    }
+    function settledPhase() { return snapshot && snapshot.state !== null ? 'ready' : 'uninitialized'; }
+    function handleFailure(e) {
+      if (e.code === 'stopped') return;
+      if (e.code === 'unauthorized') { if (!guest) loseAuth(); else emit('error'); }
+      else if (e.code === 'setup_required' || e.code === 'not_configured') emit('setup_required');
+      else if (e.code === 'storage_unavailable' || e.code === 'pending_invalid' || e.code === 'invalid_state') emit('error');
+      else emit(pending ? 'recovering' : 'offline');
+    }
+    function checkEnvelope(result) {
+      if (result.ok) return;
+      throw normalized(MESSAGES[result.code] ? result.code : 'invalid_response');
+    }
+    function clearPending() {
+      // Clear durable evidence only after the server has given a definitive answer.
+      storeRemove(pendingKey); pending = null;
+    }
+    async function resolvePending(id, attempts, initialSave) {
+      requireAuth(); emit(initialSave ? 'saving' : 'recovering');
+      for (let i = 0; i < attempts; i++) {
+        const op = pending;
+        if (!op) throw normalized('invalid_response');
+        try {
+          const result = await rpc('hnr_desk_save', { p_token: token, p_expected_revision: op.expectedRevision,
+            p_operation_id: op.operationId, p_state: op.state }, id);
+          validRun(id);
+          if (result.ok || result.code === 'conflict') {
+            accept(result); clearPending();
+            emit(settledPhase());
+            if (!result.ok) throw normalized('conflict');
+            return result;
+          }
+          if (result.code === 'invalid_state') clearPending();
+          checkEnvelope(result);
+        } catch (e) {
+          if (e.code === 'conflict') throw e;
+          if (['stopped', 'unauthorized', 'invalid_state', 'storage_unavailable', 'setup_required'].includes(e.code)) { handleFailure(e); throw e; }
+          if (i + 1 === attempts) { handleFailure(e); throw normalized('pending'); }
+          // A lost reply may hide a successful write. Repeat exactly the same operation.
+          emit('recovering');
+        }
+      }
+    }
+    function schedule() {
+      if (pollTimer !== null) cancel(pollTimer);
+      pollTimer = null;
+      if (running) pollTimer = later(() => { pollTimer = null; refresh(false).catch(() => {}); }, doc && doc.hidden ? 10000 : 3000);
+    }
+    async function sync(force) {
+      const id = epoch;
+      try {
+        if (!guest) requireAuth();
+        if (badPending) throw normalized('pending_invalid');
+        if (pending) return await resolvePending(id, 1);
+        if (!haveSnapshot || force) {
+          const result = await rpc(guest ? 'hnr_desk_public' : 'hnr_desk_read', guest ? {} : { p_token: token }, id);
+          checkEnvelope(result); accept(result); emit(settledPhase()); return result;
+        }
+        const signature = await rpc('hnr_desk_status', {}, id);
+        checkEnvelope(signature);
+        if (!revisionOK(signature.revision) || typeof signature.ready !== 'boolean') throw normalized('invalid_response');
+        if (signature.revision !== revision) {
+          const result = await rpc(guest ? 'hnr_desk_public' : 'hnr_desk_read', guest ? {} : { p_token: token }, id);
+          checkEnvelope(result); accept(result);
+        } else { lastSync = new Date(clock()).toISOString(); }
+        emit(settledPhase()); return snapshot && clone(snapshot);
+      } catch (e) { handleFailure(e); throw e; }
+    }
+    function refresh(force) {
+      if (!running) return Promise.reject(normalized('stopped'));
+      if (refreshPromise) return refreshPromise;
+      if (saveBusy || loginBusy) return Promise.reject(normalized('busy'));
+      syncBusy = true; emit();
+      refreshPromise = sync(force !== false).finally(() => { syncBusy = false; refreshPromise = null; emit(); schedule(); });
+      return refreshPromise;
+    }
+    const awaken = () => { if (running) { schedule(); refresh(true).catch(() => {}); } };
+    function listen(method) {
+      if (events && typeof events[method] === 'function') events[method]('online', awaken);
+      if (doc && typeof doc[method] === 'function') doc[method]('visibilitychange', awaken);
+    }
+    async function start() {
+      if (running) return refresh(true);
+      running = true; epoch++; listen('addEventListener'); emit('connecting');
+      try {
+        if (!guest) { loadSession(); if (!authenticated()) { emit('login_required'); schedule(); return { ok: false, code: 'unauthorized' }; } }
+        return await refresh(true);
+      } catch (e) { handleFailure(e); schedule(); throw e; }
+    }
+    async function login(code) {
+      if (guest) throw normalized('readonly');
+      if (!running) throw normalized('stopped');
+      if (saveBusy || syncBusy || loginBusy) throw normalized('busy');
+      if (typeof code !== 'string' || !code.trim()) return { ok: false, code: 'invalid_code' };
+      loginBusy = true; const id = epoch; emit('connecting');
+      try {
+        const result = await rpc('hnr_desk_login', { p_code: code.trim() }, id);
+        if (!result.ok) { emit(result.code === 'not_configured' ? 'setup_required' : 'login_required'); return { ok: false, code: MESSAGES[result.code] ? result.code : 'invalid_code' }; }
+        const expiry = Date.parse(result.expires_at);
+        if (typeof result.token !== 'string' || !result.token || !Number.isFinite(expiry) || expiry <= clock()) throw normalized('invalid_response');
+        storeSet(authKey, JSON.stringify({ token: result.token, expires_at: result.expires_at }));
+        token = result.token; expires = expiry; armExpiry();
+        await sync(true);
+        return { ok: true, expires_at: result.expires_at };
+      } catch (e) { handleFailure(e); throw e; }
+      finally { loginBusy = false; emit(); schedule(); }
+    }
+    async function save(nextState, expectedRevision) {
+      if (guest) throw normalized('readonly');
+      if (!running) throw normalized('stopped');
+      requireAuth();
+      if (pending || badPending) throw normalized('pending');
+      if (saveBusy || syncBusy || loginBusy) throw normalized('busy');
+      if (!status().canWrite) throw normalized('network');
+      if (!revisionOK(expectedRevision) || !object(nextState)) throw normalized('invalid_state');
+      if (expectedRevision !== revision) throw normalized('conflict');
+      let queued;
+      try { queued = { version: 1, operationId: newUUID(), expectedRevision, state: clone(nextState), createdAt: new Date(clock()).toISOString() }; }
+      catch (e) { throw normalized(e.code || 'invalid_state'); }
+      storeSet(pendingKey, JSON.stringify(queued)); pending = queued;
+      saveBusy = true; emit('saving');
+      try { return await resolvePending(epoch, 2, true); }
+      finally { saveBusy = false; emit(); schedule(); }
+    }
+    function logout() {
+      if (pending || badPending) throw normalized('pending');
+      epoch++; abortRequests(); token = null; expires = 0; revision = null; lastSync = null; haveSnapshot = false; snapshot = null;
+      if (expiryTimer !== null) cancel(expiryTimer); expiryTimer = null;
+      try { if (!guest) { storeRemove(authKey); storeRemove(pendingKey); } }
+      finally { emit('login_required'); schedule(); }
+    }
+    function stop() {
+      running = false; epoch++; abortRequests(); listen('removeEventListener');
+      if (pollTimer !== null) cancel(pollTimer); if (expiryTimer !== null) cancel(expiryTimer);
+      pollTimer = null; expiryTimer = null; emit();
+    }
+    return { start, login, logout, save, refresh: () => refresh(true), stop,
+      getStatus: () => { expireIfNeeded(); return status(); } };
+  }
+  return { create };
+});
+</script>
+<script>/*!
+ * qrcode-generator 1.4.4 | Copyright (c) 2009 Kazuhiko Arase
+ * https://github.com/kazuhikoarase/qrcode-generator
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(l=4*u+17),e(0,0),e(l-7,0),e(0,l-7),i(),o(),v(t,r),7<=u&&h(t),null==n&&(n=w(u,f,c)),d(n,r)}var u=t,f=y[r],g=null,l=0,n=null,c=[],s={},e=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||l<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||l<=r+n||(g[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},o=function(){for(var t=8;t<l-8;t+=1)null==g[t][6]&&(g[t][6]=t%2==0);for(var r=8;r<l-8;r+=1)null==g[6][r]&&(g[6][r]=r%2==0)},i=function(){for(var t=B.getPatternPosition(u),r=0;r<t.length;r+=1)for(var e=0;e<t.length;e+=1){var n=t[r],o=t[e];if(null==g[n][o])for(var i=-2;i<=2;i+=1)for(var a=-2;a<=2;a+=1)g[n+i][o+a]=-2==i||2==i||-2==a||2==a||0==i&&0==a}},h=function(t){for(var r=B.getBCHTypeNumber(u),e=0;e<18;e+=1){var n=!t&&1==(r>>e&1);g[Math.floor(e/3)][e%3+l-8-3]=n}for(e=0;e<18;e+=1){n=!t&&1==(r>>e&1);g[e%3+l-8-3][Math.floor(e/3)]=n}},v=function(t,r){for(var e=f<<3|r,n=B.getBCHTypeInfo(e),o=0;o<15;o+=1){var i=!t&&1==(n>>o&1);o<6?g[o][8]=i:o<8?g[o+1][8]=i:g[l-15+o][8]=i}for(o=0;o<15;o+=1){i=!t&&1==(n>>o&1);o<8?g[8][l-o-1]=i:o<9?g[8][15-o-1+1]=i:g[8][15-o-1]=i}g[l-8][8]=!t},d=function(t,r){for(var e=-1,n=l-1,o=7,i=0,a=B.getMaskFunction(r),u=l-1;0<u;u-=2)for(6==u&&(u-=1);;){for(var f=0;f<2;f+=1)if(null==g[n][u-f]){var c=!1;i<t.length&&(c=1==(t[i]>>>o&1)),a(n,u-f)&&(c=!c),g[n][u-f]=c,-1==(o-=1)&&(i+=1,o=7)}if((n+=e)<0||l<=n){n-=e,e=-e;break}}},w=function(t,r,e){for(var n=b.getRSBlocks(t,r),o=M(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=C(i[u],l.getLength()-1).mod(l);a[u]=new Array(l.getLength()-1);for(g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=0<=s?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};s.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=x(t);break;case"Alphanumeric":e=m(t);break;case"Byte":e=L(t);break;case"Kanji":e=D(t);break;default:throw"mode:"+r}c.push(e),n=null},s.isDark=function(t,r){if(t<0||l<=t||r<0||l<=r)throw t+","+r;return g[t][r]},s.getModuleCount=function(){return l},s.make=function(){if(u<1){for(var t=1;t<40;t++){for(var r=b.getRSBlocks(t,f),e=M(),n=0;n<c.length;n++){var o=c[n];e.put(o.getMode(),4),e.put(o.getLength(),B.getLengthInBits(o.getMode(),t)),o.write(e)}var i=0;for(n=0;n<r.length;n++)i+=r[n].dataCount;if(e.getLengthInBits()<=8*i)break}u=t}a(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){a(!0,e);var n=B.getLostPoint(s);(0==e||n<t)&&(t=n,r=e)}return r}())},s.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<s.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<s.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=s.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},s.createSvgTag=function(t,r,e,n){var o={};"object"==typeof t&&(t=(o=t).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,f,c=s.getModuleCount()*t+2*r,g="";for(f="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",g+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',g+=o.scalable?"":' width="'+c+'px" height="'+c+'px"',g+=' viewBox="0 0 '+c+" "+c+'" ',g+=' preserveAspectRatio="xMinYMin meet"',g+=n.text||e.text?' role="img" aria-labelledby="'+p([n.id,e.id].join(" ").trim())+'"':"",g+=">",g+=n.text?'<title id="'+p(n.id)+'">'+p(n.text)+"</title>":"",g+=e.text?'<description id="'+p(e.id)+'">'+p(e.text)+"</description>":"",g+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',g+='<path d="',a=0;a<s.getModuleCount();a+=1)for(u=a*t+r,i=0;i<s.getModuleCount();i+=1)s.isDark(a,i)&&(g+="M"+(i*t+r)+","+u+f);return g+='" stroke="transparent" fill="black"/>',g+="</svg>"},s.createDataURL=function(o,t){o=o||2,t=void 0===t?4*o:t;var r=s.getModuleCount()*o+2*t,i=t,a=r-t;return I(r,r,function(t,r){if(i<=t&&t<a&&i<=r&&r<a){var e=Math.floor((t-i)/o),n=Math.floor((r-i)/o);return s.isDark(n,e)?0:1}return 1})},s.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=s.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=s.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=p(e),o+='"'),o+="/>"};var p=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return s.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*s.getModuleCount()+2*t,u=t,f=a-t,c={"██":"█","█ ":"▀"," █":"▄","  ":" "},g={"██":"▀","█ ":"▀"," █":" ","  ":" "},l="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<f&&u<=r&&r<f&&s.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<f&&u<=r+1&&r+1<f&&s.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",l+=t<1&&f<=r+1?g[i]:c[i];l+="\n"}return a%2&&0<t?l.substring(0,l.length-a-1)+Array(1+a).join("▀"):l.substring(0,l.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=s.getModuleCount()*t+2*r,u=r,f=a-r,c=Array(t+1).join("██"),g=Array(t+1).join("  "),l="",h="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),h="",n=0;n<a;n+=1)i=1,u<=n&&n<f&&u<=e&&e<f&&s.isDark(o,Math.floor((n-u)/t))&&(i=0),h+=i?c:g;for(o=0;o<t;o+=1)l+=h+"\n"}return l.substring(0,l.length-1)},s.renderTo2dContext=function(t,r){r=r||2;for(var e=s.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=s.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},s}i.stringToBytes=(i.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,i.createStringToBytes=function(u,f){var i=function(){function t(){var t=r.read();if(-1==t)throw"eof";return t}for(var r=S(u),e=0,n={};;){var o=r.read();if(-1==o)break;var i=t(),a=t()<<8|t();n[String.fromCharCode(o<<8|i)]=a,e+=1}if(e!=f)throw e+" != "+f;return n}(),a="?".charCodeAt(0);return function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);if(n<128)r.push(n);else{var o=i[t.charAt(e)];"number"==typeof o?(255&o)==o?r.push(o):(r.push(o>>>8),r.push(255&o)):r.push(a)}}return r}};var r,t,a=1,u=2,o=4,f=8,y={L:1,M:0,Q:3,H:2},e=0,n=1,c=2,g=3,l=4,h=5,s=6,v=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],(t={}).getBCHTypeInfo=function(t){for(var r=t<<10;0<=d(r)-d(1335);)r^=1335<<d(r)-d(1335);return 21522^(t<<10|r)},t.getBCHTypeNumber=function(t){for(var r=t<<12;0<=d(r)-d(7973);)r^=7973<<d(r)-d(7973);return t<<12|r},t.getPatternPosition=function(t){return r[t-1]},t.getMaskFunction=function(t){switch(t){case e:return function(t,r){return(t+r)%2==0};case n:return function(t,r){return t%2==0};case c:return function(t,r){return r%3==0};case g:return function(t,r){return(t+r)%3==0};case l:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case h:return function(t,r){return t*r%2+t*r%3==0};case s:return function(t,r){return(t*r%2+t*r%3)%2==0};case v:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},t.getErrorCorrectPolynomial=function(t){for(var r=C([1],0),e=0;e<t;e+=1)r=r.multiply(C([1,w.gexp(e)],0));return r},t.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case o:case f:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case o:return 16;case f:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case o:return 16;case f:return 12;default:throw"mode:"+t}}},t.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);5<i&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},t);function d(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r}var w=function(){for(var r=new Array(256),e=new Array(256),t=0;t<8;t+=1)r[t]=1<<t;for(t=8;t<256;t+=1)r[t]=r[t-4]^r[t-5]^r[t-6]^r[t-8];for(t=0;t<255;t+=1)e[r[t]]=t;var n={glog:function(t){if(t<1)throw"glog("+t+")";return e[t]},gexp:function(t){for(;t<0;)t+=255;for(;256<=t;)t-=255;return r[t]}};return n}();function C(n,o){if(void 0===n.length)throw n.length+"/"+o;var r=function(){for(var t=0;t<n.length&&0==n[t];)t+=1;for(var r=new Array(n.length-t+o),e=0;e<n.length-t;e+=1)r[e]=n[e+t];return r}(),i={getAt:function(t){return r[t]},getLength:function(){return r.length},multiply:function(t){for(var r=new Array(i.getLength()+t.getLength()-1),e=0;e<i.getLength();e+=1)for(var n=0;n<t.getLength();n+=1)r[e+n]^=w.gexp(w.glog(i.getAt(e))+w.glog(t.getAt(n)));return C(r,0)},mod:function(t){if(i.getLength()-t.getLength()<0)return i;for(var r=w.glog(i.getAt(0))-w.glog(t.getAt(0)),e=new Array(i.getLength()),n=0;n<i.getLength();n+=1)e[n]=i.getAt(n);for(n=0;n<t.getLength();n+=1)e[n]^=w.gexp(w.glog(t.getAt(n))+r);return C(e,0).mod(t)}};return i}function p(){var e=[],o={writeByte:function(t){e.push(255&t)},writeShort:function(t){o.writeByte(t),o.writeByte(t>>>8)},writeBytes:function(t,r,e){r=r||0,e=e||t.length;for(var n=0;n<e;n+=1)o.writeByte(t[n+r])},writeString:function(t){for(var r=0;r<t.length;r+=1)o.writeByte(t.charCodeAt(r))},toByteArray:function(){return e},toString:function(){var t="";t+="[";for(var r=0;r<e.length;r+=1)0<r&&(t+=","),t+=e[r];return t+="]"}};return o}var k,A,b=(k=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],(A={}).getRSBlocks=function(t,r){var e=function(t,r){switch(r){case y.L:return k[4*(t-1)+0];case y.M:return k[4*(t-1)+1];case y.Q:return k[4*(t-1)+2];case y.H:return k[4*(t-1)+3];default:return}}(t,r);if(void 0===e)throw"bad rs block @ typeNumber:"+t+"/errorCorrectionLevel:"+r;for(var n,o,i=e.length/3,a=[],u=0;u<i;u+=1)for(var f=e[3*u+0],c=e[3*u+1],g=e[3*u+2],l=0;l<f;l+=1)a.push((n=g,o=void 0,(o={}).totalCount=c,o.dataCount=n,o));return a},A),M=function(){var e=[],n=0,o={getBuffer:function(){return e},getAt:function(t){var r=Math.floor(t/8);return 1==(e[r]>>>7-t%8&1)},put:function(t,r){for(var e=0;e<r;e+=1)o.putBit(1==(t>>>r-e-1&1))},getLengthInBits:function(){return n},putBit:function(t){var r=Math.floor(n/8);e.length<=r&&e.push(0),t&&(e[r]|=128>>>n%8),n+=1}};return o},x=function(t){var r=a,n=t,e={getMode:function(){return r},getLength:function(t){return n.length},write:function(t){for(var r=n,e=0;e+2<r.length;)t.put(o(r.substring(e,e+3)),10),e+=3;e<r.length&&(r.length-e==1?t.put(o(r.substring(e,e+1)),4):r.length-e==2&&t.put(o(r.substring(e,e+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return e},m=function(t){var r=u,n=t,e={getMode:function(){return r},getLength:function(t){return n.length},write:function(t){for(var r=n,e=0;e+1<r.length;)t.put(45*o(r.charAt(e))+o(r.charAt(e+1)),11),e+=2;e<r.length&&t.put(o(r.charAt(e)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return e},L=function(t){var r=o,e=i.stringToBytes(t),n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=0;r<e.length;r+=1)t.put(e[r],8)}};return n},D=function(t){var r=f,e=i.stringToBytesFuncs.SJIS;if(!e)throw"sjis not supported.";!function(){var t=e("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=e(t),n={getMode:function(){return r},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return n},S=function(t){var e=t,n=0,o=0,i=0,r={read:function(){for(;i<8;){if(n>=e.length){if(0==i)return-1;throw"unexpected end of file./"+i}var t=e.charAt(n);if(n+=1,"="==t)return i=0,-1;t.match(/^\s$/)||(o=o<<6|a(t.charCodeAt(0)),i+=6)}var r=o>>>i-8&255;return i-=8,r}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return r},I=function(t,r,e){for(var n=function(t,r){var n=t,o=r,l=new Array(t*r),e={setPixel:function(t,r,e){l[r*n+t]=e},write:function(t){t.writeString("GIF87a"),t.writeShort(n),t.writeShort(o),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(n),t.writeShort(o),t.writeByte(0);var r=i(2);t.writeByte(2);for(var e=0;255<r.length-e;)t.writeByte(255),t.writeBytes(r,e,255),e+=255;t.writeByte(r.length-e),t.writeBytes(r,e,r.length-e),t.writeByte(0),t.writeString(";")}},i=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,o=h(),i=0;i<r;i+=1)o.add(String.fromCharCode(i));o.add(String.fromCharCode(r)),o.add(String.fromCharCode(e));var a=p(),u=function(t){var e=t,n=0,o=0,r={write:function(t,r){if(t>>>r!=0)throw"length over";for(;8<=n+r;)e.writeByte(255&(t<<n|o)),r-=8-n,t>>>=8-n,n=o=0;o|=t<<n,n+=r},flush:function(){0<n&&e.writeByte(o)}};return r}(a);u.write(r,n);var f=0,c=String.fromCharCode(l[f]);for(f+=1;f<l.length;){var g=String.fromCharCode(l[f]);f+=1,o.contains(c+g)?c+=g:(u.write(o.indexOf(c),n),o.size()<4095&&(o.size()==1<<n&&(n+=1),o.add(c+g)),c=g)}return u.write(o.indexOf(c),n),u.write(e,n),u.flush(),a.toByteArray()},h=function(){var r={},e=0,n={add:function(t){if(n.contains(t))throw"dup key:"+t;r[t]=e,e+=1},size:function(){return e},indexOf:function(t){return r[t]},contains:function(t){return void 0!==r[t]}};return n};return e}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=p();n.write(a);for(var u=function(){function e(t){a+=String.fromCharCode(r(63&t))}var n=0,o=0,i=0,a="",t={},r=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return t.writeByte=function(t){for(n=n<<8|255&t,o+=8,i+=1;6<=o;)e(n>>>o-6),o-=6},t.flush=function(){if(0<o&&(e(n<<6-o),o=n=0),i%3!=0)for(var t=3-i%3,r=0;r<t;r+=1)a+="="},t.toString=function(){return a},t}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return i}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||57344<=n?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});
+
+(function (root, factory) {
+  'use strict';
+  const api = factory(root, typeof module === 'object' && module.exports ? require('./receipt-qr.min.js') : root.qrcode);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  if (root) root.DeskReceipt = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (root, makeQR) {
+  'use strict';
+  const escape = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  const validToken = value => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  function link(token, base) {
+    if (!validToken(token)) return null;
+    try {
+      const url = new URL('./receipt.html', base || root.location.href);
+      if (!['https:', 'http:'].includes(url.protocol)) return null;
+      url.search = ''; url.hash = token.toLowerCase();
+      return url.href;
+    } catch (_) { return null; }
+  }
+  function render(entry, date, options) {
+    options = options || {};
+    const fallback = '<div class="receipt-paper-note" style="margin:16px auto 0;padding:14px 16px;border:1px solid #a5b7db;border-radius:12px;background:#edf2ff;color:#132d4b;font-size:.9rem;line-height:1.65;text-align:left"><strong>휴대폰이 없어도 괜찮아요.</strong><br>종이 번호표를 받거나, '+(entry.name ? '<b>'+escape(entry.name)+'</b> 님의 ' : '')+'이름과 접수번호 <b>'+escape(entry.ticket)+'</b>를 기억해 주세요. 약속한 시각에 접수대에서 알려 주시면 확인해 드려요.</div>';
+    if (options.practice || !options.cloudMode) {
+      return '<div class="receipt-offline-note" style="margin-top:14px;padding:12px;border-radius:10px;background:#fff1ce;color:#553a12;line-height:1.6">'+(options.practice ? '연습 번호표예요. 실제 예약 확인용 QR은 표시하지 않아요.' : '이 번호표는 이 기기에서 관리해요. 온라인 확인용 QR은 표시하지 않아요.')+'</div>'+fallback;
+    }
+    const url = link(entry.receiptToken, options.baseURL);
+    if (!url || typeof makeQR !== 'function') return '<p style="color:#553a12;background:#fff1ce;border-radius:10px;padding:12px">온라인 확인용 QR이 없는 번호표예요. 접수번호로 확인해 주세요.</p>'+fallback;
+    let svg;
+    try {
+      const qr = makeQR(0, 'M'); qr.addData(url, 'Byte'); qr.make();
+      svg = qr.createSvgTag({ cellSize: 4, margin: 16, scalable: true })
+        .replace('<svg ', '<svg role="img" aria-label="본인 예약 확인용 QR" style="display:block;width:100%;height:auto" ');
+    }
+    catch (_) { return '<p style="color:#553a12;background:#fff1ce;border-radius:10px;padding:12px">QR을 표시하지 못했어요. 접수번호로 확인해 주세요.</p>'+fallback; }
+    return '<section class="receipt-qr" style="margin:20px auto 0;padding:20px 16px;border:2px solid #1747dc;border-radius:18px;background:#fff;color:#132d4b;text-align:center"><strong style="font-size:1.05rem">카메라로 찍으면 내 예약 확인증</strong><a href="'+escape(url)+'" target="_blank" rel="noopener noreferrer" aria-label="이 손님의 예약 확인증 새 창에서 열기" style="display:block;max-width:224px;margin:12px auto;background:white;aspect-ratio:1">'+svg+'</a><p style="margin:0;font-size:.85rem;line-height:1.6">휴대폰 기본 카메라로 QR을 비춰 주세요.<br>예약 시각·접수번호·현재 상태를 볼 수 있어요.</p><p style="margin:10px 0 0;font-size:.78rem;line-height:1.5;color:#1747dc">본인 확인증이므로 QR과 링크를 다른 사람에게 공유하지 마세요.</p></section>'+fallback;
+  }
+  return { render, link, validToken };
 });
 </script>
 <script>(function () {
@@ -615,9 +1094,13 @@ dialog::backdrop { background: #132d4b88; }
   const esc = x => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const params = new URLSearchParams(location.search), guest = params.get('display') === '1';
   let practice = params.get('practice') === '1', dayKey = params.get('date') === '2026-10-24' ? '2026-10-24' : '2026-10-23';
+  const cloudMode = !!(window.DeskCloudConfig && window.DeskCloudConfig.enabled) && !practice;
   let tab = ['desk','people','schedule','settings'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'desk';
   let kind = 'walkin', chosenTeam = '', age = '초등학생', query = '', filter = 'open', editable = false, readError = '', state, undoStack = [], releaseLock, registering = false;
   let toastTimer, offlineReady = false, selectedPracticeTime = '10:05', lastMinute = '';
+  let draftName='';
+  let cloud, cloudStatus = {phase:'connecting',revision:0,canWrite:false}, saving = false, loginBusy = false;
+  let renderedRevision = null, modalRevision = null, modalDate = null, deferredRender = false;
   const statuses = {booked:'예약',arrived:'도착',active:'체험 중',done:'완료',noshow:'미도착',cancelled:'취소'};
   const kinds = {reservation:'예약',walkin:'현장',wait:'현장 대기'};
   const occupied = e => !['cancelled','noshow'].includes(e.status);
@@ -631,8 +1114,8 @@ dialog::backdrop { background: #132d4b88; }
   const timeOf = iso => iso ? new Date(iso).toLocaleTimeString('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : '—';
   const dateLabel = () => dayKey === '2026-10-23' ? '10월 23일 금요일' : '10월 24일 토요일';
   const uid = prefix => prefix + '-' + crypto.randomUUID();
-  const disabled = () => !editable || !!readError || guest;
-  const attrDisabled = extra => disabled() || extra ? ' disabled' : '';
+  const disabled = () => !editable || !!readError || guest || saving || (cloudMode && !cloudStatus.canWrite);
+  const attrDisabled = extra => disabled() ? ' disabled'+(cloudMode&&!extra?' data-cloud-disabled="1"':'') : extra ? ' disabled' : '';
   const btn = (label, action, id, cls, extra) => '<button class="button ' + (cls || 'secondary small') + '" data-action="' + action + '"' + (id ? ' data-id="' + esc(id) + '"' : '') + attrDisabled(extra) + '>' + label + '</button>';
   function toast(message) { clearTimeout(toastTimer); $('#toast').textContent = message; $('#toast').hidden = false; toastTimer = setTimeout(() => { $('#toast').hidden = true; },4200); }
   function readStore() {
@@ -653,7 +1136,23 @@ dialog::backdrop { background: #132d4b88; }
     next.revision = previous.revision + 1;
     return next;
   }
-  function persist(next, newHistory) {
+  function editRevision() { return $('#modal').open ? modalRevision : renderedRevision; }
+  function assertFresh(expected) {
+    if (cloudMode && (expected !== (state ? state.revision : 0) || ($('#modal').open && modalDate !== dayKey)))
+      throw new Error('다른 운영 화면에서 기록이 바뀌었습니다. 이 창을 닫고 최신 내용을 확인한 뒤 다시 시도해 주세요.');
+  }
+  async function persist(next, newHistory, expected) {
+    if (cloudMode) {
+      if (disabled()) throw new Error('공유 연결을 확인하고 다시 시도해 주세요. 저장 중에는 새 작업을 시작할 수 없습니다.');
+      assertFresh(expected);
+      M.validate(next); saving=true; updateChrome();
+      try {
+        const result=await cloud.save(next,expected);
+        if (!result || !result.state) throw new Error('저장 결과를 확인하지 못했습니다. 연결 상태를 확인해 주세요.');
+        state=result.state; undoStack=result.revision===expected+1?newHistory:[]; readError=''; deferredRender=true;
+      } finally { saving=false; updateChrome(); }
+      return;
+    }
     if (!editable || guest) throw new Error('다른 접수 화면에서 편집 중입니다. 그 화면을 닫은 뒤 다시 열어 주세요.');
     if (!readError) {
       const current = readStore();
@@ -664,21 +1163,25 @@ dialog::backdrop { background: #132d4b88; }
     catch (e) { throw new Error('기기에 저장하지 못했습니다. 이 변경은 적용하지 않았습니다. 먼저 백업을 저장하고 기기 저장 공간을 확인해 주세요.'); }
     state = next; undoStack = newHistory; readError = ''; updateChrome();
   }
-  function commit(action) {
+  async function commit(action, expected=editRevision()) {
     if (disabled()) throw new Error('지금은 읽기 전용 화면입니다.');
+    assertFresh(expected);
     const next = M.apply(state,Object.assign({date:dayKey},action),now());
     if (next === state) return false;
-    persist(next,undoStack.concat([clone(state)]).slice(-10));
+    await persist(next,undoStack.concat([clone(state)]).slice(-10),expected);
     return true;
   }
   function undo() {
     if (!undoStack.length) return;
-    openConfirm('마지막 작업 되돌리기','마지막 접수·입장·설정 변경을 되돌립니다. 이미 발급한 접수번호는 다시 사용하지 않습니다.',() => {
+    openConfirm('마지막 작업 되돌리기','마지막 접수·입장·설정 변경을 되돌립니다. 이미 발급한 접수번호는 다시 사용하지 않습니다.',async () => {
+      assertFresh(editRevision());
+      if (!undoStack.length) throw new Error('다른 운영 화면에서 기록을 바꿔 되돌리기 기록을 비웠습니다. 최신 내용을 확인해 주세요.');
       const next = preserveCounters(clone(undoStack[undoStack.length-1]),state);
-      persist(next,undoStack.slice(0,-1)); render(); toast('마지막 작업을 되돌렸습니다.');
+      await persist(next,undoStack.slice(0,-1),editRevision()); render(); toast('마지막 작업을 되돌렸습니다.');
     });
   }
   async function acquire() {
+    if (cloudMode) { acquireCloud(); return; }
     loadStore(); render();
     if (guest) return;
     if (!navigator.locks) { editable=false; readError='이 브라우저에서는 편집 잠금을 사용할 수 없습니다. Chrome 또는 Edge에서 HTTPS나 로컬 서버 주소로 열어 주세요.'; render(); return; }
@@ -694,6 +1197,79 @@ dialog::backdrop { background: #132d4b88; }
       editable=false;
     }).catch(() => { editable=false; readError='접수 화면의 편집 잠금을 얻지 못했습니다. 새로고침해 주세요.'; render(); });
   }
+  function isEditing() {
+    return $('#modal').open || (document.activeElement && document.activeElement.matches('input,select,textarea,[contenteditable="true"]'));
+  }
+  function requestCloudRender() {
+    updateChrome();
+    if (saving || loginBusy || (!guest && isEditing())) { deferredRender=true; return; }
+    render();
+  }
+  function acquireCloud() {
+    editable=false; state=null; undoStack=[];
+    if (!window.DeskCloud) { cloudStatus={phase:'error',canWrite:false}; render(); return; }
+    cloud=window.DeskCloud.create(window.DeskCloudConfig,{
+      guest,
+      onState(envelope) {
+        const changed=!!state && state.revision!==envelope.revision;
+        state=envelope.state || null;
+        if (changed) undoStack=[];
+        requestCloudRender();
+      },
+      onStatus(status) {
+        const previousPhase=cloudStatus.phase;
+        cloudStatus=status; editable=!guest && !!status.authenticated;
+        if (status.phase==='login_required' && previousPhase!=='login_required') {
+          state=null; undoStack=[];
+          if ($('#modal').open && !saving) closeModal();
+        }
+        if(previousPhase!==status.phase)requestCloudRender();else updateChrome();
+      }
+    });
+    render(); cloud.start().catch(()=>{ cloudStatus=cloud.getStatus(); requestCloudRender(); });
+  }
+  function cloudMessage() {
+    const messages={connecting:'공유 기록에 연결하고 있어요.',login_required:'운영 코드를 입력하면 여러 기기에서 같은 기록을 사용할 수 있어요.',ready:'여러 기기에서 공유 중',uninitialized:guest?'운영 학생이 접수를 준비하고 있어요.':'공유할 시간표를 선택해 주세요.',offline:'인터넷 연결이 끊겼어요. 최신 인원과 저장 여부를 확인할 수 없습니다.',setup_required:'공유 접수 준비 중입니다. 담당 교사에게 알려 주세요.',saving:'공유 기록에 저장 중 · 확인될 때까지 기다려 주세요.',recovering:'앞서 보낸 저장 결과를 확인 중입니다. 다시 접수하지 마세요.',error:'공유 기록을 확인하지 못했습니다. 잠시 후 다시 연결해 주세요.'};
+    return messages[cloudStatus.phase] || '공유 연결 상태를 확인하고 있어요.';
+  }
+  function cloudAccessView() {
+    if (guest) return '<section class="cloud-access"><img src="hnr-tech-mark.webp" width="76" height="76" alt="HNR Tech Inc."><span class="eyebrow">HNR TECH INC. · 방문객 안내</span><h1>접수 안내를 준비하고 있어요</h1><p>'+esc(cloudMessage())+'</p><p class="note">참여 가능한 시각과 인원은 접수대에서 확인해 주세요.</p></section>'+guestRules()+guestNotices();
+    if (cloudStatus.phase==='login_required') return '<section class="cloud-access"><span class="eyebrow">HNR TECH INC. · 운영 학생</span><h1>함께 쓰는 접수 데스크</h1><p>담당 교사에게 받은 운영 코드를 입력해 주세요.<br>손님용 화면은 코드 없이 열 수 있어요.</p><form id="cloudLoginForm"><label for="cloudCode">운영 코드</label><input id="cloudCode" name="code" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" required maxlength="200"><button class="button" type="submit"'+(loginBusy?' disabled':'')+'>접수 데스크 연결</button><p id="cloudLoginError" role="alert" hidden></p></form><a href="?practice=1&amp;date='+esc(dayKey)+'">연습 모드에서 먼저 익혀 보기 →</a></section>';
+    if (cloudStatus.phase==='uninitialized' && cloudStatus.authenticated) {
+      let snapshot=null; try { if(localStorage.getItem(key())) snapshot=readStore().state; } catch (_) {}
+      return '<section class="cloud-access"><span class="eyebrow">처음 한 번만 준비해요</span><h1>공유 접수 시작하기</h1><p>앞으로 모든 운영 기기와 손님 화면이 같은 시간표를 사용해요.</p>'+(snapshot?'<div class="cloud-local-summary"><h2>현재 기기에 남아 있는 기록</h2>'+Object.keys(snapshot.days).map(d=>'<p>'+esc(d)+' · 접수 기록 <b>'+snapshot.days[d].entries.length+'건</b> · 팀 '+snapshot.days[d].teams.length+'개</p>').join('')+'</div><button class="button" data-cloud-init="local">현재 기기 기록으로 공유 시작</button>':'<p class="note">이 브라우저에 이전 실제 접수 기록이 없습니다.</p>')+'<button class="button secondary" data-cloud-init="empty">빈 시간표로 시작</button><p class="cloud-footnote">기존 기기 기록은 지우지 않습니다. 빈 시간표는 기본 운영 시간으로 시작하며 팀 수·시간·정원을 조정할 수 있어요.</p></section>';
+    }
+    return '<section class="cloud-access"><span class="eyebrow">HNR TECH INC.</span><h1>공유 접수 연결</h1><p>'+esc(cloudMessage())+'</p><button class="button secondary" data-cloud-refresh>다시 연결</button>'+(cloudStatus.phase==='setup_required'?'<a href="./setup.html">교사용 공유 접수 준비 →</a><br>':'')+'<a href="?practice=1&amp;date='+esc(dayKey)+'">연습 모드 열기 →</a></section>';
+  }
+  function initializeCloud(source) {
+    let initial;
+    try { initial=source==='local'?readStore().state:M.initialState(); M.validate(initial); }
+    catch (_) { toast('이 기기의 기록을 읽지 못했습니다. 기존 자료는 그대로 보관했습니다.'); return; }
+    const summary=Object.keys(initial.days).map(d=>'<li>'+esc(d)+' · 접수 '+initial.days[d].entries.length+'건 · 팀 '+initial.days[d].teams.length+'개</li>').join('');
+    confirmInModal('공유 시작 내용 확인','<p>아래 시간표와 기록을 모든 운영 기기에서 함께 사용합니다.</p><ul class="impact-list">'+summary+'</ul>',async()=>{
+      if (state || cloudStatus.revision!==0) throw new Error('다른 기기에서 이미 공유를 시작했습니다. 창을 닫고 최신 기록을 확인해 주세요.');
+      saving=true; updateChrome();
+      try { initial.revision=1; const result=await cloud.save(initial,0); state=result.state; undoStack=[]; }
+      finally { saving=false; updateChrome(); }
+      render(); toast('공유 접수를 시작했습니다.');
+    },'이 내용으로 공유 시작');
+  }
+  function updateWriteControls() {
+    if (!cloudMode) return;
+    const blocked=disabled();
+    document.querySelectorAll('[data-action],#main form button[type="submit"],#registerName,#registerTeam,#currentRound,#restoreFile,#confirmAction,#modal form button[type="submit"],#deleteTeam,#deleteRound').forEach(el=>{
+      if (el.dataset.action && ['ticket','backup','csv','practice','teamPeople'].includes(el.dataset.action)) return;
+      if (el.closest('#cloudLoginForm')) return;
+      if (['registerName','registerTeam'].includes(el.id) && document.activeElement===el && !saving && !cloudStatus.pending && editable) return;
+      if (el.id==='confirmAction' && cloudStatus.phase==='uninitialized' && cloudStatus.authenticated && !saving) return;
+      if (blocked && !el.disabled) {el.dataset.cloudDisabled='1';el.disabled=true;}
+      if (!blocked && el.dataset.cloudDisabled==='1') {el.disabled=false;delete el.dataset.cloudDisabled;}
+    });
+    document.querySelectorAll('[data-date],[data-kind],[data-close],[data-cloud-init]').forEach(el=>{
+      if (saving && !el.disabled) {el.dataset.cloudBusy='1';el.disabled=true;}
+      if (!saving && el.dataset.cloudBusy==='1') {el.disabled=false;delete el.dataset.cloudBusy;}
+    });
+  }
   function updateChrome() {
     document.body.classList.toggle('guest',guest);
     $('[data-date="2026-10-23"]').classList.toggle('selected',dayKey==='2026-10-23');
@@ -702,10 +1278,16 @@ dialog::backdrop { background: #132d4b88; }
     document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-current',b.dataset.tab===tab ? 'page':'false'));
     $('#practiceBanner').hidden=!practice || guest; $('#practiceTime').value=selectedPracticeTime;
     $('#practiceButton').hidden=practice;
-    const banner = readError || (!editable && !guest ? '읽기 전용 · 다른 탭이 접수를 담당하고 있습니다. 해당 탭을 닫은 뒤 이 화면을 새로고침하면 편집할 수 있습니다.' : '');
+    const banner = readError || (!cloudMode && !editable && !guest ? '읽기 전용 · 다른 탭이 접수를 담당하고 있습니다. 해당 탭을 닫은 뒤 이 화면을 새로고침하면 편집할 수 있습니다.' : '');
     $('#systemBanner').hidden=!banner; $('#systemBanner').textContent=banner;
-    $('#saveState').textContent=readError ? '저장 확인 필요' : guest ? '안내 화면' : editable ? (practice ? '연습 기록 저장' : '이 기기에 자동 저장') : '읽기 전용';
+    $('#saveState').textContent=cloudMode?(cloudStatus.phase==='ready'?'공유 기록 연결됨':saving?'공유 저장 중':'공유 연결 확인 중'):readError ? '저장 확인 필요' : guest ? '안내 화면' : editable ? (practice ? '연습 기록 저장' : '이 기기에 자동 저장') : '읽기 전용';
+    const cloudBanner=$('#cloudBanner');
+    if (cloudBanner) {
+      cloudBanner.hidden=!cloudMode;
+      if (cloudMode) { cloudBanner.classList.toggle('cloud-warning',!['ready','uninitialized'].includes(cloudStatus.phase)); cloudBanner.innerHTML='<span>'+esc(cloudMessage())+(deferredRender&&!saving&&state?' · 다른 기기의 변경을 받았습니다. 입력을 마치면 화면에 반영합니다.':'')+'</span><div>'+(cloudStatus.lastSync?'<small>마지막 확인 '+timeOf(cloudStatus.lastSync)+'</small>':'')+(!['ready','saving','recovering','connecting'].includes(cloudStatus.phase)?'<button class="button secondary small" data-cloud-refresh>다시 연결</button>':'')+(cloudStatus.authenticated&&!guest?'<button class="button quiet small" data-cloud-logout'+(saving?' disabled':'')+'>이 탭 연결 종료</button>':'')+'</div>'; }
+    }
     $('#clock').textContent=(practice?'연습 ':'현재 ') + timeOf(now());
+    updateWriteControls();
   }
   function setTab(next) { tab=next; history.replaceState(null,'','#'+next); render(); }
   function festivalHero() {
@@ -730,21 +1312,22 @@ dialog::backdrop { background: #132d4b88; }
   function teamCard(t, edit) {
     const n=M.counts(today(),t.id), r=today().rounds.find(x=>x.id===t.roundId);
     const warnings=M.conflicts(today()).filter(w=>w.teamId===t.id);
-    let out='<article class="team'+(chosenTeam===t.id?' selected-team':'')+'"><div class="row-between"><strong class="time">'+esc(t.start)+'–'+esc(t.end)+'</strong>'+occupancyTag(t)+'</div><p class="caption">'+esc(r.label)+' · '+esc(t.label)+' · '+(M.toMinutes(t.end)-M.toMinutes(t.start))+'분</p><div class="count-row"><span>접수 <b>'+n.total+'/'+t.capacity+'</b>명</span><span>예약 <b>'+n.reserved+'/'+t.reserveLimit+'</b>명</span></div><div class="seat-track" aria-hidden="true">'+Array.from({length:Math.min(t.capacity,20)},(_,i)=>'<span'+(i<n.total?' class="used"':'')+'></span>').join('')+'</div>';
+    let out='<article class="team'+(chosenTeam===t.id?' selected-team':'')+'" data-team-card="'+esc(t.id)+'"><div class="row-between"><button class="team-time-link" data-action="teamPeople" data-id="'+esc(t.id)+'" aria-label="'+esc(t.start)+' 입장 명단 보기"><strong class="time">'+esc(t.start)+'–'+esc(t.end)+'</strong><span>명단 보기 →</span></button>'+occupancyTag(t)+'</div><p class="caption">'+esc(r.label)+' · '+esc(t.label)+' · '+(M.toMinutes(t.end)-M.toMinutes(t.start))+'분</p><div class="count-row"><span>접수 <b>'+n.total+'/'+t.capacity+'</b>명</span><span>예약 <b>'+n.reserved+'/'+t.reserveLimit+'</b>명</span></div><div class="seat-track" aria-hidden="true">'+Array.from({length:Math.min(t.capacity,20)},(_,i)=>'<span'+(i<n.total?' class="used"':'')+'></span>').join('')+'</div>';
     if (edit) out+='<div class="actions">'+btn('시간·정원 수정','editTeam',t.id)+btn(t.closed?'접수 열기':'마감','toggleTeam',t.id,'quiet small')+'</div>';
-    else out+='<div class="actions">'+btn('현장 접수','pickWalkin',t.id,'secondary small',n.available===0||t.closed||r.closed||ended(t))+btn('예약','pickReservation',t.id,'secondary small',!M.canReserve(today(),t.id,now()))+'</div>';
+    else out+='<div class="actions">'+btn('현장 접수','pickWalkin',t.id,'secondary small',n.available===0||t.closed||r.closed||ended(t)||t.roundId!==today().currentRoundId)+btn('예약','pickReservation',t.id,'secondary small',!M.canReserve(today(),t.id,now()))+'</div>';
     if (edit) out+=warnings.map(w=>'<div class="note warn blank-space">'+esc(w.message)+'</div>').join('');
     return out+'</article>';
   }
   function optionsForTeams(mode,selected) {
     let teams=sortedTeams().filter(t=>!ended(t)&&!t.closed&&!today().rounds.find(r=>r.id===t.roundId).closed);
+    if(mode==='walkin') teams=teams.filter(t=>t.roundId===today().currentRoundId);
     if(mode==='reservation') teams=teams.filter(t=>M.canReserve(today(),t.id,now()));
-    if(!teams.some(t=>t.id===selected)) selected=(teams.find(t=>t.roundId===today().currentRoundId)||teams[0]||{}).id || '';
+    if(!teams.some(t=>t.id===selected)) selected=draftName&&selected?'':(teams.find(t=>t.roundId===today().currentRoundId)||teams[0]||{}).id || '';
     if(mode===kind) chosenTeam=selected;
     return '<option value="">팀을 선택해 주세요</option>'+teams.map(t=>{const r=today().rounds.find(x=>x.id===t.roundId),n=M.counts(today(),t.id);return '<option value="'+esc(t.id)+'"'+(selected===t.id?' selected':'')+'>'+esc(r.label)+' '+esc(t.start)+' · '+esc(t.label)+' / 남은 '+n.available+'명</option>';}).join('');
   }
   function registerPanel() {
-    return '<section class="panel"><h2>손님 접수</h2><p class="muted">본인이 방문했는지 확인하고 한 명씩 접수하세요.</p><div class="segmented" role="group" aria-label="접수 종류">'+['walkin','reservation','wait'].map(k=>'<button data-kind="'+k+'" class="'+(kind===k?'selected':'')+'" aria-pressed="'+(kind===k)+'">'+({walkin:'현장',reservation:'예약',wait:'대기'}[k])+'</button>').join('')+'</div><form id="registerForm">'+(kind!=='wait'?'<div class="field"><label for="registerTeam">입장할 팀</label><select id="registerTeam" name="teamId" required'+attrDisabled()+'>'+optionsForTeams(kind,chosenTeam)+'</select></div>':'<div class="note">대기 등록은 자리 확보가 아닙니다. 빈자리가 생기면 번호 순서대로 안내합니다.</div>')+'<div class="field"><label for="registerAge">참가자 연령대</label><select id="registerAge" name="age">'+['유아','초등학생','중학생','고등학생','성인','미선택'].map(a=>'<option'+(a===age?' selected':'')+'>'+esc(a)+'</option>').join('')+'</select></div>'+(kind==='reservation'?'<div class="note">번호표에 적힌 <b>실제 입장 시각</b>까지 돌아오도록 안내하세요.</div>':kind==='walkin'?'<div class="note">등록 후 입장·명단에서 체험 시작을 눌러 주세요.</div>':'')+'<button class="button full blank-space" type="submit"'+attrDisabled(today().paused||registering)+'>'+(kind==='wait'?'대기번호 발급':'1명 '+(kind==='reservation'?'예약':'접수')+' · 번호표 발급')+'</button></form><div class="assist">전화번호나 이름 없이 접수번호로 확인합니다.</div></section>';
+    return '<section class="panel"><h2>손님 접수</h2><p class="muted">체험할 학생이 직접 왔는지 확인하고 한 명씩 접수하세요.</p><div class="segmented" role="group" aria-label="접수 종류">'+['walkin','reservation','wait'].map(k=>'<button data-kind="'+k+'" class="'+(kind===k?'selected':'')+'" aria-pressed="'+(kind===k)+'">'+({walkin:'현장',reservation:'예약',wait:'대기'}[k])+'</button>').join('')+'</div><form id="registerForm"><div class="field"><label for="registerName">참가자 이름</label><input id="registerName" name="name" required maxlength="40" autocomplete="off" value="'+esc(draftName)+'" placeholder="체험하는 학생의 이름"'+attrDisabled()+'></div>'+(kind!=='wait'?'<div class="field"><label for="registerTeam">입장할 팀</label><select id="registerTeam" name="teamId" required'+attrDisabled()+'>'+optionsForTeams(kind,chosenTeam)+'</select></div>':'<div class="note">대기 등록은 자리 확보가 아닙니다. 빈자리가 생기면 번호 순서대로 안내합니다.</div>')+'<div class="field"><label for="registerAge">참가자 연령대</label><select id="registerAge" name="age">'+['유아','초등학생','중학생','고등학생','성인','미선택'].map(a=>'<option'+(a===age?' selected':'')+'>'+esc(a)+'</option>').join('')+'</select></div>'+(kind==='reservation'?'<div class="note">예약은 바로 다음 회차만, 회차 정원의 50% 이내로 받아요. 번호표의 <b>입장 시각</b>까지 돌아오도록 안내하세요.</div>':kind==='walkin'?'<div class="note">현장 접수는 현재 진행 회차만 받아요. 등록 후 입장·명단에서 체험 시작을 눌러 주세요.</div>':'')+'<button class="button full blank-space" type="submit"'+attrDisabled(today().paused||registering)+'>'+(kind==='wait'?'대기번호 발급':'1명 '+(kind==='reservation'?'예약':'접수')+' · 번호표 발급')+'</button></form><div class="assist">이름은 운영 명단과 본인 번호표에만 표시됩니다. 이름이 같으면 입장 시각과 접수번호를 함께 확인하세요.</div></section>';
   }
   function personRow(e, compact) {
     const t=teamBy(e.teamId), when=e.promisedStart?timeOf(e.promisedStart):'빈자리 발생 시 안내';
@@ -755,17 +1338,17 @@ dialog::backdrop { background: #132d4b88; }
     if(!compact && ['booked','arrived'].includes(e.status)) actions+=btn('팀 이동','assign',e.id)+btn('취소','cancel',e.id,'quiet small');
     if(!compact && e.status==='booked') actions+=btn('미도착','noshow',e.id,'quiet small',Date.parse(now())<Date.parse(e.promisedStart));
     actions+='<button class="button quiet small" data-action="ticket" data-id="'+esc(e.id)+'">번호표</button>';
-    return '<article class="person"><div><div class="ticket-number">'+esc(e.ticket)+'</div><span class="tag '+(e.status==='active'?'good':'')+'">'+(!e.teamId&&e.status==='arrived'?'현장 대기':statuses[e.status])+'</span></div><div class="details"><b>'+esc(when)+'</b>'+(t?' · '+esc(t.label):'')+'<br>'+esc(kinds[e.kind])+' · '+esc(e.age)+(e.actualStart?'<br>실제 '+timeOf(e.actualStart)+' 입장'+(e.actualEnd?' → '+timeOf(e.actualEnd)+' 완료':''):'')+'</div><div class="actions">'+actions+'</div></article>';
+    return '<article class="person"><div><div class="ticket-number">'+esc(e.ticket)+'</div><span class="tag '+(e.status==='active'?'good':'')+'">'+(!e.teamId&&e.status==='arrived'?'현장 대기':statuses[e.status])+'</span></div><div class="details"><strong class="person-name">'+esc(e.name||'이름 미등록')+'</strong><br><b>'+esc(when)+'</b>'+(t?' · '+esc(t.label):'')+'<br>'+esc(kinds[e.kind])+' · '+esc(e.age)+(e.actualStart?'<br>실제 '+timeOf(e.actualStart)+' 입장'+(e.actualEnd?' → '+timeOf(e.actualEnd)+' 완료':''):'')+'</div><div class="actions">'+actions+'</div></article>';
   }
   function empty(title,description) { return '<div class="empty"><b>'+title+'</b><p>'+description+'</p></div>'; }
   function deskView() {
     const d=today(), current=sortedTeams().filter(t=>t.roundId===d.currentRoundId), next=sortedTeams().filter(t=>M.canReserve(d,t.id,now()));
     const waiting=d.entries.filter(e=>['booked','arrived','active'].includes(e.status)).sort((a,b)=>(a.status==='active'?-1:0)-(b.status==='active'?-1:0)).slice(0,6);
-    return festivalHero()+pageHead('오늘의 접수','현재 팀과 다음 예약을 한 화면에서 확인하세요.',btn(d.paused?'접수 재개':'접수 잠시 중지','pause',null,d.paused?'':'secondary')+btn('되돌리기','undo',null,'secondary',!undoStack.length))+summary()+(d.paused?'<div class="note warn" style="margin-bottom:20px">접수를 잠시 멈췄습니다. 기존 손님의 도착·입장·완료 처리는 계속할 수 있습니다.</div>':'')+'<div class="desk-grid"><div>'+registerPanel()+'</div><div><section class="panel"><div class="section-head"><h2>지금 회차</h2><button class="button quiet small" data-nav="schedule">시간표 조정 →</button></div><div class="team-grid">'+(current.length?current.map(t=>teamCard(t,false)).join(''):empty('진행 회차를 선택하세요','상단에서 현재 회차를 지정할 수 있습니다.'))+'</div></section><section class="panel"><div class="section-head"><h2>예약 가능한 팀</h2><button class="button quiet small" data-nav="settings">예약 범위 설정 →</button></div><div class="team-grid">'+(next.length?next.map(t=>teamCard(t,false)).join(''):empty('현재 열려 있는 예약 자리가 없습니다','예약 정원과 예약 가능 회차를 확인하세요. 현장 접수 자리는 별도입니다.'))+'</div></section><section class="panel"><div class="section-head"><h2>도착·입장 확인</h2><button class="button quiet small" data-nav="people">전체 명단 →</button></div><div class="people-list">'+(waiting.length?waiting.map(e=>personRow(e,true)).join(''):empty('접수를 기다리고 있어요','발급한 번호가 이곳에 표시됩니다.'))+'</div></section></div></div>';
+    return festivalHero()+pageHead('오늘의 접수','현재 팀과 다음 예약을 한 화면에서 확인하세요.',btn(d.paused?'접수 재개':'접수 잠시 중지','pause',null,d.paused?'':'secondary')+btn('되돌리기','undo',null,'secondary',!undoStack.length))+summary()+(d.paused?'<div class="note warn" style="margin-bottom:20px">접수를 잠시 멈췄습니다. 기존 손님의 도착·입장·완료 처리는 계속할 수 있습니다.</div>':'')+'<div class="desk-grid"><div>'+registerPanel()+'</div><div><section class="panel"><div class="section-head"><h2>지금 회차</h2><button class="button quiet small" data-nav="schedule">시간표 조정 →</button></div><div class="team-grid">'+(current.length?current.map(t=>teamCard(t,false)).join(''):empty('진행 회차를 선택하세요','상단에서 현재 회차를 지정할 수 있습니다.'))+'</div></section><section class="panel"><div class="section-head"><h2>예약 가능한 팀</h2><button class="button quiet small" data-nav="settings">예약 운영 규칙 →</button></div><div class="team-grid">'+(next.length?next.map(t=>teamCard(t,false)).join(''):empty('현재 열려 있는 예약 자리가 없습니다','예약 정원과 예약 가능 회차를 확인하세요. 현장 접수 자리는 별도입니다.'))+'</div></section><section class="panel"><div class="section-head"><h2>도착·입장 확인</h2><button class="button quiet small" data-nav="people">전체 명단 →</button></div><div class="people-list">'+(waiting.length?waiting.map(e=>personRow(e,true)).join(''):empty('접수를 기다리고 있어요','발급한 번호가 이곳에 표시됩니다.'))+'</div></section></div></div>';
   }
   function peopleView() {
-    const entries=today().entries.filter(e=>(!query||e.ticket.includes(query))&&(filter==='all'||(filter==='open'?['booked','arrived','active'].includes(e.status):filter==='waiting'?e.teamId===null&&e.status==='arrived':e.status===filter)));
-    return pageHead('입장·명단','번호표를 확인하고 도착 → 체험 시작 → 완료 순서로 처리하세요.',btn('되돌리기','undo',null,'secondary',!undoStack.length)+'<button class="button secondary" data-action="csv">명단 CSV</button>')+'<div class="filters"><input id="searchPeople" aria-label="접수번호 검색" placeholder="접수번호 검색 · 예: 001" value="'+esc(query)+'"><select id="statusFilter" aria-label="상태 필터">'+Object.entries({open:'진행할 손님',all:'전체 기록',booked:'예약 · 도착 전',arrived:'도착',waiting:'배정 전 현장 대기',active:'체험 중',done:'완료',noshow:'미도착',cancelled:'취소'}).map(([v,label])=>'<option value="'+v+'"'+(filter===v?' selected':'')+'>'+label+'</option>').join('')+'</select><span class="tag">'+entries.length+'명</span></div><div id="peopleList" class="people-list">'+(entries.length?entries.map(e=>personRow(e,false)).join(''):empty('해당하는 기록이 없습니다','다른 상태나 접수번호로 확인해 보세요.'))+'</div>';
+    const entries=today().entries.filter(e=>(!query||e.ticket.includes(query)||(e.name||'').includes(query))&&(filter==='all'||(filter==='open'?['booked','arrived','active'].includes(e.status):filter==='waiting'?e.teamId===null&&e.status==='arrived':e.status===filter)));
+    return pageHead('입장·명단','이름·접수번호를 확인하세요. 이름이 같으면 입장 시각도 함께 확인해 주세요.',btn('되돌리기','undo',null,'secondary',!undoStack.length)+'<button class="button secondary" data-action="csv">명단 CSV</button>')+'<div class="filters"><input id="searchPeople" aria-label="이름 또는 접수번호 검색" placeholder="이름 또는 접수번호" value="'+esc(query)+'"><select id="statusFilter" aria-label="상태 필터">'+Object.entries({open:'진행할 손님',all:'전체 기록',booked:'예약 · 도착 전',arrived:'도착',waiting:'배정 전 현장 대기',active:'체험 중',done:'완료',noshow:'미도착',cancelled:'취소'}).map(([v,label])=>'<option value="'+v+'"'+(filter===v?' selected':'')+'>'+label+'</option>').join('')+'</select><span class="tag">'+entries.length+'명</span></div><div id="peopleList" class="people-list">'+(entries.length?entries.map(e=>personRow(e,false)).join(''):empty('해당하는 기록이 없습니다','다른 상태나 접수번호로 확인해 보세요.'))+'</div>';
   }
   function scheduleView() {
     const d=today(), warnings=M.conflicts(d);
@@ -776,13 +1359,15 @@ dialog::backdrop { background: #132d4b88; }
       sortedRounds().map(r=>'<section class="round"><div class="round-head"><div><h2>'+esc(r.label)+' <span class="tag">'+esc(r.start)+'–'+esc(r.end)+'</span>'+(r.id===d.currentRoundId?' <span class="tag good">진행 회차</span>':'')+'</h2><p>'+(r.closed?'회차 접수 마감':'팀별 시간과 예약 자리를 조정하세요.')+'</p></div><div class="actions">'+btn('팀 추가','addTeam',r.id)+btn('회차 수정','editRound',r.id)+btn('진행 회차로','current',r.id,'quiet small',r.id===d.currentRoundId)+'</div></div><div class="round-body"><div class="team-grid">'+(sortedTeams().filter(t=>t.roundId===r.id).map(t=>teamCard(t,true)).join('')||empty('편성된 팀이 없습니다','팀 추가로 시간을 정해 주세요.'))+'</div></div></section>').join('');
   }
   function settingsView() {
-    const d=today();
-    return pageHead('운영·백업','현재 선택한 날짜에만 설정이 적용됩니다. 기록은 이 기기의 브라우저에 저장됩니다.')+'<div class="settings-grid"><div><section class="panel"><h2>예약 받을 회차</h2><form id="bookingForm"><div class="field"><label for="bookingMode">예약 운영 방식</label><select id="bookingMode" name="bookingMode"'+attrDisabled()+'>'+Object.entries({next:'진행 회차의 다음 회차만',all:'모든 회차 열기',manual:'선택한 회차만 열기'}).map(([v,l])=>'<option value="'+v+'"'+(d.bookingMode===v?' selected':'')+'>'+l+'</option>').join('')+'</select></div><div id="manualRounds"'+(d.bookingMode==='manual'?'':' hidden')+'>'+sortedRounds().map(r=>'<label class="check-row"><input type="checkbox" name="openRoundIds" value="'+esc(r.id)+'"'+(d.openRoundIds.includes(r.id)?' checked':'')+'>'+esc(r.label)+' '+esc(r.start)+'</label>').join('')+'</div><div class="note">예약 가능 인원은 시간표에서 팀마다 바꿉니다. 예약 창을 열어도 팀의 예약 정원이 0명이면 예약을 받지 않습니다.</div><button type="submit" class="button blank-space"'+attrDisabled()+'>예약 범위 적용</button></form></section><section class="panel"><div class="section-head"><h2>점심·개막식·휴식</h2>'+btn('시간 수정','editBreaks')+'</div>'+d.breaks.map(b=>'<div class="break-line">'+esc(b.start)+'–'+esc(b.end)+' <b>'+esc(b.label)+'</b></div>').join('')+'<p class="muted">체험 휴식과 접수 중지는 별개입니다. 접수를 멈출 때는 아래 버튼을 사용하세요.</p><div class="actions blank-space">'+btn(d.paused?'접수 재개':'접수 잠시 중지','pause',null,'secondary')+'</div></section></div><div><section class="panel"><h2>기록 백업</h2><p>기기를 바꾸거나 브라우저 기록을 지우기 전에 백업 파일을 저장하세요. 백업에는 두 날짜가 함께 들어갑니다.</p><div class="actions blank-space"><button class="button" data-action="backup">백업 파일 저장</button><button class="button secondary" data-action="csv">오늘 명단 CSV</button></div><div class="field"><label for="restoreFile">백업 파일 복원</label><input class="file-input" id="restoreFile" type="file" accept=".json,application/json"'+(!editable?' disabled':'')+'></div><div class="note">복원 전에 두 날짜의 기록 수를 비교합니다. 복원 직전 자료는 되돌리기에 보관합니다.</div></section><section class="panel"><h2>운영 준비</h2><p class="muted">'+(offlineReady?'오프라인 준비 완료 · 이 주소를 다시 열 수 있도록 파일을 저장했습니다.':'오프라인 파일 준비 중 · 인터넷 연결 상태에서 한 번 열어 주세요.')+'</p><p class="muted">접수 기록은 현재 브라우저에만 저장됩니다. 다른 기기와 자동 공유되지 않습니다.</p><div class="actions blank-space"><button class="button secondary" data-action="practice">연습 모드 열기</button>'+btn('마지막 작업 되돌리기','undo',null,'secondary',!undoStack.length)+'</div></section><section class="panel"><h2>최근 변경</h2><ul class="log">'+(d.log.length?d.log.slice().reverse().map(l=>'<li><time>'+timeOf(l.at)+'</time>'+esc(l.message)+'</li>').join(''):'<li>아직 변경 기록이 없습니다.</li>')+'</ul></section></div></div>';
+    const d=today(), quotas=sortedRounds().map(r=>{const q=M.reservationQuota(d,r.id);return '<div class="break-line"><strong>'+esc(r.label)+' '+esc(r.start)+'</strong><span>전체 '+q.capacity+'명 · 예약 '+q.reserved+'/'+q.limit+'명</span></div>';}).join('');
+    const backupPanel='<section class="panel"><h2>기록 백업</h2><p>백업에는 두 날짜의 시간표와 접수 기록이 함께 들어갑니다.</p><div class="actions blank-space"><button class="button" data-action="backup">백업 파일 저장</button><button class="button secondary" data-action="csv">오늘 명단 CSV</button></div><div class="field"><label for="restoreFile">백업 파일 복원</label><input class="file-input" id="restoreFile" type="file" accept=".json,application/json"'+attrDisabled()+'></div><div class="note">복원 전 기록 수를 비교합니다.'+(cloudMode?' 모든 연결 기기의 기록이 함께 바뀝니다.':'')+' 복원 직전 자료는 되돌리기에 보관합니다.</div></section>';
+    const readyPanel='<section class="panel"><h2>운영 준비</h2><p class="note">'+(cloudMode?'공유 접수는 인터넷 연결이 필요합니다. 연결이 끊기면 저장을 멈춥니다. 다른 운영 기기에서도 같은 주소를 열고 운영 코드로 연결하세요. 손님용 화면은 코드 없이 공유됩니다.':offlineReady?'오프라인 파일 준비 완료. 연습 기록은 현재 브라우저에서만 사용합니다.':'오프라인 파일 준비 중. 인터넷 연결 상태에서 한 번 열어 주세요.')+'</p><div class="actions blank-space"><button class="button secondary" data-action="practice">연습 모드 열기</button>'+btn('마지막 작업 되돌리기','undo',null,'secondary',!undoStack.length)+'</div></section>';
+    return pageHead('운영·백업',cloudMode?'선택한 날짜의 설정과 접수 기록을 모든 연결 기기가 함께 사용합니다.':'선택한 날짜의 설정과 기록을 이 브라우저에 저장합니다.')+'<div class="settings-grid"><div><section class="panel"><h2>예약 운영 규칙</h2><div class="note">예약은 <b>바로 다음 회차</b>만 받아요. 예약 인원은 <b>해당 회차 전체 정원의 50% 이내</b>입니다.</div><p class="blank-space">시간표에서 팀 수와 정원을 바꾸면 예약 가능한 인원도 함께 계산됩니다. 팀별 예약 인원과 회차 전체 한도 중 남은 자리가 적은 쪽을 적용합니다.</p>'+quotas+'</section><section class="panel"><div class="section-head"><h2>점심·개막식·휴식</h2>'+btn('시간 수정','editBreaks')+'</div>'+d.breaks.map(b=>'<div class="break-line">'+esc(b.start)+'–'+esc(b.end)+' <b>'+esc(b.label)+'</b></div>').join('')+'<p class="muted">체험 휴식과 접수 중지는 별개입니다.</p><div class="actions blank-space">'+btn(d.paused?'접수 재개':'접수 잠시 중지','pause',null,'secondary')+'</div></section></div><div>'+backupPanel+readyPanel+'<section class="panel"><h2>최근 변경</h2><ul class="log">'+(d.log.length?d.log.slice().reverse().map(l=>'<li><time>'+timeOf(l.at)+'</time>'+esc(l.message)+'</li>').join(''):'<li>아직 변경 기록이 없습니다.</li>')+'</ul></section></div></div>';
   }
   function guestSlot(t,reservation) {
     const d=today(), n=M.counts(d,t.id), round=d.rounds.find(r=>r.id===t.roundId);
     const started=Date.parse(now())>=Date.parse(dayKey+'T'+t.start+':00+09:00');
-    const protectedSeats=started?0:Math.max(0,t.reserveLimit-n.reserved);
+    const protectedSeats=started?0:n.reserveAvailable;
     const count=reservation?n.reserveAvailable:Math.max(0,n.available-protectedSeats);
     const closed=t.closed||!round||round.closed||ended(t);
     const label=d.paused?'접수 잠시 중지':closed?'접수 마감':count>0?(reservation?'예약 가능 ':'현장 접수 가능 ')+'<strong>'+count+'명</strong>':(reservation?'예약 마감':'현장 접수 마감');
@@ -800,55 +1385,72 @@ dialog::backdrop { background: #132d4b88; }
     ];
     return '<section class="guest-notices" aria-labelledby="guestNoticeTitle"><div class="guest-notice-heading"><span class="eyebrow">BEFORE YOU JOIN</span><h2 id="guestNoticeTitle">예약·참여 전 꼭 확인해 주세요</h2></div><ol class="guest-notice-grid">'+notices.map(([title,body],i)=>'<li'+(i===1||i===2?' class="notice-important"':'')+'><span class="notice-step" aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+title+'</h3><p>'+body+'</p></div></li>').join('')+'</ol></section>';
   }
+  function guestRules() {
+    return '<section class="guest-rules" aria-labelledby="guestRulesTitle"><span class="eyebrow">예약 전에 꼭 읽어 주세요</span><h2 id="guestRulesTitle">학생 본인이 직접 줄 서서 예약해요</h2><div class="guest-rules-grid"><p><strong>부모님 대리 예약은 불가해요</strong><span>체험할 학생이 직접 접수대에 와 주세요.</span></p><p><strong>바로 다음 회차만 예약해요</strong><span>원하는 먼 시간대의 예약은 받지 않아요.</span></p><p><strong>회차 정원의 50% 이내로 예약해요</strong><span>나머지 자리는 현장 접수로 안내해요.</span></p><p><strong>예약한 입장 시각까지 돌아와요</strong><span>미도착이 확인되면 운영 학생이 대기자에게 자리를 배정할 수 있어요.</span></p></div></section>';
+  }
+  function teamPeople(id) {
+    const t=teamBy(id);if(!t)return;
+    const entries=today().entries.filter(e=>e.teamId===id&&!['cancelled','noshow'].includes(e.status));
+    modal(esc(t.start)+'–'+esc(t.end)+' 입장 명단','<p class="note">이름이 같으면 입장 시각과 접수번호를 함께 확인하세요. 취소한 기록은 이 명단에서 빠지고 전체 기록에 남습니다.</p><div class="people-list team-people-list">'+(entries.length?entries.map(e=>'<article class="person"><div class="ticket-number">'+esc(e.ticket)+'</div><div class="details"><strong class="person-name">'+esc(e.name||'이름 미등록')+'</strong><br>'+esc(kinds[e.kind])+' · '+esc(statuses[e.status])+' · '+(e.promisedStart?timeOf(e.promisedStart):esc(t.start))+' 입장</div><div class="actions"><button class="button quiet small" data-action="ticket" data-id="'+esc(e.id)+'">번호표</button>'+(['booked','arrived'].includes(e.status)?btn(e.kind==='reservation'?'예약 취소':'접수 취소','cancel',e.id,'danger small'):'')+'</div></article>').join(''):empty('이 시간대의 접수 기록이 없습니다','접수하면 이곳에서 이름과 접수번호를 확인할 수 있어요.'))+'</div>');
+  }
   function guestView() {
     const d=today(), active=d.entries.filter(e=>e.status==='active'), upcoming=sortedTeams().filter(t=>t.roundId===d.currentRoundId&&!ended(t)), next=sortedTeams().filter(t=>M.canReserve(d,t.id,now()));
     const at=Date.parse(now()), breakNow=d.breaks.find(b=>at>=Date.parse(dayKey+'T'+b.start+':00+09:00')&&at<Date.parse(dayKey+'T'+b.end+':00+09:00'));
     const headline=d.paused?'신규 접수를 잠시 쉬고 있어요':breakNow?esc(breakNow.label)+'입니다':active.length?'지금 체험 중인 번호':'체험 신청은 접수대에서 해 주세요';
     const notice=breakNow?esc(breakNow.label)+' '+esc(breakNow.start)+'–'+esc(breakNow.end)+' · 다음 입장 시각은 아래 안내를 확인해 주세요.':'번호표를 확인한 뒤 운영 학생의 안내에 따라 입장해 주세요.';
-    return '<div class="guest-title"><span class="eyebrow">HNR TECH INC. · 방문객 안내</span><h1>어쩌다 반도체 연구원!</h1><p class="date-line">'+esc(dateLabel())+(practice?' · 연습 화면':'')+'</p></div><section class="guest-now"><h2>'+headline+'</h2>'+(active.length?((d.paused||breakNow)?'<p class="active-caption">지금 체험 중인 번호</p>':'')+'<div class="guest-numbers">'+active.map(e=>'<span>'+esc(e.ticket)+'</span>').join('')+'</div>':'')+'<p>'+notice+'</p></section><div class="guest-next"><section class="panel" id="guestWalkin"><h2>현장 접수 안내</h2><p class="guest-panel-intro">지금 접수대에서 참여 가능한 인원을 확인해요.</p>'+(upcoming.length?upcoming.map(t=>guestSlot(t,false)).join(''):'<p class="guest-empty">다음 입장 시각은 접수대에 문의해 주세요.</p>')+'<p class="guest-panel-foot">진행 중인 체험의 참여 여부는 운영 학생에게 확인해 주세요.</p></section><section class="panel" id="guestReservation"><h2>예약할 수 있는 입장 시각</h2><p class="guest-panel-intro">지금 신청하고, 약속한 시각에 다시 방문해요.</p>'+(next.length?next.map(t=>guestSlot(t,true)).join(''):'<p class="guest-empty">'+(d.paused?'지금은 신규 예약을 잠시 쉬고 있어요.':'현재 열린 예약 자리가 없어요.')+'</p><p class="guest-panel-foot">현장 접수 가능 여부는 접수대에 문의해 주세요.</p>')+'</section></div>'+guestNotices()+'<a class="display-return" href="./?date='+esc(dayKey)+(practice?'&amp;practice=1':'')+'">운영 화면으로</a>';
+    return '<div class="guest-title"><span class="eyebrow">HNR TECH INC. · 방문객 안내</span><h1>어쩌다 반도체 연구원!</h1><p class="date-line">'+esc(dateLabel())+(practice?' · 연습 화면':'')+'</p></div>'+guestRules()+'<section class="guest-now"><h2>'+headline+'</h2>'+(active.length?((d.paused||breakNow)?'<p class="active-caption">지금 체험 중인 번호</p>':'')+'<div class="guest-numbers">'+active.map(e=>'<span>'+esc(e.ticket)+'</span>').join('')+'</div>':'')+'<p>'+notice+'</p></section><div class="guest-next"><section class="panel" id="guestWalkin"><h2>현장 접수 안내</h2><p class="guest-panel-intro">지금 접수대에서 참여 가능한 인원을 확인해요.</p>'+(upcoming.length?upcoming.map(t=>guestSlot(t,false)).join(''):'<p class="guest-empty">다음 입장 시각은 접수대에 문의해 주세요.</p>')+'<p class="guest-panel-foot">진행 중인 체험의 참여 여부는 운영 학생에게 확인해 주세요.</p></section><section class="panel" id="guestReservation"><h2>예약할 수 있는 입장 시각</h2><p class="guest-panel-intro">지금 신청하고, 약속한 시각에 다시 방문해요.</p>'+(next.length?next.map(t=>guestSlot(t,true)).join(''):'<p class="guest-empty">'+(d.paused?'지금은 신규 예약을 잠시 쉬고 있어요.':'현재 열린 예약 자리가 없어요.')+'</p><p class="guest-panel-foot">현장 접수 가능 여부는 접수대에 문의해 주세요.</p>')+'</section></div>'+guestNotices()+'<a class="display-return" href="./?date='+esc(dayKey)+(practice?'&amp;practice=1':'')+'">운영 화면으로</a>';
   }
   function render() {
-    if(!state) return;
+    deferredRender=false;
     updateChrome();
+    if (cloudMode && (!state || (guest && cloudStatus.phase!=='ready'))) { $('#main').innerHTML=cloudAccessView(); renderedRevision=state?state.revision:0; return; }
+    if(!state) return;
     $('#main').innerHTML=guest?guestView():({desk:deskView,people:peopleView,schedule:scheduleView,settings:settingsView}[tab])();
+    renderedRevision=state.revision;
+    updateWriteControls();
   }
-  function closeModal() { $('#modal').close(); $('#modalBody').innerHTML=''; }
+  function closeModal() { if(saving)return; $('#modal').close(); $('#modalBody').innerHTML=''; modalRevision=null; modalDate=null; if(deferredRender)render(); }
   function modal(title,body,buttons) {
+    if(!$('#modal').open) {modalRevision=state?state.revision:0;modalDate=dayKey;}
     $('#modalBody').innerHTML='<div class="modal-head"><h2>'+title+'</h2><button class="button quiet small" data-close aria-label="창 닫기">닫기</button></div>'+body+'<div id="modalError" class="modal-error" role="alert" hidden></div>'+(buttons||'');
     if(!$('#modal').open) $('#modal').showModal();
   }
   function modalError(e) { const el=$('#modalError'); if(el){el.textContent=e.message||String(e);el.hidden=false;}else toast(e.message||String(e)); }
   function confirmInModal(title,body,onConfirm,label) {
     modal(title,body,'<div class="modal-actions"><button class="button secondary" data-close>돌아가기</button><button id="confirmAction" class="button">'+(label||'확인하고 적용')+'</button></div>');
-    $('#confirmAction').onclick=()=>{try{onConfirm();closeModal();}catch(e){modalError(e);}};
+    $('#confirmAction').onclick=async()=>{if(saving)return;try{await onConfirm();closeModal();}catch(e){modalError(e);}};
   }
   function openConfirm(title,text,onConfirm) { confirmInModal(title,'<p>'+esc(text)+'</p>',onConfirm); }
   function ticketHtml(e) {
     const t=teamBy(e.teamId);
-    return '<div class="ticket-preview"><img src="hnr-tech-mark.webp" alt="HNR Tech Inc."><h3>HNR Tech Inc.</h3><p class="ticket-event">STEM축제 · 어쩌다 반도체 연구원</p><p>'+esc(dateLabel())+'</p><div class="big-ticket">'+esc(e.ticket)+'</div><p>'+esc(kinds[e.kind])+' · '+esc(statuses[e.status])+'</p><p class="time">'+(e.promisedStart?timeOf(e.promisedStart)+' 입장':'현장 대기')+'</p><p>'+(t?esc(t.start)+'–'+esc(t.end)+' · '+esc(t.label):'자리 확보 전입니다. 빈자리가 생기면 안내합니다.')+'</p><p class="muted">'+(e.teamId?'입장 시각까지 접수대로 돌아와 주세요.':'운영 학생의 번호 안내를 기다려 주세요.')+'</p></div>';
+    return '<div class="ticket-preview"><img src="hnr-tech-mark.webp" alt="HNR Tech Inc."><h3>HNR Tech Inc.</h3><p class="ticket-event">STEM축제 · 어쩌다 반도체 연구원</p><p>'+esc(dateLabel())+'</p><div class="big-ticket">'+esc(e.ticket)+'</div><p class="ticket-person-name">'+esc(e.name||'이름 미등록')+'</p><p>'+esc(kinds[e.kind])+' · '+esc(statuses[e.status])+'</p><p class="time">'+(e.promisedStart?timeOf(e.promisedStart)+' 입장':'현장 대기')+'</p><p>'+(t?esc(t.start)+'–'+esc(t.end)+' · '+esc(t.label):'자리 확보 전입니다. 빈자리가 생기면 안내합니다.')+'</p><p class="muted">'+(e.teamId?'입장 시각까지 접수대로 돌아와 주세요.':'운영 학생의 번호 안내를 기다려 주세요.')+'</p>'+(window.DeskReceipt?window.DeskReceipt.render(e,dayKey,{practice,cloudMode}):'<p class="note">휴대폰이 없어도 이름·접수번호로 확인할 수 있어요. 종이 번호표를 받거나 입장 시각과 번호를 메모해 주세요.</p>')+'</div>';
   }
   function showTicket(e) {
     modal(e.teamId?'접수가 완료되었어요':'대기번호를 확인해 주세요',ticketHtml(e),'<div class="modal-actions"><button class="button secondary" id="printTicket">번호표 인쇄</button><button class="button" data-close>다음 손님 접수</button></div>');
     $('#printTicket').onclick=()=>{$('#printArea').innerHTML=ticketHtml(e);window.print();};
   }
-  function submitRegistration(form) {
+  async function submitRegistration(form) {
     if(registering) return;
     registering=true;
     try {
-      const fd=new FormData(form), requestId=uid('request');
+      const fd=new FormData(form), requestId=uid('request'), name=String(fd.get('name')||'').trim();
+      if(!name || name.length>40)throw new Error('참가자 이름을 40자 이내로 입력해 주세요.');
+      const receiptToken=crypto.randomUUID();
       age=String(fd.get('age')); chosenTeam=kind==='wait'?'':String(fd.get('teamId')||'');
-      commit({type:'REGISTER',kind,age,teamId:kind==='wait'?null:chosenTeam,requestId});
-      const e=today().entries[today().entries.length-1]; render(); showTicket(e);
+      await commit({type:'REGISTER',kind,age,name,receiptToken,teamId:kind==='wait'?null:chosenTeam,requestId});
+      draftName='';const nameInput=$('#registerName');if(nameInput)nameInput.value='';
+      const e=today().entries.find(entry=>entry.requestId===requestId); render(); if(e)showTicket(e);else toast('저장된 접수 기록을 입장·명단에서 확인해 주세요.');
     }catch(e){toast(e.message);}finally{setTimeout(()=>{registering=false;const b=$('#registerForm button[type=submit]');if(b)b.disabled=disabled()||today().paused;},450);}
   }
   function teamEditor(id, roundId) {
     const existing=id?teamBy(id):null, round=today().rounds.find(r=>r.id===(existing?existing.roundId:roundId));
     const t=existing||{id:uid('team'),roundId:round.id,label:'추가 팀',start:round.start,end:round.end,capacity:4,reserveLimit:2,closed:false};
     modal(existing?'팀 시간·정원 수정':'새 팀 편성','<form id="teamForm"><div class="field"><label for="teamLabel">팀 이름</label><input id="teamLabel" name="label" required maxlength="100" value="'+esc(t.label)+'"></div><div class="field"><label for="teamRound">소속 회차</label><select id="teamRound" name="roundId">'+sortedRounds().map(r=>'<option value="'+esc(r.id)+'"'+(r.id===t.roundId?' selected':'')+'>'+esc(r.label)+' '+esc(r.start)+'</option>').join('')+'</select></div><div class="form-grid"><div class="field"><label for="teamStart">시작 시각</label><input id="teamStart" type="time" name="start" required value="'+esc(t.start)+'"></div><div class="field"><label for="teamEnd">종료 시각</label><input id="teamEnd" type="time" name="end" required value="'+esc(t.end)+'"></div><div class="field"><label for="teamCapacity">전체 정원</label><input id="teamCapacity" name="capacity" type="number" min="0" max="10000" required value="'+t.capacity+'"></div><div class="field"><label for="teamReserve">예약 가능 인원</label><input id="teamReserve" name="reserveLimit" type="number" min="0" max="10000" required value="'+t.reserveLimit+'"></div></div><div class="note">시간을 겹치게 편성하면 확인 안내가 나타납니다. 정원을 줄여도 기존 접수 기록은 유지합니다.</div><div class="modal-actions">'+(existing?'<button type="button" class="button danger" id="deleteTeam">빈 팀 삭제</button>':'')+'<button class="button" type="submit">변경 내용 확인</button></div></form>');
-    if(existing) $('#deleteTeam').onclick=()=>openConfirm('팀 삭제',t.label+' 팀을 삭제합니다. 연결된 접수 기록이 있는 팀은 삭제할 수 없습니다.',()=>{commit({type:'DELETE_TEAM',id});render();toast('빈 팀을 삭제했습니다.');});
-    $('#teamForm').onsubmit=ev=>{
+    if(existing) $('#deleteTeam').onclick=()=>openConfirm('팀 삭제',t.label+' 팀을 삭제합니다. 연결된 접수 기록이 있는 팀은 삭제할 수 없습니다.',async()=>{await commit({type:'DELETE_TEAM',id});render();toast('빈 팀을 삭제했습니다.');});
+    $('#teamForm').onsubmit=async ev=>{
       ev.preventDefault();
       try {
+        assertFresh(editRevision());
         const fd=new FormData(ev.currentTarget),patch={label:String(fd.get('label')).trim(),roundId:String(fd.get('roundId')),start:String(fd.get('start')),end:String(fd.get('end')),capacity:Number(fd.get('capacity')),reserveLimit:Number(fd.get('reserveLimit'))};
         const action=existing?{type:'EDIT_TEAM',id,patch}:{type:'ADD_TEAM',team:Object.assign({},t,patch)};
         const preview=M.apply(state,Object.assign({date:dayKey},action),now());
@@ -856,15 +1458,15 @@ dialog::backdrop { background: #132d4b88; }
         const changedTime=existing&&(patch.start!==t.start||patch.end!==t.end||patch.roundId!==t.roundId);
         const warnings=M.conflicts(preview.days[dayKey]).filter(w=>w.teamId===t.id);
         const info='<p><b>'+esc(patch.label)+' '+esc(patch.start)+'–'+esc(patch.end)+'</b><br>전체 '+patch.capacity+'명 · 예약 '+patch.reserveLimit+'명</p>'+warnings.map(w=>'<div class="note warn blank-space">'+esc(w.message)+'</div>').join('')+(changedTime&&affected.length?'<div class="note blank-space">입장 시각이 바뀌는 손님: '+affected.map(e=>esc(e.ticket)).join(', ')+'<br>기존 '+esc(t.start)+' → 변경 '+esc(patch.start)+'</div><label class="check-row"><input type="checkbox" id="informedGuests">해당 손님에게 변경 시각을 안내했습니다.</label>':'')+'<p class="muted blank-space">예약 가능 회차: '+preview.days[dayKey].rounds.filter(r=>preview.days[dayKey].teams.some(x=>x.roundId===r.id&&M.canReserve(preview.days[dayKey],x.id,now()))).map(r=>esc(r.label)).join(', ')+'</p>';
-        confirmInModal('팀 변경 확인',info,()=>{if(changedTime&&affected.length&&!$('#informedGuests').checked)throw new Error('변경 시각을 손님에게 안내한 뒤 확인해 주세요.');commit(action);render();toast('팀 편성을 저장했습니다.');});
+        confirmInModal('팀 변경 확인',info,async()=>{if(changedTime&&affected.length&&!$('#informedGuests').checked)throw new Error('변경 시각을 손님에게 안내한 뒤 확인해 주세요.');await commit(action);render();toast('팀 편성을 저장했습니다.');});
       }catch(e){modalError(e);}
     };
   }
   function roundEditor(id) {
     const r=id?today().rounds.find(x=>x.id===id):{id:uid('round'),label:'추가 회차',start:'17:00',end:'17:55',closed:false};
     modal(id?'회차 수정':'회차 추가','<form id="roundForm"><div class="field"><label for="roundLabel">회차 이름</label><input id="roundLabel" name="label" value="'+esc(r.label)+'" maxlength="100" required></div><div class="form-grid"><div class="field"><label for="roundStart">회차 시작</label><input id="roundStart" type="time" name="start" value="'+r.start+'" required></div><div class="field"><label for="roundEnd">회차 종료</label><input id="roundEnd" type="time" name="end" value="'+r.end+'" required></div></div><label class="check-row"><input type="checkbox" name="closed"'+(r.closed?' checked':'')+'>회차 접수 마감</label><div class="note">회차 범위를 바꿔도 그 안의 팀 시간이 자동으로 이동하지 않습니다. 팀 시간은 별도로 조정하세요.</div><div class="modal-actions">'+(id?'<button type="button" id="deleteRound" class="button danger">빈 회차 삭제</button>':'')+'<button class="button" type="submit">회차 저장</button></div></form>');
-    if(id) $('#deleteRound').onclick=()=>openConfirm('빈 회차 삭제','팀이 없는 회차만 삭제할 수 있습니다.',()=>{commit({type:'DELETE_ROUND',id});render();});
-    $('#roundForm').onsubmit=ev=>{ev.preventDefault();try{const fd=new FormData(ev.currentTarget),patch={label:String(fd.get('label')).trim(),start:String(fd.get('start')),end:String(fd.get('end')),closed:fd.has('closed')};commit(id?{type:'EDIT_ROUND',id,patch}:{type:'ADD_ROUND',round:Object.assign({},r,patch)});closeModal();render();toast('회차를 저장했습니다.');}catch(e){modalError(e);}};
+    if(id) $('#deleteRound').onclick=()=>openConfirm('빈 회차 삭제','팀이 없는 회차만 삭제할 수 있습니다.',async()=>{await commit({type:'DELETE_ROUND',id});render();});
+    $('#roundForm').onsubmit=async ev=>{ev.preventDefault();try{const fd=new FormData(ev.currentTarget),patch={label:String(fd.get('label')).trim(),start:String(fd.get('start')),end:String(fd.get('end')),closed:fd.has('closed')};await commit(id?{type:'EDIT_ROUND',id,patch}:{type:'ADD_ROUND',round:Object.assign({},r,patch)});closeModal();render();toast('회차를 저장했습니다.');}catch(e){modalError(e);}};
   }
   function breaksEditor() {
     let rows=clone(today().breaks);
@@ -873,15 +1475,15 @@ dialog::backdrop { background: #132d4b88; }
       function collect(){const fd=new FormData($('#breakForm'));rows=rows.map((b,i)=>({id:b.id,label:String(fd.get('label'+i)).trim(),start:String(fd.get('start'+i)),end:String(fd.get('end'+i))}));}
       $('#addBreak').onclick=()=>{collect();rows.push({id:uid('break'),label:'휴식',start:'12:00',end:'13:00'});draw();};
       document.querySelectorAll('[data-remove-break]').forEach(b=>{b.onclick=()=>{collect();rows.splice(Number(b.dataset.removeBreak),1);draw();};});
-      $('#breakForm').onsubmit=ev=>{ev.preventDefault();try{collect();commit({type:'SET_BREAKS',breaks:rows});closeModal();render();toast('휴식 시간을 저장했습니다.');}catch(e){modalError(e);}};
+      $('#breakForm').onsubmit=async ev=>{ev.preventDefault();try{collect();await commit({type:'SET_BREAKS',breaks:rows});closeModal();render();toast('휴식 시간을 저장했습니다.');}catch(e){modalError(e);}};
     } draw();
   }
   function assignEntry(e) {
     modal(e.teamId?'다른 팀으로 이동':'대기자 팀 배정','<p><b>'+esc(e.ticket)+'</b>'+(e.promisedStart?' · 기존 입장 '+timeOf(e.promisedStart):' · 배정 전 현장 대기')+'</p><form id="assignForm"><div class="field"><label for="assignTeam">새 입장 팀</label><select id="assignTeam" name="teamId" required>'+optionsForTeams('assign',e.teamId||'')+'</select></div><label class="check-row"><input id="assignInformed" type="checkbox" required>손님에게 새 입장 시각을 안내했습니다.</label><div class="modal-actions"><button class="button" type="submit">확인하고 배정</button></div></form>');
-    $('#assignForm').onsubmit=ev=>{ev.preventDefault();try{commit({type:'ASSIGN',id:e.id,teamId:String(new FormData(ev.currentTarget).get('teamId'))});closeModal();render();toast('입장 팀을 배정했습니다.');}catch(err){modalError(err);}};
+    $('#assignForm').onsubmit=async ev=>{ev.preventDefault();try{await commit({type:'ASSIGN',id:e.id,teamId:String(new FormData(ev.currentTarget).get('teamId'))});closeModal();render();toast('입장 팀을 배정했습니다.');}catch(err){modalError(err);}};
   }
-  function updateStatus(e,status) {
-    const action=()=>{commit({type:'STATUS',id:e.id,status});render();toast(e.ticket+' · '+statuses[status]);};
+  async function updateStatus(e,status) {
+    const action=async()=>{await commit({type:'STATUS',id:e.id,status});render();toast(e.ticket+' · '+statuses[status]);};
     if(status==='active') {
       const other=today().entries.filter(x=>x.status==='active'&&x.teamId!==e.teamId);
       if(other.length) throw new Error('다른 팀 '+other.length+'명이 체험 중입니다. 먼저 이전 팀의 완료를 확인해 주세요.');
@@ -889,85 +1491,99 @@ dialog::backdrop { background: #132d4b88; }
       openConfirm(early?'예정 시각보다 일찍 입장':'체험 시작',e.ticket+' 손님이 도착했고 지금 입장하는지 확인해 주세요.'+(early?' 약속 시각 '+timeOf(e.promisedStart)+'은 그대로 보관하고 실제 입장 시각을 따로 기록합니다.':''),action);
     } else if(status==='noshow') openConfirm('미도착 확인',e.ticket+' 손님을 현장에서 확인했으나 도착하지 않았나요? 이 자리를 현장 대기자에게 배정할 수 있게 됩니다.',action);
     else if(status==='cancelled') openConfirm('접수 취소',e.ticket+' 접수를 취소하고 자리를 비웁니다. 기록은 남습니다.',action);
-    else action();
+    else await action();
   }
   function download(name,content,type) { const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000); }
   function backup() { download('HNR-접수백업-'+(practice?'연습-':'')+new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())+'.json',JSON.stringify({format:'hnr-desk-backup',version:1,savedAt:new Date().toISOString(),state},null,2),'application/json');toast('백업 파일을 저장합니다.'); }
   function csv() {
     const cell=v=>'"'+String(v==null?'':v).replace(/^[=+\-@]/,"'$&").replace(/"/g,'""')+'"';
-    const rows=[['운영일','접수번호','유형','연령대','상태','팀','약속 입장','실제 입장','실제 종료']];
-    today().entries.forEach(e=>rows.push([dayKey,e.ticket,kinds[e.kind],e.age,statuses[e.status],(teamBy(e.teamId)||{}).label||'',timeOf(e.promisedStart),timeOf(e.actualStart),timeOf(e.actualEnd)]));
+    const rows=[['운영일','접수번호','이름','유형','연령대','상태','팀','약속 입장','실제 입장','실제 종료']];
+    today().entries.forEach(e=>rows.push([dayKey,e.ticket,e.name||'',kinds[e.kind],e.age,statuses[e.status],(teamBy(e.teamId)||{}).label||'',timeOf(e.promisedStart),timeOf(e.actualStart),timeOf(e.actualEnd)]));
     download('HNR-접수명단-'+dayKey+'.csv','\ufeff'+rows.map(r=>r.map(cell).join(',')).join('\r\n'),'text/csv;charset=utf-8');
   }
   async function restore(file) {
     if(!file)return;
+    const originalRevision=state?state.revision:0;
     try {
       if(file.size>12000000)throw new Error('백업 파일이 너무 큽니다. 12MB 이하 파일을 사용해 주세요.');
       const data=JSON.parse(await file.text());
+      assertFresh(originalRevision);
       if(data.format!=='hnr-desk-backup'||data.version!==1)throw new Error('HNR 접수 데스크 백업 파일이 아닙니다.');
       M.validate(data.state);
       const summary=Object.keys(state.days).map(d=>'<li>'+esc(d)+': 현재 '+state.days[d].entries.length+'건 → 백업 '+data.state.days[d].entries.length+'건</li>').join('');
-      confirmInModal('백업으로 기록 복원','<p>현재 두 날짜의 시간표와 기록을 백업 파일로 교체합니다.</p><ul class="impact-list">'+summary+'</ul><div class="note warn">현재 기록과 자동으로 합치지 않습니다. 복원 직전 자료는 되돌리기에 보관합니다.</div><label class="check-row"><input id="restoreConfirmed" type="checkbox">기록 교체 내용을 확인했습니다.</label>',()=>{
+      confirmInModal('백업으로 기록 복원','<p>현재 두 날짜의 시간표와 기록을 백업 파일로 교체합니다.'+(cloudMode?' 모든 연결 기기에 적용됩니다.':'')+'</p><ul class="impact-list">'+summary+'</ul><div class="note warn">현재 기록과 자동으로 합치지 않습니다. 복원 직전 자료는 되돌리기에 보관합니다.</div><label class="check-row"><input id="restoreConfirmed" type="checkbox">기록 교체 내용을 확인했습니다.</label>',async()=>{
         if(!$('#restoreConfirmed').checked)throw new Error('기록 교체 내용을 확인해 주세요.');
+        assertFresh(editRevision());
         const previous=clone(state), next=preserveCounters(clone(data.state),state);
-        persist(next,undoStack.concat([previous]).slice(-10));render();toast('백업을 복원했습니다.');
+        await persist(next,undoStack.concat([previous]).slice(-10),editRevision());render();toast('백업을 복원했습니다.');
       },'백업으로 복원');
     }catch(e){toast(e.message);}
     const input=$('#restoreFile');if(input)input.value='';
   }
   function openPractice() { const url=new URL(location.href);url.searchParams.set('practice','1');url.searchParams.delete('display');url.searchParams.set('date',dayKey);url.hash='desk';location.href=url.href; }
-  function actionClick(action,id) {
+  async function actionClick(action,id) {
     const e=today().entries.find(x=>x.id===id);
     if(action==='ticket'){if(e)showTicket(e);return;}
+    if(action==='teamPeople'){teamPeople(id);return;}
     if(action==='backup'){backup();return;}
     if(action==='csv'){csv();return;}
     if(action==='practice'){openPractice();return;}
     if(disabled())throw new Error('읽기 전용 화면에서는 기록을 바꿀 수 없습니다.');
     switch(action) {
-      case 'pause':commit({type:'EDIT_DAY',patch:{paused:!today().paused}});render();break;
+      case 'pause':await commit({type:'EDIT_DAY',patch:{paused:!today().paused}});render();break;
       case 'undo':undo();break;
-      case 'current':commit({type:'EDIT_DAY',patch:{currentRoundId:id}});render();break;
+      case 'current':await commit({type:'EDIT_DAY',patch:{currentRoundId:id}});render();break;
       case 'pickWalkin':kind='walkin';chosenTeam=id;setTab('desk');$('#registerForm').scrollIntoView({block:'center',behavior:'smooth'});break;
       case 'pickReservation':kind='reservation';chosenTeam=id;setTab('desk');$('#registerForm').scrollIntoView({block:'center',behavior:'smooth'});break;
       case 'editTeam':teamEditor(id);break;
       case 'addTeam':teamEditor(null,id);break;
-      case 'toggleTeam':commit({type:'EDIT_TEAM',id,patch:{closed:!teamBy(id).closed}});render();break;
+      case 'toggleTeam':await commit({type:'EDIT_TEAM',id,patch:{closed:!teamBy(id).closed}});render();break;
       case 'editRound':roundEditor(id);break;
       case 'addRound':roundEditor();break;
       case 'editBreaks':breaksEditor();break;
       case 'assign':assignEntry(e);break;
-      case 'arrive':updateStatus(e,'arrived');break;
-      case 'start':updateStatus(e,'active');break;
-      case 'finish':updateStatus(e,'done');break;
-      case 'noshow':updateStatus(e,'noshow');break;
-      case 'cancel':updateStatus(e,'cancelled');break;
+      case 'arrive':await updateStatus(e,'arrived');break;
+      case 'start':await updateStatus(e,'active');break;
+      case 'finish':await updateStatus(e,'done');break;
+      case 'noshow':await updateStatus(e,'noshow');break;
+      case 'cancel':await updateStatus(e,'cancelled');break;
     }
   }
-  document.addEventListener('click',ev=>{
-    const close=ev.target.closest('[data-close]');if(close){closeModal();return;}
-    const date=ev.target.closest('[data-date]');if(date){dayKey=date.dataset.date;chosenTeam='';render();return;}
-    const nav=ev.target.closest('[data-tab],[data-nav]');if(nav){setTab(nav.dataset.tab||nav.dataset.nav);return;}
-    const kindButton=ev.target.closest('[data-kind]');if(kindButton){kind=kindButton.dataset.kind;chosenTeam='';render();return;}
-    const a=ev.target.closest('[data-action]');if(a){try{actionClick(a.dataset.action,a.dataset.id);}catch(e){toast(e.message);}}
-  });
-  document.addEventListener('submit',ev=>{
-    if(ev.target.id==='registerForm'){ev.preventDefault();submitRegistration(ev.target);}
-    if(ev.target.id==='bookingForm'){
-      ev.preventDefault();try{const fd=new FormData(ev.target);commit({type:'EDIT_DAY',patch:{bookingMode:String(fd.get('bookingMode')),openRoundIds:fd.getAll('openRoundIds').map(String)}});render();toast('예약 범위를 적용했습니다.');}catch(e){toast(e.message);}
+  document.addEventListener('click',async ev=>{
+    if (cloudMode) {
+      if(ev.target.closest('[data-cloud-refresh]')) { if(cloud&&!saving)try{await cloud.refresh();requestCloudRender();}catch(_){requestCloudRender();} return; }
+      if(ev.target.closest('[data-cloud-logout]')) { if(cloud&&!saving&&!cloudStatus.pending)try{await cloud.logout();state=null;undoStack=[];render();}catch(_){toast('저장 결과를 먼저 확인해 주세요.');} return; }
+      const init=ev.target.closest('[data-cloud-init]');if(init){if(!saving&&cloudStatus.phase==='uninitialized')initializeCloud(init.dataset.cloudInit);return;}
     }
+    const close=ev.target.closest('[data-close]');if(close){closeModal();return;}
+    const date=ev.target.closest('[data-date]');if(date){if(saving)return;dayKey=date.dataset.date;chosenTeam='';draftName='';render();return;}
+    const nav=ev.target.closest('[data-tab],[data-nav]');if(nav){setTab(nav.dataset.tab||nav.dataset.nav);return;}
+    const kindButton=ev.target.closest('[data-kind]');if(kindButton){if(saving)return;kind=kindButton.dataset.kind;chosenTeam='';render();return;}
+    const a=ev.target.closest('[data-action]');if(a){try{await actionClick(a.dataset.action,a.dataset.id);}catch(e){toast(e.message);}return;}
+    const card=ev.target.closest('[data-team-card]');if(card&&!ev.target.closest('button,a,input,select,label'))teamPeople(card.dataset.teamCard);
   });
-  document.addEventListener('change',ev=>{
+  document.addEventListener('submit',async ev=>{
+    if(ev.target.id==='cloudLoginForm') {
+      ev.preventDefault();if(loginBusy||!cloud)return;const input=$('#cloudCode'),code=input.value;input.value='';loginBusy=true;
+      ev.target.querySelector('button[type="submit"]').disabled=true;
+      let error='';try{await cloud.login(code);}catch(e){error=e.message||'연결하지 못했습니다. 운영 코드를 확인해 주세요.';}finally{loginBusy=false;render();}
+      if(error){const box=$('#cloudLoginError');if(box){box.textContent=error;box.hidden=false;}else toast(error);}return;
+    }
+    if(ev.target.id==='registerForm'){ev.preventDefault();await submitRegistration(ev.target);}
+
+  });
+  document.addEventListener('change',async ev=>{
     try {
-      if(ev.target.id==='currentRound'){commit({type:'EDIT_DAY',patch:{currentRoundId:ev.target.value}});chosenTeam='';render();}
+      if(ev.target.id==='currentRound'){await commit({type:'EDIT_DAY',patch:{currentRoundId:ev.target.value}});chosenTeam='';render();}
       if(ev.target.id==='registerTeam')chosenTeam=ev.target.value;
       if(ev.target.id==='registerAge')age=ev.target.value;
-      if(ev.target.id==='bookingMode')$('#manualRounds').hidden=ev.target.value!=='manual';
       if(ev.target.id==='statusFilter'){filter=ev.target.value;render();}
       if(ev.target.id==='restoreFile')restore(ev.target.files[0]);
       if(ev.target.id==='practiceTime'){selectedPracticeTime=ev.target.value||'10:05';render();}
     }catch(e){toast(e.message);render();}
   });
   document.addEventListener('input',ev=>{
+    if(ev.target.id==='registerName')draftName=ev.target.value;
     if(ev.target.id==='searchPeople'){
       const caret=ev.target.selectionStart;query=ev.target.value;
       $('#main').innerHTML=peopleView();const input=$('#searchPeople');input.focus();input.setSelectionRange(caret,caret);
@@ -976,9 +1592,10 @@ dialog::backdrop { background: #132d4b88; }
   $('#displayButton').onclick=()=>{const url=new URL(location.href);url.searchParams.set('display','1');url.searchParams.set('date',dayKey);url.hash='';window.open(url.href,'hnr-desk-display','noopener');};
   $('#practiceButton').onclick=openPractice;
   $('#exitPractice').onclick=()=>{const url=new URL(location.href);url.searchParams.delete('practice');url.searchParams.delete('display');url.searchParams.set('date',dayKey);url.hash='desk';location.href=url.href;};
-  $('#modal').addEventListener('cancel',()=>{setTimeout(()=>{$('#modalBody').innerHTML='';},0);});
-  window.addEventListener('storage',ev=>{if(ev.key===key()){loadStore();render();}});
-  window.addEventListener('pagehide',()=>{if(releaseLock)releaseLock();});
+  $('#modal').addEventListener('cancel',ev=>{ev.preventDefault();closeModal();});
+  document.addEventListener('focusout',()=>{if(cloudMode&&deferredRender)setTimeout(()=>{if(!isEditing()&&!saving)render();},0);});
+  window.addEventListener('storage',ev=>{if(!cloudMode&&ev.key===key()){loadStore();render();}});
+  window.addEventListener('pagehide',()=>{if(releaseLock)releaseLock();if(cloud)cloud.stop();});
   window.addEventListener('pageshow',ev=>{if(ev.persisted)location.reload();});
   window.addEventListener('hashchange',()=>{if(['desk','people','schedule','settings'].includes(location.hash.slice(1))){tab=location.hash.slice(1);render();}});
   setInterval(()=>{
@@ -990,7 +1607,7 @@ dialog::backdrop { background: #132d4b88; }
     navigator.serviceWorker.register('./sw.js').then(()=>navigator.serviceWorker.ready).then(async reg=>{
       if(reg.active)reg.active.postMessage({type:'CACHE_STATUS'});
     }).catch(()=>{offlineReady=false;});
-    navigator.serviceWorker.addEventListener('message',ev=>{if(ev.data&&ev.data.type==='CACHE_READY'){offlineReady=true;if(tab==='settings')render();}});
+    navigator.serviceWorker.addEventListener('message',ev=>{if(ev.data&&ev.data.type==='CACHE_READY'){offlineReady=true;if(tab==='settings'){if(cloudMode)requestCloudRender();else render();}}});
   }
   acquire();
 })();

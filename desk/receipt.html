@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1747dc"><meta name="referrer" content="no-referrer"><meta name="robots" content="noindex,nofollow,noarchive">
+<title>내 예약 확인증 | HNR Tech Inc.</title>
+<link rel="icon" href="hnr-tech-mark.webp" type="image/webp">
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif;color:#132d4b;background:#fffaf0;font-synthesis:none;line-height:1.6;color-scheme:light}*{box-sizing:border-box}body{margin:0;padding:0 20px}button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #1747dc;outline-offset:4px}.receipt-wrap{max-width:560px;margin:0 auto;padding:24px 0 40px}.brand{display:flex;align-items:center;gap:12px;margin-bottom:30px}.brand img{width:49px;height:49px;object-fit:contain}.brand strong{display:block;font-size:1.1rem;letter-spacing:-.04em}.brand small{display:block;font-size:.7rem}h1{font-size:clamp(2rem,7vw,2.7rem);letter-spacing:-.065em;line-height:1.18;margin:0 0 12px}.intro{font-size:.95rem;margin:0 0 24px}.intro strong{color:#1747dc}.sync{background:#edf2ff;border:1px solid #a5b7db;border-radius:12px;padding:12px 15px;margin-bottom:16px;font-size:.85rem;font-weight:650}.sync[data-phase="offline"],.sync[data-phase="error"]{background:#fff0ce;color:#663c05;border-color:#d7aa58}.ticket{background:#fff;border:2px solid #1747dc;border-radius:24px;overflow:hidden;box-shadow:0 12px 28px #132d4b0c}.ticket-top{padding:22px 24px 16px;background:#1747dc;color:#fff}.ticket-top p{margin:0;font-size:.8rem;letter-spacing:.06em}.ticket-top h2{font-size:1.45rem;letter-spacing:-.045em;margin:3px 0 0}.ticket-body{padding:24px}.tag{display:inline-block;border-radius:999px;font-size:.85rem;font-weight:800;padding:6px 13px;background:#e6f3dc;color:#23522b;border:1px solid #94b280}.tag.ended{background:#edf2ff;color:#173c95;border-color:#a5b7db}.tag.cancelled{background:#ffe4d8;color:#8a2618;border-color:#d89b80}.ticket-label{display:block;font-size:.8rem;margin-top:21px}.ticket-number{font-size:clamp(3.5rem,14vw,4.8rem);font-weight:850;letter-spacing:-.06em;line-height:1.2;color:#1747dc;font-variant-numeric:tabular-nums}.facts{display:grid;grid-template-columns:1fr 1fr;gap:15px;border-top:1px dashed #9aaed0;border-bottom:1px dashed #9aaed0;padding:18px 0;margin-top:22px}.facts dt{font-size:.75rem}.facts dd{margin:3px 0 0;font-weight:800;font-size:1.3rem;letter-spacing:-.025em}.facts dd small{display:block;font-size:.75rem;font-weight:550}.instructions{margin:18px 0 0;padding:14px 16px;background:#edf2ff;border-radius:12px;font-size:.9rem;line-height:1.75}.instructions.warning{background:#fff0ce;color:#663c05}.notice{border:1px solid #a5b7db;border-radius:15px;background:#edf2ff;padding:18px;margin-top:20px}.notice h2{font-size:1rem;letter-spacing:-.03em;margin:0 0 9px}.notice ul{padding-left:1.25em;margin:0;font-size:.85rem}.notice li+li{margin-top:8px}.actions{display:flex;gap:10px;margin-top:18px}.actions button{border:1px solid #1747dc;background:#1747dc;color:#fff;font-weight:750;min-height:48px;flex:1;border-radius:12px}.actions button.secondary{background:#fff;color:#1747dc}.empty{border:1px solid #a5b7db;border-radius:20px;padding:25px;background:#fff}.empty h2{font-size:1.2rem;margin:0 0 9px}.empty p{font-size:.9rem;margin:0}footer{font-size:.73rem;text-align:center;padding-top:24px}.last-check{margin:12px 0 0;font-size:.75rem;color:#173c95}.loading{display:inline-block;width:16px;height:16px;border:2px solid #a5b7db;border-top-color:#1747dc;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:7px}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.loading{animation:none}}@media(max-width:380px){body{padding:0 14px}.ticket-body{padding:20px}.ticket-top{padding:20px}.facts{gap:10px}.facts dd{font-size:1.15rem}}@media print{body{background:#fff}.receipt-wrap{padding:0;max-width:520px}.brand{margin-bottom:16px}.actions,.intro{display:none}.ticket{box-shadow:none;break-inside:avoid}.sync{font-size:11px}.notice{break-inside:avoid}footer{padding-top:10px}.ticket-top{background:#fff;color:#132d4b;border-bottom:1px solid #1747dc}}
+</style>
+</head>
+<body>
+<main class="receipt-wrap">
+<header class="brand"><img src="hnr-tech-mark.webp" alt="HNR Tech Inc. 해누리 엠블럼"><div><strong>HNR Tech Inc.</strong><small>2026 서울STEM축제 · 해누리중학교</small></div></header>
+<h1>내 예약 확인증</h1><p class="intro"><strong>어쩌다 반도체 연구원</strong><br>약속한 시각에 접수대에서 이 화면을 보여 주세요.</p>
+<div id="receiptStatus" class="sync" role="status" aria-live="polite"><span class="loading" aria-hidden="true"></span>예약 정보를 확인하고 있어요.</div>
+<div id="receiptContent" aria-live="polite"></div>
+<div class="actions"><button id="refreshReceipt" type="button">현재 상태 새로고침</button><button id="printReceipt" type="button" class="secondary" hidden>확인증 인쇄</button></div>
+<section class="notice"><h2>돌아오기 전에 꼭 확인해 주세요</h2><ul><li>예약 시각까지 접수대로 돌아와 도착 확인을 받아 주세요.</li><li>늦으면 운영 학생이 확인한 뒤 다른 대기자에게 자리를 배정할 수 있어요.</li><li>예약 변경이나 취소는 접수대에 알려 주세요. 이 화면은 확인용이며 직접 입장·취소 처리할 수 없어요.</li><li>휴대폰이 없어도 <b>이름과 접수번호 또는 종이 번호표</b>로 확인할 수 있어요.</li><li>본인 확인증이므로 이 링크를 다른 사람에게 공유하지 마세요.</li></ul></section>
+<footer id="app-credit"><strong>HNR Tech Inc.</strong><br>2026 서울STEM축제 · 해누리중학교</footer>
+</main>
+<script>window.DeskCloudConfig = {
+  "enabled": true,
+  "url": "https://vbvtnmnodeoocbbjauap.supabase.co",
+  "publishableKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZidnRubW5vZGVvb2NiYmphdWFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0OTQ0OTYsImV4cCI6MjA5NTA3MDQ5Nn0.dvuRrt3qw2Tya_QwGbcXrmGPdfDgI4xmgyH8UjU73Nc",
+  "boothId": "hnr-stem-2026"
+};
+</script>
+<script>(function (root, factory) {
+  'use strict';
+  const api = factory(root);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  if (root) root.DeskReceiptPage = api;
+  if (root.document && root.document.getElementById('receiptContent')) api.mount();
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (root) {
+  'use strict';
+  const DAYS = ['2026-10-23', '2026-10-24'];
+  const STATUSES = { booked: '예약 완료', arrived: '도착 확인', active: '체험 중', done: '체험 완료', noshow: '미도착 처리', cancelled: '취소된 접수' };
+  const escape = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  const readToken = hash => typeof hash === 'string' && /^#[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(hash) ? hash.slice(1).toLowerCase() : null;
+  const normalizeTime = value => {
+    if (value === null) return null;
+    if (typeof value === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(value)) return value;
+    if (typeof value === 'string' && /^2026-10-(23|24)T/.test(value) && Number.isFinite(Date.parse(value))) return new Date(value).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Seoul' });
+    throw new Error('invalid_response');
+  };
+  function project(result) {
+    if (!result || result.ok !== true || !DAYS.includes(result.date) ||
+      typeof result.ticket !== 'string' || !new RegExp('^'+result.date.slice(8)+'-[0-9]{3,6}$').test(result.ticket) ||
+      !Object.hasOwn(STATUSES, result.status) || typeof result.updated_at !== 'string' || !Number.isFinite(Date.parse(result.updated_at))) throw new Error('invalid_response');
+    return { ticket: result.ticket, date: result.date, start: normalizeTime(result.start), end: normalizeTime(result.end), status: result.status, updated_at: result.updated_at };
+  }
+  function view(receipt) {
+    const r = receipt, closed = ['cancelled', 'noshow'].includes(r.status), complete = r.status === 'done', waiting = !r.start;
+    let instruction;
+    if (closed) instruction = '현재 입장이 확정된 확인증이 아니에요. 다시 참여하려면 접수대에 문의해 주세요.';
+    else if (complete) instruction = '체험을 마쳤어요. HNR Tech Inc.와 함께해 주셔서 고맙습니다!';
+    else if (r.status === 'active') instruction = '지금 체험 중이에요. 운영 학생의 설명과 안전 안내를 따라 주세요.';
+    else if (waiting) instruction = '아직 입장할 자리가 확정되지 않은 대기번호예요. 빈자리가 생기면 운영 학생이 안내해 드려요.';
+    else if (r.status === 'arrived') instruction = '접수대에서 도착을 확인했어요. 운영 학생의 입장 안내를 기다려 주세요.';
+    else instruction = '<b>'+escape(r.start)+'</b>까지 접수대로 돌아와 이 확인증 또는 접수번호를 보여 주세요.';
+    return '<article class="ticket"><header class="ticket-top"><p>HNR TECH INC. · MY TICKET</p><h2>어쩌다 반도체 연구원</h2></header><div class="ticket-body"><span class="tag '+(closed?'cancelled':complete?'ended':'')+'">'+(waiting && !closed && !complete?'현장 대기':STATUSES[r.status])+'</span><span class="ticket-label">나의 접수번호</span><div class="ticket-number">'+escape(r.ticket)+'</div><dl class="facts"><div><dt>참여 날짜</dt><dd>10월 '+r.date.slice(8)+'일<small>'+(r.date.endsWith('23')?'금요일':'토요일')+'</small></dd></div><div><dt>약속한 입장 시각</dt><dd>'+(waiting?'배정 전':escape(r.start))+'<small>'+(waiting?'빈자리가 생기면 안내':r.end?'예정 종료 '+escape(r.end):'종료 시각은 접수대 확인')+'</small></dd></div></dl><p class="instructions '+(closed||waiting?'warning':'')+'">'+instruction+'</p></div></article>';
+  }
+  function create(config, options) {
+    options = options || {};
+    const env = options.env || {}, fetcher = env.fetch || root.fetch.bind(root), now = env.now || (() => Date.now());
+    const later = env.setTimeout || root.setTimeout.bind(root), cancel = env.clearTimeout || root.clearTimeout.bind(root);
+    const doc = env.document === undefined ? root.document : env.document, events = env.events === undefined ? root : env.events;
+    const Abort = env.AbortController || root.AbortController;
+    const onReceipt = options.onReceipt || (() => {}), onStatus = options.onStatus || (() => {});
+    const token = readToken('#'+(options.token || ''));
+    let running = false, generation = 0, timer = null, controller = null, active = null, lastSync = null, hasReceipt = false;
+    function status(phase) { onStatus({ phase, lastSync, hasReceipt }); }
+    function schedule() {
+      if (timer !== null) cancel(timer);
+      timer = null;
+      if (running && token) timer = later(() => { timer = null; refresh(); }, doc && doc.hidden ? 15000 : 5000);
+    }
+    async function read(id) {
+      controller = new Abort(); let abortListener;
+      const requestController = controller;
+      const deadline = later(() => { requestController.abort(); }, 10000);
+      status(hasReceipt ? 'refreshing' : 'loading');
+      try {
+        const aborted = new Promise((_, reject) => {
+          abortListener = () => { cancel(deadline); reject(new Error('abort')); };
+          requestController.signal.addEventListener('abort', abortListener, { once: true });
+        });
+        const request = (async () => {
+          const response = await fetcher(config.url.replace(/\/$/, '')+'/rest/v1/rpc/hnr_desk_receipt', {
+            method: 'POST', credentials: 'omit', cache: 'no-store', referrerPolicy: 'no-referrer', signal: requestController.signal,
+            headers: { 'Content-Type': 'application/json', apikey: config.publishableKey, Authorization: 'Bearer '+config.publishableKey },
+            body: JSON.stringify({ p_booth_id: config.boothId, p_receipt_token: token })
+          });
+          const result = await response.json();
+          return { response, result };
+        })();
+        const { response, result } = await Promise.race([request, aborted]);
+        if (!running || generation !== id) return null;
+        if (!response.ok) { status(response.status === 404 ? 'setup_required' : 'offline'); return null; }
+        if (!result || !result.ok) {
+          if (result && ['not_found', 'invalid_token', 'unauthorized'].includes(result.code)) { hasReceipt = false; onReceipt(null); status('not_found'); }
+          else status(result && ['not_configured', 'setup_required'].includes(result.code) ? 'setup_required' : 'offline');
+          return null;
+        }
+        const safe = project(result);
+        lastSync = new Date(now()).toISOString(); hasReceipt = true; onReceipt(safe); status('ready'); return safe;
+      } catch (_) {
+        if (running && generation === id) status('offline');
+        return null;
+      } finally {
+        cancel(deadline); requestController.signal.removeEventListener('abort', abortListener);
+        if (controller === requestController) controller = null;
+      }
+    }
+    function refresh() {
+      if (!running) return Promise.resolve(null);
+      if (active) return active;
+      if (!token) { onReceipt(null); status('invalid_link'); return Promise.resolve(null); }
+      if (!config || !config.enabled || typeof config.url !== 'string' || !/^https:\/\/[^/]+\/?$/.test(config.url) || !config.publishableKey || !config.boothId) {
+        status('setup_required'); return Promise.resolve(null);
+      }
+      active = read(generation).finally(() => { active = null; schedule(); });
+      return active;
+    }
+    const wake = () => { if (running) refresh(); };
+    function listen(method) {
+      if (doc && typeof doc[method] === 'function') doc[method]('visibilitychange', wake);
+      if (events && typeof events[method] === 'function') events[method]('online', wake);
+    }
+    function start() { if (!running) { running = true; generation++; listen('addEventListener'); } return refresh(); }
+    function stop() {
+      running = false; generation++; if (timer !== null) cancel(timer); timer = null;
+      if (controller) controller.abort(); listen('removeEventListener');
+    }
+    return { start, refresh, stop };
+  }
+  function mount() {
+    const doc = root.document, content = doc.getElementById('receiptContent'), sync = doc.getElementById('receiptStatus');
+    const print = doc.getElementById('printReceipt'); let client;
+    const messages = {
+      loading: '예약 정보를 확인하고 있어요.', refreshing: '현재 상태를 다시 확인하고 있어요.',
+      ready: '공유 접수 기록을 확인했어요. 변경 사항은 자동으로 반영돼요.',
+      offline: '연결이 원활하지 않아요. 아래 정보는 마지막으로 확인한 기록이에요. 현재 상태는 접수대에 확인해 주세요.',
+      setup_required: '온라인 확인증을 아직 준비 중이에요. 이름과 접수번호 또는 종이 번호표로 접수대에서 확인해 주세요.',
+      not_found: '해당 확인증을 찾을 수 없어요. 접수대에 이름과 접수번호를 알려 주세요.',
+      invalid_link: '예약 확인용 QR로 열어 주세요. 휴대폰이 없어도 접수대에서 이름과 접수번호로 확인할 수 있어요.'
+    };
+    function restart() {
+      if (client) client.stop(); content.innerHTML = ''; print.hidden = true;
+      client = create(root.DeskCloudConfig, { token: readToken(root.location.hash),
+        onReceipt: receipt => { content.innerHTML = receipt ? view(receipt) : ''; print.hidden = !receipt; },
+        onStatus: state => {
+          sync.dataset.phase = state.phase;
+          const message = state.phase === 'offline' && !state.hasReceipt ? '예약 정보를 아직 불러오지 못했어요. 인터넷 연결을 확인하거나 접수대에 문의해 주세요.' : messages[state.phase];
+          sync.textContent = message || messages.offline;
+          if (state.lastSync) {
+            const p = doc.createElement('div'); p.className = 'last-check';
+            p.textContent = '마지막 확인 '+new Date(state.lastSync).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Asia/Seoul' }); sync.append(p);
+          }
+        }
+      }); client.start();
+    }
+    doc.getElementById('refreshReceipt').addEventListener('click', () => client.refresh());
+    print.addEventListener('click', () => root.print());
+    root.addEventListener('hashchange', restart); root.addEventListener('pagehide', () => client.stop());
+    root.addEventListener('pageshow', event => { if (event.persisted) client.start(); }); restart();
+  }
+  return { create, project, view, readToken, mount };
+});
+</script>
+</body>
+</html>
