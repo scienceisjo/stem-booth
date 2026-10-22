@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#005bd7">
+<title>최종 면접 · 숫자를 기억시켜라 | HNR Tech Inc.</title>
+<meta name="description" content="HNR Tech Inc. 최종 면접. 8·4·2·1 숫자를 뽑고 직접 만든 네 개의 1비트 기억회로로 표현해 보세요.">
+<link rel="icon" href="assets/hnr-tech-mark.webp" type="image/webp"><style>:root{--blue:#005bd7;--ink:#102a4f;--pale:#edf5ff;--line:#acc9e9;--gold:#ffe368;font:18px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif;color:var(--ink);background:#fff;color-scheme:light}
+*{box-sizing:border-box}body{margin:0;word-break:keep-all;overflow-wrap:anywhere}button,input,summary{font:inherit}button,a,input,summary{-webkit-tap-highlight-color:transparent}button{cursor:pointer;min-height:44px;padding:10px 19px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-weight:700;line-height:1.35}button:hover:not(:disabled){background:var(--pale);border-color:var(--blue)}button:active:not(:disabled){transform:scale(.98)}button:disabled{cursor:default;background:#edf2f8;color:#48607d;border-color:#c6d4e4}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid #e09500;outline-offset:4px}a{color:var(--blue)}[hidden]{display:none!important}.primary{background:var(--blue);border-color:var(--blue);color:white}.primary:hover:not(:disabled){background:#0048ac;color:#fff}h1,h2,p,figure{margin:0}h1{font-size:clamp(36px,4vw,70px);line-height:1.15;letter-spacing:-.055em;font-weight:800}h1:focus{outline:none}h2{font-size:clamp(23px,2vw,32px);line-height:1.35;letter-spacing:-.035em}em{font-style:normal;color:var(--blue)}.brandbar{padding:14px 3.5vw;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);background:#fff;position:relative;z-index:2;min-height:82px}.brand{display:flex;gap:12px;align-items:center;color:var(--ink);text-decoration:none;font-size:23px;font-weight:850;letter-spacing:-.03em}.brand img{object-fit:contain;width:47px;height:47px}.brand small{display:block;font-size:12px;font-weight:650;letter-spacing:0}.header-tag{font-size:14px;display:flex;gap:18px;align-items:center}.header-tag b{border:1px solid var(--line);background:var(--pale);padding:6px 12px;border-radius:8px;letter-spacing:.1em}
+#stage{padding-bottom:88px}.scene{max-width:1600px;margin:auto;padding:clamp(28px,4vw,62px) 4vw;min-height:calc(100svh - 170px);animation:scene-in .35s ease both}.arrival,.passed{display:grid;grid-template-columns:.92fr 1.08fr;align-items:center;gap:4vw}.eyebrow{font-size:14px;font-weight:800;letter-spacing:.13em;color:var(--blue);margin-bottom:16px}.lead{font-size:clamp(21px,1.9vw,31px);line-height:1.65;margin-top:25px;letter-spacing:-.025em}.lead strong{color:var(--blue)}.hero-cta{margin-top:30px;padding:16px 24px;font-size:23px}.hero-cta span{margin-left:18px}.story-art{overflow:hidden;border-radius:24px;background:var(--pale);border:1px solid var(--line);align-self:stretch;display:flex;flex-direction:column;justify-content:center}.story-art img{display:block;width:100%;height:auto;aspect-ratio:1.35;object-fit:cover;flex:1;min-height:0}.story-art figcaption{padding:15px 20px;font-size:15px;font-weight:750;background:var(--pale);display:flex;align-items:center;gap:9px}.live-dot{width:8px;height:8px;background:var(--blue);border-radius:50%;display:inline-block}.scene-heading{margin-bottom:28px}.scene-heading .lead{margin-top:15px}.scene-heading h1{font-size:clamp(35px,3.6vw,60px)}.bit-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.demo-wrap{max-width:1100px;margin:24px auto}.bit-card{position:relative;text-align:center;border:2px solid var(--line);border-radius:20px;min-width:0;padding:18px 10px;background:var(--pale);color:var(--ink)}.bit-card .weight{font-size:clamp(42px,5.3vw,82px);font-weight:850;line-height:1.15;display:block}.bit-card .signal{font-size:26px;display:block;margin-top:7px}.bit-card .led{width:24px;height:24px;border:2px solid #597398;background:#fff;display:block;border-radius:50%;margin:12px auto}.bit-card.on{background:var(--blue);border-color:var(--blue);color:#fff}.bit-card.on .led{background:var(--gold);border-color:#fff2ab;box-shadow:0 0 0 8px #ffffff1f}.bit-card.on:hover{background:#0048ac}.bit-card .meaning{display:block;font-size:17px;font-weight:650;margin-top:8px}.sum-line{display:flex;justify-content:center;align-items:center;gap:22px;padding:19px 10px 6px;flex-wrap:wrap}.sum-line>span{font-size:18px;font-weight:700}.sum-line output{font-size:clamp(30px,3.2vw,48px);font-weight:850;color:var(--blue)}.rules-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-top:24px}.boxed-note{padding:15px 20px;border:1px solid var(--line);border-radius:12px;background:var(--pale);font-size:18px}.boxed-note span{font-size:16px}.actions{display:flex;gap:10px;flex-wrap:wrap}.compact{margin-top:24px;font-size:17px}.prep-layout{display:grid;grid-template-columns:1fr 1fr;gap:4vw;align-items:center}.prep-visual{padding:25px 20px;background:var(--pale);border-radius:20px;border:1px solid var(--line)}.four-mats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}.four-mats>div{border:2px solid var(--blue);border-radius:12px;background:#fff;text-align:center;padding:15px 7px}.four-mats b{font-size:clamp(42px,5vw,72px);line-height:1.1}.memory-tile{border:2px solid var(--blue);background:var(--pale);border-radius:8px;display:block;margin:20px auto 5px;padding:18px 3px;font-size:22px;font-weight:750;max-width:85px}.board-caption{font-size:18px;text-align:center;margin-top:20px}.range-caption{border-top:1px solid var(--line);margin-top:24px;padding-top:20px;text-align:center}.range-caption strong{display:block;color:var(--blue);font-size:48px;line-height:1.35}.range-caption strong span{font-size:20px;margin:0 14px}.range-caption>span{font-size:19px}.prep-steps{padding:0;list-style:none;margin:0}.prep-steps li{display:flex;gap:18px;padding:20px 0;border-bottom:1px solid var(--line)}.prep-steps li:first-child{padding-top:0}.prep-steps li:last-child{border:0}.prep-steps li>span{color:var(--blue);font-size:17px;font-weight:800;padding-top:5px}.prep-steps p{font-size:clamp(18px,1.6vw,25px);margin-top:8px;line-height:1.65}.challenge-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:32px;align-items:start}.target-panel{border-radius:22px;background:var(--blue);color:#fff;padding:25px;text-align:center}.target-panel>p:first-child{font-size:20px;font-weight:700}.target-panel>output{display:block;font-size:clamp(100px,11.5vw,175px);font-weight:850;line-height:1.25;font-variant-numeric:tabular-nums;letter-spacing:-.07em}.target-panel>.primary{background:#fff;color:var(--blue);border:0;min-width:200px;font-size:21px}.target-panel>.primary:hover{background:#e1efff;color:var(--blue)}.target-note{font-size:14px;margin:14px 0 0}.manual{border-top:1px solid #8ab6f6;margin-top:18px;padding-top:12px;font-size:15px}.manual summary{cursor:pointer;min-height:34px}.manual form{text-align:left;padding-top:10px}.manual label{display:block}.manual form>div{display:flex;gap:8px;margin-top:6px}.manual input{min-width:0;width:100%;border-radius:8px;border:1px solid var(--line);padding:10px;color:var(--ink)}.manual button{white-space:nowrap}.manual #manualError{font-size:14px;margin-top:6px}.read-panel h2{margin:0 0 10px}.read-instruction{font-size:clamp(18px,1.5vw,23px);line-height:1.6;margin-bottom:20px}.read-panel .bit-row{gap:10px}.read-panel .bit-card{padding:12px 7px}.read-panel .weight{font-size:clamp(35px,3.7vw,56px)}.read-panel .signal{font-size:16px;min-height:25px;margin-top:2px}.read-panel .led{margin:11px auto;width:19px;height:19px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}.choices button{font-size:24px;padding:5px;min-height:48px;border-color:#799fc8;color:var(--ink)}.choices button[aria-pressed=true]{background:var(--gold);color:#17284c;border-color:#ffe368}.read-summary{font-size:19px;font-weight:700;margin:17px 0;min-height:29px}.check-actions{display:flex;gap:10px}.check-actions .primary{font-size:20px}.feedback{padding:14px 17px;border:1px solid var(--line);background:var(--pale);font-size:20px;font-weight:700;margin-top:15px;border-radius:10px}.feedback.success{border-color:var(--blue);color:var(--blue)}.celebrate{margin-top:12px;width:100%;font-size:22px}.answer-tools{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}.answer-tools>button{font-size:15px;min-height:38px;padding:7px 12px}.answer-tools>div{background:var(--pale);border:1px solid var(--line);border-radius:10px;padding:15px;margin-top:10px;font-size:21px}.answer-code{letter-spacing:.35em;font-size:32px;font-weight:850;color:var(--blue)}.pass-stamp{display:inline-block;border:3px solid var(--blue);border-radius:10px;padding:6px 23px;color:var(--blue);font-size:26px;font-weight:850;letter-spacing:.2em;margin:0 0 18px;transform:rotate(-4deg)}.pass-equation{font-size:28px;font-weight:750;background:var(--pale);border:1px solid var(--line);border-radius:10px;margin:20px 0;padding:15px}.closing-line{font-size:21px;margin:0 0 24px}#app-credit{font-size:13px;margin-top:30px;line-height:1.7}
+#hud{position:fixed;bottom:0;left:0;width:100%;background:#fff;border-top:1px solid var(--line);padding:12px 2.5vw;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:60;min-height:77px}#hud button{font-size:14px;padding:8px 13px;min-height:42px}.nav-group,.tools,#stepdots{display:flex;gap:7px;align-items:center}.nav-group #next{background:var(--blue);color:#fff;border-color:var(--blue)}.nav-group #next:disabled{background:#edf2f8;border-color:#c6d4e4;color:#48607d}.nav-group #count{font-size:14px;font-weight:750;min-width:44px;text-align:center}#stepdots button{border:0;padding:8px 11px;background:transparent}#stepdots button[aria-current=step]{background:var(--pale);color:var(--blue)}#stepdots button:disabled{background:transparent;color:#48607d}#lecture-laser-toggle svg{width:23px;height:23px;display:block}#hud .tools #sound[aria-pressed=false]{background:var(--pale)}.volume-pop{position:fixed;right:20px;bottom:85px;background:#fff;border:2px solid var(--blue);border-radius:14px;padding:18px;z-index:65;width:min(320px,calc(100% - 32px))}.volume-pop label{display:flex;justify-content:space-between;font-weight:750}.volume-pop input{width:100%;accent-color:var(--blue);margin:16px 0}.volume-pop>div{display:flex;gap:8px;justify-content:flex-end}dialog{color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:30px;max-width:700px;max-height:85dvh;width:calc(100% - 28px);line-height:1.7}dialog::backdrop{background:#071c46a6}dialog .close-note{float:right}dialog h2{margin-bottom:20px}dialog ol{padding-left:24px}dialog li{margin-bottom:14px}dialog .boxed-note{font-size:16px}.key-guide{font-size:15px;border-top:1px solid var(--line);padding-top:18px;margin:20px 0}.rolling{animation:number-pulse .16s ease-in-out infinite alternate}.celebration i{position:fixed;top:-16px;width:9px;height:16px;background:var(--blue);pointer-events:none;z-index:30;animation:fall 1.7s ease-in both}.celebration{pointer-events:none}.celebration i:nth-child(3n){background:var(--gold)}
+@keyframes scene-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}@keyframes number-pulse{from{transform:translateY(-3px)}to{transform:translateY(3px)}}@keyframes fall{to{transform:translateY(110vh) rotate(400deg)}}
+.prep-steps li>span{flex:0 0 28px;white-space:nowrap}
+@media(min-width:1600px){.scene{padding-top:60px;padding-bottom:60px}.story-art img{aspect-ratio:1.25}.scene-heading{margin-bottom:36px}}
+@media(max-width:1190px){#stepdots{display:none}.scene{padding-inline:30px}.story-art img{aspect-ratio:1}.wide-only{display:none}.story-copy h1{font-size:clamp(35px,4.4vw,56px)}.rules-bottom{align-items:start}.rules-bottom .actions{max-width:260px}.prep-layout{gap:25px}.challenge-grid{gap:22px;grid-template-columns:.7fr 1.3fr}}
+@media(max-width:780px){.brandbar{padding:12px 18px;min-height:73px}.brand{font-size:19px}.brand img{width:39px;height:39px}.brand small{font-size:10px}.header-tag{font-size:12px}.header-tag b{display:none}#stage{padding-bottom:123px}.scene{padding:25px 20px;min-height:calc(100svh - 196px)}.arrival,.passed{grid-template-columns:1fr;gap:25px}.story-art{align-self:auto}.story-art img{aspect-ratio:1.8;max-height:390px}.story-copy h1{font-size:clamp(35px,6.2vw,49px)}.lead{font-size:21px;margin-top:18px}.hero-cta{font-size:19px;margin-top:20px}.eyebrow{font-size:12px;margin-bottom:13px}.scene-heading h1{font-size:35px}.scene-heading{margin-bottom:22px}.scene-heading .lead{font-size:20px}.bit-row{gap:8px}.bit-card{border-radius:13px;padding:14px 6px}.bit-card .weight{font-size:50px}.bit-card .signal{font-size:22px}.bit-card .meaning{font-size:13px}.bit-card .led{width:19px;height:19px}.sum-line{gap:10px;padding-top:16px}.sum-line>span{font-size:15px}.sum-line output{font-size:31px}.rules-bottom{flex-direction:column;align-items:stretch;gap:14px}.rules-bottom .actions{max-width:none}.boxed-note{font-size:16px;padding:14px}.boxed-note span{font-size:14px}.prep-layout{grid-template-columns:1fr}.four-mats{gap:7px}.four-mats b{font-size:42px}.memory-tile{padding:12px 2px;font-size:17px;margin-top:14px}.prep-steps h2{font-size:24px}.prep-steps p{font-size:19px}.challenge-grid{grid-template-columns:1fr;gap:25px}.target-panel{padding:18px}.target-panel>output{font-size:112px;line-height:1.15}.target-note{font-size:13px}.manual{margin-top:14px}.read-panel .weight{font-size:40px}.read-instruction{font-size:18px}.read-panel .bit-row{gap:7px}.choices{gap:4px}.choices button{font-size:22px;min-height:45px}.read-panel .signal{font-size:13px}.read-summary{font-size:17px}.compact{font-size:15px}.answer-tools>div{font-size:18px}.pass-equation{font-size:23px}.closing-line{font-size:19px}#hud{flex-wrap:wrap;justify-content:center;gap:8px;padding:9px 10px;min-height:110px}#hud .tools{justify-content:center;gap:5px}#hud button{font-size:12px;padding:7px 9px;min-height:38px}.nav-group{margin-right:auto}.tools{margin-left:auto}.volume-pop{bottom:119px}.scene .actions button{font-size:16px}.story-art figcaption{font-size:13px;padding:11px 15px}}
+@media(max-width:450px){#hud .tools{width:100%;margin:0}.nav-group{margin:auto}#hud>.nav-group{order:0}#lecture-laser-toggle{order:1}#hud .tools{order:2}.scene{padding-inline:16px}.read-panel .signal{font-size:11px}.read-panel .weight{font-size:37px}.read-panel .bit-card{padding:10px 5px}.choices{gap:3px}.choices button{font-size:22px;padding:4px}.target-panel>.primary{min-width:180px}.read-instruction br{display:none}}
+@media(max-height:740px) and (min-width:781px){.scene{padding-top:24px;padding-bottom:24px}.arrival h1,.passed h1{font-size:44px}.lead{font-size:22px;margin-top:17px}.story-art img{aspect-ratio:1.7}.scene-heading h1{font-size:40px}.scene-heading{margin-bottom:20px}.scene-heading .lead{font-size:21px}.demo-wrap{margin:15px auto}.bit-card{padding:12px 8px}.bit-card .weight{font-size:55px}.prep-steps p{font-size:18px}.prep-steps li{padding:12px 0}.range-caption{margin-top:17px;padding-top:12px}.range-caption strong{font-size:36px}.target-panel>output{font-size:110px}.read-instruction{font-size:18px}.pass-equation{font-size:24px;padding:10px;margin:15px 0}.closing-line{font-size:18px;margin-bottom:15px}.pass-stamp{font-size:19px;margin-bottom:12px}.passed #app-credit{margin-top:17px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.celebration{display:none}}
+</style></head>
+<body>
+<header class="brandbar"><a class="brand" href="../hub/" aria-label="HNR Tech Inc. 운영 허브"><img src="assets/hnr-tech-mark.webp" width="48" height="48" alt="HNR TECH 공식 엠블럼"><span>HNR Tech Inc.<small>2026 서울STEM축제 · 해누리중학교</small></span></a><span class="header-tag">최종 면접 <b>8 · 4 · 2 · 1</b></span></header>
+<main id="stage">
+<section class="scene arrival" data-scene="0" aria-labelledby="title0">
+ <div class="story-copy"><p class="eyebrow">FINAL INTERVIEW</p><h1 id="title0" tabindex="-1">여기까지 왔다고?<br><em>이제 마지막<br class="wide-only"> 면접이야.</em></h1><p class="lead">실험도 해내고, 기억회로도 만들었네.<br>그럼 그 회로에 <strong>숫자 하나</strong>를 기억시켜 볼까?</p><button class="primary hero-cta" data-go="1">좋아, 해 볼게! <span aria-hidden="true">→</span></button></div>
+ <figure class="story-art"><img src="assets/interview-welcome.webp" width="1536" height="1024" alt="파랑과 흰색 연구소 면접실에서 작은 로봇이 빈 연구대를 가리키며 반기는 모습"><figcaption><span class="live-dot"></span> HNR 연구소 · 최종 면접실</figcaption></figure>
+</section>
+<section class="scene rules" data-scene="1" aria-labelledby="title1" hidden>
+ <div class="scene-heading"><p class="eyebrow">면접관의 설명</p><h1 id="title1" tabindex="-1">켜진 자리만 <em>더하면 돼.</em></h1><p class="lead">앞에 놓인 숫자는 <strong>8, 4, 2, 1.</strong><br>회로를 읽었을 때 <strong>1이면 더하고, 0이면 그 자리는 건너뛰어.</strong></p></div>
+ <div class="demo-wrap"><div id="demoBits" class="bit-row" aria-label="8421 규칙 연습"></div><div class="sum-line"><span>켜진 자리의 합</span><output id="demoSum" aria-live="polite"></output></div></div>
+ <div class="rules-bottom"><p class="boxed-note">숫자판을 눌러 봐. <b>1 → 0 → 1</b>로 바뀌어.<br><span>0인 자리는 빼기 계산을 하는 게 아니라, 더하지 않는 거야.</span></p><div class="actions"><button id="example11">11은 어떻게 만들까?</button><button id="demoClear">모두 0으로</button></div></div>
+</section>
+<section class="scene prepare" data-scene="2" aria-labelledby="title2" hidden>
+ <div class="scene-heading"><p class="eyebrow">면접 준비</p><h1 id="title2" tabindex="-1">네 회로가 모이면,<br><em>숫자를 기억할 수 있어.</em></h1></div>
+ <div class="prep-layout"><div class="prep-visual"><div class="four-mats" aria-label="왼쪽부터 8, 4, 2, 1 순서로 놓은 네 개의 독립된 기억회로"><div><b>8</b><span class="memory-tile">1bit</span></div><div><b>4</b><span class="memory-tile">1bit</span></div><div><b>2</b><span class="memory-tile">1bit</span></div><div><b>1</b><span class="memory-tile">1bit</span></div></div><p class="board-caption">회로는 <strong>하나씩 따로!</strong> 서로 선으로 연결하지 않아.</p><p class="range-caption"><strong>0<span>부터</span>15<span>까지</span></strong><span>네 개의 0과 1로 나타낼 수 있어.</span></p></div>
+ <ol class="prep-steps"><li><span>01</span><div><h2>왼쪽부터 8 · 4 · 2 · 1</h2><p>숫자판 위에 회로를 하나씩 놓아 줘.</p></div></li><li><span>02</span><div><h2>먼저, 기억을 비우자.</h2><p>쓰기(S1)는 놓고, 읽기(S2)를 충분히 눌러.<br>불이 더는 켜지지 않는지 확인해.</p></div></li><li><span>03</span><div><h2>쓸 때는 S1. 읽을 때는 S2.</h2><p>필요한 자리만 S1으로 충전하고 손을 떼.<br>그다음 바로 S2를 하나씩 눌러 확인하는 거야.</p></div></li></ol></div>
+ <p class="boxed-note compact">우리가 만든 건 반도체 속 <b>기억 한 칸의 원리를 크게 꺼낸 모형</b>이야. 네 칸을 함께 쓰면 4비트가 돼.</p>
+</section>
+<section class="scene mission" data-scene="3" aria-labelledby="title3" hidden>
+ <div class="scene-heading"><p class="eyebrow">마지막 과제 · 숫자를 기억시켜라</p><h1 id="title3" tabindex="-1">이번에 기억할 숫자는…</h1></div>
+ <div class="challenge-grid"><div class="target-panel"><p id="targetLabel">면접관의 숫자</p><output id="target" aria-live="polite">?</output><button class="primary" id="draw">숫자 뽑기 <span aria-hidden="true">↻</span></button><p class="target-note">0~15 중 하나 · 같은 숫자는 연속으로 나오지 않아.</p><details class="manual"><summary>숫자 직접 정하기</summary><form id="manualForm"><label for="manualNumber">0부터 15까지</label><div><input id="manualNumber" type="number" min="0" max="15" step="1" inputmode="numeric" required aria-describedby="manualError"><button type="submit">적용</button></div><p id="manualError" role="status"></p></form></details></div>
+ <div class="read-panel"><h2>실제 회로로 만들어 봐.</h2><p class="read-instruction">필요한 자리만 <b>쓰기(S1)</b> → 손을 뗀 뒤 <b>읽기(S2)</b><br>읽을 때 본 LED 상태를 아래에 표시해 줘.</p><div id="readBits" class="bit-row" aria-label="실제 회로에서 읽은 네 자리"></div><p class="read-summary" id="readSummary">숫자를 뽑으면 도전을 시작할 수 있어.</p><div class="check-actions"><button class="primary" id="check" disabled>이 신호로 제출!</button><button id="clearRead" disabled>입력 지우기</button></div><div id="feedback" class="feedback" role="status" hidden></div><button id="celebrate" class="primary celebrate" hidden>합격 발표 →</button>
+ <div class="answer-tools"><button id="answerToggle" aria-expanded="false" aria-controls="answer" disabled>정답 열어보기</button><div id="answer" hidden></div></div></div></div>
+ <p class="boxed-note compact">LED가 계속 켜져 있을 필요는 없어. <b>S2를 눌렀을 때 켜졌는지</b>를 보자. 읽고 나면 기억이 약해지니, 다시 확인할 땐 먼저 비우고 새로 써 줘.</p>
+</section>
+<section class="scene passed" data-scene="4" aria-labelledby="title4" hidden>
+ <div class="story-copy"><p class="eyebrow">HNR TECH INC. · 최종 면접 결과</p><p class="pass-stamp">합격</p><h1 id="title4" tabindex="-1">우리 연구소에<br><em>온 걸 환영해!</em></h1><p class="lead">네가 만든 회로가 <strong id="passNumber">숫자</strong>를 기억했어.<br>불빛 네 개로 숫자를 전한 거야.</p><p class="pass-equation" id="passEquation"></p><p class="closing-line">작은 기억 한 칸, 직접 만들어 보니 어땠어?</p><div class="actions"><button id="another" class="primary">다른 숫자도 도전!</button><button id="nextTeam">다음 팀 맞이하기</button></div><p id="app-credit">HNR Tech Inc. · 지도교사 남국현, 조승재<br>© 2026 해누리중학교 · 최종 업데이트 2026-10-22</p></div>
+ <figure class="story-art"><img src="assets/interview-success.webp" width="1536" height="1024" alt="연구소 로봇이 새 연구원에게 빈 사원증 목걸이를 건네며 환영하는 모습"><figcaption>첫 번째 기억회로, 완성.</figcaption></figure>
+</section>
+</main>
+<footer id="hud"><div class="nav-group"><button id="prev" aria-label="이전 장면">←</button><span id="count" aria-live="polite">1 / 5</span><button id="next">다음 →</button></div><nav id="stepdots" aria-label="면접 진행"><button data-go="0" aria-label="1. 면접실">면접실</button><button data-go="1" aria-label="2. 규칙">규칙</button><button data-go="2" aria-label="3. 준비">준비</button><button data-go="3" aria-label="4. 도전">도전</button><button data-go="4" aria-label="5. 합격" disabled>합격</button></nav><div class="tools"><button id="sound" aria-pressed="true" title="효과음 (M)">소리 켜짐</button><button id="volumeButton" aria-label="효과음 볼륨 조절" aria-expanded="false">100%</button><button id="notesButton">진행 도움</button><button data-a="full" id="full" aria-label="전체 화면 (F)">전체 화면</button></div></footer>
+<div class="volume-pop" id="volumePop" hidden><label for="volume">효과음 <output id="volumeValue">100%</output></label><input id="volume" type="range" min="0" max="100" step="5" value="100"><div><button id="testSound">시험 듣기</button><button id="closeVolume">닫기</button></div></div>
+<dialog id="notes"><form method="dialog"><button class="close-note">닫기 ×</button></form><p class="eyebrow">진행자에게</p><h2>화면을 함께 보며 진행해 주세요.</h2><ol><li><b>면접실 → 규칙 → 준비</b> 순서로 보여 주세요. 규칙 화면의 숫자판은 직접 눌러 볼 수 있어요.</li><li><b>숫자를 뽑고, 참가자가 실제 회로를 조작하게 해 주세요.</b> 화면은 실물 회로와 연결되어 있지 않아요.</li><li>읽기(S2)를 눌렀을 때 LED가 켜지면 1, 꺼져 있으면 0. 관찰한 값을 화면에 입력하고 제출하세요.</li><li>신호가 맞으면 합격을 발표합니다. 화면 입력만으로 실물 작동을 확인할 수는 없으니, 옆에서 직접 확인해 주세요.</li><li>한 사람이 여러 회로를 맡아도 돼요. 다음 숫자에 도전할 땐 네 회로를 먼저 비우세요.</li></ol><p class="boxed-note">0이 나오면 네 자리 모두 0이에요. 기억을 비운 뒤 S2를 눌러도 불이 켜지지 않는지 확인해 주세요.</p><p class="key-guide">← → 장면 이동 · F 전체 화면 · M 음소거 · L 레이저<br>숫자 입력 중에는 방향키로 장면이 넘어가지 않아요.</p><a href="../lab/resources/8421-activity.html" target="_blank" rel="noopener">기존 안내문·인쇄 자료 보기 ↗</a></dialog>
+<script>(()=>{'use strict';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],weights=[8,4,2,1],key='hnr.final-interview.v1';
+let scene=0,target=null,previousTarget=null,read=[null,null,null,null],demo=[1,0,1,1],success=false,rolling=false,rollTimer=0,rollToken=0,answerShown=false,muted=false,volume=1,audio,master,oscillators=new Set(),confettiTimer=0;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+window.Deck={}; // Mount the existing lecture laser on this page's toolbar.
+function save(){try{sessionStorage.setItem(key,JSON.stringify({scene,target,previousTarget,read,demo,success}));}catch{}}
+function restore(){try{const s=JSON.parse(sessionStorage.getItem(key));if(s&&Number.isInteger(s.target)&&s.target>=0&&s.target<=15)target=s.target;previousTarget=Number.isInteger(s?.previousTarget)&&s.previousTarget>=0&&s.previousTarget<=15?s.previousTarget:target;if(s?.read?.length===4&&s.read.every(v=>v===0||v===1||v===null))read=s.read;if(s?.demo?.length===4&&s.demo.every(v=>v===0||v===1))demo=s.demo;success=!!s?.success&&target!==null&&read.every(v=>v!==null)&&sum(read)===target;scene=Number.isInteger(s?.scene)?Math.max(0,Math.min(s.scene,4)):0;if(scene===4&&!success)scene=3;}catch{}
+ try{muted=localStorage.getItem('hnr.final.muted')==='1';const stored=localStorage.getItem('sc_sfx_volume');if(stored!==null&&Number.isFinite(Number(stored)))volume=Math.max(0,Math.min(1,Number(stored)));}catch{}}
+function sum(bits){return bits.reduce((n,b,i)=>n+(b===1?weights[i]:0),0)}
+function expression(bits){return weights.filter((_,i)=>bits[i]===1).join(' + ')||'0'}
+function sounds(type){if(muted||volume===0)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();if(!master){master=audio.createGain();master.connect(audio.destination);}master.gain.setValueAtTime(volume,audio.currentTime);audio.resume().catch(()=>{});const seq=type==='pass'?[523,659,784,1047]:type==='draw'?[392,523,784]:type==='wrong'?[330,294]:[570];seq.forEach((f,i)=>{const o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime+i*.11;o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.085,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+.20);o.connect(g);g.connect(master);o.start(t);o.stop(t+.22);oscillators.add(o);o.onended=()=>{oscillators.delete(o);o.disconnect();g.disconnect();};});}catch{}}
+function silence(){for(const o of oscillators){try{o.stop();}catch{}}oscillators.clear();}
+function renderSound(){const pct=Math.round(volume*100);$('#sound').textContent=muted?'소리 꺼짐':'소리 켜짐';$('#sound').setAttribute('aria-pressed',String(!muted));$('#volumeButton').textContent=pct+'%';$('#volumeValue').textContent=pct+'%';$('#volume').value=pct;}
+function toggleSound(){muted=!muted;try{localStorage.setItem('hnr.final.muted',muted?'1':'0')}catch{}if(muted)silence();renderSound();}
+function closeVolume(){$('#volumePop').hidden=true;$('#volumeButton').setAttribute('aria-expanded','false');}
+function cancelRoll(){rollToken++;clearTimeout(rollTimer);rolling=false;$('#target').classList.remove('rolling');$('#targetLabel').textContent='면접관의 숫자';}
+function clearConfetti(){clearTimeout(confettiTimer);$('.celebration')?.remove();}
+function confetti(){clearConfetti();if(reduced.matches)return;const layer=document.createElement('div');layer.className='celebration';layer.setAttribute('aria-hidden','true');for(let i=0;i<28;i++){const p=document.createElement('i');p.style.left=(i*37%100)+'%';p.style.animationDelay=(i%7)*.065+'s';layer.append(p)}document.body.append(layer);confettiTimer=setTimeout(clearConfetti,2300);}
+function renderDemo(){const host=$('#demoBits');if(!host.children.length)host.innerHTML=weights.map((v,i)=>`<button class="bit-card" data-demo="${i}" aria-pressed="false"><b class="weight">${v}</b><span class="led" aria-hidden="true"></span><span class="signal"></span><span class="meaning"></span></button>`).join('');$$('[data-demo]').forEach((b,i)=>{b.classList.toggle('on',!!demo[i]);b.setAttribute('aria-pressed',String(!!demo[i]));b.setAttribute('aria-label',`${weights[i]} 자리, ${demo[i]}, ${demo[i]?'더하기':'제외'}, 눌러서 바꾸기`);b.querySelector('.signal').textContent=demo[i];b.querySelector('.meaning').textContent=demo[i]?'더한다':'건너뛴다';});$('#demoSum').textContent=expression(demo)+' = '+sum(demo);}
+function renderRead(){const host=$('#readBits');if(!host.children.length)host.innerHTML=weights.map((v,i)=>`<div class="bit-card" data-read-card="${i}"><b class="weight">${v}</b><span class="led" aria-hidden="true"></span><span class="signal">아직 안 읽음</span><div class="choices" role="group" aria-label="${v} 자리의 LED"><button data-index="${i}" data-bit="0" aria-label="${v} 자리 0, 꺼짐" aria-pressed="false">0</button><button data-index="${i}" data-bit="1" aria-label="${v} 자리 1, 켜짐" aria-pressed="false">1</button></div></div>`).join('');
+ $$('[data-read-card]').forEach((b,i)=>{b.classList.toggle('on',read[i]===1);b.querySelector('.signal').textContent=read[i]===null?'아직 안 읽음':read[i]===1?'1 · 켜졌어':'0 · 꺼졌어';b.querySelectorAll('[data-bit]').forEach(btn=>{btn.setAttribute('aria-pressed',String(read[i]===+btn.dataset.bit));btn.disabled=target===null||rolling;});});
+ $('#target').textContent=target===null?'?':target;$('#draw').textContent=target===null?'숫자 뽑기 ↻':'새 숫자 뽑기 ↻';$('#draw').disabled=rolling;$('#manualNumber').disabled=rolling;$('#manualForm button').disabled=rolling;const complete=read.every(v=>v!==null);$('#check').disabled=rolling||target===null||!complete;$('#clearRead').disabled=rolling||!read.some(v=>v!==null);$('#answerToggle').disabled=rolling||target===null;
+ $('#readSummary').textContent=target===null?'숫자를 뽑으면 도전을 시작할 수 있어.':complete?'읽은 신호  '+read.join('  ')+' · '+expression(read)+' = '+sum(read):'네 자리 중 '+read.filter(v=>v!==null).length+'자리 확인 · S2로 읽고 표시해 줘.';
+ $('#celebrate').hidden=!success;$('#answer').hidden=!answerShown;$('#answerToggle').setAttribute('aria-expanded',String(answerShown));$('#answerToggle').textContent=answerShown?'정답 다시 가리기':'정답 열어보기';if(answerShown&&target!==null){const bits=weights.map(v=>(target&v)?1:0);$('#answer').innerHTML=`<p>왼쪽부터 8 · 4 · 2 · 1</p><p class="answer-code">${bits.join(' ')}</p><p>${expression(bits)} = <b>${target}</b></p>`;}else $('#answer').replaceChildren();
+ $$('[data-go="4"]').forEach(b=>b.disabled=!success);if(scene===3){$('#next').disabled=!success||rolling;$('#next').textContent=success?'합격 발표 →':'회로로 도전 중';}
+}
+function clearAttempt(){read=[null,null,null,null];success=false;answerShown=false;$('#feedback').hidden=true;}
+function commitTarget(n){target=n;previousTarget=n;clearAttempt();renderRead();save();}
+function randomNumber(){const count=previousTarget===null?16:15;const bytes=new Uint32Array(1),bound=Math.floor(4294967296/count)*count;let n;do{crypto.getRandomValues(bytes);n=bytes[0];}while(n>=bound);n%=count;return previousTarget!==null&&n>=previousTarget?n+1:n;}
+function draw(){if(rolling)return;const n=randomNumber();cancelRoll();clearAttempt();save();const token=rollToken;rolling=true;renderRead();$('#targetLabel').textContent='숫자 뽑는 중…';if(reduced.matches){finish();return}$('#target').classList.add('rolling');let step=0;function frame(){if(token!==rollToken)return;$('#target').textContent=(step*7+n)%16;if(step++<11)rollTimer=setTimeout(frame,65);else finish();}function finish(){if(token!==rollToken)return;rolling=false;$('#target').classList.remove('rolling');$('#targetLabel').textContent='면접관의 숫자';commitTarget(n);sounds('draw');}frame();}
+function verify(){if(rolling||target===null||read.some(v=>v===null))return;success=sum(read)===target;const f=$('#feedback');f.hidden=false;f.classList.toggle('success',success);f.textContent=success?`맞아! ${expression(read)} = ${target}. 이 숫자를 기억해 냈네.`:'다시 볼까? 켜진 자리만 더해서 목표 숫자와 비교해 봐.';renderRead();save();sounds(success?'pass':'wrong');}
+function go(n,quiet=false){if(n===4&&!success)return;n=Math.max(0,Math.min(4,n));cancelRoll();silence();clearConfetti();closeVolume();window.LectureLaser?.clear();scene=n;$$('.scene').forEach((s,i)=>s.hidden=i!==n);$$('#stepdots [data-go]').forEach(b=>{if(+b.dataset.go===n)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});$('#count').textContent=(n+1)+' / 5';$('#prev').disabled=n===0;$('#next').disabled=n===4||(n===3&&!success);$('#next').textContent=n===4?'면접 완료':n===3?(success?'합격 발표 →':'회로로 도전 중'):'다음 →';renderDemo();renderRead();if(n===4){$('#passNumber').textContent='숫자 '+target;$('#passEquation').textContent=read.join(' ')+'  →  '+expression(read)+' = '+target;if(!quiet){sounds('pass');confetti();}}else if(!quiet)sounds('click');window.scrollTo({top:0,behavior:'instant'});$('#title'+n).focus({preventScroll:true});save();}
+function full(){try{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();p?.catch(()=>{});}catch{}}
+function reset(){cancelRoll();target=null;demo=[1,0,1,1];clearAttempt();$('#manualNumber').value='';$('#manualError').textContent='';go(0);}
+restore();renderSound();renderDemo();renderRead();go(scene,true);
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(+b.dataset.go)));$('#prev').onclick=()=>go(scene-1);$('#next').onclick=()=>{if(scene<4&&(scene!==3||success))go(scene+1)};
+$('#demoBits').onclick=e=>{const b=e.target.closest('[data-demo]');if(!b)return;const i=+b.dataset.demo;demo[i]=1-demo[i];renderDemo();save();sounds('click');};$('#example11').onclick=()=>{demo=[1,0,1,1];renderDemo();save();sounds('draw')};$('#demoClear').onclick=()=>{demo=[0,0,0,0];renderDemo();save();sounds('click')};
+$('#readBits').onclick=e=>{const b=e.target.closest('[data-bit]');if(!b||rolling||target===null)return;read[+b.dataset.index]=+b.dataset.bit;success=false;$('#feedback').hidden=true;renderRead();save();sounds('click');};$('#draw').onclick=draw;$('#check').onclick=verify;$('#clearRead').onclick=()=>{clearAttempt();renderRead();save()};$('#celebrate').onclick=()=>go(4);$('#another').onclick=()=>{cancelRoll();target=null;clearAttempt();go(3)};$('#nextTeam').onclick=reset;
+$('#answerToggle').onclick=()=>{answerShown=!answerShown;renderRead()};$('#manualForm').onsubmit=e=>{e.preventDefault();if(rolling)return;const raw=$('#manualNumber').value.trim(),n=Number(raw);if(raw===''||!Number.isInteger(n)||n<0||n>15){$('#manualError').textContent='0부터 15까지의 정수를 입력해 주세요.';return}cancelRoll();$('#manualError').textContent='';$('#targetLabel').textContent='면접관의 숫자';commitTarget(n);$('.manual').open=false;sounds('draw');};$('#sound').onclick=toggleSound;$('#volumeButton').onclick=()=>{const show=$('#volumePop').hidden;$('#volumePop').hidden=!show;$('#volumeButton').setAttribute('aria-expanded',String(show));};$('#closeVolume').onclick=closeVolume;$('#volume').oninput=e=>{volume=+e.target.value/100;if(master)master.gain.setValueAtTime(volume,audio.currentTime);try{localStorage.setItem('sc_sfx_volume',String(volume))}catch{}renderSound();};$('#testSound').onclick=()=>sounds('draw');$('#notesButton').onclick=()=>{window.LectureLaser?.setEnabled(false);$('#notes').showModal()};$('#full').onclick=full;
+document.addEventListener('fullscreenchange',()=>{$('#full').textContent=document.fullscreenElement?'화면 줄이기':'전체 화면'});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('#volumePop,#volumeButton'))closeVolume();});
+document.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey||e.isComposing||e.repeat)return;if($('#notes').open)return;if(e.key==='Escape'){closeVolume();return}if(e.target.closest('input,textarea,select,[contenteditable],summary'))return;if(!$('#volumePop').hidden)return;const k=e.key.toLowerCase();if(k==='arrowright'){e.preventDefault();if(scene<4&&(scene!==3||success))go(scene+1)}else if(k==='arrowleft'){e.preventDefault();go(scene-1)}else if(k==='f'){e.preventDefault();full()}else if(k==='m'){e.preventDefault();toggleSound()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){silence();if(rolling){cancelRoll();$('#targetLabel').textContent='면접관의 숫자';renderRead();}}});window.addEventListener('pagehide',()=>{cancelRoll();silence();clearConfetti();});
+window.HNRFinal=Object.freeze({getState:()=>({scene,target,read:[...read],demo:[...demo],success,rolling,answerShown}),sum,expression});
+})();
+</script><script>/* Lecture laser pointer v2 — canonical: 전기강의_빌드/objects/90_laser.js
+ * 소비전력강의_빌드/objects/90_laser.js is the identical build copy.
+ * Hold the full stroke until release; then fade it for 1100 ms.
+ * Page-level UI: RAF sleeps while a held stroke is stationary, independently of scene Ctx.
+ */
+(function () {
+  'use strict';
+  function mount() {
+    if (window.LectureLaser || !window.Deck || !document.getElementById('hud')) return;
+    var hud = document.getElementById('hud');
+    var canvas = document.createElement('canvas');
+    canvas.id = 'lecture-laser';
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.hidden = true;
+    var style = document.createElement('style');
+    style.textContent = '#lecture-laser{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:49;touch-action:none;cursor:none;user-select:none;-webkit-user-select:none;}#lecture-laser[hidden]{display:none!important}#hud #lecture-laser-toggle[aria-pressed="true"]{background:#c82044;color:#fff;outline:2px solid #fff;outline-offset:2px}@media print{#lecture-laser,#lecture-laser-toggle{display:none!important}}';
+    document.head.appendChild(style);
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    if (!ctx) { canvas.remove(); style.remove(); return; }
+    var button = document.createElement('button');
+    button.id = 'lecture-laser-toggle';
+    button.type = 'button';
+    button.setAttribute('aria-label', '레이저 포인터 켜기/끄기 (L)');
+    button.setAttribute('aria-keyshortcuts', 'L');
+    button.setAttribute('aria-pressed', 'false');
+    button.title = '레이저 포인터 (L) · 누르는 동안 유지 · 떼면 사라짐 · Esc로 끄기';
+    button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 19 7-7 3 3-7 7zM14 10l2-2M17 12h4M12 7V3M17 7l3-3"/><circle cx="13" cy="11" r="1.5" fill="currentColor"/></svg>';
+    var laserTools = hud.querySelector('.tools') || hud;
+    laserTools.insertBefore(button, laserTools.querySelector('[data-a="full"]'));
+    var table = document.querySelector('#help table');
+    if (table) {
+      var row = table.insertRow();
+      row.innerHTML = '<td><kbd>L</kbd> / <kbd>Esc</kbd></td><td>레이저 켜기·끄기 / 끄기 · 누르는 동안 궤적 유지, 떼면 사라짐 · 방향키로 진행</td>';
+    }
+
+    var enabled = false, pointer = null, activeId = null;
+    var points = [], strokeId = 0, raf = 0, dpr = 1;
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var lifetime = 1100;
+    function stopFrame() { if (raf) cancelAnimationFrame(raf); raf = 0; }
+    function render(now) {
+      raf = 0;
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+      if (!enabled) return;
+      // A null timestamp belongs to the held stroke. Its lifetime starts at pointerup.
+      points = points.filter(function (p) { return p.t === null || now - p.t < lifetime; });
+      ctx.lineCap = ctx.lineJoin = 'round';
+      for (var i = 0; i < points.length; i++) {
+        var a = points[i], b = points[i + 1];
+        var opacity = a.t === null || reduced.matches ? 1 : Math.max(0, 1 - (now - a.t) / lifetime);
+        ctx.globalAlpha = opacity;
+        if (!b || a.s !== b.s) {
+          // Keep a short tap visible after release, too.
+          if (i === 0 || points[i - 1].s !== a.s) {
+            ctx.fillStyle = '#f52651'; ctx.beginPath(); ctx.arc(a.x,a.y,2.25,0,Math.PI*2); ctx.fill();
+          }
+          continue;
+        }
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.lineWidth = 9; ctx.strokeStyle = 'rgba(180,0,38,.20)'; ctx.stroke();
+        ctx.lineWidth = 4.5; ctx.strokeStyle = '#f52651'; ctx.stroke();
+        ctx.lineWidth = 1.2; ctx.strokeStyle = '#fff1f4'; ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      if (pointer) {
+        var glow = ctx.createRadialGradient(pointer.x,pointer.y,2,pointer.x,pointer.y,18);
+        glow.addColorStop(0,'rgba(255,35,77,.7)'); glow.addColorStop(1,'rgba(255,35,77,0)');
+        ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(pointer.x,pointer.y,18,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#eb1243'; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.arc(pointer.x,pointer.y,6,0,Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(pointer.x,pointer.y,1.8,0,Math.PI*2); ctx.fill();
+      }
+      if (points.some(function (p) { return p.t !== null; })) raf = requestAnimationFrame(render);
+    }
+    function paint() { if (!raf) raf = requestAnimationFrame(render); }
+    function release() {
+      var id = activeId;
+      activeId = null;
+      if (id !== null && canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
+    }
+    function clear() {
+      release(); pointer = null; points = []; stopFrame();
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    }
+    function resize() {
+      clear();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.style.width = window.innerWidth + 'px'; canvas.style.height = window.innerHeight + 'px';
+      canvas.width = Math.round(window.innerWidth * dpr); canvas.height = Math.round(window.innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function toggle(value) {
+      enabled = typeof value === 'boolean' ? value : !enabled;
+      clear(); canvas.hidden = !enabled; button.setAttribute('aria-pressed', String(enabled));
+      if (enabled) resize();
+    }
+    function position(e) { return { x:e.clientX, y:e.clientY }; }
+    function sample(e, finalPoint) {
+      pointer = position(e);
+      if (activeId !== null) {
+        var last = points[points.length - 1];
+        if (!last || last.s !== strokeId || Math.hypot(last.x-pointer.x,last.y-pointer.y) >= 2 || (finalPoint && (last.x !== pointer.x || last.y !== pointer.y))) {
+          // Do not truncate the beginning of a long held stroke.
+          points.push({x:pointer.x,y:pointer.y,t:null,s:strokeId});
+        }
+      }
+      paint();
+    }
+    button.addEventListener('click', function (e) { e.stopPropagation(); toggle(); button.blur(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.isComposing || (e.target.closest && e.target.closest('input,textarea,select,[contenteditable]'))) return;
+      if (e.key.toLowerCase() === 'l') {
+        if (!e.repeat) toggle();
+        e.preventDefault(); e.stopImmediatePropagation();
+      } else if (e.key === 'Escape' && enabled) {
+        toggle(false); e.preventDefault(); e.stopImmediatePropagation();
+      } else if (enabled) {
+        // Arrows, replay, overview, blanking and jumps clear old marks but retain laser mode.
+        clear();
+      }
+    }, true);
+    canvas.addEventListener('pointerdown', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (!enabled || activeId !== null || e.button !== 0 || !e.isPrimary) return;
+      activeId = e.pointerId; strokeId++;
+      canvas.setPointerCapture(e.pointerId); sample(e);
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      if (!enabled || !e.isPrimary || (activeId !== null && e.pointerId !== activeId)) return;
+      sample(e);
+    });
+    function end(e) {
+      e.preventDefault(); e.stopPropagation();
+      if (e.pointerId !== activeId) return;
+      sample(e, true);
+      var releasedAt = performance.now();
+      points.forEach(function (p) { if (p.s === strokeId && p.t === null) p.t = releasedAt; });
+      release();
+      if (e.pointerType !== 'mouse') pointer = null;
+      if (reduced.matches) points = [];
+      paint();
+    }
+    canvas.addEventListener('pointerup', end);
+    canvas.addEventListener('pointercancel', function (e) { if (e.pointerId === activeId) clear(); });
+    canvas.addEventListener('lostpointercapture', function (e) { if (e.pointerId === activeId) clear(); });
+    canvas.addEventListener('pointerleave', function () { if (activeId === null) { pointer = null; paint(); } });
+    canvas.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); });
+    canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); });
+    // Avoid a constantly visible toolbar in recordings; the lower edge still reveals it.
+    canvas.addEventListener('mousemove', function (e) { if (e.clientY < window.innerHeight - 90) e.stopPropagation(); });
+    hud.addEventListener('click', clear, true);
+    new MutationObserver(function () { if (enabled) clear(); }).observe(document.getElementById('count'), {childList:true,subtree:true,characterData:true});
+    new MutationObserver(function () { if (enabled) clear(); }).observe(document.getElementById('stepdots'), {childList:true});
+    window.addEventListener('resize', resize);
+    document.addEventListener('fullscreenchange', resize);
+    window.addEventListener('blur', clear);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) clear(); });
+    window.addEventListener('pagehide', clear);
+    reduced.addEventListener('change', clear);
+    resize();
+    window.LectureLaser = Object.freeze({
+      setEnabled: toggle, clear: clear,
+      get enabled() { return enabled; },
+      get drawing() { return activeId !== null; },
+      get trailPoints() { return points.length; }
+    });
+  }
+  // The engine boots in its DOMContentLoaded timer, so queue ours immediately after it.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(mount,0); });
+  else setTimeout(mount,0);
+})();
+</script>
+</body></html>
