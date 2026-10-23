@@ -1,0 +1,241 @@
+{
+  "version": "2026-10-23-offline1",
+  "material_count": 21,
+  "html_count": 22,
+  "archive_file_count": 23,
+  "uncompressed_bytes": 7240129,
+  "archive": {
+    "file": "HNR_TECH_offline.zip",
+    "bytes": 2464891,
+    "sha256": "a9597b27573c5b8ded81ae6f54028b02af9788f9e03e42c4b71dbbcbc783485e"
+  },
+  "controls_start": {
+    "energy": 6,
+    "static": 2,
+    "plasma": 5,
+    "dram": 9,
+    "train": 6,
+    "eddy": 6
+  },
+  "sources": {
+    "brand/hnr-tech-mark.webp": {
+      "sha256": "e39aade84e60397b5358440db5d3bc23d3414d2c37322a6c54ed465da1b13899",
+      "bytes": 8566
+    },
+    "explain/energy-easy.html": {
+      "sha256": "835a0dfa713258e974005583a42603baec2b22d4d548af419ba493413f77f21d",
+      "bytes": 404969
+    },
+    "explain/energy.html": {
+      "sha256": "69b2255788b3b46f2a61725f4e86154af95463020e2a6874a6ee229d4d141de0",
+      "bytes": 2188279
+    },
+    "explain/static-easy.html": {
+      "sha256": "d8f62e534c629a8cc6f0f8151ea8a5919f476013625d8585526d324ed43fd25c",
+      "bytes": 404970
+    },
+    "explain/static.html": {
+      "sha256": "4847ea0ce7dfcfc221ebf07eafc61f38ae553c6044560b485c5c66b13db6aea9",
+      "bytes": 2188279
+    },
+    "explain/plasma-easy.html": {
+      "sha256": "488579253cc323da135bbecc3996eb87b0ad6f6f17dc7161a33d6f33cdae085a",
+      "bytes": 404969
+    },
+    "explain/plasma.html": {
+      "sha256": "fa43854b9b4ef9f8771a10373927df889e69b019930b670481721b87e9961d6b",
+      "bytes": 2188276
+    },
+    "explain/dram-easy.html": {
+      "sha256": "89acf3f061d205ccc812ce46e07ee38d46429b47441b4da09be9c67c54eecbb2",
+      "bytes": 404982
+    },
+    "explain/dram.html": {
+      "sha256": "e10d11157236c9f505d4d1f9d524b4f03536d675e3abf8ceb0913fbacbedd114",
+      "bytes": 2188332
+    },
+    "explain/train-easy.html": {
+      "sha256": "68562ddad7b0f877d800bf5ae719fdeb6d934cd81e90c829744564a497e72fee",
+      "bytes": 404976
+    },
+    "explain/train.html": {
+      "sha256": "495eaf1a5b68a2ee9f12d1b4ecff1e3be6e63a569998d959670138a6e87d8bf2",
+      "bytes": 2188268
+    },
+    "explain/eddy-easy.html": {
+      "sha256": "19c5f22d6f8e59e42afb7da43723860fafeef9dcbf176938efa2fb64789938ab",
+      "bytes": 404984
+    },
+    "explain/eddy.html": {
+      "sha256": "b31c10edcab51242f25c74045e232c856c17bab46e14b6f361a5e405a2231a39",
+      "bytes": 2188277
+    },
+    "explain/guide-easy.html": {
+      "sha256": "afaea972a228a95880916352e2afe67a81c4e68ff8f2a61cc1055f7477490e46",
+      "bytes": 44067
+    },
+    "explain/guide.html": {
+      "sha256": "4b28c041c4e6a68c8fb571875931cfe664841872cf3bdc5192c0094aa9182e4b",
+      "bytes": 3731541
+    },
+    "final/index.html": {
+      "sha256": "40d10ee928e5a0a496a0f978bcba96665f398795debe78a8218bc5c49c9a63bd",
+      "bytes": 48197
+    },
+    "final/assets/hnr-tech-mark.webp": {
+      "sha256": "e39aade84e60397b5358440db5d3bc23d3414d2c37322a6c54ed465da1b13899",
+      "bytes": 8566
+    },
+    "final/assets/interview-welcome.webp": {
+      "sha256": "3c83afa59d74316393311adb7f475a74010144f0b71927ca47446a862c046c16",
+      "bytes": 90094
+    },
+    "final/assets/interview-success.webp": {
+      "sha256": "51f9302fe70cda5d82ef530bacf15ca7860bef4b6e87ea521376085ecc7c183c",
+      "bytes": 120460
+    }
+  },
+  "builder_sha256": "5eebf5d089404a0340edb908ad88fedeb9cf7e515d479c604157a4a1d76b37de",
+  "files": {
+    "energy-easy.html": {
+      "bytes": 404980,
+      "sha256": "6f7524f2a31a1fa55c0cc02eeaa00ebbb5533f55c05c6789048eebca617a9f3f",
+      "source": "explain/energy-easy.html",
+      "source_sha256": "835a0dfa713258e974005583a42603baec2b22d4d548af419ba493413f77f21d"
+    },
+    "energy.html": {
+      "bytes": 359151,
+      "sha256": "6709e2cb1491747a359550dc18f03a27c489333410ff0180f78f6833660484de",
+      "source": "explain/energy.html",
+      "source_sha256": "69b2255788b3b46f2a61725f4e86154af95463020e2a6874a6ee229d4d141de0"
+    },
+    "energy-controls.html": {
+      "bytes": 359317,
+      "sha256": "b6b62d32211d7b82bf44b0210a92e1b7be815f3c62eecce8257d6af4c1be4138",
+      "source": "explain/energy.html",
+      "source_sha256": "69b2255788b3b46f2a61725f4e86154af95463020e2a6874a6ee229d4d141de0",
+      "controls_start": 6
+    },
+    "static-easy.html": {
+      "bytes": 404981,
+      "sha256": "af4ab8ed61377e6813397ffe0038a5530f45f547a5ddc48dac3f7a8fc4da938a",
+      "source": "explain/static-easy.html",
+      "source_sha256": "d8f62e534c629a8cc6f0f8151ea8a5919f476013625d8585526d324ed43fd25c"
+    },
+    "static.html": {
+      "bytes": 359151,
+      "sha256": "cf2382e66e56175bfba7f309152f10c3190c5a509784d146bb5ab6f93c443847",
+      "source": "explain/static.html",
+      "source_sha256": "4847ea0ce7dfcfc221ebf07eafc61f38ae553c6044560b485c5c66b13db6aea9"
+    },
+    "static-controls.html": {
+      "bytes": 359317,
+      "sha256": "afb119d5501501b00476e137520a000bda7565b7a5b0c303db76205844e46d74",
+      "source": "explain/static.html",
+      "source_sha256": "4847ea0ce7dfcfc221ebf07eafc61f38ae553c6044560b485c5c66b13db6aea9",
+      "controls_start": 2
+    },
+    "plasma-easy.html": {
+      "bytes": 404980,
+      "sha256": "28e061050e5d3f77314930a1c026b2ad253207111b961508a76de45ae0c63a72",
+      "source": "explain/plasma-easy.html",
+      "source_sha256": "488579253cc323da135bbecc3996eb87b0ad6f6f17dc7161a33d6f33cdae085a"
+    },
+    "plasma.html": {
+      "bytes": 359148,
+      "sha256": "75558d1cd49e8a0a44814e6a592c2b9ff31b4e280b29a90bff2cded759aeeab8",
+      "source": "explain/plasma.html",
+      "source_sha256": "fa43854b9b4ef9f8771a10373927df889e69b019930b670481721b87e9961d6b"
+    },
+    "plasma-controls.html": {
+      "bytes": 359314,
+      "sha256": "6dd2076260dd9bf434feba423fc42c5edcc9c6a315b808851994dd232234d919",
+      "source": "explain/plasma.html",
+      "source_sha256": "fa43854b9b4ef9f8771a10373927df889e69b019930b670481721b87e9961d6b",
+      "controls_start": 5
+    },
+    "dram-easy.html": {
+      "bytes": 404993,
+      "sha256": "7654a36175b5d4eddaad68e6c228c74d86a3cd3ab3005446df660d2060e56473",
+      "source": "explain/dram-easy.html",
+      "source_sha256": "89acf3f061d205ccc812ce46e07ee38d46429b47441b4da09be9c67c54eecbb2"
+    },
+    "dram.html": {
+      "bytes": 359198,
+      "sha256": "edc9c0bdcb228a80769d420efce823767afba0ae497258c246a6f6720646411c",
+      "source": "explain/dram.html",
+      "source_sha256": "e10d11157236c9f505d4d1f9d524b4f03536d675e3abf8ceb0913fbacbedd114"
+    },
+    "dram-controls.html": {
+      "bytes": 359364,
+      "sha256": "2d345038162a12a698660882c5b6349b4a2f4d40d1475a1821ec64f835b8fd74",
+      "source": "explain/dram.html",
+      "source_sha256": "e10d11157236c9f505d4d1f9d524b4f03536d675e3abf8ceb0913fbacbedd114",
+      "controls_start": 9
+    },
+    "train-easy.html": {
+      "bytes": 404987,
+      "sha256": "2846e18e376a434f728610a638348ee432e7f3168d059cb2a4c97335c4acb0a2",
+      "source": "explain/train-easy.html",
+      "source_sha256": "68562ddad7b0f877d800bf5ae719fdeb6d934cd81e90c829744564a497e72fee"
+    },
+    "train.html": {
+      "bytes": 359137,
+      "sha256": "beb16a7a0641ee7ef16145578244bbf4216beedb76af2e85c56b7ddddf4c8369",
+      "source": "explain/train.html",
+      "source_sha256": "495eaf1a5b68a2ee9f12d1b4ecff1e3be6e63a569998d959670138a6e87d8bf2"
+    },
+    "train-controls.html": {
+      "bytes": 359303,
+      "sha256": "f89d9167a39ef8082b95293d302a04a03f86acfde3762400a4050ad60fbc474b",
+      "source": "explain/train.html",
+      "source_sha256": "495eaf1a5b68a2ee9f12d1b4ecff1e3be6e63a569998d959670138a6e87d8bf2",
+      "controls_start": 6
+    },
+    "eddy-easy.html": {
+      "bytes": 404995,
+      "sha256": "55296eb49b4cce2ec50aca77b41f5b2aa2499aa1f9431312520c92504c23a804",
+      "source": "explain/eddy-easy.html",
+      "source_sha256": "19c5f22d6f8e59e42afb7da43723860fafeef9dcbf176938efa2fb64789938ab"
+    },
+    "eddy.html": {
+      "bytes": 359143,
+      "sha256": "4efe86d9896106f63ebc5b3a8a52a3b142ff5a278407e1598441cf66c3e1e80e",
+      "source": "explain/eddy.html",
+      "source_sha256": "b31c10edcab51242f25c74045e232c856c17bab46e14b6f361a5e405a2231a39"
+    },
+    "eddy-controls.html": {
+      "bytes": 359309,
+      "sha256": "9ae4c5d6542973bb1af183283e67891eaa18a0a67c51259a76b1fdf961a6e47b",
+      "source": "explain/eddy.html",
+      "source_sha256": "b31c10edcab51242f25c74045e232c856c17bab46e14b6f361a5e405a2231a39",
+      "controls_start": 6
+    },
+    "guide-easy.html": {
+      "bytes": 44073,
+      "sha256": "87d91761dfe99f33c9c7d725369088cbf2f4d16fe47971be34a4d1797d407b5f",
+      "source": "explain/guide-easy.html",
+      "source_sha256": "afaea972a228a95880916352e2afe67a81c4e68ff8f2a61cc1055f7477490e46"
+    },
+    "guide.html": {
+      "bytes": 72963,
+      "sha256": "ab60eb521dd01222cc5a2a57c4a4efec655235ef695813e5d2370945c3eebdd4",
+      "source": "explain/guide.html",
+      "source_sha256": "4b28c041c4e6a68c8fb571875931cfe664841872cf3bdc5192c0094aa9182e4b"
+    },
+    "final.html": {
+      "bytes": 351814,
+      "sha256": "37369b3ceaa3001f002e904bdb5dcbeaf46834961cba65e99fadec38de1ecb63",
+      "source": "final/index.html",
+      "source_sha256": "40d10ee928e5a0a496a0f978bcba96665f398795debe78a8218bc5c49c9a63bd"
+    },
+    "index.html": {
+      "bytes": 29266,
+      "sha256": "f1b74eaeb24335206c24e604c3201a3c5d9726619db89cdcbf6c03e923ddef6d"
+    },
+    "사용방법.txt": {
+      "bytes": 1245,
+      "sha256": "f4c3f3e3f0fa8a52561a3b8e7b996d8ebed63e5312c3a34e485cbc0bb5e953fe"
+    }
+  }
+}
