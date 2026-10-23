@@ -510,18 +510,13 @@ dialog::backdrop { background: #132d4b88; }
   function canReserve(day, teamId, nowISO) {
     const team = day.teams.find(t => t.id === teamId);
     if (!team || day.paused || team.closed) return false;
-    if (nowISO != null) {
-      stamp(nowISO, '현재 시각');
-      if (Date.parse(nowISO) >= Date.parse(scheduledAt(day.date, team.start))) return false;
-    }
+    if (nowISO != null) stamp(nowISO, '현재 시각');
     const round = day.rounds.find(r => r.id === team.roundId);
     return !!(round && !round.closed && reservableRound(day, round.id) && counts(day, teamId).reserveAvailable > 0);
   }
   function checkSeat(day, teamId, kind, now, exceptId, requireWindow) {
     const team = getTeam(day, teamId), round = getRound(day, team.roundId), n = counts(day, teamId, exceptId);
     if (team.closed || round.closed) fail('이 팀은 접수가 마감되어 있습니다. 시간표에서 다시 열어 주세요.');
-    if (Date.parse(now) >= Date.parse(scheduledAt(day.date, team.end))) fail('이 팀의 예정 체험 시간이 지났습니다. 시간표를 먼저 조정하거나 다른 팀을 선택해 주세요.');
-    if (kind === 'reservation' && requireWindow && Date.parse(now) >= Date.parse(scheduledAt(day.date, team.start))) fail('이미 입장 시각이 된 팀은 새 예약을 받을 수 없습니다. 현장 접수를 이용하거나 시간표를 먼저 조정해 주세요.');
     if (n.available < 1) fail('팀 전체 정원이 찼습니다. 다른 팀을 선택하거나 정원을 조정해 주세요.');
     if (kind === 'reservation') {
       if (requireWindow && !reservableRound(day, round.id)) fail('현재 예약을 받는 회차가 아닙니다. 예약 가능 회차 설정을 확인해 주세요.');
@@ -1110,7 +1105,6 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
   const sortedRounds = () => today().rounds.slice().sort((a,b) => M.toMinutes(a.start)-M.toMinutes(b.start));
   const sortedTeams = () => today().teams.slice().sort((a,b) => M.toMinutes(a.start)-M.toMinutes(b.start) || a.id.localeCompare(b.id));
   const now = () => practice ? new Date(dayKey + 'T' + selectedPracticeTime + ':00+09:00').toISOString() : new Date().toISOString();
-  const ended = t => Date.parse(now()) >= Date.parse(dayKey + 'T' + t.end + ':00+09:00');
   const timeOf = iso => iso ? new Date(iso).toLocaleTimeString('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}) : '—';
   const dateLabel = () => dayKey === '2026-10-23' ? '10월 23일 금요일' : '10월 24일 토요일';
   const uid = prefix => prefix + '-' + crypto.randomUUID();
@@ -1303,7 +1297,6 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
   }
   function occupancyTag(t) {
     const n=M.counts(today(),t.id), r=today().rounds.find(x=>x.id===t.roundId);
-    if (ended(t)) return '<span class="tag">시간 종료</span>';
     if (t.closed || r.closed) return '<span class="tag">접수 마감</span>';
     if (n.total>t.capacity) return '<span class="tag error">정원 초과 '+(n.total-t.capacity)+'명</span>';
     if (!n.available) return '<span class="tag">전체 마감</span>';
@@ -1314,12 +1307,12 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     const warnings=M.conflicts(today()).filter(w=>w.teamId===t.id);
     let out='<article class="team'+(chosenTeam===t.id?' selected-team':'')+'" data-team-card="'+esc(t.id)+'"><div class="row-between"><button class="team-time-link" data-action="teamPeople" data-id="'+esc(t.id)+'" aria-label="'+esc(t.start)+' 입장 명단 보기"><strong class="time">'+esc(t.start)+'–'+esc(t.end)+'</strong><span>명단 보기 →</span></button>'+occupancyTag(t)+'</div><p class="caption">'+esc(r.label)+' · '+esc(t.label)+' · '+(M.toMinutes(t.end)-M.toMinutes(t.start))+'분</p><div class="count-row"><span>접수 <b>'+n.total+'/'+t.capacity+'</b>명</span><span>예약 <b>'+n.reserved+'/'+t.reserveLimit+'</b>명</span></div><div class="seat-track" aria-hidden="true">'+Array.from({length:Math.min(t.capacity,20)},(_,i)=>'<span'+(i<n.total?' class="used"':'')+'></span>').join('')+'</div>';
     if (edit) out+='<div class="actions">'+btn('시간·정원 수정','editTeam',t.id)+btn(t.closed?'접수 열기':'마감','toggleTeam',t.id,'quiet small')+'</div>';
-    else out+='<div class="actions">'+btn('현장 접수','pickWalkin',t.id,'secondary small',n.available===0||t.closed||r.closed||ended(t)||t.roundId!==today().currentRoundId)+btn('예약','pickReservation',t.id,'secondary small',!M.canReserve(today(),t.id,now()))+'</div>';
+    else out+='<div class="actions">'+btn('현장 접수','pickWalkin',t.id,'secondary small',n.available===0||t.closed||r.closed||t.roundId!==today().currentRoundId)+btn('예약','pickReservation',t.id,'secondary small',!M.canReserve(today(),t.id,now()))+'</div>';
     if (edit) out+=warnings.map(w=>'<div class="note warn blank-space">'+esc(w.message)+'</div>').join('');
     return out+'</article>';
   }
   function optionsForTeams(mode,selected) {
-    let teams=sortedTeams().filter(t=>!ended(t)&&!t.closed&&!today().rounds.find(r=>r.id===t.roundId).closed);
+    let teams=sortedTeams().filter(t=>!t.closed&&!today().rounds.find(r=>r.id===t.roundId).closed);
     if(mode==='walkin') teams=teams.filter(t=>t.roundId===today().currentRoundId);
     if(mode==='reservation') teams=teams.filter(t=>M.canReserve(today(),t.id,now()));
     if(!teams.some(t=>t.id===selected)) selected=draftName&&selected?'':(teams.find(t=>t.roundId===today().currentRoundId)||teams[0]||{}).id || '';
@@ -1344,7 +1337,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
   function deskView() {
     const d=today(), current=sortedTeams().filter(t=>t.roundId===d.currentRoundId), next=sortedTeams().filter(t=>M.canReserve(d,t.id,now()));
     const waiting=d.entries.filter(e=>['booked','arrived','active'].includes(e.status)).sort((a,b)=>(a.status==='active'?-1:0)-(b.status==='active'?-1:0)).slice(0,6);
-    return festivalHero()+pageHead('오늘의 접수','현재 팀과 다음 예약을 한 화면에서 확인하세요.',btn(d.paused?'접수 재개':'접수 잠시 중지','pause',null,d.paused?'':'secondary')+btn('되돌리기','undo',null,'secondary',!undoStack.length))+summary()+(d.paused?'<div class="note warn" style="margin-bottom:20px">접수를 잠시 멈췄습니다. 기존 손님의 도착·입장·완료 처리는 계속할 수 있습니다.</div>':'')+'<div class="desk-grid"><div>'+registerPanel()+'</div><div><section class="panel"><div class="section-head"><h2>지금 회차</h2><button class="button quiet small" data-nav="schedule">시간표 조정 →</button></div><div class="team-grid">'+(current.length?current.map(t=>teamCard(t,false)).join(''):empty('진행 회차를 선택하세요','상단에서 현재 회차를 지정할 수 있습니다.'))+'</div></section><section class="panel"><div class="section-head"><h2>예약 가능한 팀</h2><button class="button quiet small" data-nav="settings">예약 운영 규칙 →</button></div><div class="team-grid">'+(next.length?next.map(t=>teamCard(t,false)).join(''):empty('현재 열려 있는 예약 자리가 없습니다','예약 정원과 예약 가능 회차를 확인하세요. 현장 접수 자리는 별도입니다.'))+'</div></section><section class="panel"><div class="section-head"><h2>도착·입장 확인</h2><button class="button quiet small" data-nav="people">전체 명단 →</button></div><div class="people-list">'+(waiting.length?waiting.map(e=>personRow(e,true)).join(''):empty('접수를 기다리고 있어요','발급한 번호가 이곳에 표시됩니다.'))+'</div></section></div></div>';
+    return festivalHero()+pageHead('오늘의 접수','예정 시각이 지나도 접수할 수 있어요. 진행 회차와 마감은 운영자가 선택합니다.',btn(d.paused?'접수 재개':'접수 잠시 중지','pause',null,d.paused?'':'secondary')+btn('되돌리기','undo',null,'secondary',!undoStack.length))+summary()+(d.paused?'<div class="note warn" style="margin-bottom:20px">접수를 잠시 멈췄습니다. 기존 손님의 도착·입장·완료 처리는 계속할 수 있습니다.</div>':'')+'<div class="desk-grid"><div>'+registerPanel()+'</div><div><section class="panel"><div class="section-head"><h2>지금 회차</h2><button class="button quiet small" data-nav="schedule">시간표 조정 →</button></div><div class="team-grid">'+(current.length?current.map(t=>teamCard(t,false)).join(''):empty('진행 회차를 선택하세요','상단에서 현재 회차를 지정할 수 있습니다.'))+'</div></section><section class="panel"><div class="section-head"><h2>예약 가능한 팀</h2><button class="button quiet small" data-nav="settings">예약 운영 규칙 →</button></div><div class="team-grid">'+(next.length?next.map(t=>teamCard(t,false)).join(''):empty('현재 열려 있는 예약 자리가 없습니다','예약 정원과 예약 가능 회차를 확인하세요. 현장 접수 자리는 별도입니다.'))+'</div></section><section class="panel"><div class="section-head"><h2>도착·입장 확인</h2><button class="button quiet small" data-nav="people">전체 명단 →</button></div><div class="people-list">'+(waiting.length?waiting.map(e=>personRow(e,true)).join(''):empty('접수를 기다리고 있어요','발급한 번호가 이곳에 표시됩니다.'))+'</div></section></div></div>';
   }
   function peopleView() {
     const entries=today().entries.filter(e=>(!query||e.ticket.includes(query)||(e.name||'').includes(query))&&(filter==='all'||(filter==='open'?['booked','arrived','active'].includes(e.status):filter==='waiting'?e.teamId===null&&e.status==='arrived':e.status===filter)));
@@ -1369,7 +1362,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     const started=Date.parse(now())>=Date.parse(dayKey+'T'+t.start+':00+09:00');
     const protectedSeats=started?0:n.reserveAvailable;
     const count=reservation?n.reserveAvailable:Math.max(0,n.available-protectedSeats);
-    const closed=t.closed||!round||round.closed||ended(t);
+    const closed=t.closed||!round||round.closed;
     const label=d.paused?'접수 잠시 중지':closed?'접수 마감':count>0?(reservation?'예약 가능 ':'현장 접수 가능 ')+'<strong>'+count+'명</strong>':(reservation?'예약 마감':'현장 접수 마감');
     const open=!d.paused&&!closed&&count>0;
     return '<div class="guest-slot" data-guest-team="'+esc(t.id)+'"><div><p class="time">'+esc(t.start)+' <small>'+(started?'시작':'입장')+'</small></p><p class="slot-duration">체험 '+(M.toMinutes(t.end)-M.toMinutes(t.start))+'분'+(n.active>0?' · 체험 진행 중':'')+'</p></div><p class="guest-availability'+(open?' is-open':'')+'">'+label+'</p></div>';
@@ -1394,7 +1387,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     modal(esc(t.start)+'–'+esc(t.end)+' 입장 명단','<p class="note">이름이 같으면 입장 시각과 접수번호를 함께 확인하세요. 취소한 기록은 이 명단에서 빠지고 전체 기록에 남습니다.</p><div class="people-list team-people-list">'+(entries.length?entries.map(e=>'<article class="person"><div class="ticket-number">'+esc(e.ticket)+'</div><div class="details"><strong class="person-name">'+esc(e.name||'이름 미등록')+'</strong><br>'+esc(kinds[e.kind])+' · '+esc(statuses[e.status])+' · '+(e.promisedStart?timeOf(e.promisedStart):esc(t.start))+' 입장</div><div class="actions"><button class="button quiet small" data-action="ticket" data-id="'+esc(e.id)+'">번호표</button>'+(['booked','arrived'].includes(e.status)?btn(e.kind==='reservation'?'예약 취소':'접수 취소','cancel',e.id,'danger small'):'')+'</div></article>').join(''):empty('이 시간대의 접수 기록이 없습니다','접수하면 이곳에서 이름과 접수번호를 확인할 수 있어요.'))+'</div>');
   }
   function guestView() {
-    const d=today(), active=d.entries.filter(e=>e.status==='active'), upcoming=sortedTeams().filter(t=>t.roundId===d.currentRoundId&&!ended(t)), next=sortedTeams().filter(t=>M.canReserve(d,t.id,now()));
+    const d=today(), active=d.entries.filter(e=>e.status==='active'), upcoming=sortedTeams().filter(t=>t.roundId===d.currentRoundId), next=sortedTeams().filter(t=>M.canReserve(d,t.id,now()));
     const at=Date.parse(now()), breakNow=d.breaks.find(b=>at>=Date.parse(dayKey+'T'+b.start+':00+09:00')&&at<Date.parse(dayKey+'T'+b.end+':00+09:00'));
     const headline=d.paused?'신규 접수를 잠시 쉬고 있어요':breakNow?esc(breakNow.label)+'입니다':active.length?'지금 체험 중인 번호':'체험 신청은 접수대에서 해 주세요';
     const notice=breakNow?esc(breakNow.label)+' '+esc(breakNow.start)+'–'+esc(breakNow.end)+' · 다음 입장 시각은 아래 안내를 확인해 주세요.':'번호표를 확인한 뒤 운영 학생의 안내에 따라 입장해 주세요.';
