@@ -1814,7 +1814,9 @@ function start(first) {
   HNR.tick(0);
   lastNow = performance.now(); requestAnimationFrame(loop);
   HNR.emit('start', { first: !!first });
-  if (first && !AUTO && !Q.sim && !(HNR.opening && HNR.opening.start({ initial: true }))) {
+  // Play on every map entry, including continuing an existing research record.
+  const openingStarted = !AUTO && !Q.sim && HNR.opening && HNR.opening.start({ initial: true });
+  if (first && !AUTO && !Q.sim && !openingStarted) {
     const w = ST('welcome', null);
     if (w && !S.seen.welcome) { S.seen.welcome = true; state.save(); setTimeout(function () { ui.say(w, { who: 'bit', buttons: [{ t: '가 볼게요!', v: 'ok', cls: 'green' }] }).then(function () { HNR.emit('welcomed'); }); }, 450); }
   }
