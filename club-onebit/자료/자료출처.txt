@@ -1,0 +1,38 @@
+1. 스마트폰과 생활
+삼성반도체 · 시스템LSI사업부
+https://semiconductor.samsung.com/kr/about-us/business-area/system-lsi/
+읽을 부분: 이미지센서·보안 솔루션 등 내가 고른 기능에 관련된 부분
+검색어: 스마트폰 이미지센서 역할 / 모바일 결제 반도체
+
+2. 게임과 영상
+Arm · What is a GPU? (영문)
+https://www.arm.com/glossary/gpus
+읽을 부분: Why is a GPU Important?의 graphics rendering 부분
+검색어: GPU 게임 화면 역할 / GPU 영상 편집
+
+3. AI와 학교생활
+UNESCO · AI and education: Protecting the rights of learners (영문)
+https://www.unesco.org/en/articles/ai-and-education-protecting-rights-learners
+읽을 부분: 맞춤형 학습 등 기회와 교육 격차 등 과제를 소개한 부분
+검색어: 생성형 AI 학습 활용 한계 / GPU AI 계산
+
+4. 자동차와 교통
+삼성반도체 · 오토모티브 프로세서
+https://semiconductor.samsung.com/kr/processor/automotive-processor/
+읽을 부분: 디스플레이·카메라·영상 기능을 설명하는 부분
+검색어: 차량용 반도체 내비게이션 / 자동차 카메라 프로세서
+
+5. 반도체와 환경
+삼성반도체 · 반도체의 안전한 수자원 관리
+https://semiconductor.samsung.com/kr/sustainability/people/community-communication/community-story/ds-water-management/
+읽을 부분: 수자원의 중요성·수자원 관리 과정
+검색어: 반도체 공장 물 재이용 / 전자제품 수리 자원 절약
+
+6. 반도체와 직업
+삼성반도체 · 채용 및 직무소개
+https://semiconductor.samsung.com/kr/about-us/careers/
+읽을 부분: 직무소개에서 내가 고른 직무 한 가지
+검색어: 반도체 직무 생산관리 / 반도체 환경안전 하는 일
+
+자료 확인: 2026-11-06. 위 자료는 조사 시작점이며 모든 사례의 정답을 담은 자료는 아닙니다.
+AI 주제의 하드웨어 역할 보조 자료: Arm, What is a GPU? https://www.arm.com/glossary/gpus
