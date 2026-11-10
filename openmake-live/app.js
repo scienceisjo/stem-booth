@@ -2310,7 +2310,7 @@ async function api(path,body,asText=false){
   const code=op==='join'?payload.code:session?.code;
   const res=await fetch(CLOUD_CONFIG.url+'/rest/v1/rpc/oml_rpc',{
     method:'POST',headers:{apikey:CLOUD_CONFIG.key,Authorization:'Bearer '+CLOUD_CONFIG.key,'Content-Type':'application/json'},
-    body:JSON.stringify({p_action:op,p_code:code||null,p_token:session?.token||null,p_payload:payload}),signal:AbortSignal.timeout(15000)
+    body:JSON.stringify({p_action:op,p_code:code||null,p_token:session?.token||null,p_payload:payload}),signal:AbortSignal.timeout(op==='import'?60000:15000)
   });
   let data=await res.json().catch(()=>({error:'연결 응답을 읽지 못했어요.'}));
   if(!res.ok){if(data.code==='PGRST202')throw new Error('Supabase 수업 설정이 아직 설치되지 않았어요. 설치 SQL을 실행한 뒤 새로고침해 주세요.');throw new Error(data.message||data.error||'수업 연결을 확인해 주세요.');}
@@ -2374,6 +2374,41 @@ async function showResults(id){roundSeen=id;const a=await api(roomPath('round?id
 document.addEventListener('click',safe(async e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.close){$('#'+b.dataset.close).close();if(b.dataset.close==='results-dialog')roundSeen=null;return;}if(b.dataset.start){await api(roomPath('start'),{id:b.dataset.start});await poll();}if(b.dataset.action){await api(roomPath('action'),{action:b.dataset.action,round:b.dataset.round});await poll();}if(b.dataset.history)await showResults(b.dataset.history);if(b.dataset.choice!==undefined){selected=Number(b.dataset.choice);saveDraft(selected);document.querySelectorAll('[data-choice]').forEach(el=>{el.classList.toggle('selected',Number(el.dataset.choice)===selected);el.setAttribute('aria-pressed',Number(el.dataset.choice)===selected)});}if(b.hasAttribute('data-open-lab'))await openLab();if(b.dataset.resume){const s=saved()[Number(b.dataset.resume)];await enter(s);}}));
 document.addEventListener('input',e=>{if(e.target.id==='answer-text')saveDraft(e.target.value);if(e.target.matches('[data-signal]'))saveDraft([...document.querySelectorAll('[data-signal]')].map(e=>e.value));});
 document.addEventListener('submit',safe(async e=>{if(e.target.id!=='answer-form')return;e.preventDefault();const a=state.active,q=a.question;let value;if(['quiz','poll'].includes(q.kind)){if(selected===null){toast('보기 하나를 골라 주세요.');return;}value=selected;}else if(q.kind==='signals')value=[...document.querySelectorAll('[data-signal]')].map(e=>e.value);else if(q.kind==='design'){if(!design){toast('제작대에서 작품을 먼저 가져와 주세요.');return;}value=design;}else value=$('#answer-text').value;const button=e.target.querySelector('[type="submit"]');button.disabled=true;try{await api(roomPath('answer'),{round:a.id,value});toast('제출했어요.');await poll();}catch(error){button.disabled=false;throw error}}));
+// Teacher-owned files stay private in Supabase, alongside the per-step assets.
+let courseBundle=null,courseBusy=false;
+const uploadDialog=$('#course-dialog'),uploadForm=$('#course-form');
+$('#update-course').onclick=safe(async()=>{
+  info=await api('/api/info');
+  $('#course-status').textContent=info.courseUpload?'':'이 기능은 처음 한 번 설치가 필요해요. 전달받은 ‘자료업데이트_기능추가.sql’을 실행한 뒤 다시 열어 주세요.';
+  uploadForm.hidden=!info.courseUpload;uploadDialog.showModal();
+});
+uploadDialog.addEventListener('cancel',e=>{if(courseBusy)e.preventDefault();});
+uploadDialog.addEventListener('close',()=>{$('#course-key').value='';});
+$('#course-file').onchange=async()=>{
+  courseBundle=null;$('#course-submit').disabled=true;$('#course-status').textContent='';
+  const file=$('#course-file').files[0];
+  if(!file){$('#course-preview').textContent='수업 자료 파일을 선택해 주세요.';return;}
+  try{
+    if(file.size>11000000)throw new Error('11 MB 이하의 수업 자료 파일을 선택해 주세요.');
+    const b=JSON.parse(await file.text());
+    if(b.format!=='openmake-course-v1'||!/^cloud-[a-f0-9]{16}$/.test(b.version)||!Array.isArray(b.metadata?.pages)||!Array.isArray(b.metadata?.questions)||!Array.isArray(b.assets))throw new Error('오픈메이크랩 수업 자료 파일이 아니에요.');
+    courseBundle=b;$('#course-preview').textContent=`${file.name} · ${b.metadata.pages.length}개 장면 · 질문 ${b.metadata.questions.length}개`;
+    $('#course-submit').disabled=false;
+  }catch(e){$('#course-preview').textContent=e instanceof SyntaxError?'파일을 읽지 못했어요. 전달받은 JSON 파일을 선택해 주세요.':e.message;}
+};
+uploadForm.onsubmit=async e=>{
+  e.preventDefault();if(!courseBundle||courseBusy)return;
+  courseBusy=true;$('#course-submit').disabled=true;$('#course-file').disabled=true;$('#course-key').disabled=true;
+  uploadDialog.querySelector('[data-close]').disabled=true;$('#course-status').textContent='자료를 올리는 중이에요. 잠시 기다려 주세요.';
+  try{
+    const result=await api('/api/import',{teacherKey:$('#course-key').value.trim(),bundle:courseBundle});
+    $('#course-status').textContent=`업데이트 완료 · ${result.pages}개 장면이 준비됐어요. 창을 닫고 ‘새 수업 열기’를 눌러 주세요. 기존 수업은 이전 자료로 계속 진행됩니다.`;
+    $('#lobby-status').textContent='새 수업에 수정한 자료가 적용됩니다.';
+    courseBundle=null;$('#course-file').value='';$('#course-preview').textContent='업데이트한 자료를 새 수업에서 사용할 수 있어요.';
+  }catch(e){$('#course-status').textContent=e.name==='TimeoutError'?'응답을 확인하지 못했어요. 같은 파일을 다시 올려도 중복 저장되지 않습니다. 다시 시도해 주세요.':e.message;}
+  finally{courseBusy=false;$('#course-key').value='';$('#course-file').disabled=false;$('#course-key').disabled=false;$('#course-submit').disabled=!courseBundle;uploadDialog.querySelector('[data-close]').disabled=false;}
+};
+
 $('#join-form').onsubmit=safe(async e=>{e.preventDefault();const s=await api('/api/join',{code:$('#code').value});await enter({...s,role:'student'});online=true;});
 $('#create').onclick=safe(async()=>{const s=await api('/api/create',{});await enter({...s,role:'host'});online=true;$('#teacher-key').value='';await showJoin();});
 $('#follow').onclick=()=>setFollow(!follow);$('#toggle-panel').onclick=()=>{const hidden=document.body.classList.toggle('panel-hidden');$('#toggle-panel').setAttribute('aria-expanded',!hidden)};
