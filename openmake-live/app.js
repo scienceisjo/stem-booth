@@ -2409,6 +2409,112 @@ uploadForm.onsubmit=async e=>{
   finally{courseBusy=false;$('#course-key').value='';$('#course-file').disabled=false;$('#course-key').disabled=false;$('#course-submit').disabled=!courseBundle;uploadDialog.querySelector('[data-close]').disabled=false;}
 };
 
+// Cloud-only participation dashboard and a serialized, retryable student outbox.
+const pbLabels={building:'제작 중',checking:'검사 확인',recheck:'재검사 필요',explaining:'설명·자기점검',cleared:'클리어'};
+const pbChecks={write_control:'쓰기 버튼으로 저장 시작',hold:'손을 떼어도 저장 유지',read_response:'읽으면 켜지고 점차 약해짐',reuse:'읽기 멈춤과 다시 쓰기',connections:'극성·단락·전류 확인'};
+const pbStage={parts:'부품 살펴보기',lab:'회로 제작·시험',review:'검사·설명 기록'};
+let pbId=null,pbFilter='all',pbDetail=null,pbDetailBusy=false,pbDetailVersion=-1,pbRosterKey='',pbSeq=0,pbQueue=[],pbSending=false,pbTimer,pbLab=null,pbLastLab='',pbLastAck='',pbEpoch=0,pbLost=false;
+const pbButton=document.createElement('button');pbButton.id='participation-open';pbButton.className='secondary';pbButton.textContent='참여 현황';pbButton.hidden=true;$('#toggle-panel').before(pbButton);
+const pbSync=document.createElement('span');pbSync.id='lab-sync-status';pbSync.setAttribute('role','status');$('#lab-dialog .dialog-head').append(pbSync);
+const pbTime=t=>t?new Date(Number(t)).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}):'—';
+const pbAgo=t=>!t?'기록 대기':Math.max(0,Date.now()+offset-t)<45000?'방금 연결':`${Math.max(1,Math.floor((Date.now()+offset-t)/60000))}분 전`;
+const pbKey=()=>session?`openmake-progress-${session.code}-${session.token.slice(0,12)}`:'';
+function pbPersist(){try{localStorage.setItem(pbKey(),JSON.stringify({seq:pbSeq,queue:pbQueue}));}catch{pbLost=true;}}
+function pbSyncText(){if(state?.host){pbSync.textContent='강사 시연 · 학생 기록에 포함하지 않음';return;}
+  const pending=pbQueue.length>0;pbSync.classList.toggle('pending',pending||pbLost);
+  pbSync.textContent=!state?.progressTracking?'연결 기능 업데이트 필요':!state?.labTracking?'제작 기록 연결 전 자료':state.closed?(pending?'수업 종료 · 미전송 기록 있음':'수업 종료 · 기록 확인 가능'):pending?'교사용 화면에 전송 중…':!pbLab?'제작대 기록 연결 확인 중…':pbLost?'기기 저장 제한 · 창을 유지해 주세요':'제작 과정이 선생님 화면에 연결돼요';
+}
+function pbPayload(){return {view:{index:Math.max(0,view.index),step:view.step,follow,surface:$('#lab-dialog').open?'lab':'lesson'},...(pbLab?{lab:pbLab}:{})};}
+function pbEnqueue(critical=false,heartbeat=false){if(!session||state?.host||!state?.progressTracking||state.closed)return;
+  clearTimeout(pbTimer);
+  const enqueue=()=>{const body=pbPayload(),signature=JSON.stringify(body);if(pbQueue.at(-1)?.signature===signature){pbSend();return;}if(!heartbeat&&!pbQueue.length&&pbLastAck===signature)return;
+    pbSeq=Math.max(pbSeq,Number(state.progressSeq)||0)+1;pbQueue.push({seq:pbSeq,...body,signature:JSON.stringify(body)});pbPersist();pbSyncText();pbSend();};
+  if(critical)enqueue();else pbTimer=setTimeout(enqueue,750);
+}
+async function pbSend(){if(pbSending||!pbQueue.length||!session||state?.host||state.closed||!state?.progressTracking)return;
+  pbSending=true;const epoch=pbEpoch,item=pbQueue[0];
+  try{const {signature,...payload}=item;const result=await api(roomPath('progress'),payload);if(epoch!==pbEpoch)return;
+    pbSeq=Math.max(pbSeq,Number(result.seq)||0);pbLastAck=item.signature;pbQueue.shift();pbPersist();pbSyncText();
+  }catch{if(epoch===pbEpoch){pbSync.textContent='연결되면 기록을 다시 보냅니다 · 창을 유지해 주세요';pbSync.classList.add('pending');}}
+  finally{if(epoch===pbEpoch){pbSending=false;if(pbQueue.length&&pbQueue[0]!==item)setTimeout(pbSend,120);}}
+}
+const pbEnter=enter;
+enter=async function(s){pbEpoch++;pbQueue=[];pbSeq=0;pbLab=null;pbLastLab='';pbLastAck='';pbSending=false;pbId=null;pbDetail=null;pbDetailVersion=-1;pbRosterKey='';pbLost=false;labLoaded=false;$('#lab').srcdoc='';view={index:-1,step:0};follow=true;clearTimeout(pbTimer);
+  // Read pending records only for this room and this participant.
+  try{const old=JSON.parse(localStorage.getItem(`openmake-progress-${s.code}-${s.token.slice(0,12)}`)||'{}');pbSeq=Number(old.seq)||0;pbQueue=Array.isArray(old.queue)?old.queue:[];}catch{}
+  await pbEnter(s);pbSeq=Math.max(pbSeq,Number(state.progressSeq)||0);pbEnqueue(true);pbSyncText();
+};
+const pbUpdate=update;update=async function(s){await pbUpdate(s);pbButton.hidden=!s.host;pbSyncText();if(s.host)pbRenderRoster();};
+const pbShow=showPage;showPage=async function(index,step){await pbShow(index,step);pbEnqueue();};
+const pbFollow=setFollow;setFollow=function(on){pbFollow(on);pbEnqueue();};
+const pbOpen=openLab;openLab=async function(){await pbOpen();pbSyncText();pbEnqueue(true);$('#lab').contentWindow.postMessage({type:'lab-progress-request'},location.origin);};
+// Existing handlers held a reference before this module was inserted.
+$('#open-lab').onclick=safe(openLab);
+$('#lab-dialog').addEventListener('close',()=>pbEnqueue(true));
+window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==$('#lab').contentWindow||e.data?.type!=='lab-progress'||e.data.protocol!==1||state?.host||!state?.labTracking)return;
+  const next=e.data.value;if(!next||typeof next!=='object')return;
+  const serialized=JSON.stringify(next);if(serialized===pbLastLab)return;
+  const critical=!pbLab||pbLab.checkId!==next.checkId||pbLab.complete!==next.complete||pbLab.recorded!==next.recorded;
+  pbLab=next;pbLastLab=serialized;pbEnqueue(critical);
+});
+setInterval(()=>{if(!document.hidden){pbSend();pbEnqueue(false,true);}if($('#participation-dialog').open&&state?.host)pbRenderRoster();},20000);
+window.addEventListener('online',pbSend);
+window.addEventListener('beforeunload',e=>{if(pbQueue.length&&!state?.host){e.preventDefault();e.returnValue='';}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){pbSend();pbEnqueue();}});
+
+function pbMatch(p){return pbFilter==='all'||pbFilter==='cleared'&&p.lab.status==='cleared'||pbFilter==='help'&&['checking','recheck'].includes(p.lab.status)||pbFilter==='working'&&['building','explaining'].includes(p.lab.status);}
+function pbRenderRoster(){if(!state?.host||!$('#participation-dialog').open)return;
+  const rows=state.progress||[],cleared=rows.filter(x=>x.lab.status==='cleared').length,started=rows.filter(x=>x.lab.startedAt).length;
+  const status=$('#participation-status');status.classList.toggle('progress-error',!state.progressTracking);
+  status.textContent=!state.progressTracking?'참여 현황 연결 SQL을 한 번 실행하고 새로고침해 주세요.':!state.labTracking?'이 수업은 제작 기록 연결 전 자료로 열렸습니다. 업데이트 후 새 수업을 열면 제작대 과정도 표시됩니다.':state.closed?'종료된 수업의 기록입니다.':`기록이 들어오면 자동으로 갱신됩니다 · ${pbTime(Date.now()+offset)} · 강사에게만 표시`;
+  $('#participation-summary').innerHTML=[[state.participants,'수업 참여'],[rows.filter(x=>x.answers>0).length,'질문에 답한 학생'],[started,'제작대 시작'],[cleared,'현재 회로 클리어']].map(([n,label])=>`<article><strong>${n}<small> 명</small></strong><span>${label}</span></article>`).join('');
+  const filtered=rows.filter(pbMatch),key=JSON.stringify([filtered,pbId,pbFilter]);
+  if(key!==pbRosterKey){pbRosterKey=key;$('#participation-roster').innerHTML=filtered.length?filtered.map(p=>{const lab=p.lab,where=p.view?.surface==='lab'?pbStage[lab.stage]||'가상 제작대':p.view?`${p.view.index+1}장 · ${p.view.follow?'따라가기':'열린 장면 복습'}`:'참여 중';
+    return `<tr class="${pbId===p.id?'selected':''}"><td><button class="progress-person" data-person="${esc(p.id)}" aria-pressed="${pbId===p.id}">${esc(p.name)}</button><small>${esc(where)}</small></td><td>${p.answers} / ${p.opened}</td><td><span class="progress-badge ${esc(lab.status||'')}">${pbLabels[lab.status]||'시작 전'}</span>${lab.startedAt?`<div class="progress-dots" aria-label="현재 검사 ${lab.passedCount||0}/5 통과">${Array.from({length:5},(_,i)=>`<i class="${i<(lab.passedCount||0)?'passed':''}"></i>`).join('')}</div><small>${lab.parts||0}개 부품 · ${lab.wireCount||0}개 연결</small>`:''}</td><td><span data-seen="${p.seen||0}">${pbAgo(p.seen)}</span></td></tr>`;}).join(''):`<tr><td colspan="4" class="progress-empty">${rows.length?'이 조건에 해당하는 학생이 없어요.':'학생이 참여하면 이곳에 나타나요.'}</td></tr>`;
+  }
+  document.querySelectorAll('[data-seen]').forEach(el=>el.textContent=pbAgo(Number(el.dataset.seen)));
+  if(pbId&&pbDetailVersion!==state.version)pbLoadDetail();
+}
+async function pbLoadDetail(before=null){if(!pbId||pbDetailBusy)return;const id=pbId,version=state.version,epoch=pbEpoch;pbDetailBusy=true;
+  try{const d=await api(roomPath('participant'),{id,...(before?{before}:{})});if(id!==pbId||epoch!==pbEpoch)return;
+    if(pbDetail?.id===id)d.events=[...new Map([...pbDetail.events,...d.events].map(e=>[e.id,e])).values()].sort((a,b)=>a.id-b.id);pbDetail=d;pbDetailVersion=version;pbRenderDetail();
+  }catch(e){if(id===pbId)$('#participant-detail').innerHTML=`<p class="progress-error">${esc(e.message)}</p><button data-progress-retry>다시 불러오기</button>`;}
+  finally{pbDetailBusy=false;if(id!==pbId&&pbId&&epoch===pbEpoch)pbLoadDetail();}
+}
+function pbAnswer(a){if(!a.submitted)return'<p class="muted">제출 전</p>';const v=a.value;
+  if(a.kind==='design')return `<h4>${esc(v?.title)}</h4>${/^data:image\/png;base64,/.test(v?.png||'')?`<img src="${v.png}" alt="제출한 회로 작품">`:''}<p>${esc(v?.meaning)}</p>`;
+  if(a.kind==='signals')return(v||[]).map((x,i)=>`<p><b>${['00','01','10','11'][i]}</b> ${esc(x)}</p>`).join('');
+  if(['quiz','poll'].includes(a.kind))return`<p>${esc(a.options?.[v]??v)}</p>${a.kind==='quiz'?`<small>${a.correct?'정답':'다시 생각하기'} · ${a.points||0}점</small>`:''}`;
+  return`<p>${esc(v)}</p>`;
+}
+function pbEvent(e){const d=e.detail||{};return({view:()=>d.surface==='lab'?'가상 제작대 열기':`${Number(d.index)+1}장 보기 · ${d.follow?'따라가기':'열린 장면 복습'}`,'lab-start':()=>'가상 제작대 시작',stage:()=>pbStage[d.stage]||'제작 단계 이동',circuit:()=>`회로 구성 변경 · 부품 ${d.parts}개 / 연결 ${d.wires?.length||0}개`,prediction:()=>`실험 예상: ${d.text}`,trial:()=>`직접 시험: ${['write','wait','read'].filter(k=>d[k]).map(k=>({write:'쓰기',wait:'기다리기',read:'읽기'})[k]).join(' → ')||'다시 시험 준비'}`,check:()=>`기능 검사 · ${(d.checks||[]).filter(x=>x.passed).length}/5 통과`,reflection:()=>'증거·이유·다음 확인 기록',self:()=>`설명 자기점검 ${(d.items||[]).filter(Boolean).length}/3`,clear:()=>'제작대 클리어',recheck:()=>'회로가 바뀌어 재검사 필요'}[e.kind]||(()=>'참여 기록'))();}
+function pbRenderDetail(){const d=pbDetail;if(!d)return;const lab=d.snapshot?.lab,records=lab?.reflection||{};
+  const box=$('#participant-detail'),scroll=box.scrollTop,open=[...box.querySelectorAll('details[open]')].map(el=>el.id);
+  box.innerHTML=`<h3>${esc(d.name)}</h3><p class="muted">질문 답변 ${(d.answers||[]).filter(x=>x.submitted).length}/${d.answers?.length||0} · ${lab?`기능 검사 ${lab.attempts}회`:'제작대 시작 전'}</p>${lab?`
+    <span class="progress-badge ${esc(lab.status)}">${pbLabels[lab.status]||'제작 중'}</span>
+    <div class="progress-stages">${[['부품',lab.parts===6],['직접 시험',Object.values(lab.experience||{}).every(Boolean)],['검사',lab.current&&lab.passedCount===5],['설명 기록',lab.recorded],['자기점검',lab.self?.every(Boolean)],['클리어',lab.complete]].map(([label,done])=>`<span class="${done?'done':''}">${done?'✓ ':''}${label}</span>`).join('')}</div>
+    ${lab.firstClearedAt?`<p class="muted">첫 클리어 ${pbTime(lab.firstClearedAt)}${!lab.complete?' · 현재 회로는 다시 확인 중':''}</p>`:''}
+    <h4>기능 검사 <small>${lab.current?`${lab.passedCount}/5`:'현재 회로 검사 전'}</small></h4>
+    ${!lab.current&&lab.checkId?'<p class="muted">아래는 수정 전 검사입니다. 현재 회로의 통과 결과로 집계하지 않습니다.</p>':''}
+    ${(lab.checks||[]).length?lab.checks.map(c=>`<div class="progress-check ${c.passed?'pass':'fail'}"><b>${c.passed?'✓':'△'} ${pbChecks[c.id]||esc(c.id)}</b><p>${esc(c.observation)}</p></div>`).join(''):'<p class="muted">아직 기능 검사를 실행하지 않았어요.</p>'}
+    <h4>학생의 예상과 설명</h4><div class="progress-record"><b>실험 전 예상</b><p>${esc(lab.prediction||'선택 전')}</p></div>
+    ${lab.recorded?[['observation','관찰한 증거'],['reason','그렇게 생각한 이유'],['action','다음에 확인할 것']].map(([k,label])=>`<div class="progress-record"><b>${label}</b><p>${esc(records[k])}</p></div>`).join(''):'<p class="muted">현재 회로의 설명을 아직 기록하지 않았어요. 작성 중인 초안은 수집하지 않습니다.</p>'}
+    <details id="pb-wires"><summary>현재 연결 ${lab.wires?.length||0}개 보기</summary>${(lab.wires||[]).map(w=>`<p class="muted">${esc(pbPin(w.a))} ↔ ${esc(pbPin(w.b))}</p>`).join('')}</details>`:''}
+    <h4>수업 질문과 답변</h4>${d.answers?.length?d.answers.map(a=>`<article class="progress-answer"><b>${esc(a.title)}</b>${pbAnswer(a)}</article>`).join(''):'<p class="muted">아직 열린 질문이 없어요.</p>'}
+    <h4>참여 흐름 <small>${d.eventCount}개 기록</small></h4><p class="muted">최근 기록부터 표시합니다. 전체 기록 파일에는 모든 수집 기록이 포함됩니다.</p><ol class="progress-timeline">${[...(d.events||[])].reverse().map(e=>`<li><time>${pbTime(e.at)}</time>${esc(pbEvent(e))}${e.kind==='check'?`<details id="pb-event-${e.id}"><summary>검사 항목 보기</summary>${(e.detail.checks||[]).map(c=>`<p>${c.passed?'✓':'△'} ${pbChecks[c.id]}<br>${esc(c.observation)}</p>`).join('')}</details>`:e.kind==='reflection'?`<details id="pb-event-${e.id}"><summary>기록한 설명 보기</summary>${['observation','reason','action'].map(k=>`<p>${esc(e.detail[k])}</p>`).join('')}</details>`:''}</li>`).join('')}</ol>${d.eventCount>d.events.length?'<button id="pb-earlier">이전 기록 더 보기</button>':''}`;
+  open.forEach(id=>{const el=document.getElementById(id);if(el)el.open=true;});box.scrollTop=scroll;
+}
+function pbPin(s){const [part,pin]=String(s).split('.');return `${({b:'전지',c:'축전기',r:'저항',w:'쓰기 스위치',s:'읽기 스위치',d:'LED'})[part]||part} ${({p:'+',n:'−',a:part==='d'?'+':'A',b:'B',k:'−'})[pin]||pin}`;}
+pbButton.onclick=()=>{$('#participation-dialog').showModal();pbRenderRoster();};
+document.addEventListener('click',safe(async e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.person){pbId=b.dataset.person;pbDetail=null;pbDetailVersion=-1;$('#participant-detail').innerHTML='<p class="muted">참여 기록을 불러오는 중…</p>';pbRenderRoster();}
+  if(b.dataset.progressFilter){pbFilter=b.dataset.progressFilter;document.querySelectorAll('[data-progress-filter]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.progressFilter===pbFilter));pbRenderRoster();}
+  if(b.hasAttribute('data-progress-retry'))await pbLoadDetail();
+  if(b.id==='pb-earlier')await pbLoadDetail(pbDetail.events[0]?.id);
+}));
+$('#participation-json').onclick=safe(async()=>download(await api(roomPath('export')),`오픈메이크랩_${session.code}_전체참여기록.json`));
+$('#participation-csv').onclick=()=>{const cell=v=>'"'+String(v??'').replace(/^[=+@\-\t\r]/,"'$('#join-form').onsubmit=").replaceAll('"','""')+'"';const rows=[['참여자','제출 답변','열린 질문','제작대 상태','통과 검사','검사 횟수','설명 기록','자기점검','첫 클리어','마지막 연결'],...(state.progress||[]).map(p=>[p.name,p.answers,p.opened,pbLabels[p.lab.status]||'시작 전',p.lab.passedCount||0,p.lab.attempts||0,p.lab.recorded?'기록':'미기록',(p.lab.self||[]).filter(Boolean).length,pbTime(p.lab.firstClearedAt),pbTime(p.seen)])];download('\uFEFF'+rows.map(r=>r.map(cell).join(',')).join('\r\n'),`오픈메이크랩_${session.code}_참여현황.csv`,'text/csv;charset=utf-8');};
+
 $('#join-form').onsubmit=safe(async e=>{e.preventDefault();const s=await api('/api/join',{code:$('#code').value});await enter({...s,role:'student'});online=true;});
 $('#create').onclick=safe(async()=>{const s=await api('/api/create',{});await enter({...s,role:'host'});online=true;$('#teacher-key').value='';await showJoin();});
 $('#follow').onclick=()=>setFollow(!follow);$('#toggle-panel').onclick=()=>{const hidden=document.body.classList.toggle('panel-hidden');$('#toggle-panel').setAttribute('aria-expanded',!hidden)};
